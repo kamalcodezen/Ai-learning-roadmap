@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Endless3DCarousel from "@/src/components/Endless3DCarousel";
+import Endless3DCarousel from "@/src/components/shared/Endless3DCarousel";
 
 export default function BannerSection() {
   const videoRef = useRef<HTMLVideoElement>(null);

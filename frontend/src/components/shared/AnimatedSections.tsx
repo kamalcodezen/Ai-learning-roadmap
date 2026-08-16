@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { Observer } from "gsap/Observer";
-import BannerSection from "@/src/components/BannerSection";
-import BrandPartners from "@/src/components/BrandPartners";
-import DiagonalMarqueeSection from "@/src/components/DiagonalMarqueeSection";
+import BannerSection from "@/src/components/shared/BannerSection";
+import BrandPartners from "@/src/components/shared/BrandPartners";
+import DiagonalMarqueeSection from "@/src/components/shared/DiagonalMarqueeSection";
 import Link from "next/link";
 
 // Register GSAP Plugin

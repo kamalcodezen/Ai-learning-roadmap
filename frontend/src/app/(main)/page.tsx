@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Navbar from "@/src/components/Navbar";
-import BannerSection from "@/src/components/BannerSection";
-import BrandPartners from "@/src/components/BrandPartners";
-import DiagonalMarqueeSection from "@/src/components/DiagonalMarqueeSection";
-import Footer from "@/src/components/Footer";
-import SiteLoader from "@/src/components/SiteLoader";
+import Navbar from "@/src/components/layout/Navbar";
+import BannerSection from "@/src/components/shared/BannerSection";
+import BrandPartners from "@/src/components/shared/BrandPartners";
+import DiagonalMarqueeSection from "@/src/components/shared/DiagonalMarqueeSection";
+import Footer from "@/src/components/layout/Footer";
+import SiteLoader from "@/src/components/shared/SiteLoader";
 
 export default function Home() {
   const [isLoaderActive, setIsLoaderActive] = useState(true);

@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
-import BannerSection from "@/src/components/BannerSection";
-import BrandPartners from "@/src/components/BrandPartners";
-import DiagonalMarqueeSection from "@/src/components/DiagonalMarqueeSection";
-import Footer from "@/src/components/Footer";
+import BannerSection from "@/src/components/shared/BannerSection";
+import BrandPartners from "@/src/components/shared/BrandPartners";
+import DiagonalMarqueeSection from "@/src/components/shared/DiagonalMarqueeSection";
+import Footer from "@/src/components/layout/Footer";
 
 export default function ContinuousAnimatedSections({
   isLoaderActive,
@@ -119,7 +119,7 @@ export default function ContinuousAnimatedSections({
 
     // Wheel listener: wait until current section reaches finish line before triggering swipe
     let scrollAccumulator = 0;
-    let accumulatorTimeout: any = null;
+    let accumulatorTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
     const handleWheel = (e: WheelEvent) => {
       if (animatingRef.current || !containerRef.current) return;
