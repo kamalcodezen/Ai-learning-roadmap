@@ -1,8 +1,10 @@
 "use client";
 
 import { authClient } from "@/src/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
 
   if (isPending) {
@@ -23,7 +25,7 @@ export default function DashboardPage() {
       <button
         onClick={async () => {
           await authClient.signOut();
-          window.location.href = "/signin";
+          router.push("/signin");
         }}
       >
         Logout
