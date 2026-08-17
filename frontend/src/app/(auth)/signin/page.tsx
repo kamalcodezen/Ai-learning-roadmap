@@ -1,1 +1,7 @@
-export default function Placeholder() { return <div>Placeholder</div>; }
+import SignInForm from "@/src/components/auth/SignInForm";
+
+const SignInPage = () => {
+  return <SignInForm />;
+};
+
+export default SignInPage;
