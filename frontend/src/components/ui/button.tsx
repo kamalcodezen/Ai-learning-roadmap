@@ -21,11 +21,11 @@ export default function Button({
       <span className="relative z-10">{text}</span>
 
       <span
-        className="absolute right-1 top-1 flex h-10 w-10 items-center justify-end pr-3 rounded-full transition-all duration-500 ease-out group-hover:w-[calc(100%-8px)]"
+        className="absolute right-1 top-1 flex h-8 w-8 items-center justify-end pr-2 rounded-full transition-all duration-500 ease-out group-hover:w-[calc(100%-8px)]"
         style={{ backgroundColor: "#C6F56E" }}
       >
         {icon ?? (
-          <FaArrowRight />
+          <FaArrowRight className="text-black rotate-180" />
         )}
       </span>
     </>
@@ -35,7 +35,7 @@ export default function Button({
     group
     relative
     flex
-    h-12
+    h-10
     items-center
     justify-start
     overflow-hidden
