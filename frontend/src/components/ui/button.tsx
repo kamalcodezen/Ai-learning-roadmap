@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { FaArrowRight } from "react-icons/fa";
+import { GoArrowUpRight } from "react-icons/go";
 
 interface ButtonProps {
   text: string;
@@ -18,33 +18,42 @@ export default function Button({
 }: ButtonProps) {
   const content = (
     <>
-      <span className="relative z-10">{text}</span>
-
+      {/* Expanding background */}
       <span
-        className="absolute right-1 top-1 flex h-8 w-8 items-center justify-end pr-2 rounded-full transition-all duration-500 ease-out group-hover:w-[calc(100%-8px)]"
-        style={{ backgroundColor: "#C6F56E" }}
+        className="absolute right-1 top-1 h-10 w-10 rounded-full bg-white transition-all duration-500 ease-out group-hover:w-[calc(100%-8px)] group-hover:bg-[#ceff1f]"
+      />
+
+      {/* Text */}
+      <span className="relative z-10 transition-all duration-500 ease-out group-hover:translate-x-8">
+        {text}
+      </span>
+
+      {/* Arrow */}
+      <span
+        className="absolute right-1 top-1 z-20 flex h-10 w-10 items-center justify-center rounded-full transition-all duration-500 ease-out group-hover:right-[calc(100%-44px)] group-hover:rotate-45"
       >
         {icon ?? (
-          <FaArrowRight className="text-black rotate-180" />
+          <GoArrowUpRight className="text-black text-xl" />
         )}
       </span>
     </>
   );
 
   const classes = `
+    font-sans
     group
     relative
     flex
-    h-10
+    h-12
     items-center
-    justify-start
+    justify-between
     overflow-hidden
     rounded-full
     bg-neutral-800
-    px-5
-    pl-6
-    pr-14
-    text-sm
+    px-6
+    pl-7
+    pr-16
+    text-base
     font-medium
     text-white
     transition-colors
