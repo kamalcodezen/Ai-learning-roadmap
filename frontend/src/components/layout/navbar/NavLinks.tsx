@@ -70,19 +70,6 @@ export default function NavLinks() {
                   className="flex items-center justify-between rounded-xl px-4 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-950"
                 >
                   <span>{link.label}</span>
-
-                  {link.dropdown && (
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                    >
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
-                  )}
                 </Link>
               ))}
             </nav>
