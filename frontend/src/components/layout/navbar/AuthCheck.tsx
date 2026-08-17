@@ -31,5 +31,5 @@ export default function AuthCheck() {
     );
   }
 
-  return <Button text="Get Started" href="/signup" />;
+  return <Button text="Start for Free" href="/signup" />;
 }

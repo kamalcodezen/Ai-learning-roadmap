@@ -14,7 +14,7 @@ const navLinks = [
   {
     label: "How it works",
     href: "/courses"
-  },
+  }
 ];
 
 export default function NavLinks() {
@@ -28,7 +28,7 @@ export default function NavLinks() {
           <div key={link.label} className="relative">
             <Link
               href={link.href}
-              className="flex items-center gap-1.5 text-[14px] font-normal text-neutral-700 transition-colors duration-200 hover:text-neutral-950"
+              className="flex items-center gap-1.5 text-[18px] font-normal text-neutral-700 transition-colors duration-200 hover:text-neutral-950"
             >
               {link.label}
             </Link>
