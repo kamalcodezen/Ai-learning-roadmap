@@ -24,7 +24,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${poppins.variable} font-sans antialiased h-full scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col antialiased">
+      <body className="min-h-full flex flex-col antialiased" suppressHydrationWarning>
         <NextTopLoader
           color="var(--color-accent)"
           showSpinner={false}

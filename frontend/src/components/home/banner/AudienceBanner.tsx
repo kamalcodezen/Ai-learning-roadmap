@@ -1,20 +1,12 @@
 "use client";
 
-import { useState } from "react";
-
-import BannerBackground from "./BannerBackground";
 import BannerHeader from "./BannerHeader";
 import BannerCta from "./BannerCta";
-import CoverflowCarousel from "./CoverflowCarousel";
-
-import { carouselItems, slides } from "./data";
+import CurvedCarousel from "./CurvedCarousel";
+import { slides } from "./data";
+import { GridPattern } from "@/src/registry/magicui/grid-pattern";
 
 export default function AudienceBanner() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
-  const activeItem = carouselItems[hoveredIndex ?? activeIndex];
-
   return (
     <section
       className="
@@ -22,39 +14,32 @@ export default function AudienceBanner() {
         isolate
         min-h-180
         overflow-hidden
-        bg-[#faf8f2]
-        py-20
-        sm:py-24
-        md:py-28
+        bg-background
+        pt-28 pb-20
+        sm:pt-32 sm:pb-24
+        md:pt-36 md:pb-28
       "
     >
-      <BannerBackground image={activeItem.image} title={activeItem.title} />
-
-      <div className="mx-auto flex max-w-350 flex-col items-center px-5 sm:px-8">
+      <GridPattern
+        width={45}
+        height={45}
+        x={-1}
+        y={-1}
+        className="[mask-image:linear-gradient(to_bottom,white,transparent,transparent)] opacity-40 dark:opacity-20"
+      />
+      <div className="relative z-20 mx-auto flex max-w-350 flex-col items-center px-5 sm:px-8">
         <BannerHeader
-          badge="A smarter way to learn"
-          heading={activeItem.title}
-          subHeading={activeItem.description}
+          badge="AI-powered learning for your career"
+          heading={"Learn with direction\nMap your career step-by-step"}
+          subHeading="Build a personalized learning roadmap based on your career goal, current skills, available time, and learning progress."
         />
 
-        <div className="w-full">
-          <CoverflowCarousel
-            slides={slides}
-            loop
-            rotate={28}
-            gap={0.08}
-            autoplay
-            autoplayDelay={3000}
-            showPagination
-            showNavigation
-            cardWidth="clamp(150px, 20vw, 240px)"
-            onSlideChange={setActiveIndex}
-            onCardHover={setHoveredIndex}
-            label="Aurevo learning carousel"
-          />
-        </div>
+        <BannerCta text="Create My Roadmap" href="/signup" />
+      </div>
 
-        <BannerCta text="Get Started" href="/signup" />
+      {/* ── Endless 3D Concave Carousel ── */}
+      <div className="relative z-10 w-full -mt-6 sm:-mt-14 md:-mt-20 lg:-mt-24">
+        <CurvedCarousel slides={slides} />
       </div>
     </section>
   );
