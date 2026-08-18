@@ -17,7 +17,7 @@ export default function Logo() {
       </span>
 
         {/* Temporary hardcode text pixels */}
-      <span className="font-sans text-[20px] md:text-[24px] font-semibold tracking-[-0.03em] text-neutral-800">
+      <span className="font-sans text-[20px] md:text-[24px] font-semibold text-foreground">
         Ai Pather
       </span>
     </Link>

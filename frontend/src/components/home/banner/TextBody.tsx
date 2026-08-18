@@ -37,7 +37,7 @@ export default function TextBody({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.12, ease: "easeOut" }}
-        className="mt-5 max-w-xl px-4 font-poppins text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7"
+        className="mt-4 sm:mt-5 max-w-xl px-4 font-poppins text-[13px] leading-5 text-muted-foreground sm:text-sm sm:leading-6 md:text-base md:leading-7"
       >
         {subHeading}
       </motion.p>
