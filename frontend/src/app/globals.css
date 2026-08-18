@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "@heroui/styles";
+@import "../../node_modules/@heroui/styles/dist/index.css";
 
 
 @layer base {
