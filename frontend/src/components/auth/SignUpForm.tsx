@@ -1,64 +1,65 @@
 "use client";
 
-import { authClient } from "@/src/lib/auth-client";
-import { FormEvent, useState } from "react";
+import { authClient } from "../../lib/auth-client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { showToast } from "@/src/components/ui/toast";
+import AuthForm from "./AuthForm";
 
-export default function SignUpForm() {
+interface SignUpFormProps {
+  onSwitch: () => void;
+}
+
+export default function SignUpForm({ onSwitch }: SignUpFormProps) {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isPending, setIsPending] = useState(false);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
 
+    setIsPending(true);
     setMessage("Creating account...");
 
-    const { data, error } = await authClient.signUp.email({
+    const { error } = await authClient.signUp.email({
       name,
       email,
       password,
     });
 
+    setIsPending(false);
+
     if (error) {
-      setMessage(error.message ?? "Signup failed");
+      setMessage("");
+      showToast({
+        variant: "error",
+        message: error.message ?? "Signup failed",
+        duration: 5,
+      });
       return;
     }
 
-    console.log("Signup successful:", data);
-    setMessage("Account created successfully!");
+    router.push("/dashboard");
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-        required
-      />
-
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        required
-      />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-        required
-        minLength={8}
-      />
-
-      <button type="submit">Create Account</button>
-
-      <p>{message}</p>
-    </form>
+    <AuthForm
+      mode="signup"
+      name={name}
+      email={email}
+      password={password}
+      setName={setName}
+      setEmail={setEmail}
+      setPassword={setPassword}
+      message={message}
+      isPending={isPending}
+      onSubmit={handleSubmit}
+      onSwitch={onSwitch}
+    />
   );
 }
