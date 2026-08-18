@@ -6,6 +6,8 @@ import { motion } from "motion/react";
 import Logo from "./Logo";
 import NavLinks from "./NavLinks";
 import AuthCheck from "./AuthCheck";
+import MobileNav from "./MobileNav";
+import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -33,11 +35,14 @@ export default function Navbar() {
         stiffness: 100,
         damping: 20,
       }}
-      className={`font-poppins fixed inset-x-0 top-0 z-50 px-3 pt-10 sm:px-4 ${
+      className={`font-poppins fixed inset-x-0 top-0 z-50 px-3 pt-5 md:pt-6 sm:px-4 ${
         scrolled ? ""
-        : "bg-white"
+        : "bg-transparent"
       } `}
     >
+      <div className="block md:hidden">
+        <MobileNav />
+      </div>
       <motion.div
         layout
         transition={{
@@ -47,12 +52,12 @@ export default function Navbar() {
           },
         }}
 className={`
-            relative mx-auto flex items-center
+            hidden md:flex relative mx-auto items-center
             transition-all duration-500 ease-out
             ${
               scrolled
             //   Here max-w-140 temporary - it hard codedly changes the things for nav links
-                ? "w-full max-w-[80%] rounded-full bg-white/70 px-3 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl sm:px-4"
+                ? "w-full max-w-[80%] rounded-full bg-background/70 px-3 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl sm:px-4"
                 : "w-full max-w-[80%] rounded-none px-4"
             }
           `}
@@ -72,9 +77,10 @@ className={`
               <NavLinks />
             </div>
 
-            {/* Auth */}
-            <div className="flex justify-end">
+            {/* Auth and Theme */}
+            <div className="flex items-center justify-end">
               <AuthCheck />
+              <AnimatedThemeToggler />
             </div>
           </div>
         </motion.div>
