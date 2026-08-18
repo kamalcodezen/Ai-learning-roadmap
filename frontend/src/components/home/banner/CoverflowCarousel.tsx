@@ -296,7 +296,7 @@ export default function CoverflowCarousel({
               nudge(1);
             }
           }}
-          className="cursor-grab overflow-hidden py-10 outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 active:cursor-grabbing"
+          className="cursor-grab py-10 outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 active:cursor-grabbing"
           style={{
             perspective: `calc(var(--cf-card) * ${perspective})`,
             touchAction: "pan-y",
@@ -323,7 +323,7 @@ export default function CoverflowCarousel({
               >
                 <div
                   className={cn(
-                    "group aspect-[4/5] cursor-pointer overflow-hidden rounded-2xl bg-neutral-100 shadow-xl transition-transform duration-300 hover:scale-[1.05] hover:brightness-105",
+                    "group aspect-[4/5] cursor-pointer overflow-hidden rounded-2xl bg-neutral-100 shadow-xl transition-transform duration-300",
                     cardClassName,
                   )}
                 >
@@ -370,7 +370,7 @@ export default function CoverflowCarousel({
           transition={{ duration: 0.3 }}
           className="mt-2 flex flex-col items-center px-6"
         >
-          <p className="text-[15px] font-semibold tracking-tight text-neutral-950">
+          <p className="text-[15px] font-semibold text-neutral-950">
             {active.title}
           </p>
           {active.subtitle && (
