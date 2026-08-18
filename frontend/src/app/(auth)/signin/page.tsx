@@ -1,7 +1,5 @@
-import SignInForm from "@/src/components/auth/SignInForm";
+import AuthPage from "@/src/components/auth/AuthPage";
 
-const SignInPage = () => {
-  return <SignInForm />;
-};
-
-export default SignInPage;
+export default function SignInPage() {
+  return <AuthPage mode="signin" />;
+}
