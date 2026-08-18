@@ -90,7 +90,7 @@
 ========================================= */
 @theme {
   --color-brand: #c6f56e;
-  --font-sans: "ClashDisplay-Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-poppins: var(--font-poppins), sans-serif;
 
 

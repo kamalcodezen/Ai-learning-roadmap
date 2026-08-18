@@ -1,5 +1,4 @@
 import { Poppins } from "next/font/google";
-import "../../public/font/css/clash-display.css";
 import "./globals.css";
 import Providers from "../providers/providers";
 import SmoothScroll from "../providers/SmoothScroll";
