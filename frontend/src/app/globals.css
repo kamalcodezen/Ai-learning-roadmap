@@ -1,13 +1,260 @@
 @import "tailwindcss";
+@import "@heroui/styles";
 
+
+@layer base {
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-poppins);
+  }
+}
+
+
+/* =========================================
+   LIGHT THEME (Clean, Minimalist & Premium)
+========================================= */
+:root {
+  /* Background: #fafafa */
+  --background: 250 250 250;
+  /* Text: #333333 */
+  --foreground: 51 51 51;
+
+  /* Cards need to be pure white for depth against #fafafa */
+  --card: 255 255 255;
+  --card-soft: 245 245 245;
+  --card-foreground: 51 51 51;
+
+  /* Primary: Neon Green #CEFF1F */
+  --primary: 206 255 31;
+  /* Secondary: Dark Blue #131824 (Used for contrast in light mode) */
+  --secondary: 19 24 36;
+  --accent: 206 255 31;
+
+  /* Subtle border for light mode */
+  --border: 229 229 229;
+
+  --muted: 240 240 240;
+  --muted-foreground: 102 102 102;
+
+  --sidebar: 255 255 255;
+
+  /* Premium soft shadow */
+  --shadow: 0 10px 30px rgba(19, 24, 36, 0.08);
+
+  --body-bg: rgb(var(--background));
+}
+
+/* =========================================
+   DARK THEME (Deep AI Tech Vibe with Neon Glow)
+========================================= */
+.dark {
+  /* Background: Dark Grey #0B0F19 */
+  --background: 11 15 25;
+  /* Text: White #fafafa */
+  --foreground: 250 250 250;
+
+  /* Card: Dark Blue #131824 */
+  --card: 19 24 36;
+  /* Slightly lighter for soft cards */
+  --card-soft: 26 32 47;
+  --card-foreground: 250 250 250;
+
+  /* Primary: Neon Green #CEFF1F */
+  --primary: 206 255 31;
+  --secondary: 19 24 36;
+  --accent: 206 255 31;
+
+  /* Border matching the dark aesthetic */
+  --border: 42 49 67;
+
+  --muted: 26 32 47;
+  --muted-foreground: 139 149 165;
+
+  /* Sidebar uses the deepest background */
+  --sidebar: 11 15 25;
+
+  /* Neon Green Glow */
+  --shadow: 0 0 25px rgba(206, 255, 31, 0.12);
+
+  /* Premium Radial Gradient using Dark Grey & Dark Blue */
+  --body-bg: radial-gradient(circle at top right, rgb(19 24 36), rgb(11 15 25)),
+    linear-gradient(to bottom, rgb(11 15 25), rgb(8 11 18));
+}
+
+/* =========================================
+   TAILWIND V4 TOKENS MAPPING
+========================================= */
 @theme {
   --color-brand: #c6f56e;
   --font-sans: "ClashDisplay-Variable", ui-sans-serif, system-ui, sans-serif;
   --font-poppins: var(--font-poppins), sans-serif;
+
+
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+
+  --color-card: rgb(var(--card));
+  --color-card-soft: rgb(var(--card-soft));
+  --color-card-foreground: rgb(var(--card-foreground));
+
+  --color-primary: rgb(var(--primary));
+  --color-secondary: rgb(var(--secondary));
+  --color-accent: rgb(var(--accent));
+
+  --color-border: rgb(var(--border));
+  --color-muted: rgb(var(--muted));
+  --color-muted-foreground: rgb(var(--muted-foreground));
+
+  --color-sidebar: rgb(var(--sidebar));
 }
 
-@layer base {
-  h2, h3, h4, h5, h6 {
-    font-family: var(--font-poppins);
+/* =========================================
+   GLOBAL OVERRIDES & FONTS INJECTION
+========================================= */
+
+body {
+  background: var(--body-bg);
+  background-attachment: fixed;
+  color: rgb(var(--foreground));
+  min-height: 100vh;
+}
+
+
+button {
+  cursor: pointer;
+}
+
+/* =========================================
+   CUSTOM SCROLLBAR SYSTEM
+========================================= */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--primary));
+  border-radius: 999px;
+}
+
+/* =========================================
+   REUSABLE COMPONENTS LAYER
+========================================= */
+@layer components {
+  .container-custom {
+    @apply mx-auto w-[90%] max-w-[1440px];
   }
+
+  .section-title {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
+  }
+
+  .section-description {
+    color: rgb(var(--muted-foreground));
+    @apply leading-7;
+  }
+
+  .dashboard-card {
+    @apply rounded-lg border p-6 backdrop-blur-md transition-all duration-300;
+    background: rgba(var(--card), 0.85);
+    border-color: rgb(var(--border));
+    box-shadow: var(--shadow);
+  }
+
+  .soft-card {
+    @apply rounded-lg border p-6;
+    background: rgb(var(--card-soft));
+    border-color: rgb(var(--border));
+  }
+
+  .book-card {
+    @apply overflow-hidden rounded-lg border transition-all duration-300;
+    background: rgba(var(--card), 0.85);
+    border-color: rgb(var(--border));
+    box-shadow: var(--shadow);
+  }
+
+  .table-wrapper {
+    @apply overflow-hidden rounded-lg border;
+    background: rgb(var(--card));
+    border-color: rgb(var(--border));
+  }
+
+  .input-field {
+    @apply h-12 w-full rounded-xl border px-4 outline-none transition-all;
+    background: rgb(var(--card));
+    border-color: rgb(var(--border));
+  }
+
+  .input-field:focus {
+    border-color: rgb(var(--primary));
+  }
+
+  .sidebar {
+    background: rgb(var(--sidebar));
+    border-right: 1px solid rgb(var(--border));
+  }
+
+  .btn-primary {
+    @apply rounded-lg px-6 py-3 font-bold transition-all duration-200 active:scale-95 shadow-md;
+  }
+
+  .btn-secondary {
+    @apply rounded-xl border px-6 py-3 transition-all duration-200 active:scale-95;
+    background: rgb(var(--card));
+    border-color: rgb(var(--border));
+  }
+}
+
+/* =========================================
+   LIGHT & DARK MODE PRIMARY BUTTON
+========================================= */
+.btn-primary {
+  background: rgb(var(--primary));
+  /* Neon Green needs Dark text for UI accessibility/readability */
+  color: #131824 !important;
+}
+
+.dark .btn-primary {
+  background: rgb(var(--primary));
+  color: #0B0F19 !important;
+  box-shadow: 0 0 20px rgba(206, 255, 31, 0.3);
+  /* Neon Green Glow */
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+/* =========================================
+   DARK HOVER GLOW SYSTEM
+========================================= */
+.dark .dashboard-card:hover,
+.dark .book-card:hover {
+  box-shadow:
+    0 0 25px rgba(206, 255, 31, 0.15),
+    0 0 50px rgba(206, 255, 31, 0.05);
+  transform: translateY(-2px);
+  border-color: rgba(206, 255, 31, 0.4);
+}
+
+/* =========================================
+   HERO BANNER GRADIENT MESH EFFECT
+========================================= */
+.hero-gradient {
+  /* Subtle dark blue gradient mesh for light mode */
+  background: radial-gradient(circle at top left, rgba(19, 24, 36, 0.08), transparent 40%);
+}
+
+.dark .hero-gradient {
+  /* Neon green gradient mesh for dark mode */
+  background: radial-gradient(circle at top left, rgba(206, 255, 31, 0.12), transparent 40%);
 }
