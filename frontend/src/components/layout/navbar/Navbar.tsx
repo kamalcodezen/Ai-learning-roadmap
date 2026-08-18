@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import Logo from "./Logo";
 import NavLinks from "./NavLinks";
 import AuthCheck from "./AuthCheck";
+import MobileNav from "./MobileNav";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -33,11 +34,14 @@ export default function Navbar() {
         stiffness: 100,
         damping: 20,
       }}
-      className={`font-poppins fixed inset-x-0 top-0 z-50 px-3 pt-10 sm:px-4 ${
+      className={`font-poppins fixed inset-x-0 top-0 z-50 px-3 pt-5 md:pt-10 sm:px-4 ${
         scrolled ? ""
         : "bg-white"
       } `}
     >
+      <div className="block md:hidden">
+        <MobileNav />
+      </div>
       <motion.div
         layout
         transition={{
@@ -47,7 +51,7 @@ export default function Navbar() {
           },
         }}
 className={`
-            relative mx-auto flex items-center
+            hidden md:flex relative mx-auto items-center
             transition-all duration-500 ease-out
             ${
               scrolled
