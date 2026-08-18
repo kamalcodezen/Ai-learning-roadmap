@@ -1,53 +1,63 @@
 "use client";
 
-import { authClient } from "@/src/lib/auth-client";
-import { FormEvent, useState } from "react";
+import { authClient } from "../../lib/auth-client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { showToast } from "@/src/components/ui/toast";
+import AuthForm from "./AuthForm";
 
-export default function SignInForm() {
+interface SignInFormProps {
+  onSwitch: () => void;
+}
+
+export default function SignInForm({ onSwitch }: SignInFormProps) {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isPending, setIsPending] = useState(false);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
 
+    setIsPending(true);
     setMessage("Signing in...");
 
-    const { data, error } = await authClient.signIn.email({
+    const { error } = await authClient.signIn.email({
       email,
       password,
     });
 
+    setIsPending(false);
+
     if (error) {
-      setMessage(error.message ?? "Signin failed");
+      setMessage("");
+      showToast({
+        variant: "error",
+        message: error.message ?? "Signin failed",
+        duration: 5,
+      });
       return;
     }
 
-    console.log("Signin successful:", data);
-    setMessage("Signed in successfully!");
+    router.push("/dashboard");
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        required
-      />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-        required
-      />
-
-      <button type="submit">Sign In</button>
-
-      <p>{message}</p>
-    </form>
+    <AuthForm
+      mode="signin"
+      name=""
+      email={email}
+      password={password}
+      setName={() => {}}
+      setEmail={setEmail}
+      setPassword={setPassword}
+      message={message}
+      isPending={isPending}
+      onSubmit={handleSubmit}
+      onSwitch={onSwitch}
+    />
   );
 }

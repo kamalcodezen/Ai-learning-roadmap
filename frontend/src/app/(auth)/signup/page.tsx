@@ -1,7 +1,5 @@
-import SignUpForm from "@/src/components/auth/SignUpForm";
+import AuthPage from "@/src/components/auth/AuthPage";
 
-const SignUpPage = () => {
-  return <SignUpForm />;
-};
-
-export default SignUpPage;
+export default function SignUpPage() {
+  return <AuthPage mode="signup" />;
+}
