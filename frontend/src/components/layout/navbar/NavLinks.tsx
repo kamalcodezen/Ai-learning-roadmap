@@ -28,7 +28,7 @@ export default function NavLinks() {
           <div key={link.label} className="relative">
             <Link
               href={link.href}
-              className="flex items-center gap-1.5 text-[18px] font-normal text-neutral-700 transition-colors duration-200 hover:text-neutral-950"
+              className="flex items-center gap-1.5 text-[18px] font-normal text-muted-foreground transition-colors duration-200 hover:text-foreground"
             >
               {link.label}
             </Link>
@@ -40,7 +40,7 @@ export default function NavLinks() {
       <button
         type="button"
         onClick={() => setMobileOpen((previous) => !previous)}
-        className="flex size-9 items-center justify-center rounded-full text-neutral-800 transition-colors hover:bg-neutral-100 lg:hidden"
+        className="flex size-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted lg:hidden"
         aria-label="Toggle navigation"
         aria-expanded={mobileOpen}
       >
@@ -59,7 +59,7 @@ export default function NavLinks() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="absolute left-4 right-4 top-[calc(100%+8px)] rounded-2xl border border-neutral-200 bg-white p-3 shadow-xl lg:hidden"
+            className="absolute left-4 right-4 top-[calc(100%+8px)] rounded-2xl border border-border bg-card p-3 shadow-xl lg:hidden"
           >
             <nav className="flex flex-col">
               {navLinks.map((link) => (
@@ -67,7 +67,7 @@ export default function NavLinks() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between rounded-xl px-4 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-950"
+                  className="flex items-center justify-between rounded-xl px-4 py-3 text-sm text-muted-foreground transition-colors hover:bg-card-soft hover:text-foreground"
                 >
                   <span>{link.label}</span>
                 </Link>

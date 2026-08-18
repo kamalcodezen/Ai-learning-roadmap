@@ -20,11 +20,11 @@ export default function Button({
     <>
       {/* Expanding background */}
       <span
-        className="absolute right-1 top-1 h-10 w-10 rounded-full bg-white transition-all duration-500 ease-out group-hover:w-[calc(100%-8px)] group-hover:bg-[#ceff1f]"
+        className="absolute right-1 top-1 h-10 w-10 rounded-full bg-background transition-all duration-500 ease-out group-hover:w-[calc(100%-8px)] group-hover:bg-primary"
       />
 
       {/* Text */}
-      <span className="relative z-10 transition-all duration-500 ease-out group-hover:translate-x-8">
+      <span className="relative z-10 transition-all duration-500 ease-out group-hover:translate-x-8 group-hover:text-secondary">
         {text}
       </span>
 
@@ -33,7 +33,7 @@ export default function Button({
         className="absolute right-1 top-1 z-20 flex h-10 w-10 items-center justify-center rounded-full transition-all duration-500 ease-out group-hover:right-[calc(100%-44px)] group-hover:rotate-45"
       >
         {icon ?? (
-          <GoArrowUpRight className="text-black text-xl" />
+          <GoArrowUpRight className="text-foreground transition-colors duration-500 group-hover:text-secondary text-xl" />
         )}
       </span>
     </>
@@ -49,16 +49,15 @@ export default function Button({
     justify-between
     overflow-hidden
     rounded-full
-    bg-neutral-800
+    bg-foreground
     px-6
     pl-7
     pr-16
     text-base
     font-medium
-    text-white
+    text-background
     transition-colors
     duration-300
-    hover:text-neutral-950
     ${className}
   `;
 
