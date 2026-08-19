@@ -1,47 +1,117 @@
-"use client";
+"use client"
 
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { FiSun, FiMoon } from "react-icons/fi";
+import { useEffect, useRef, useState, useCallback } from "react"
+import { flushSync } from "react-dom"
+import { Moon, Sun } from "lucide-react"
+import { motion, AnimatePresence } from "motion/react"
 
-export function AnimatedThemeToggler() {
-  const { setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+type AnimatedThemeTogglerProps = {
+  className?: string
+}
+
+export const AnimatedThemeToggler = ({ className }: AnimatedThemeTogglerProps) => {
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const [mounted, setMounted] = useState(false)
+  const [darkMode, setDarkMode] = useState(() =>
+    typeof window !== "undefined"
+      ? document.documentElement.classList.contains("dark")
+      : false
+  )
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
+    setMounted(true)
+    const syncTheme = () =>
+      setDarkMode(document.documentElement.classList.contains("dark"))
 
-  if (!mounted) {
-    return <div className="w-10 h-10" />;
-  }
+    const observer = new MutationObserver(syncTheme)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    })
+    return () => observer.disconnect()
+  }, [])
 
-  const isDark = resolvedTheme === "dark";
+  const onToggle = useCallback(async () => {
+    if (!buttonRef.current) return
+
+    // Fallback for browsers that do not support view transitions
+    if (!document.startViewTransition) {
+      const toggled = !darkMode
+      setDarkMode(toggled)
+      document.documentElement.classList.toggle("dark", toggled)
+      localStorage.setItem("theme", toggled ? "dark" : "light")
+      return;
+    }
+
+    await document.startViewTransition(() => {
+      flushSync(() => {
+        const toggled = !darkMode
+        setDarkMode(toggled)
+        document.documentElement.classList.toggle("dark", toggled)
+        localStorage.setItem("theme", toggled ? "dark" : "light")
+      })
+    }).ready
+
+    const { left, top, width, height } = buttonRef.current.getBoundingClientRect()
+    const centerX = left + width / 2
+    const centerY = top + height / 2
+    const maxDistance = Math.hypot(
+      Math.max(centerX, window.innerWidth - centerX),
+      Math.max(centerY, window.innerHeight - centerY)
+    )
+
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at ${centerX}px ${centerY}px)`,
+          `circle(${maxDistance}px at ${centerX}px ${centerY}px)`,
+        ],
+      },
+      {
+        duration: 700,
+        easing: "ease-in-out",
+        pseudoElement: "::view-transition-new(root)",
+      }
+    )
+  }, [darkMode])
 
   return (
     <button
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="relative flex items-center justify-center w-10.5 h-10.5 rounded-full border border-border bg-card hover:bg-muted/50 text-foreground transition-all duration-300 focus:outline-none shadow-sm ml-2 md:ml-3"
-      aria-label="Toggle Theme"
+      ref={buttonRef}
+      onClick={onToggle}
+      aria-label="Switch theme"
+      className={["flex items-center justify-center p-2 rounded-full outline-none focus:outline-none active:outline-none focus:ring-0 cursor-pointer", className].filter(Boolean).join(" ")}
+      type="button"
     >
-      <AnimatePresence initial={false}>
-        <motion.div
-          key={isDark ? "dark" : "light"}
-          initial={{ y: -20, opacity: 0, rotate: -90, scale: 0.5 }}
-          animate={{ y: 0, opacity: 1, rotate: 0, scale: 1 }}
-          exit={{ y: 20, opacity: 0, rotate: 90, scale: 0.5 }}
-          transition={{ duration: 0.2, type: "spring", stiffness: 250, damping: 20 }}
-          className="absolute flex items-center justify-center"
-        >
-          {isDark ? (
-            <FiSun className="w-4.5 h-4.5" />
+      {!mounted ? (
+        <div className="w-5 h-5" />
+      ) : (
+        <AnimatePresence mode="wait" initial={false}>
+          {darkMode ? (
+            <motion.span
+              key="sun-icon"
+              initial={{ opacity: 0, scale: 0.55, rotate: 25 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.33 }}
+              className="text-foreground"
+            >
+              <Sun className="w-5 h-5" />
+            </motion.span>
           ) : (
-            <FiMoon className="w-4.5 h-4.5" />
+            <motion.span
+              key="moon-icon"
+              initial={{ opacity: 0, scale: 0.55, rotate: -25 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.33 }}
+              className="text-foreground"
+            >
+              <Moon className="w-5 h-5" />
+            </motion.span>
           )}
-        </motion.div>
-      </AnimatePresence>
+        </AnimatePresence>
+      )}
     </button>
-  );
+  )
 }
