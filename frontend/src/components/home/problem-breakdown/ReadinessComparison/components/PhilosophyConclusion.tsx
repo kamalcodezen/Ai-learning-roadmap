@@ -6,7 +6,7 @@ export default function PhilosophyConclusion() {
   return (
     <div className="relative flex flex-col items-center text-center">
       {/* Ambient Backlight Glow */}
-      <div className="pointer-events-none absolute -top-10 h-32 w-72 rounded-full bg-primary/20 blur-[70px]" />
+      <div className="pointer-events-none absolute -top-10 h-32 w-full max-w-72 rounded-full bg-primary/20 blur-[70px]" />
 
       {/* Interactive Core Statement Bento Card */}
       <div className="group relative max-w-2xl overflow-hidden rounded-2xl rounded-t-none border border-border/80  bg-card/60 p-7 shadow-md backdrop-blur-md transition-all duration-500 hover:border-primary/50 ">

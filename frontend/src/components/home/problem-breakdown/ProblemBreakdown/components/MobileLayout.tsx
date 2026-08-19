@@ -7,7 +7,7 @@ interface MobileLayoutProps {
 
 export default function MobileLayout({ states }: MobileLayoutProps) {
   return (
-    <div className="mt-12 flex flex-col gap-10 lg:hidden">
+    <div className="mt-12 flex flex-col gap-10 lg:hidden w-full overflow-hidden">
       {states.map((state, idx) => (
         <div key={state.id} className="flex flex-col gap-3.5">
           <div className="relative h-[320px] overflow-hidden rounded-3xl border-2 border-border bg-card shadow-lg">

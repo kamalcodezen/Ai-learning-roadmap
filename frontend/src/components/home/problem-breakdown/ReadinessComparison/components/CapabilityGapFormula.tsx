@@ -6,7 +6,7 @@ export default function CapabilityGapFormula() {
   return (
     <div className="relative mx-auto w-full max-w-4xl">
       {/* Ambient Halo behind Terminal */}
-      <div className="pointer-events-none absolute -inset-2 rounded-3xl bg-primary/10 blur-2xl -z-10" />
+      <div className="pointer-events-none absolute inset-0 rounded-3xl bg-primary/10 blur-2xl -z-10" />
 
       {/* Header Badge */}
       <div className="mb-6 flex items-center justify-center">

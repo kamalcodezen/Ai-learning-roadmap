@@ -11,7 +11,7 @@ import {
 
 export default function ProblemBreakdown() {
   return (
-    <section className="relative bg-background pb-1 transition-colors duration-300">
+    <section className="relative w-full overflow-hidden bg-background pb-1 transition-colors duration-300">
       {/* TURBOPACK-SAFE HIGH-CONTRAST INLINE STYLES */}
       <ProblemBreakdownStyles />
 
