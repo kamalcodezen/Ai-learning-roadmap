@@ -23,8 +23,8 @@
   /* Text: #333333 */
   --foreground: 51 51 51;
 
-  /* Cards need to be pure white for depth against #fafafa */
-  --card: 255 255 255;
+  /* Cards background: #fafafa */
+  --card: 250 250 250;
   --card-soft: 245 245 245;
   --card-foreground: 51 51 51;
 
@@ -40,7 +40,7 @@
   --muted: 240 240 240;
   --muted-foreground: 102 102 102;
 
-  --sidebar: 255 255 255;
+  --sidebar: 250 250 250;
 
   /* Premium soft shadow */
   --shadow: 0 10px 30px rgba(19, 24, 36, 0.08);
@@ -110,6 +110,13 @@
   --color-muted-foreground: rgb(var(--muted-foreground));
 
   --color-sidebar: rgb(var(--sidebar));
+
+  --animate-x-slider: x-slider 40s linear infinite;
+
+  @keyframes x-slider {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-50% - 10px)); }
+  }
 }
 
 /* =========================================
@@ -210,6 +217,10 @@ button {
     @apply rounded-xl border px-6 py-3 transition-all duration-200 active:scale-95;
     background: rgb(var(--card));
     border-color: rgb(var(--border));
+  }
+
+  .pause-animation {
+    animation-play-state: paused;
   }
 }
 
