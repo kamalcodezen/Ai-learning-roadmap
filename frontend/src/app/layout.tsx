@@ -22,9 +22,12 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${poppins.variable} font-sans antialiased h-full scroll-smooth`}
+      className={`${poppins.variable} font-sans antialiased h-full scroll-smooth dark`}
     >
-      <body className="min-h-full flex flex-col antialiased" suppressHydrationWarning>
+      <body
+        className="min-h-full flex flex-col antialiased"
+        suppressHydrationWarning
+      >
         <NextTopLoader
           color="var(--color-accent)"
           showSpinner={false}
