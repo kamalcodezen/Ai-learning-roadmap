@@ -16,14 +16,14 @@ export default function BentoCanvas({
   activeEyebrow,
 }: BentoCanvasProps) {
   return (
-    <div className="sticky top-24 self-start w-[52%] p-px transition-all duration-700">
+    <div className="relative w-[52%] p-px transition-all duration-700">
       <div className="absolute -inset-3 rounded-[38px] bg-primary/20 blur-2xl -z-10 transition-opacity duration-700" />
       <div className="absolute -inset-[1.5px] rounded-[34px] bg-gradient-to-b from-primary/60 via-primary/20 to-primary/50 opacity-60 blur-sm transition-opacity duration-700 group-hover:opacity-100" />
 
       <div
         className="
           group isolate relative
-          flex h-[62vh] w-full flex-col
+          flex h-[58vh] max-h-[580px] min-h-[420px] w-full flex-col
           overflow-hidden rounded-[30px]
           border-2 border-border
           bg-card
@@ -33,7 +33,6 @@ export default function BentoCanvas({
           transition-all duration-700
           ease-[cubic-bezier(0.22,1,0.36,1)]
           hover:border-primary
-          hover:shadow-[0_0_50px_-10px_rgba(var(--primary),0.35)]
         "
       >
         {/* Dot Grid Mesh */}

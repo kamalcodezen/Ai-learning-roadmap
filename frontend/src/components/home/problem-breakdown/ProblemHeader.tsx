@@ -2,11 +2,11 @@
 
 export default function ProblemHeader() {
   return (
-    <div className=" text-left">
+    <div className="text-left w-full">
       {/* <span className="text-[12px] font-mono tracking-widest text-muted-foreground uppercase mb-2 block">
         The Problem
       </span> */}
-      <h2 className="font-poppins text-2xl sm:text-3xl  font-medium tracking-tight text-foreground">
+      <h2 className="font-poppins text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
         Why{" "}
         <i className="font-serif italic font-normal text-muted-foreground">
           Static
