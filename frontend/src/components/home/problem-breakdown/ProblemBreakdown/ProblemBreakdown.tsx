@@ -25,7 +25,7 @@ export default function ProblemBreakdown() {
         <DesktopLayout states={narrativeStates} />
 
         {/* CLIMAX */}
-        <div className="mt-14 md:mt-20">
+        <div>
           <ReadinessComparison />
         </div>
       </div>
