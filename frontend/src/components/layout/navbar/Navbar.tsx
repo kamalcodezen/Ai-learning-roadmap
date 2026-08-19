@@ -35,9 +35,8 @@ export default function Navbar() {
         stiffness: 100,
         damping: 20,
       }}
-      className={`font-poppins fixed inset-x-0 top-0 z-50 px-3 pt-5 md:pt-6 sm:px-4 ${
-        scrolled ? ""
-        : "bg-transparent"
+      className={`font-poppins fixed inset-x-0 top-0 z-50 pt-3 sm:px-4 ${
+        scrolled ? "" : "bg-transparent"
       } `}
     >
       <div className="block md:hidden">
@@ -51,39 +50,39 @@ export default function Navbar() {
             ease: [0.22, 1, 0.36, 1],
           },
         }}
-className={`
+        className={`
             hidden md:flex relative mx-auto items-center
             transition-all duration-500 ease-out
             ${
               scrolled
-            //   Here max-w-140 temporary - it hard codedly changes the things for nav links
-                ? "w-full max-w-[80%] rounded-full bg-background/70 px-3 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl sm:px-4"
+                ? //   Here max-w-140 temporary - it hard codedly changes the things for nav links
+                  "w-full max-w-[80%] rounded-full bg-background/70 px-3 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl sm:px-4"
                 : "w-full max-w-[80%] rounded-none px-4"
             }
           `}
-        >
-          <div
-            className={`
+      >
+        <div
+          className={`
               flex w-full items-center justify-between gap-5 sm:gap-7
             `}
-          >
-            {/* Logo */}
-            <div className="flex  justify-start">
-              <Logo />
-            </div>
-
-            {/* Navigation */}
-            <div className="ml-auto flex justify-center lg:ml-0">
-              <NavLinks />
-            </div>
-
-            {/* Auth and Theme */}
-            <div className="flex items-center justify-end">
-              <AuthCheck />
-              <AnimatedThemeToggler />
-            </div>
+        >
+          {/* Logo */}
+          <div className="flex  justify-start">
+            <Logo />
           </div>
-        </motion.div>
+
+          {/* Navigation */}
+          <div className="ml-auto flex justify-center lg:ml-0">
+            <NavLinks />
+          </div>
+
+          {/* Auth and Theme */}
+          <div className="flex items-center justify-end">
+            <AuthCheck />
+            <AnimatedThemeToggler />
+          </div>
+        </div>
+      </motion.div>
     </motion.nav>
   );
 }
