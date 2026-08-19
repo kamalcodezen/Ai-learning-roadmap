@@ -2,16 +2,23 @@
 
 export default function ProblemHeader() {
   return (
-    <div className="max-w-2xl text-center md:text-left mx-auto md:mx-0">
-      <span className="text-[12px] font-mono tracking-widest text-muted-foreground uppercase mb-4 block">
+    <div className=" text-left">
+      {/* <span className="text-[12px] font-mono tracking-widest text-muted-foreground uppercase mb-2 block">
         The Problem
-      </span>
-      <h2 className="text-[36px] md:text-[52px] font-sans font-medium text-foreground tracking-tight leading-[1.1] mb-6">
-        Why Static Roadmaps Break Down
+      </span> */}
+      <h2 className="font-poppins text-2xl sm:text-3xl  font-medium tracking-tight text-foreground">
+        Why{" "}
+        <i className="font-serif italic font-normal text-muted-foreground">
+          Static
+        </i>{" "}
+        Roadmaps{" "}
+        <span className="font-medium underline decoration-primary/50 underline-offset-8">
+          Break Down
+        </span>
       </h2>
-      <p className="text-[17px] text-muted-foreground leading-relaxed max-w-xl mx-auto md:mx-0">
+      <p className="section-description text-base md:text-lg">
         Completing lessons is not the same as becoming job-ready.
       </p>
     </div>
-  )
+  );
 }
