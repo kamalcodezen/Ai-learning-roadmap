@@ -1,23 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
-  LuSparkles,
   LuCompass,
   LuBrainCircuit,
   LuMilestone,
 } from "react-icons/lu";
 
 export default function ProgressBridgeSection() {
-  const [pulseCount, setPulseCount] = useState(74);
-
-  // লাইভ পালসিং সিমুলেশন
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPulseCount((prev) => (prev === 74 ? 75 : 74));
-    }, 2800);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <section className="relative w-full overflow-hidden">
