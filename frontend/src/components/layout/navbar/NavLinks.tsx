@@ -9,11 +9,11 @@ import { RxHamburgerMenu } from "react-icons/rx";
 const navLinks = [
   {
     label: "About Us",
-    href: "/about",
+    href: "/#",
   },
   {
     label: "How it works",
-    href: "/courses"
+    href: "#how-it-works"
   }
 ];
 

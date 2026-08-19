@@ -114,8 +114,13 @@
   --animate-x-slider: x-slider 40s linear infinite;
 
   @keyframes x-slider {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-50% - 10px)); }
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(calc(-50% - 10px));
+    }
   }
 }
 
@@ -155,13 +160,6 @@ button {
    REUSABLE COMPONENTS LAYER
 ========================================= */
 @layer components {
-  .container-custom {
-    @apply mx-auto w-[90%] max-w-[1440px];
-  }
-
-  .section-title {
-    @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
-  }
 
   .section-description {
     color: rgb(var(--muted-foreground));

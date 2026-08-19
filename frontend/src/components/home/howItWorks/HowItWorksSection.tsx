@@ -66,8 +66,11 @@ export default function HowItWorksSection() {
   // ১. শুধুমাত্র মোবাইলে (sm এর নিচে) একটার নিচে একটা (Stacked)
   if (isMobile) {
     return (
-      <section className="relative px-5 py-16">
-        <div className="flex flex-col items-center gap-8">
+      <section
+        id="how-it-works"
+        className="relative w-full  overflow-hidden px-4 sm:px-8 md:px-12 "
+      >
+        <div className="container mx-auto max-w-7xl py-13 flex flex-col items-center gap-8">
           <TextHeader />
           <div className="flex w-full flex-col items-center gap-6">
             {cards.map(({ id, Component }) => (
@@ -83,15 +86,20 @@ export default function HowItWorksSection() {
 
   // ২. sm, md, lg এবং তার ওপরে পাশাপাশি হরাইজন্টাল স্ক্রোল
   return (
-    <section ref={mainRef} className="relative" style={{ height: "250vh" }}>
-      <div className="sticky top-0 flex h-screen w-full flex-col justify-center overflow-hidden">
+    <section
+      id="how-it-works"
+      ref={mainRef}
+      className="relative w-full py-13 pt-4 px-4 sm:px-8 md:px-12"
+      style={{ height: "250vh" }}
+    >
+      <div className="sticky top-10 flex h-screen w-full flex-col justify-center overflow-hidden">
         {/* হেডার */}
-        <div className="mx-auto w-full container-custom max-w-6xl ">
+        <div className="container mx-auto max-w-7xl">
           <TextHeader />
         </div>
 
         {/* কার্ড ক্যারোজেল */}
-        <div className="mx-auto w-full container-custom max-w-6xl ">
+        <div className="container mx-auto max-w-7xl">
           <motion.div
             ref={carouselRef}
             style={{ x }}

@@ -19,6 +19,7 @@ export const AnimatedThemeToggler = ({ className }: AnimatedThemeTogglerProps) =
   )
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
     const syncTheme = () =>
       setDarkMode(document.documentElement.classList.contains("dark"))
