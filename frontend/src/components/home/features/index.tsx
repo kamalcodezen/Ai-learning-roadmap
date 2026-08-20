@@ -17,7 +17,7 @@ export default function FeaturesSection() {
   };
 
   return (
-    <section className="relative isolate pt-0 pb-20 overflow-hidden -mt-16 md:-mt-32">
+    <section className="relative w-full overflow-hidden py-4 px-4 sm:px-8 md:px-12">
         <GridPattern
                 width={45}
                 height={45}
@@ -25,7 +25,7 @@ export default function FeaturesSection() {
                 y={-1}
                 className="[mask-image:linear-gradient(to_bottom,white,transparent,transparent)] opacity-40 dark:opacity-20"
               />
-      <div className="relative z-20 w-[90%] md:w-full md:max-w-[80%] mx-auto">
+      <div className="container relative z-20 mx-auto max-w-7xl">
         <FeatureHeader />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch relative">
