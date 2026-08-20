@@ -7,7 +7,7 @@ export default function Logo() {
     <Link
       href="/"
       className="flex shrink-0 items-center gap-2 md:gap-2.5"
-      aria-label="Aurevo home"
+      aria-label="AIPather home"
     >
       <span
         className="flex w-10 h-10 md:w-12 md:h-12 items-center justify-center rounded-full"

@@ -42,7 +42,7 @@ export default function ProfileDropdown({
       <button
         type="button"
         onClick={() => setOpen((previous) => !previous)}
-        className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white py-1 pl-1 pr-2 transition-all hover:border-neutral-300"
+        className="flex items-center gap-2 rounded-full border border-neutral-200 bg-[#fafafa] py-1 pl-1 pr-2 transition-all hover:border-neutral-300"
         aria-expanded={open}
       >
         {/* User Icon */}

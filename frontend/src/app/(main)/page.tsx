@@ -4,6 +4,7 @@ import CTASection from "@/src/components/home/cta/CTASection";
 import HowItWorksSection from "@/src/components/home/howItWorks/HowItWorksSection";
 import ProblemBreakdown from "@/src/components/home/problem-breakdown/ProblemBreakdown/ProblemBreakdown";
 import ProgressBridgeSection from "@/src/components/home/ProgressBridge/ProgressBridgeSection";
+import FeaturesSection from "@/src/components/home/features";
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <ProgressBridgeSection />
       <ProblemBreakdown />
       <HowItWorksSection />
+      <FeaturesSection />
       <TestimonialSection />
       <CTASection />
     </>

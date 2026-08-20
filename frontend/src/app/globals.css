@@ -132,7 +132,7 @@ body {
   background: var(--body-bg);
   background-attachment: fixed;
   color: rgb(var(--foreground));
-  min-height: 100vh;
+  min-height: 80vh;
 }
 
 

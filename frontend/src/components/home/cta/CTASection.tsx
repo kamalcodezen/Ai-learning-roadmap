@@ -55,7 +55,7 @@ export default function CTASection() {
       <div
         className="absolute top-0 left-0 right-0 h-40 pointer-events-none z-[1] bg-gradient-to-b from-background to-transparent"
       />
-      <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-20 sm:py-24 sm:pb-52 md:py-32 md:pb-56">
+      <div className="relative z-10 px-4 sm:px-6 lg:px-8 pt-20 pb-20 sm:pt-20 sm:pb-52 md:pt-20 md:pb-56">
         {/* Dot patterns – top corners */}
         <DotPattern className="absolute top-16 left-8 md:left-16 hidden sm:block" />
         <DotPattern className="absolute top-16 right-8 md:right-16 scale-x-[-1] hidden sm:block" />

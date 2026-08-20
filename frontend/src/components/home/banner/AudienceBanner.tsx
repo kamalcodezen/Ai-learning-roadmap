@@ -15,9 +15,7 @@ export default function AudienceBanner() {
         min-h-180
         overflow-hidden
         bg-background
-        pt-28 pb-10
-        sm:pt-32 
-        md:pt-36 
+        pt-32 pb-10 
       "
     >
       <GridPattern
