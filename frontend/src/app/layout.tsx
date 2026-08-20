@@ -11,7 +11,7 @@ const poppins = Poppins({
   display: "swap",
 });
 
-export const metadata = { title: "App" };
+export const metadata = { title: "AI Pather" };
 
 export default function RootLayout({
   children,

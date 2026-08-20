@@ -237,7 +237,9 @@ export default function CurvedCarousel({ slides, className }: CurvedCarouselProp
       lastScrollY = currentScrollY;
 
       // Add velocity based on scroll direction & speed
-      dragVelocity += (deltaY / window.innerHeight) * 0.2;
+      // Using a factor derived from the requested baseVelocity (6) to make it slower
+      const baseVelocity = 6;
+      dragVelocity += (deltaY / window.innerHeight) * (baseVelocity * 0.01);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
 

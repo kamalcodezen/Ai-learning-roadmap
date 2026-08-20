@@ -10,11 +10,11 @@ import {
 export default function ProgressBridgeSection() {
 
   return (
-    <section className="relative w-full overflow-hidden">
+    <section className="relative w-full overflow-hidden py-10">
       {/* ========================================================
           1. ICONIC HORIZONTAL LEARNING ROADMAP PULSE LINE
           ======================================================== */}
-      <div className="relative mb-16 w-full">
+      <div className="relative w-full">
         {/* ব্যাকগ্রাউন্ড বেস লাইন */}
         <div className="absolute inset-x-0 top-1/2 h-[1px] w-full -translate-y-1/2 bg-white/10" />
 

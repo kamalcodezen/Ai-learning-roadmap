@@ -70,7 +70,7 @@ export default function HowItWorksSection() {
         id="how-it-works"
         className="relative w-full  overflow-hidden px-4 sm:px-8 md:px-12 "
       >
-        <div className="container mx-auto max-w-7xl py-13 flex flex-col items-center gap-8">
+        <div className="container mx-auto max-w-7xl pt-0 pb-0 flex flex-col items-center gap-8">
           <TextHeader />
           <div className="flex w-full flex-col items-center gap-6">
             {cards.map(({ id, Component }) => (
@@ -89,7 +89,7 @@ export default function HowItWorksSection() {
     <section
       id="how-it-works"
       ref={mainRef}
-      className="relative w-full py-13 pt-4 px-4 sm:px-8 md:px-12"
+      className="relative w-full pt-0 pb-0 px-4 sm:px-8 md:px-12"
       style={{ height: "250vh" }}
     >
       <div className="sticky top-10 flex h-screen w-full flex-col justify-center overflow-hidden">
