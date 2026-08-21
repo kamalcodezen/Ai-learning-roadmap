@@ -55,8 +55,8 @@ const duplicatedTestimonials = [...testimonials, ...testimonials];
 
 const TestimonialSection = () => {
   return (
-    <section className="relative w-full overflow-hidden py-20 px-4 sm:px-8 md:px-12  border-t border-border/40">
-      <div className="container relative z-10 mx-auto max-w-7xl">
+    <section className="relative w-full overflow-hidden py-10 px-4 sm:px-8 md:px-12  border-t border-border/40">
+      <div className="global-pos relative z-10">
         <div className="text-left mb-10 md:mb-16">
           {/* <span className="text-[12px] font-mono tracking-widest text-muted-foreground uppercase mb-2 block">
     Testimonials
@@ -84,7 +84,7 @@ const TestimonialSection = () => {
             WebkitMaskImage:
               "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
           }}
-          className="flex relative overflow-hidden w-full max-w-7xl mx-auto"
+          className="flex relative overflow-hidden w-full"
         >
           <div className="flex animate-x-slider gap-5 w-max hover:pause-animation">
             {duplicatedTestimonials.map((testimonial, indx) => {

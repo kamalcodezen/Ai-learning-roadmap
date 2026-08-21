@@ -15,7 +15,7 @@ export default function ProblemBreakdown() {
       {/* TURBOPACK-SAFE HIGH-CONTRAST INLINE STYLES */}
       <ProblemBreakdownStyles />
 
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="global-pos px-4 sm:px-6 lg:px-8">
         {/* শুধুমাত্র মোবাইলে দৃশ্যমান, ডেস্কটপে হাইড থাকবে */}
         <div className="block lg:hidden">
           <ProblemHeader />
