@@ -220,6 +220,10 @@ button {
   .pause-animation {
     animation-play-state: paused;
   }
+
+  .global-pos {
+    @apply max-w-460 mx-auto;
+  }
 }
 
 /* =========================================

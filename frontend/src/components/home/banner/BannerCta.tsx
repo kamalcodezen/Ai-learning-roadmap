@@ -15,7 +15,7 @@ export default function BannerCta({ text, href }: BannerCtaProps) {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.25, ease: "easeOut" }}
-      className="mt-5 sm:mt-6 scale-90 sm:scale-100 origin-center"
+      className="mt-6"
     >
       <Button text={text} href={href} />
     </motion.div>

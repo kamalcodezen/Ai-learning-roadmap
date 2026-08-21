@@ -14,7 +14,7 @@ export default function BannerBackground({
   return (
     <>
       {/* Base background */}
-      <div className="absolute inset-0 -z-30 bg-[#faf8f2]" />
+      <div className="absolute inset-0 -z-30 bg-background" />
 
       {/* Dynamic centered-card background */}
       <AnimatePresence mode="sync">
@@ -31,7 +31,7 @@ export default function BannerBackground({
             style={{ backgroundImage: `url(${image})` }}
           />
 
-          <div className="absolute inset-0 bg-linear-to-b from-white/55 to-white" />
+          <div className="absolute inset-0 bg-linear-to-b from-background/40 to-background/75" />
 
           <div className="absolute inset-0 backdrop-blur-[3px]" />
         </motion.div>

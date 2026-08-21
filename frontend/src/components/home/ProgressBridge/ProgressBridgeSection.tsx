@@ -23,7 +23,7 @@ export default function ProgressBridgeSection() {
         <div className="absolute inset-x-0 top-1/2 mx-auto h-[6px] w-1/4 -translate-y-1/2 bg-gradient-to-r from-transparent via-[#CEFF1F] to-transparent blur-[3px]" />
 
         {/* ইন্টারঅ্যাক্টিভ নোডস (AI Learning Roadmap Trail) */}
-        <div className="container mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="global-pos flex items-center justify-between px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Node 1: AI Roadmap Active Path */}
           <div className="flex items-center gap-2 rounded-full border border-white/10 bg-[#0B0F19]/90 px-3 py-1.5 backdrop-blur-md">
             <span className="relative flex h-2 w-2">

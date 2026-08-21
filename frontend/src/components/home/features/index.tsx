@@ -25,7 +25,7 @@ export default function FeaturesSection() {
                 y={-1}
                 className="[mask-image:linear-gradient(to_bottom,white,transparent,transparent)] opacity-40 dark:opacity-20"
               />
-      <div className="container relative z-20 mx-auto max-w-7xl">
+      <div className="global-pos relative z-20">
         <FeatureHeader />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch relative">
