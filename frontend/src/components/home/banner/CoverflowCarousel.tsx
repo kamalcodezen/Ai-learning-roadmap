@@ -35,7 +35,6 @@ export interface CoverflowCarouselProps {
   autoplay?: boolean;
   autoplayDelay?: number;
   onSlideChange?: (index: number) => void;
-  onCardHover?: (index: number | null) => void;
   label?: string;
   className?: string;
   cardClassName?: string;
@@ -57,7 +56,6 @@ export default function CoverflowCarousel({
   autoplay = false,
   autoplayDelay = 3000,
   onSlideChange,
-  onCardHover,
   label = "Cover carousel",
   className,
   cardClassName,
@@ -207,27 +205,6 @@ export default function CoverflowCarousel({
     settle(clamp(Math.round(posRef.current + carried)));
   };
 
-  const detectHover = (event: React.MouseEvent<HTMLDivElement>) => {
-    const x = event.clientX;
-    const y = event.clientY;
-    let nearest = -1;
-    let nearestDistance = Infinity;
-
-    cardRefs.current.forEach((card, index) => {
-      if (!card) return;
-      const rect = card.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const distance = Math.hypot(x - cx, y - cy);
-      if (distance < nearestDistance) {
-        nearestDistance = distance;
-        nearest = index;
-      }
-    });
-
-    if (nearest !== -1) onCardHover?.(nearest);
-  };
-
   useIsoLayoutEffect(() => {
     const frame = frameRef.current;
     if (!frame) return;
@@ -274,14 +251,11 @@ export default function CoverflowCarousel({
         <div
           ref={frameRef}
           tabIndex={0}
-          onMouseEnter={(event) => {
+          onMouseEnter={() => {
             autoplayPausedRef.current = true;
-            detectHover(event);
           }}
-          onMouseMove={detectHover}
           onMouseLeave={() => {
             autoplayPausedRef.current = false;
-            onCardHover?.(null);
           }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -296,7 +270,7 @@ export default function CoverflowCarousel({
               nudge(1);
             }
           }}
-          className="cursor-grab py-10 outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 active:cursor-grabbing"
+          className="cursor-grab overflow-hidden py-10 outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 active:cursor-grabbing"
           style={{
             perspective: `calc(var(--cf-card) * ${perspective})`,
             touchAction: "pan-y",
@@ -305,7 +279,7 @@ export default function CoverflowCarousel({
           <div
             className="relative select-none"
             style={{
-              height: "calc(var(--cf-card) * 1.4)",
+              height: "var(--cf-card)",
               transformStyle: "preserve-3d",
             }}
           >
@@ -318,23 +292,19 @@ export default function CoverflowCarousel({
                 role="group"
                 aria-roledescription="slide"
                 aria-label={`${index + 1} of ${count}`}
-                className="absolute left-1/2 top-0 will-change-transform"
+                className={cn(
+                  "group absolute left-1/2 top-0 aspect-square overflow-hidden rounded-2xl bg-neutral-100 shadow-xl will-change-transform",
+                  cardClassName,
+                )}
                 style={{ width: "var(--cf-card)" }}
               >
-                <div
-                  className={cn(
-                    "group aspect-[4/5] cursor-pointer overflow-hidden rounded-2xl bg-neutral-100 shadow-xl transition-transform duration-300",
-                    cardClassName,
-                  )}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={slide.src}
-                    alt={slide.alt}
-                    draggable={false}
-                    className="h-full w-full select-none object-cover"
-                  />
-                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={slide.src}
+                  alt={slide.alt}
+                  draggable={false}
+                  className="h-full w-full select-none object-cover transition-transform duration-300 group-hover:scale-105"
+                />
               </div>
             ))}
           </div>
@@ -370,7 +340,7 @@ export default function CoverflowCarousel({
           transition={{ duration: 0.3 }}
           className="mt-2 flex flex-col items-center px-6"
         >
-          <p className="text-[15px] font-semibold text-neutral-950">
+          <p className="text-[15px] font-semibold tracking-tight text-neutral-950">
             {active.title}
           </p>
           {active.subtitle && (
