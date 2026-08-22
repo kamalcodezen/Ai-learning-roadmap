@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import type { Easing } from "motion/react";
+import { TypographyH1 } from "@/src/components/shadcn-studio/typography/typography-01";
 
 interface FoldTextProps {
   text: string;
@@ -44,15 +45,10 @@ export default function FoldText({
       : units.map((character) => ({ content: character }));
 
   return (
-    <h1
-      className="font-serif"
+    <TypographyH1
       style={{
         perspective: `${perspective}px`,
-        fontSize: `text-4xl md:text-6xl lg:text-7x`,
-        fontWeight,
         color,
-        lineHeight: 1,
-        letterSpacing: "-0.03em",
       }}
       aria-label={text}
     >
@@ -99,6 +95,6 @@ export default function FoldText({
           </motion.span>
         );
       })}
-    </h1>
+    </TypographyH1>
   );
 }
