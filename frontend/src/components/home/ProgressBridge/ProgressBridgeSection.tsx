@@ -31,7 +31,7 @@ export default function ProgressBridgeSection() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[#CEFF1F]"></span>
             </span>
             <LuCompass className="size-3.5 text-[#CEFF1F]" />
-            <span className="font-mono text-xs font-medium text-slate-300">
+            <span className="font-mono text-caption font-medium text-slate-300">
               AI Roadmap: Active Path
             </span>
           </div>
@@ -39,7 +39,7 @@ export default function ProgressBridgeSection() {
           {/* Node 2: Adaptive Milestone Engine */}
           <div className="hidden items-center gap-2 rounded-full border border-[#CEFF1F]/30 bg-[#131824] px-3.5 py-1.5 shadow-[0_0_15px_rgba(206,255,31,0.15)] sm:flex">
             <LuBrainCircuit className="size-3.5 text-[#CEFF1F] animate-pulse" />
-            <span className="font-mono text-xs font-semibold text-[#CEFF1F]">
+            <span className="font-mono text-caption font-semibold text-[#CEFF1F]">
               Adaptive Roadmap Engine
             </span>
           </div>
@@ -47,7 +47,7 @@ export default function ProgressBridgeSection() {
           {/* Node 3: Continuous Skill Sync */}
           <div className="flex items-center gap-2 rounded-full border border-white/10 bg-[#0B0F19]/90 px-3 py-1.5 backdrop-blur-md">
             <LuMilestone className="size-3.5 text-emerald-400" />
-            <span className="font-mono text-xs text-slate-300">
+            <span className="font-mono text-caption text-slate-300">
               Continuous Skill Sync
             </span>
           </div>
