@@ -1,21 +1,18 @@
 "use client";
 
+import { authClient } from "@/src/lib/auth-client";
 import Button from "../../ui/button";
 import ProfileDropdown from "./profileDropdown";
 
 export default function AuthCheck() {
-  /*
-   * MOCK AUTH
-   *
-   * Later this value will come from Better Auth.
-   *
-   * Example:
-   * const { data: session } = authClient.useSession();
-   *
-   * const isAuthenticated = !!session?.user;
-   */
+  
+   const { data: session } = authClient.useSession();
+  
+   const isAuthenticated = !!session?.user;
 
-  const isAuthenticated = false;
+   console.log(isAuthenticated);
+
+  // const isAuthenticated = false;
 
   const mockUser = {
     name: "Jubair",
