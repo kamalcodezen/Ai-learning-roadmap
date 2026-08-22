@@ -16,7 +16,7 @@ export default function AdaptCard() {
 
           <div className="mt-2">
             <span className="text-caption font-mono font-semibold text-primary uppercase tracking-wider">Step 04</span>
-            <h3 className="text-h3 font-bold mt-0.5">Adapt</h3>
+            <h3 className="text-h3 mt-0.5">Adapt</h3>
           </div>
 
           <div className="soft-card rounded-2xl p-3 mt-3 space-y-2">

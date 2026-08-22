@@ -15,7 +15,7 @@ export default function UnblockCard() {
 
           <div className="mt-2">
             <span className="text-caption font-mono font-semibold text-primary uppercase tracking-wider">Step 02</span>
-            <h3 className="text-h3 font-bold mt-0.5">Unblock</h3>
+            <h3 className="text-h3 mt-0.5">Unblock</h3>
           </div>
 
           <div className="soft-card rounded-2xl p-3 mt-3 space-y-2">

@@ -18,7 +18,7 @@ export default function DiagnoseCard() {
           {/* Card Header */}
           <div className="mt-2">
             <span className="text-xs font-mono font-semibold text-primary uppercase tracking-wider">Step 01</span>
-            <h3 className="text-xl font-bold mt-0.5">Diagnose</h3>
+            <h3 className="text-xl mt-0.5">Diagnose</h3>
           </div>
 
           {/* Inner Mock Visual */}
