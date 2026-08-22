@@ -5,6 +5,7 @@ import HowItWorksSection from "@/src/components/home/howItWorks/HowItWorksSectio
 import CareerTwinSection from "@/src/components/home/careerTwin/CareerTwinSection";
 import ProblemBreakdown from "@/src/components/home/problem-breakdown/ProblemBreakdown/ProblemBreakdown";
 import ProgressBridgeSection from "@/src/components/home/ProgressBridge/ProgressBridgeSection";
+import Pricing from "@/src/components/home/pricing/Pricing";
 import FeaturesSection from "@/src/components/home/features";
 
 export default function HomePage() {
@@ -16,6 +17,7 @@ export default function HomePage() {
       <HowItWorksSection />
       <CareerTwinSection />
       <FeaturesSection />
+      <Pricing />
       <TestimonialSection />
       <CTASection />
     </>

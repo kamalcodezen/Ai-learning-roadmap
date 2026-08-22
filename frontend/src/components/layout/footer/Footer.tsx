@@ -55,7 +55,7 @@ export default function Footer() {
         <div className="absolute inset-0 w-full h-full bg-[#060911] [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
       </div>
 
-      <div className="container mx-auto max-w-7xl relative z-10 flex flex-col items-center">
+      <div className="global-pos relative z-10 flex w-full flex-col items-center">
         <AnimatedContainer className="flex flex-col items-center justify-center space-y-10 w-full pb-12">
           {/* Logo and Tagline */}
           <div className="flex flex-col items-center">
