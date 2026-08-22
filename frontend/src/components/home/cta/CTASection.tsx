@@ -62,7 +62,7 @@ export default function CTASection() {
 
         {/* ====== Main content ====== */}
         <div className="max-w-5xl mx-auto text-center -mt-10 sm:mt-0 text-measure mx-auto">
-          <h2 className="text-display text-balance uppercase font-black tracking-tight text-foreground mb-4">
+          <h2 className="text-display text-balance uppercase tracking-tight text-foreground mb-4">
             Let's Build Your AI Career Path
           </h2>
 

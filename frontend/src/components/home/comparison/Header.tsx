@@ -1,4 +1,5 @@
 import React from "react";
+import { TypographyH1 } from "@/src/components/shadcn-studio/typography/typography-01";
 
 const Header = () => {
   return (
@@ -7,10 +8,10 @@ const Header = () => {
         
 
         {/* Main Heading */}
-        <h1 className="max-w-5xl text-left text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
+        <TypographyH1 className="max-w-5xl text-left text-foreground">
           The Evolution of {" "}
           <span className="text-primary"> Career Learning.</span>
-        </h1>
+        </TypographyH1>
       </div>
     </section>
   );

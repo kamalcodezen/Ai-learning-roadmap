@@ -3,7 +3,8 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { FiChevronDown, FiUser, FiExternalLink, FiCheck } from "react-icons/fi";
 import { IoRocketOutline } from "react-icons/io5";
-import { HiOutlineBookOpen, HiOutlineCode, HiOutlineFolder, HiOutlinePuzzle, HiOutlineChat, HiOutlineUserGroup, HiOutlineBadgeCheck } from "react-icons/hi";
+import { HiOutlineBookOpen, HiOutlineCode, HiOutlineFolder, HiOutlinePuzzle, HiOutlineChat, HiOutlineUserGroup, HiOutlineBadgeCheck, HiOutlineAcademicCap, HiOutlineLightBulb } from "react-icons/hi";
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiNodedotjs, SiDocker, SiJavascript, SiPostgresql, SiGithub, SiMongodb, SiFirebase } from "react-icons/si";
 import { ContainerScroll } from "@/src/components/ui/container-scroll-animation";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -99,7 +100,6 @@ export function useReducedMotion(): boolean {
 export function useAnimatedNumber(target: number, duration = 1000, animate = true, delayMs = 0): number {
   const [value, setValue] = useState(target);
   const currentValRef = useRef(target);
-  currentValRef.current = value;
 
   useEffect(() => {
     if (!animate) {
@@ -382,6 +382,21 @@ function Pipeline({ stage }: { stage: number }) {
 }
 
 
+function FloatingIcon({ icon: Icon, className, delay, duration, colorClassName }: { icon: any, className: string, delay: number, duration: number, colorClassName?: string }) {
+  const reducedMotion = useReducedMotion();
+  
+  return (
+    <motion.div
+      initial={{ y: 0 }}
+      animate={reducedMotion ? {} : { y: [-10, 10, -10] }}
+      transition={{ duration, repeat: Infinity, ease: "easeInOut", delay }}
+      className={`absolute hidden lg:flex items-center justify-center w-[72px] h-[72px] rounded-[24px] bg-white dark:bg-zinc-900 shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] border border-gray-100 dark:border-zinc-800 z-10 ${className}`}
+    >
+      <Icon className={`w-10 h-10 ${colorClassName || 'text-gray-400 dark:text-zinc-600'}`} />
+    </motion.div>
+  );
+}
+
 export default function CareerTwinSection() {
   const [selectedRoleIndex, setSelectedRoleIndex] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -408,11 +423,44 @@ export default function CareerTwinSection() {
   };
 
   return (
-    <section className="bg-gray-50/50 dark:bg-black/50 overflow-hidden">
+    <section className="bg-gray-50/50 dark:!bg-black/50 overflow-hidden relative">
+      {/* Orbit Ring Background & Icons */}
+      <div className="absolute top-[50%] left-1/2 w-[140vw] max-w-[1600px] h-[1100px] -translate-x-1/2 -translate-y-1/2 rounded-[100%] border border-dashed border-gray-300 dark:border-zinc-800 hidden lg:block z-0 pointer-events-none">
+        
+        {/* Top: Next.js */}
+        <FloatingIcon icon={SiNextdotjs} delay={0} duration={4.5} className="top-0 left-1/2 -translate-x-1/2 -translate-y-1/2" colorClassName="text-black dark:text-white" />
+        
+        {/* Top Right: Node.js */}
+        <FloatingIcon icon={SiNodedotjs} delay={1.5} duration={5} className="top-[14.6%] right-[14.6%] translate-x-1/2 -translate-y-1/2" colorClassName="text-[#339933]" />
+        
+        {/* Right: MongoDB */}
+        <FloatingIcon icon={SiMongodb} delay={0.5} duration={4.8} className="top-1/2 right-0 translate-x-1/2 -translate-y-1/2" colorClassName="text-[#47A248]" />
+        
+        {/* Bottom Right: PostgreSQL */}
+        <FloatingIcon icon={SiPostgresql} delay={2.2} duration={5.5} className="bottom-[14.6%] right-[14.6%] translate-x-1/2 translate-y-1/2" colorClassName="text-[#4169E1]" />
+        
+        {/* Bottom: Firebase */}
+        <FloatingIcon icon={SiFirebase} delay={1.8} duration={4.2} className="bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2" colorClassName="text-[#FFCA28]" />
+        
+        {/* Bottom Left: Tailwind */}
+        <FloatingIcon icon={SiTailwindcss} delay={2.5} duration={5.2} className="bottom-[14.6%] left-[14.6%] -translate-x-1/2 translate-y-1/2" colorClassName="text-[#06B6D4]" />
+        
+        {/* Left: TypeScript */}
+        <FloatingIcon icon={SiTypescript} delay={1.0} duration={4.6} className="top-1/2 left-0 -translate-x-1/2 -translate-y-1/2" colorClassName="text-[#3178C6]" />
+        
+        {/* Top Left: React */}
+        <FloatingIcon icon={SiReact} delay={0.8} duration={5.1} className="top-[14.6%] left-[14.6%] -translate-x-1/2 -translate-y-1/2" colorClassName="text-[#61DAFB]" />
+
+        {/* Decorative Dotted Accents */}
+        <div className="absolute top-[14.6%] right-[14.6%] w-2 h-2 bg-[#CEFF1F] rounded-full shadow-[0_0_10px_#CEFF1F] translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-[14.6%] left-[14.6%] w-2 h-2 bg-[#CEFF1F] rounded-full shadow-[0_0_10px_#CEFF1F] -translate-x-1/2 translate-y-1/2" />
+        <div className="absolute right-0 top-1/2 w-2 h-2 bg-[#CEFF1F] rounded-full shadow-[0_0_10px_#CEFF1F] translate-x-1/2 -translate-y-1/2" />
+      </div>
+
       <ContainerScroll
         titleComponent={
           <>
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-zinc-100 sm:text-5xl">
+            <h2 className="text-3xl tracking-tight text-gray-900 dark:text-zinc-100 sm:text-5xl">
               Career twin
             </h2>
             <p className="mt-4 text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto mb-4">
@@ -424,7 +472,7 @@ export default function CareerTwinSection() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 h-full bg-white dark:bg-zinc-950 sm:bg-transparent dark:sm:bg-transparent">
           {/* ============ LEFT PANEL — PROFILE ============ */}
           <div className="rounded-2xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm lg:col-span-4 flex flex-col">
-            <h3 className="text-sm font-bold tracking-widest text-gray-800 dark:text-zinc-200 mb-6 uppercase">YOUR PROFILE</h3>
+            <h3 className="text-sm tracking-widest text-gray-800 dark:text-zinc-200 mb-6 uppercase">YOUR PROFILE</h3>
             
             <div className="relative mb-8" ref={dropdownRef}>
               <div 
@@ -512,7 +560,7 @@ export default function CareerTwinSection() {
             {/* SKILL METRICS */}
             <div className="rounded-2xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm">
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-sm font-bold tracking-widest text-gray-800 dark:text-zinc-200 uppercase">SKILL METRICS</h3>
+                <h3 className="text-sm tracking-widest text-gray-800 dark:text-zinc-200 uppercase">SKILL METRICS</h3>
                 <button className="flex items-center gap-2 rounded-lg border border-[#CEFF1F] px-4 py-2 text-xs font-bold text-[#9fe60d] hover:bg-green-50 dark:hover:bg-[#9fe60d]/10 transition-colors">
                   <FiExternalLink className="h-4 w-4" />
                   View Details
@@ -524,7 +572,7 @@ export default function CareerTwinSection() {
 
             {/* MASTERY PIPELINE */}
             <div className="rounded-2xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm overflow-hidden">
-                <h3 className="text-sm font-bold tracking-widest text-gray-800 dark:text-zinc-200 uppercase mb-8">MASTERY PIPELINE</h3>
+                <h3 className="text-sm tracking-widest text-gray-800 dark:text-zinc-200 uppercase mb-8">MASTERY PIPELINE</h3>
                 
                 <div className="w-full">
                     <Pipeline stage={role.stage} />
