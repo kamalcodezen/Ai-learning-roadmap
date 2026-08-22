@@ -124,7 +124,7 @@ const Pricing: React.FC = () => {
           <div className="flex flex-col gap-5">
             {/* Text Body - Height Fit */}
             <div className="h-fit">
-              <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl lg:leading-[1.08]">
+              <h2 className="text-3xl tracking-tight text-foreground sm:text-4xl lg:text-5xl lg:leading-[1.08]">
                 <span className="inline">  
                 Simple pricing for your
                 </span>

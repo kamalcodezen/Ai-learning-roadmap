@@ -6,7 +6,7 @@ export default function ProblemHeader() {
       {/* <span className="text-[12px] font-mono tracking-widest text-muted-foreground uppercase mb-2 block">
         The Problem
       </span> */}
-      <h2 className="font-poppins text-h2 font-medium tracking-tight text-foreground text-balance">
+      <h2 className="font-poppins text-h2 tracking-tight text-foreground text-balance">
         Why{" "}
         <i className="font-serif italic font-normal text-muted-foreground">
           Static
