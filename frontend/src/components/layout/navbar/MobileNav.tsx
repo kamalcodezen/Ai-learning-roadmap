@@ -5,9 +5,18 @@ import { motion, AnimatePresence } from 'motion/react';
 import Logo from './Logo';
 import Button from '../../ui/button';
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
+import { authClient } from "@/src/lib/auth-client";
+import { dropdownLinks } from "./profileDropdown";
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = authClient.useSession();
+  const isAuthenticated = !!session?.user;
+
+  const mockUser = {
+    name: "Jubair",
+    email: "jubair@example.com",
+  };
 
   return (
     <div className="w-full flex justify-center relative mt-2">
@@ -56,8 +65,59 @@ export default function MobileNav() {
                   <a href="#" className="text-body text-muted-foreground hover:text-foreground transition-colors">How it works</a>
                 </div>
                 
+                {/* Profile Section (mobile - no background colors) */}
+                {isAuthenticated && (
+                  <div className="flex w-full flex-col items-center gap-4 mt-2">
+                    <div className="flex items-center gap-3">
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-foreground">
+                        <svg
+                          width="17"
+                          height="17"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        >
+                          <circle cx="12" cy="8" r="3.5" />
+                          <path d="M5 20c.8-3.5 3.2-5.5 7-5.5s6.2 2 7 5.5" />
+                        </svg>
+                      </span>
+                      <div className="min-w-0 text-left">
+                        <p className="truncate text-sm font-semibold text-foreground">
+                          {mockUser.name}
+                        </p>
+                        <p className="truncate text-xs text-muted-foreground">
+                          {mockUser.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex w-full flex-col items-center gap-1">
+                      {dropdownLinks.map((link) =>
+                        link.variant === "danger" ? (
+                          <button
+                            key={link.label}
+                            type="button"
+                            className="w-full rounded-md bg-red-500 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                          >
+                            {link.label}
+                          </button>
+                        ) : (
+                          <a
+                            key={link.label}
+                            href="#"
+                            className="w-full rounded-lg py-2 text-center text-sm text-muted-foreground transition-colors hover:text-foreground"
+                          >
+                            {link.label}
+                          </a>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 <div className="w-full mt-2 mb-4 flex justify-center items-center gap-3">
-                  <Button text="Start for Free" href="#" />
+                  {!isAuthenticated && <Button text="Start for Free" href="#" />}
                   <AnimatedThemeToggler />
                 </div>
               </div>

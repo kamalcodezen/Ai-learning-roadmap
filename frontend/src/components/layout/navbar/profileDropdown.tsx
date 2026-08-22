@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 interface ProfileDropdownProps {
   name: string;
   email?: string;
 }
 
-const dropdownLinks = [
+export const dropdownLinks = [
   { label: "Profile", variant: "default" },
   { label: "Settings", variant: "default" },
   { label: "Sign out", variant: "danger" },
@@ -18,31 +20,27 @@ export default function ProfileDropdown({
   email,
 }: ProfileDropdownProps) {
   const [open, setOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    AOS.init({ duration: 400, easing: "ease-out", once: true });
   }, []);
 
+  // Re-scan AOS each time the menu mounts (it only exists while hovered)
+  useEffect(() => {
+    if (!open) return;
+    const frame = requestAnimationFrame(() => AOS.refreshHard());
+    return () => cancelAnimationFrame(frame);
+  }, [open]);
+
   return (
-    <div ref={dropdownRef} className="relative">
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
       <button
         type="button"
-        onClick={() => setOpen((previous) => !previous)}
-        className="flex items-center gap-2 rounded-full border border-neutral-200 bg-[#fafafa] py-1 pl-1 pr-2 transition-all hover:border-neutral-300"
+        className="flex items-center gap-2 rounded-lg bg-brand py-1 pl-1 pr-2 transition-all"
         aria-expanded={open}
       >
         {/* User Icon */}
@@ -84,36 +82,42 @@ export default function ProfileDropdown({
       </button>
 
       {open && (
-        <div className="absolute right-0 top-[calc(100%+8px)] w-60 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 shadow-xl">
-          <div className="border-b border-neutral-100 px-3 py-3">
-            <p className="truncate text-sm font-semibold text-neutral-900">
+        <div
+          data-aos="flip-left"
+          className="absolute right-0 top-[calc(100%+8px)] w-60 overflow-hidden rounded-lg p-2 shadow-xl -mt-2
+          bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)]
+          dark:bg-[linear-gradient(to_bottom,#0f2a02_0%,#1a3a05_28%,#304c0a_55%,#6b861c_100%)]"
+        >
+          <div className="px-3 pb-2 pt-3">
+            <p className="truncate text-sm font-semibold text-neutral-900 dark:text-white">
               {name}
             </p>
 
             {email && (
-              <p className="mt-0.5 truncate text-xs text-neutral-500">
+              <p className="mt-0.5 truncate text-xs text-neutral-500 dark:text-white/70">
                 {email}
               </p>
             )}
           </div>
 
-<div className="mt-1">
-  {dropdownLinks.map((link) => (
-    <button
-      key={link.label}
-      type="button"
-      className={`flex w-full rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${
-        link.variant === "danger"
-          ? "text-red-500 hover:bg-red-50"
-          : "text-neutral-700 hover:bg-neutral-50"
-      }`}
-    >
-      {link.label}
-    </button>
-  ))}
-</div>
+          <div className="mt-1">
+            {dropdownLinks.map((link) => (
+              <button
+                key={link.label}
+                type="button"
+                className={`flex w-full px-3 py-2.5 text-left text-sm transition-colors ${
+                  link.variant === "danger"
+                    ? "rounded-md bg-red-500 font-medium text-white hover:bg-red-600"
+                    : "rounded-lg text-neutral-700 hover:bg-neutral-50 dark:text-white/75 dark:hover:bg-white/10"
+                }`}
+              >
+                {link.label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>
   );
 }
+

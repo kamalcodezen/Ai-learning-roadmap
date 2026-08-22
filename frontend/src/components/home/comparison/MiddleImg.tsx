@@ -1,9 +1,9 @@
 import Image from "next/image";
 
-const Middelimg = () => {
+const MiddleImg = () => {
   return (
-    <div className="flex w-full items-center justify-center">
-      <div className="relative w-full">
+    <div className="flex w-full items-center justify-center relative">
+      <div className="relative w-full max-w-md">
         {/* Main Image */}
         <div className="animate-[spin_20s_linear_infinite]">
           <Image
@@ -16,14 +16,14 @@ const Middelimg = () => {
         </div>
 
         {/* Center Logo */}
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div>
             <Image
               src="/brand/AI-Pather-blue.png"
               alt="Project logo"
               width={80}
               height={80}
-              className="h-20 w-20 object-contain"
+              className="h-15 w-15 object-contain"
             />
           </div>
         </div>
@@ -32,4 +32,4 @@ const Middelimg = () => {
   );
 };
 
-export default Middelimg;
+export default MiddleImg;

@@ -15,6 +15,7 @@
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",
+    "aos": "^2.3.4",
     "better-auth": "^1.6.29",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/aos": "^3.0.8",
     "@types/canvas-confetti": "^1.9.0",
     "@types/gsap": "^1.20.2",
     "@types/node": "^20",
