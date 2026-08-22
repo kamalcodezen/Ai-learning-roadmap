@@ -5,23 +5,23 @@
 @layer base {
   h1 {
     font-family: var(--font-poppins);
-    @apply text-display font-black tracking-tight text-foreground text-balance;
+    @apply text-display font-extrabold tracking-tight text-foreground text-balance;
   }
   h2 {
     font-family: var(--font-poppins);
-    @apply text-h1 font-bold tracking-tight text-foreground text-balance;
+    @apply text-h1 font-extrabold tracking-tight text-foreground text-balance;
   }
   h3 {
     font-family: var(--font-poppins);
-    @apply text-h2 font-semibold tracking-tight text-foreground text-balance;
+    @apply text-h2 font-extrabold tracking-tight text-foreground text-balance;
   }
   h4 {
     font-family: var(--font-poppins);
-    @apply text-h3 font-semibold tracking-tight text-foreground text-balance;
+    @apply text-h3 font-extrabold tracking-tight text-foreground text-balance;
   }
   h5, h6 {
     font-family: var(--font-poppins);
-    @apply text-h4 font-semibold tracking-tight text-foreground text-balance;
+    @apply text-h4 font-extrabold tracking-tight text-foreground text-balance;
   }
   p {
     @apply text-body leading-relaxed text-muted-foreground;
