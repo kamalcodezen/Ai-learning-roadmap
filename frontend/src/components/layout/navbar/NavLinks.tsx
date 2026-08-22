@@ -28,7 +28,7 @@ export default function NavLinks() {
           <div key={link.label} className="relative">
             <Link
               href={link.href}
-              className="flex items-center text-[18px] font-normal text-muted-foreground transition-colors duration-200 hover:text-foreground"
+              className="flex items-center text-body-large font-normal text-muted-foreground transition-colors duration-200 hover:text-foreground"
             >
               {link.label}
             </Link>

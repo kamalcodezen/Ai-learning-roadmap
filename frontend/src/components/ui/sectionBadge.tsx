@@ -6,8 +6,8 @@ interface SectionBadgeProps {
 
 export default function SectionBadge({ text }: SectionBadgeProps) {
   return (
-    <div className="font-poppins inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-[#ceff1f] px-3.5 py-1.5 sm:px-5 sm:py-2 text-[11px] sm:text-[13px] md:text-[15px] font-medium text-[#131824] shadow-sm">
-      <FiTrendingUp className="text-[14px] sm:text-[17px]" />
+    <div className="font-poppins inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-primary px-3.5 py-1.5 sm:px-5 sm:py-2 text-small md:text-body font-medium text-secondary shadow-sm">
+      <FiTrendingUp className="text-body" />
       <span>{text}</span>
     </div>
   );
