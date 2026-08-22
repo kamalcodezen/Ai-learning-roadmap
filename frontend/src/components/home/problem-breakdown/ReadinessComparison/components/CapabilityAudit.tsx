@@ -17,7 +17,7 @@ export default function CapabilityAudit() {
         <span className="font-mono text-small font-bold uppercase tracking-[0.2em] dark:text-primary">
           The 4 Proof Pillars
         </span>
-        <h4 className="font-poppins text-h2 font-medium text-foreground mt-2 text-balance">
+        <h4 className="font-poppins text-h2 text-foreground mt-2 text-balance">
           Why 67% of Self-Learners Never Get Hired
         </h4>
       </div>
@@ -46,7 +46,7 @@ export default function CapabilityAudit() {
             <span className="font-mono text-caption font-semibold uppercase tracking-widest text-primary">
               Competency Breakdown
             </span>
-            <h5 className="font-poppins text-h3 font-medium text-foreground mt-0.5">
+            <h5 className="font-poppins text-h3 text-foreground mt-0.5">
               {capabilities[activeCap].label}
             </h5>
           </div>
