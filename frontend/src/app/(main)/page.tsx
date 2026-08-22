@@ -7,16 +7,18 @@ import ProblemBreakdown from "@/src/components/home/problem-breakdown/ProblemBre
 import ProgressBridgeSection from "@/src/components/home/ProgressBridge/ProgressBridgeSection";
 import Pricing from "@/src/components/home/pricing/Pricing";
 import FeaturesSection from "@/src/components/home/features";
+import Comparison from "@/src/components/home/comparison/Comparison";
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
       <ProgressBridgeSection />
-      <ProblemBreakdown />
+      <ProblemBreakdown />      
       <HowItWorksSection />
       <CareerTwinSection />
       <FeaturesSection />
+      <Comparison />
       <Pricing />
       <TestimonialSection />
       <CTASection />

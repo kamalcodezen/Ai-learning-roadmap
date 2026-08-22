@@ -1,7 +1,7 @@
 "use client";
 
-import PricingFeature from "./PricingFeature";
-import Button from "../../ui/button";
+import PricingFeature from "../PricingFeature";
+import Button from "../../../ui/button";
 
 
 interface PricingCardProps {
@@ -37,7 +37,7 @@ const PricingCard = ({
 
  return (
   <article
-    className={`dashboard-card relative h-full overflow-visible rounded-3xl border p-5
+    className={`dashboard-card relative h-fit overflow-visible rounded-3xl border
       bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)]
       dark:bg-[linear-gradient(to_bottom,#0f2a02_0%,#1a3a05_28%,#304c0a_55%,#6b861c_100%)]
       ${className}
@@ -56,10 +56,10 @@ const PricingCard = ({
 
     {/* Card Container */}
   {/* Card Container */}
-<div className="flex h-full min-h-[285px] flex-col xl:flex-row">
+<div className="flex h-fit min-h-[285px] flex-col ">
 
   {/* Left - Pricing Information */}
-  <div className="flex w-full flex-col p-6 sm:p-7 xl:w-[49%] lg:px-8">
+  <div className="flex w-full flex-col p-2 sm:p-3 lg:px-5">
 
     {/* Plan Badge */}
     <div className="mb-5">
@@ -97,7 +97,7 @@ const PricingCard = ({
   </div>
 
   {/* Right - Features */}
-  <div className="flex w-full flex-1 p-6 sm:p-7 lg:px-8 text-zinc-800 dark:text-white/75">
+  <div className="flex w-full flex-1 p-2 sm:p-3 lg:px-5 text-zinc-800 dark:text-white/75">
     <div className="flex w-full flex-col justify-center gap-4">
       {features.map((feature) => (
         <PricingFeature

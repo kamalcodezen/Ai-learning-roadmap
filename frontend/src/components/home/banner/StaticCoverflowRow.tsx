@@ -56,8 +56,11 @@ export default function StaticCoverflowRow({
   }, []);
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
       className={cn("w-full", className)}
       style={{ ["--cf-card" as string]: CARD_WIDTH }}
       role="region"
@@ -146,6 +149,6 @@ export default function StaticCoverflowRow({
           })}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
