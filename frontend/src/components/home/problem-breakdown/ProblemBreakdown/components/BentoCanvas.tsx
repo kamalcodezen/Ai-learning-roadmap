@@ -50,7 +50,7 @@ export default function BentoCanvas({
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
           </span>
-          <span className="font-mono text-[10.5px] font-extrabold tracking-widest text-foreground">
+          <span className="font-mono text-caption font-extrabold tracking-widest text-foreground">
             {activeEyebrow}
           </span>
         </div>
@@ -67,7 +67,7 @@ export default function BentoCanvas({
               <span className="h-2 w-2 rounded-full bg-primary border border-primary shadow-[0_0_8px_rgba(var(--primary),0.9)]" />
             </div>
             <span className="h-3.5 w-px bg-border" />
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/80">
+            <span className="font-mono text-caption font-bold uppercase tracking-widest text-foreground/80">
               Roadmap Intelligence Core
             </span>
           </div>

@@ -6,7 +6,7 @@ export default function ProblemHeader() {
       {/* <span className="text-[12px] font-mono tracking-widest text-muted-foreground uppercase mb-2 block">
         The Problem
       </span> */}
-      <h2 className="font-poppins text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
+      <h2 className="font-poppins text-h2 font-medium tracking-tight text-foreground text-balance">
         Why{" "}
         <i className="font-serif italic font-normal text-muted-foreground">
           Static
@@ -16,7 +16,7 @@ export default function ProblemHeader() {
           Break Down
         </span>
       </h2>
-      <p className="section-description text-base md:text-lg">
+      <p className="section-description text-body-large mt-4">
         Completing lessons is not the same as becoming job-ready.
       </p>
     </div>
