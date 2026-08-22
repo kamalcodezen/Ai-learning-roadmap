@@ -1,15 +1,33 @@
 @import "tailwindcss";
 @import "../../node_modules/@heroui/styles/dist/index.css";
 
-
+@custom-variant dark (&:is(.dark *));
 @layer base {
-
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1 {
     font-family: var(--font-poppins);
+    @apply text-display font-black tracking-tight text-foreground text-balance;
+  }
+  h2 {
+    font-family: var(--font-poppins);
+    @apply text-h1 font-bold tracking-tight text-foreground text-balance;
+  }
+  h3 {
+    font-family: var(--font-poppins);
+    @apply text-h2 font-semibold tracking-tight text-foreground text-balance;
+  }
+  h4 {
+    font-family: var(--font-poppins);
+    @apply text-h3 font-semibold tracking-tight text-foreground text-balance;
+  }
+  h5, h6 {
+    font-family: var(--font-poppins);
+    @apply text-h4 font-semibold tracking-tight text-foreground text-balance;
+  }
+  p {
+    @apply text-body leading-relaxed text-muted-foreground;
+  }
+  small {
+    @apply text-small text-muted-foreground;
   }
 }
 
@@ -93,6 +111,36 @@
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-poppins: var(--font-poppins), sans-serif;
 
+  /* Semantic Typography Hierarchy */
+  --text-display: clamp(3rem, 5vw + 2rem, 5rem);
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.02em;
+  
+  --text-h1: clamp(2.5rem, 4vw + 1.5rem, 4rem);
+  --text-h1--line-height: 1.15;
+  --text-h1--letter-spacing: -0.015em;
+  
+  --text-h2: clamp(2rem, 3vw + 1rem, 3rem);
+  --text-h2--line-height: 1.2;
+  --text-h2--letter-spacing: -0.01em;
+  
+  --text-h3: clamp(1.5rem, 2vw + 0.8rem, 2.25rem);
+  --text-h3--line-height: 1.25;
+  
+  --text-h4: clamp(1.25rem, 1.5vw + 0.8rem, 1.5rem);
+  --text-h4--line-height: 1.3;
+  
+  --text-body-large: clamp(1.125rem, 1vw + 0.75rem, 1.25rem);
+  --text-body-large--line-height: 1.6;
+  
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
 
   --color-background: rgb(var(--background));
   --color-foreground: rgb(var(--foreground));
@@ -139,6 +187,16 @@ body {
 button {
   cursor: pointer;
 }
+
+@layer utilities {
+  .text-measure {
+    max-width: 65ch;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
 
 /* =========================================
    CUSTOM SCROLLBAR SYSTEM
