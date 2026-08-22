@@ -39,7 +39,7 @@ export default function TimelineStep({ state, isActive }: TimelineStepProps) {
         <div className="flex items-center gap-2">
           <span
             className={`
-              font-mono text-[10.5px] font-extrabold uppercase tracking-[0.16em] transition-colors duration-200
+              font-mono text-caption font-extrabold uppercase tracking-widest transition-colors duration-200
               ${
                 isActive
                   ? "text-primary drop-shadow-[0_0_6px_rgba(var(--primary),0.7)]"
@@ -50,14 +50,14 @@ export default function TimelineStep({ state, isActive }: TimelineStepProps) {
             {state.eyebrow}
           </span>
           <span className="h-1 w-1 rounded-full bg-border" />
-          <span className="font-mono text-[9.5px] font-bold uppercase tracking-wider text-muted-foreground">
+          <span className="font-mono text-caption font-bold uppercase tracking-wider text-muted-foreground">
             {state.tag}
           </span>
         </div>
 
         <h3
           className={`
-            font-poppins text-[18px] font-semibold leading-snug tracking-tight transition-colors duration-200
+            font-poppins text-h4 font-semibold tracking-tight transition-colors duration-200
             ${
               isActive
                 ? "text-foreground drop-shadow-sm"
@@ -70,7 +70,7 @@ export default function TimelineStep({ state, isActive }: TimelineStepProps) {
 
         <p
           className={`
-            max-w-[400px] text-[13px] font-normal leading-relaxed transition-colors duration-200
+            max-w-md text-small font-normal transition-colors duration-200
             ${
               isActive
                 ? "text-foreground/90 font-medium"

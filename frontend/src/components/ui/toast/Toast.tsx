@@ -134,7 +134,7 @@ export default function LearningToast({
         {/* Compact Label + Inline Message */}
         <div className="flex-1 min-w-0 flex items-center gap-2">
           <span
-            className={`text-[10px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded ${config.badgeBg} ${config.badgeText} shrink-0`}
+            className={`text-caption font-bold tracking-wider uppercase px-1.5 py-0.5 rounded ${config.badgeBg} ${config.badgeText} shrink-0`}
           >
             {config.label}
           </span>

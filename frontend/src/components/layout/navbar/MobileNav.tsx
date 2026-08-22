@@ -16,7 +16,7 @@ export default function MobileNav() {
         initial={false}
         animate={{ borderRadius: isOpen ? 32 : 50 }}
         transition={isOpen ? { duration: 0.3, ease: "easeOut" } : { type: "spring", stiffness: 260, damping: 20 }}
-        className="bg-card/80 backdrop-blur-[5px] border border-border py-1 px-1 w-90 max-w-sm mx-auto overflow-hidden flex flex-col z-50"
+        className="bg-card/80 backdrop-blur-[5px] border border-border py-1 px-1 w-[95%] max-w-sm mx-auto overflow-hidden flex flex-col z-50"
         style={{
           zIndex: isOpen ? 999 : 50
         }}
@@ -52,8 +52,8 @@ export default function MobileNav() {
             >
               <div className="flex flex-col items-center gap-6 pt-6 pb-2 px-4">
                 <div className="flex flex-col gap-6 w-full items-center mt-2">
-                  <a href="#" className="text-[17px] text-muted-foreground hover:text-foreground transition-colors">About Us</a>
-                  <a href="#" className="text-[17px] text-muted-foreground hover:text-foreground transition-colors">How it works</a>
+                  <a href="#" className="text-body text-muted-foreground hover:text-foreground transition-colors">About Us</a>
+                  <a href="#" className="text-body text-muted-foreground hover:text-foreground transition-colors">How it works</a>
                 </div>
                 
                 <div className="w-full mt-2 mb-4 flex justify-center items-center gap-3">

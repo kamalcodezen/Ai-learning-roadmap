@@ -12,7 +12,7 @@ export default function LearningDebtVisual() {
   ];
 
   return (
-    <div className="w-full max-w-[280px] flex flex-col font-sans p-2">
+    <div className="w-full max-w-xs flex flex-col font-sans p-2">
        <div className="flex flex-col relative w-full">
          <div className="absolute left-[11px] top-3 bottom-5 w-px bg-border z-0" />
          
@@ -34,7 +34,7 @@ export default function LearningDebtVisual() {
                </div>
 
                <div className={`flex flex-col w-full pb-3 border-b border-border/40 last:border-0 ${isAffected ? 'opacity-40' : 'opacity-100'}`}>
-                 <span className={`text-[15px] tracking-tight ${isAffected ? 'text-muted-foreground' : 'text-foreground font-medium'}`}>
+                 <span className={`text-body tracking-tight ${isAffected ? 'text-muted-foreground' : 'text-foreground font-medium'}`}>
                    {node.label}
                  </span>
                  {isWeak && (
@@ -44,7 +44,7 @@ export default function LearningDebtVisual() {
                       transition={{ delay: 0.6 }}
                       className="mt-1 flex flex-col"
                     >
-                      <span className="text-[10px] font-mono text-amber-500 uppercase tracking-widest mt-1">
+                      <span className="text-caption font-mono text-amber-500 uppercase tracking-widest mt-1">
                         \u26A0 GAP
                       </span>
                     </motion.div>

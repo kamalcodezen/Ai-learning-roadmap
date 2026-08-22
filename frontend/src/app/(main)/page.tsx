@@ -2,11 +2,12 @@ import HeroSection from "@/src/components/home/banner/HeroSection";
 import TestimonialSection from "@/src/components/home/testimonial/TestimonialSection";
 import CTASection from "@/src/components/home/cta/CTASection";
 import HowItWorksSection from "@/src/components/home/howItWorks/HowItWorksSection";
+import CareerTwinSection from "@/src/components/home/careerTwin/CareerTwinSection";
 import ProblemBreakdown from "@/src/components/home/problem-breakdown/ProblemBreakdown/ProblemBreakdown";
 import ProgressBridgeSection from "@/src/components/home/ProgressBridge/ProgressBridgeSection";
 import Pricing from "@/src/components/home/pricing/Pricing";
+import FeaturesSection from "@/src/components/home/features";
 import Comparison from "@/src/components/home/comparison/Comparison";
-
 
 export default function HomePage() {
   return (
@@ -15,6 +16,8 @@ export default function HomePage() {
       <ProgressBridgeSection />
       <ProblemBreakdown />      
       <HowItWorksSection />
+      <CareerTwinSection />
+      <FeaturesSection />
       <Comparison />
       <Pricing />
       <TestimonialSection />

@@ -61,13 +61,12 @@ export default function CTASection() {
         <DotPattern className="absolute top-16 right-8 md:right-16 scale-x-[-1] hidden sm:block" />
 
         {/* ====== Main content ====== */}
-        <div className="max-w-5xl mx-auto text-center -mt-10 sm:mt-0">
-          <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-foreground leading-[1.05] mb-3">
-            Let&apos;s Build <br>
-            </br>Your AI Career Path
+        <div className="max-w-5xl mx-auto text-center -mt-10 sm:mt-0 text-measure mx-auto">
+          <h2 className="text-display text-balance uppercase font-black tracking-tight text-foreground mb-4">
+            Let's Build Your AI Career Path
           </h2>
 
-          <p className="text-sm sm:text-base text-muted-foreground font-medium mb-5">
+          <p className="text-body-large text-muted-foreground font-medium mb-6">
             Tell us where you want to go, and we’ll help you understand what to learn next
           </p>
 
@@ -106,14 +105,14 @@ export default function CTASection() {
         {/* Bottom corner labels */}
         <div className="absolute bottom-10 sm:bottom-6 left-8 sm:left-8 md:left-16 z-20 flex items-center gap-2">
           <span className="block h-2 w-2 sm:h-3 sm:w-3 bg-[#060911] dark:bg-white dark:sm:bg-[#060911]" />
-          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#060911] dark:text-white dark:sm:text-[#060911]">
+          <span className="text-caption font-bold uppercase tracking-widest text-[#060911] dark:text-white dark:sm:text-[#060911]">
             Personalized Learning
           </span>
         </div>
 
         <div className="absolute bottom-10 sm:bottom-6 right-8 sm:right-8 md:right-16 z-20 flex items-center gap-2">
           <span className="block h-2 w-2 sm:h-3 sm:w-3 bg-[#060911] dark:bg-white dark:sm:bg-[#060911]" />
-          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#060911] dark:text-white dark:sm:text-[#060911]">
+          <span className="text-caption font-bold uppercase tracking-widest text-[#060911] dark:text-white dark:sm:text-[#060911]">
             AI-Powered Paths
           </span>
         </div>
