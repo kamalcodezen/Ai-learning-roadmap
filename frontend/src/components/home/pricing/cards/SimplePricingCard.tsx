@@ -24,7 +24,7 @@ const SimplePricingCard = ({
 }: SimplePricingCardProps) => {
   return (
     <article
-      className={`relative h-full overflow-visible rounded-3xl border border-zinc-300 shadow-none
+      className={`relative h-fit overflow-visible rounded-3xl border border-zinc-300 shadow-none
         bg-background dark:bg-card
         dark:border-zinc-700
         ${className}`}
