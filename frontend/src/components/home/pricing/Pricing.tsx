@@ -4,7 +4,6 @@ import React, { useRef, useState } from "react";
 import PricingCard from "./cards/ProPricingCard";
 import SimplePricingCard from "./cards/SimplePricingCard";
 import EnterprisePricingCard from "./cards/EnterprisePricingCard";
-import { FiArrowUpRight } from "react-icons/fi";
 import { Confetti, type ConfettiRef } from "@/src/registry/magicui/confetti";
 
 const freeFeatures: string[] = [
@@ -42,24 +41,14 @@ const DescriptionText = ({
   onBillingChange: (yearly: boolean) => void;
 }) => (
   <div className={`relative h-fit ${className}`}>
-    {/* Discount Badge */}
-    <div className="absolute top-0 right-0">
-      <span className="inline-flex items-center rounded-full bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-500 ring-1 ring-inset ring-amber-500/20">
-        20% OFF
-      </span>
-    </div>
-
-    <p className="mb-3 flex items-center gap-1.5 text-sm italic text-muted-foreground">
-      <span>Learn smarter, grow faster</span>
-      <FiArrowUpRight className="h-4 w-4" />
-    </p>
+    
 
     <p className="text-sm leading-6 text-muted-foreground sm:text-base pr-20">
       One simple plan for getting started, with advanced options for
       learners and teams who want deeper AI-powered guidance.
     </p>
 
-    <div className="mt-5 flex items-center gap-3">
+    {/* <div className="mt-5 flex items-center gap-3">
       <span className="text-sm font-medium text-foreground">
         Start for free
       </span>
@@ -67,7 +56,7 @@ const DescriptionText = ({
       <span className="text-sm text-muted-foreground">
         Upgrade anytime
       </span>
-    </div>
+    </div> */}
 
     {/* Monthly / Yearly Billing Toggle */}
     <div className="mt-5 inline-flex items-center rounded-full border border-border bg-card p-1 shadow-sm">
@@ -129,15 +118,17 @@ const Pricing: React.FC = () => {
 
       <div className="global-pos relative w-full">
         {/* Main 3-Column Layout */}
-        <div className="mt-10 grid grid-cols-1 items-stretch gap-5 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 items-end gap-5 lg:grid-cols-3 2xl:items-stretch">
           
           {/* ================= LEFT COLUMN ================= */}
           <div className="flex flex-col gap-5">
             {/* Text Body - Height Fit */}
             <div className="h-fit">
               <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl lg:leading-[1.08]">
+                <span className="inline">  
                 Simple pricing for your
-                <br className="hidden sm:block" />
+                </span>
+                {/* <br className="hidden sm:block" /> */}
                 <span className="text-primary"> learning journey</span>
               </h2>
 
@@ -155,14 +146,13 @@ const Pricing: React.FC = () => {
             />
 
             {/* Free Card - Simple Clean Design */}
-            <div className="flex-1">
+            <div className="2xl:flex-1">
               <SimplePricingCard
                 badge="FREE"
                 price="Free"
                 description="Perfect for getting started with your personalized learning journey."
                 features={freeFeatures}
                 buttonText="Continue"
-                className="h-full"
               />
             </div>
           </div>
@@ -177,7 +167,7 @@ const Pricing: React.FC = () => {
               features={proFeatures}
               buttonText="Buy Now"
               popular
-              className="h-full w-full min-h-[500px]"
+              className="w-full 2xl:min-h-[500px]"
             />
           </div>
 
@@ -191,14 +181,13 @@ const Pricing: React.FC = () => {
             />
 
             {/* Enterprise Card - Dedicated Glowing Neon Component */}
-            <div className="flex-1">
+            <div className="2xl:flex-1">
               <EnterprisePricingCard
                 badge="ENTERPRISE"
                 price="Custom"
                 description="Perfect for teams and organizations needing full custom roadmaps."
                 features={enterpriseFeatures}
                 buttonText="Contact"
-                className="h-full"
               />
             </div>
           </div>

@@ -24,7 +24,7 @@ const EnterprisePricingCard = ({
 }: EnterprisePricingCardProps) => {
   return (
     <article
-      className={`dashboard-card relative h-full overflow-visible rounded-3xl border border-primary/50
+      className={`dashboard-card relative h-fit overflow-visible rounded-3xl border border-primary/50
         shadow-[0_12px_40px_rgba(206,255,31,0.10)]
         bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)]
         dark:bg-[linear-gradient(to_bottom,#0f2a02_0%,#1a3a05_28%,#304c0a_55%,#6b861c_100%)]

@@ -37,7 +37,7 @@ const PricingCard = ({
 
  return (
   <article
-    className={`dashboard-card relative h-full overflow-visible rounded-3xl border
+    className={`dashboard-card relative h-fit overflow-visible rounded-3xl border
       bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)]
       dark:bg-[linear-gradient(to_bottom,#0f2a02_0%,#1a3a05_28%,#304c0a_55%,#6b861c_100%)]
       ${className}
