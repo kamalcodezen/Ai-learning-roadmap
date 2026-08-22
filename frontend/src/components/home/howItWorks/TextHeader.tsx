@@ -3,7 +3,7 @@
 export default function TextHeader() {
   return (
     <div className="w-full max-w-6xl  text-left container-custom">
-      <h2 className="font-poppins text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
+      <h2 className="font-poppins text-2xl sm:text-3xl tracking-tight text-foreground">
         How to{" "}
         <i className="font-serif italic font-normal text-muted-foreground">
           Start

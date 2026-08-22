@@ -6,7 +6,7 @@ export default function FeatureHeader() {
   return (
     <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 ">
       <div className="max-w-xl">
-        <h2 className="font-poppins text-h2 font-medium tracking-tight text-foreground text-center md:text-start text-balance">
+        <h2 className="font-poppins text-h2 tracking-tight text-foreground text-center md:text-start text-balance">
           Accelerate Growth with <span className="text-primary font-extrabold">Smart Execution</span>
         </h2>
       </div>
