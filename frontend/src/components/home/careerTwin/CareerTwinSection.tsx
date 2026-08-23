@@ -99,11 +99,13 @@ export function useReducedMotion(): boolean {
 export function useAnimatedNumber(target: number, duration = 1000, animate = true, delayMs = 0): number {
   const [value, setValue] = useState(target);
   const currentValRef = useRef(target);
+  // eslint-disable-next-line react-hooks/refs
   currentValRef.current = value;
 
   useEffect(() => {
     if (!animate) {
       currentValRef.current = target;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValue(target);
       return;
     }
@@ -173,9 +175,6 @@ function Gauge({ value }: { value: number }) {
   });
 
   const clamped = Math.max(v, 0.01);
-  const endA = rad(clamped * 3.6);
-  const ex = C + R * Math.sin(endA);
-  const ey = C - R * Math.cos(endA);
 
   return (
     <div className="relative mx-auto" style={{ width: SIZE, height: SIZE }}>
