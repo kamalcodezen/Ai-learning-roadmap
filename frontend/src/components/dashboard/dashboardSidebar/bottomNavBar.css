@@ -1,0 +1,30 @@
+/* Container floating floating pill styling */
+.mobile-nav-pill {
+  background: #111621;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5),
+              0 0 1px 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+/* Elevated circular site icon button */
+.mobile-nav-logo-btn {
+  background: radial-gradient(circle at 30% 30%, #1c2331, #111621);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4),
+              0 1px 0 rgba(255, 255, 255, 0.1) inset;
+}
+
+/* Fluid curved active tab stroke line overlay */
+.mobile-active-curve {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-active-curve path {
+  stroke: rgb(var(--primary));
+  stroke-width: 2.5;
+  fill: none;
+  stroke-linecap: round;
+}
