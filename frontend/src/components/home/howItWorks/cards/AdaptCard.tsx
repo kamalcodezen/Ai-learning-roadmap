@@ -15,25 +15,25 @@ export default function AdaptCard() {
           </div>
 
           <div className="mt-2">
-            <span className="text-xs font-mono font-semibold text-primary uppercase tracking-wider">Step 04</span>
-            <h3 className="text-xl font-bold mt-0.5">Adapt</h3>
+            <span className="text-caption font-mono font-semibold text-primary uppercase tracking-wider">Step 04</span>
+            <h3 className="text-h3 font-bold mt-0.5">Adapt</h3>
           </div>
 
           <div className="soft-card rounded-2xl p-3 mt-3 space-y-2">
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center justify-between text-caption">
               <span className="font-semibold text-muted-foreground">Roadmap Shift</span>
               <FiTrendingUp className="w-4 h-4 text-primary" />
             </div>
 
             <div className="space-y-1.5">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground line-through">
+              <div className="flex items-center gap-2 text-caption text-muted-foreground line-through">
                 <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                   <FiCheck className="w-2.5 h-2.5" />
                 </div>
                 Milestone Alpha
               </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-                <div className="w-4 h-4 rounded-full bg-primary text-secondary flex items-center justify-center text-[10px] font-bold">
+              <div className="flex items-center gap-2 text-caption font-semibold text-foreground">
+                <div className="w-4 h-4 rounded-full bg-primary text-secondary flex items-center justify-center text-caption font-bold">
                   2
                 </div>
                 Adaptive Next Steps
@@ -43,7 +43,7 @@ export default function AdaptCard() {
         </div>
       </BorderGlow>
 
-      <p className="text-xs md:text-sm text-muted-foreground text-center mt-4 px-2 leading-relaxed">
+      <p className="text-small text-muted-foreground text-center mt-4 px-2 leading-relaxed">
         Continuously adjust your learning path as your progress changes.
       </p>
     </div>

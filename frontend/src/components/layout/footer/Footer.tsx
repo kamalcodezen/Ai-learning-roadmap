@@ -71,7 +71,7 @@ export default function Footer() {
                 className="w-10 h-10 md:w-[70px] md:h-[70px] object-contain"
               />
 
-              <span className="font-bold text-5xl sm:text-6xl md:text-8xl tracking-tight text-white">
+              <span className="font-bold text-display tracking-tight text-white">
                 AI <span className="text-[#ceff1f]">Pather</span>
               </span>
             </Link>
@@ -83,7 +83,7 @@ export default function Footer() {
               <Link
                 key={link.title}
                 href={link.href}
-                className="text-sm font-medium text-slate-400 hover:text-[#ceff1f] transition-colors duration-300"
+                className="text-small font-medium text-slate-400 hover:text-[#ceff1f] transition-colors duration-300"
               >
                 {link.title}
               </Link>
@@ -97,7 +97,7 @@ export default function Footer() {
           className="w-full pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6"
         >
           {/* Copyright */}
-          <div className="text-slate-400 text-sm order-3 md:order-1 flex-1 text-center md:text-left">
+          <div className="text-slate-400 text-small order-3 md:order-1 flex-1 text-center md:text-left">
             © {new Date().getFullYear()} AI Pather. All rights reserved.
           </div>
 
@@ -116,7 +116,7 @@ export default function Footer() {
           </div>
 
           {/* Bottom Links (Privacy, Terms) */}
-          <div className="flex items-center justify-center md:justify-end gap-6 text-sm order-2 md:order-3 flex-1">
+          <div className="flex items-center justify-center md:justify-end gap-6 text-small order-2 md:order-3 flex-1">
             {bottomLinks.map((link) => (
               <Link
                 key={link.title}

@@ -14,7 +14,7 @@ export default function PhilosophyConclusion() {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-70" />
 
         {/* Stage Tag */}
-        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1 font-mono text-[10.5px] font-bold uppercase tracking-widest text-primary shadow-xs">
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1 font-mono text-caption font-bold uppercase tracking-widest text-primary shadow-xs">
           <span className="relative flex h-1.5 w-1.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
@@ -23,11 +23,11 @@ export default function PhilosophyConclusion() {
         </div>
 
         {/* Human-Hook Hookline */}
-        <p className="text-[14px] font-medium text-muted-foreground sm:text-[15px]">
+        <p className="text-body font-medium text-muted-foreground">
           A 100% course completion bar is just a metric.
         </p>
 
-        <h4 className="mt-1 font-poppins text-lg font-semibold leading-snug text-foreground sm:text-xl">
+        <h4 className="mt-1 font-poppins text-h4 font-semibold text-foreground text-balance">
           Real engineering capability requires an{" "}
           <span className="relative inline-block font-bold text-primary">
             Adaptive Continuous OS

@@ -16,20 +16,20 @@ export default function MobileLayout({ states }: MobileLayoutProps) {
 
           <div className="space-y-1 px-1">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
+              <span className="font-mono text-caption font-bold uppercase tracking-widest text-primary">
                 {state.eyebrow}
               </span>
               <span className="h-1 w-1 rounded-full bg-border" />
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="font-mono text-caption font-semibold uppercase tracking-wider text-muted-foreground">
                 {state.tag}
               </span>
             </div>
 
-            <h3 className="font-poppins text-lg font-bold leading-snug text-foreground">
+            <h3 className="font-poppins text-h3 font-bold leading-snug text-foreground text-balance">
               {state.title}
             </h3>
 
-            <p className="text-[13.5px] leading-relaxed text-muted-foreground">
+            <p className="text-small leading-relaxed text-muted-foreground">
               {state.description}
             </p>
           </div>

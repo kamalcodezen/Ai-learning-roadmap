@@ -14,31 +14,31 @@ export default function ProveCard() {
           </div>
 
           <div className="mt-2">
-            <span className="text-xs font-mono font-semibold text-primary uppercase tracking-wider">Step 03</span>
-            <h3 className="text-xl font-bold mt-0.5">Prove</h3>
+            <span className="text-caption font-mono font-semibold text-primary uppercase tracking-wider">Step 03</span>
+            <h3 className="text-h3 font-bold mt-0.5">Prove</h3>
           </div>
 
           <div className="soft-card rounded-2xl p-3 mt-3 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-xs font-semibold">E-Commerce API</span>
+                <span className="text-caption font-semibold">E-Commerce API</span>
               </div>
               <FiExternalLink className="w-3 h-3 text-muted-foreground" />
             </div>
 
             <div className="flex items-center gap-2 bg-card p-2 rounded-xl border border-border">
               <FiShield className="w-4 h-4 text-primary shrink-0" />
-              <div className="text-[11px] leading-tight">
+              <div className="text-caption leading-tight">
                 <p className="font-semibold">Verified Skill State</p>
-                <p className="text-muted-foreground text-[10px]">Tests passed!</p>
+                <p className="text-muted-foreground text-caption">Tests passed!</p>
               </div>
             </div>
           </div>
         </div>
       </BorderGlow>
 
-      <p className="text-xs md:text-sm text-muted-foreground text-center mt-4 px-2 leading-relaxed">
+      <p className="text-small text-muted-foreground text-center mt-4 px-2 leading-relaxed">
         Turn what you learn into real projects and measurable skill evidence.
       </p>
     </div>
