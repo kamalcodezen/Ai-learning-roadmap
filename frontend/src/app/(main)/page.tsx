@@ -5,6 +5,8 @@ import HowItWorksSection from "@/src/components/home/howItWorks/HowItWorksSectio
 import ProblemBreakdown from "@/src/components/home/problem-breakdown/ProblemBreakdown/ProblemBreakdown";
 import ProgressBridgeSection from "@/src/components/home/ProgressBridge/ProgressBridgeSection";
 import Pricing from "@/src/components/home/pricing/Pricing";
+import { HomeFloatingChat } from "@/src/components/chat/HomeFloatingChat";
+import { FloatingSocials } from "@/src/components/socials/FloatingSocials";
 
 export default function HomePage() {
   return (
@@ -16,6 +18,9 @@ export default function HomePage() {
       <Pricing />
       <TestimonialSection />
       <CTASection />
+
+      <HomeFloatingChat />
+      <FloatingSocials />
     </>
   );
 }
