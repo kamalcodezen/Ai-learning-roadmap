@@ -17,7 +17,7 @@ const Pricing = () => {
   };
 
   return (
-    <section className="bg-muted/40  dark:bg-transparent  lg:px-10  relative w-full overflow-hidden py-section px-4 sm:px-8 md:px-12">
+    <section className="section-pad lg:px-10  relative w-full overflow-hidden px-4 sm:px-8 md:px-12">
       <div className=" global-pos relative w-full">
         {/* Header */}
         <Header billing={billing} onBillingChange={setBilling} />
@@ -35,7 +35,7 @@ const Pricing = () => {
             >
               {/* Most Popular */}
               {plan.popular && (
-                <div className="absolute right-0 top-0 rounded-bl-xl rounded-tr-2xl bg-primary px-4 py-2 text-sm font-semibold text-secondary shadow-[0_0_20px_rgba(159,84,247,0.3)] dark:shadow-[0_0_25px_rgba(185,120,255,0.4)]">
+                <div className="section-badge absolute right-4 top-4">
                   ★ Most Popular
                 </div>
               )}

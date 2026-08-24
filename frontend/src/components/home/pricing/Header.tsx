@@ -13,7 +13,7 @@ interface HeaderProps {
 const CONFETTI_COLORS = ["#9F54F7", "#B978FF", "#ffffff"];
 
 const Header = ({ billing, onBillingChange }: HeaderProps) => {
-  const toggleRef = useRef<HTMLButtonElement>(null);
+  const toggleRef = useRef<HTMLDivElement>(null);
   const echoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Don't let a pending echo burst fire after unmount/navigation
@@ -62,66 +62,61 @@ const Header = ({ billing, onBillingChange }: HeaderProps) => {
     }, 80);
   };
 
-  const handleToggle = () => {
-    const nextBilling: BillingPeriod =
-      billing === "monthly" ? "yearly" : "monthly";
+  const handleSelect = (period: BillingPeriod) => {
+    if (period === billing) return;
 
     // Celebrate only the upgrade moment (switching to yearly)
-    if (nextBilling === "yearly") {
+    if (period === "yearly") {
       fireConfetti();
     }
 
-    onBillingChange(nextBilling);
+    onBillingChange(period);
   };
+
+  const periodPill = (active: boolean) =>
+    `rounded-full px-5 py-2 text-sm font-semibold transition-all duration-200 ${
+      active
+        ? "bg-primary text-white shadow-[0_0_18px_color-mix(in_srgb,var(--color-primary)_35%,transparent)]"
+        : "text-muted-foreground hover:text-foreground"
+    }`;
+
   return (
     <div className="text-left">
-      <h2 className="font-poppins text-h2 font-bold tracking-tight text-foreground text-balance md:text-5xl">
-       Simple Plans, <span className="text-brand">Maximum Learning</span>
+      <h2 className="section-title">
+        Simple Plans, <span className="text-brand">Maximum Learning</span>
       </h2>
 
-      <p className="mt-4 text-base text-muted-foreground md:text-lg">
+      <p className="section-subtitle mt-4">
         Start for free with full diagnostics, or upgrade to unlock unlimited skill proofing and real-time job readiness analysis.
       </p>
 
-      {/* Billing Toggle */}
-      <div className="mt-12 flex items-center justify-center gap-4">
-        <span
-          className={`text-base font-medium transition-colors ${
-            billing === "monthly"
-              ? "text-foreground"
-              : "text-muted-foreground"
-          }`}
-        >
-          Monthly
-        </span>
-
-        <button
+      {/* Billing Toggle — button pair, selected side highlighted */}
+      <div className="mt-8 flex justify-center">
+        <div
           ref={toggleRef}
-          type="button"
-          role="switch"
-          aria-checked={billing === "yearly"}
+          role="group"
           aria-label="Toggle billing period"
-          onClick={handleToggle}
-          className="relative h-8 w-14 rounded-full bg-secondary shadow-[var(--shadow)] dark:shadow-[0_0_15px_rgba(185,120,255,0.2)]"
+          className="flex items-center gap-1 rounded-full border border-border bg-card p-1 shadow-[var(--shadow)]"
         >
-          <span
-            className={`absolute top-1 h-6 w-6 rounded-full bg-primary transition-all ${
-              billing === "yearly" ? "left-7" : "left-1"
-            }`}
-          />
-        </button>
+          <button
+            type="button"
+            aria-pressed={billing === "monthly"}
+            onClick={() => handleSelect("monthly")}
+            className={periodPill(billing === "monthly")}
+          >
+            Monthly
+          </button>
 
-        <span
-          className={`text-base font-medium transition-colors ${
-            billing === "yearly" ? "text-foreground" : "text-muted-foreground"
-          }`}
-        >
-          Yearly
-        </span>
-
-        <span className="text-sm font-semibold text-primary">
-          (Save 20%)
-        </span>
+          <button
+            type="button"
+            aria-pressed={billing === "yearly"}
+            onClick={() => handleSelect("yearly")}
+            className={`${periodPill(billing === "yearly")} flex items-center gap-1.5`}
+          >
+            Yearly
+            <span className="text-xs font-extrabold opacity-90">(Save 20%)</span>
+          </button>
+        </div>
       </div>
     </div>
   );

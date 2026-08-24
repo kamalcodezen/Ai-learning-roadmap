@@ -396,16 +396,18 @@ export default function CapabilityAudit() {
     <div className="mt-16 w-full global-container">
       {/* ── SECTION HEADER & NAVIGATION ── */}
       <div className="text-center mb-10 flex flex-col items-center gap-6">
-        <span className="inline-flex items-center justify-center gap-2 font-poppins text-xs md:text-sm font-semibold tracking-[0.2em] text-secondary bg-primary px-4 py-1.5 rounded-full">
+        <span className="section-badge">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shield-check"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg>
           THE 4 PROOF PILLARS
         </span>
         
-        <h4 className="font-poppins text-3xl md:text-5xl font-extrabold text-foreground text-balance tracking-tight">
-          Progress Is not Proof
+        <h4 className="section-title">
+          Progress Is <span className="text-brand">
+              not Proof
+              </span>
         </h4>
         
-        <p className="font-poppins text-sm md:text-base text-muted-foreground font-medium max-w-3xl mx-auto md:whitespace-nowrap">
+        <p className="section-subtitle md:whitespace-nowrap">
           AI Pather turns what you learn into visible evidence of what you can actually do
         </p>
 
@@ -417,11 +419,6 @@ export default function CapabilityAudit() {
             text={item.title}
             onClick={() => handleTabChange(idx)}
             isActive={activeCap === idx}
-            className={
-              activeCap === idx
-                ? "shadow-[0_0_18px_rgba(206,255,31,0.25)] ring-1 ring-primary"
-                : "opacity-60 hover:opacity-100"
-            }
           />
         ))}
         </div>
