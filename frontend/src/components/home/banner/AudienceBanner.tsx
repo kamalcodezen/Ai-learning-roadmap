@@ -23,9 +23,7 @@ export default function AudienceBanner() {
         min-h-180
         overflow-hidden
         bg-background
-        py-20
-        sm:py-24
-        md:py-28
+        py-section
       "
     >
       <BannerBackground image={activeItem.image} title={activeItem.title} />
