@@ -12,6 +12,7 @@
     "@better-auth/prisma-adapter": "^1.6.29",
     "@heroui/react": "^3.2.4",
     "@heroui/styles": "^3.2.4",
+    "@react-three/fiber": "^9.7.0",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",
