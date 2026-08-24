@@ -78,7 +78,7 @@ export default function AnimatedButton({
   );
 
   const classes = `
-    font-sans
+    font-poppins
     group
     relative
     flex
