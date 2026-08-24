@@ -104,7 +104,7 @@ export const Card = ({
         boxShadow:
           "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
       }}
-      className={`max-w-5xl mx-auto h-[40rem] md:h-[48rem] w-full border-4 border-[#6C6C6C] p-2 md:p-2 bg-[#222222] rounded-[30px] shadow-2xl flex flex-col ${isMobile ? "mt-4" : "-mt-12"}`}
+      className={`max-w-5xl mx-auto h-fit w-full border-4 border-[#6C6C6C] p-2 md:p-2 bg-[#222222] rounded-[30px] shadow-2xl flex flex-col ${isMobile ? "mt-4" : "-mt-12"}`}
     >
       {/* MacOS Window Controls Mockup */}
       <div className="flex items-center gap-2 px-4 pb-2 pt-2">
@@ -112,7 +112,7 @@ export const Card = ({
         <div className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
         <div className="h-3 w-3 rounded-full bg-[#27c93f]" />
       </div>
-      <div className="flex-1 w-full overflow-hidden overflow-y-auto rounded-xl bg-gray-100 dark:bg-zinc-900 md:rounded-b-2xl md:rounded-t-none md:p-4 p-2">
+      <div className="flex-1 w-full flex items-center justify-center overflow-hidden overflow-y-auto rounded-xl bg-gray-100 dark:bg-zinc-900 md:rounded-b-2xl md:rounded-t-none md:p-4 p-2">
         {children}
       </div>
     </motion.div>

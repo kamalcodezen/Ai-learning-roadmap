@@ -363,9 +363,6 @@ function Pipeline({ stage }: { stage: number }) {
               <span className={`mt-2 md:mt-3 text-caption md:text-small font-bold tracking-wide transition-colors duration-500 w-12 md:w-auto text-center ${cleared ? "text-foreground" : "text-muted-foreground"}`}>
                 {s.label}
               </span>
-              <span className="mt-1 text-caption text-muted-foreground w-12 md:w-20 text-center leading-tight">
-                {s.desc}
-              </span>
             </div>
 
             {i < STAGES.length - 1 && (
@@ -381,7 +378,7 @@ function Pipeline({ stage }: { stage: number }) {
 }
 
 
-function FloatingIcon({ icon: Icon, className, delay, duration, colorClassName }: { icon: React.ElementType, className: string, delay: number, duration: number, colorClassName?: string }) {
+function FloatingIcon({ icon: Icon, className, delay, duration, colorClassName }: { icon: React.ComponentType<{ className?: string }>, className: string, delay: number, duration: number, colorClassName?: string }) {
   const reducedMotion = useReducedMotion();
 
   return (
@@ -422,9 +419,9 @@ export default function CareerTwinSection() {
   };
 
   return (
-    <section className="bg-[var(--color-surface)] py-section overflow-hidden relative">
+    <section className="relative overflow-hidden">
       {/* Orbit Ring Background & Icons */}
-      <div className="absolute top-[50%] left-1/2 w-[140vw] max-w-[1600px] h-[1100px] -translate-x-1/2 -translate-y-1/2 rounded-[100%] border border-dashed border-gray-300 dark:border-zinc-800 hidden lg:block z-0 pointer-events-none">
+      <div className="absolute top-[50%] left-1/2 w-[140vw] max-w-[1300px] h-[1100px] -translate-x-1/2 -translate-y-1/2 rounded-[100%] border border-dashed border-gray-300 dark:border-zinc-800 hidden lg:block z-0 pointer-events-none">
 
         {/* Top: Next.js */}
         <FloatingIcon icon={SiNextdotjs} delay={0} duration={4.5} className="top-0 left-1/2 -translate-x-1/2 -translate-y-1/2" colorClassName="text-black dark:text-white" />
@@ -459,21 +456,23 @@ export default function CareerTwinSection() {
       <ContainerScroll
         titleComponent={
           <>
-            <h2 className="text-3xl tracking-tight text-gray-900 dark:text-zinc-100 sm:text-5xl">
-              Career twin
+            <h2 className="section-title">
+              Career <span className="text-brand">
+              twin
+              </span>
             </h2>
-            <p className="mt-4 text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto mb-4">
+            <p className="section-subtitle mt-3">
               Track your progress and match your skills to real-world roles.
             </p>
           </>
         }
       >
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 h-full bg-white dark:bg-zinc-950 sm:bg-transparent dark:sm:bg-transparent">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 h-full bg-white dark:bg-zinc-950 sm:bg-transparent dark:sm:bg-transparent">
           {/* ============ LEFT PANEL — PROFILE ============ */}
-          <div className="rounded-2xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm lg:col-span-4 flex flex-col">
-            <h3 className="text-sm tracking-widest text-gray-800 dark:text-zinc-200 mb-6 uppercase">YOUR PROFILE</h3>
+          <div className="h-fit rounded-2xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 md:p-6 shadow-sm lg:col-span-4 flex flex-col">
+            <h3 className="text-sm tracking-widest text-gray-800 dark:text-zinc-200 mb-4 uppercase">YOUR PROFILE</h3>
 
-            <div className="relative mb-8" ref={dropdownRef}>
+            <div className="relative mb-5" ref={dropdownRef}>
               <div
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center justify-between rounded-xl border border-gray-200 dark:border-zinc-800 p-3 hover:border-gray-300 dark:hover:border-zinc-700 transition-colors cursor-pointer bg-white dark:bg-zinc-900 z-20 relative"
@@ -523,7 +522,7 @@ export default function CareerTwinSection() {
               </AnimatePresence>
             </div>
 
-            <div className="flex-1 flex items-center justify-center py-6 relative z-0">
+            <div className="flex-1 flex items-center justify-center py-2 relative z-0">
               <Gauge value={role.score} />
             </div>
 
@@ -532,7 +531,7 @@ export default function CareerTwinSection() {
               whileTap={{ scale: 0.98 }}
               onClick={handleAction}
               disabled={isRedirecting}
-              className={`mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] py-4 text-sm font-bold text-white shadow-[0_4px_14px_0_rgba(159,84,247,0.39)] transition-colors ${isRedirecting ? "opacity-80 cursor-wait" : ""}`}
+              className={`mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] py-3 text-sm font-bold text-white shadow-[0_4px_14px_0_rgba(159,84,247,0.39)] transition-colors ${isRedirecting ? "opacity-80 cursor-wait" : ""}`}
             >
               {isRedirecting ? (
                 <>
@@ -553,24 +552,16 @@ export default function CareerTwinSection() {
           </div>
 
           {/* ============ RIGHT PANEL — METRICS & PIPELINE ============ */}
-          <div className="flex flex-col gap-6 lg:col-span-8 z-0 relative">
+          <div className="flex flex-col gap-4 lg:col-span-8 z-0 relative">
 
-            {/* SKILL METRICS */}
-            <div className="rounded-2xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm">
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-sm tracking-widest text-gray-800 dark:text-zinc-200 uppercase">SKILL METRICS</h3>
-              </div>
-
+            {/* SKILL METRICS — bars only, no heading */}
+            <div className="rounded-2xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 shadow-sm">
               <MetricsPanel values={role.metrics} />
             </div>
 
-            {/* MASTERY PIPELINE */}
-            <div className="rounded-2xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm overflow-hidden">
-              <h3 className="text-sm tracking-widest text-gray-800 dark:text-zinc-200 uppercase mb-8">MASTERY PIPELINE</h3>
-
-              <div className="w-full">
-                <Pipeline stage={role.stage} />
-              </div>
+            {/* MASTERY PIPELINE — bare strip: icons + labels only */}
+            <div>
+              <Pipeline stage={role.stage} />
             </div>
 
           </div>
