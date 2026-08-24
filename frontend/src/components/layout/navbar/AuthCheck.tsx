@@ -22,8 +22,8 @@ export default function AuthCheck() {
   if (isAuthenticated) {
     return (
       <ProfileDropdown
-        name={mockUser.name}
-        email={mockUser.email}
+        name={mockUser.name ?? ""}
+        email={mockUser.email ?? ""}
       />
     );
   }
