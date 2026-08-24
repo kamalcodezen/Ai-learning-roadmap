@@ -1,0 +1,12 @@
+/* Neutralize WebKit's autofill paint (Chrome/Safari) so fields stay transparent */
+
+.autofill-fix:-webkit-autofill,
+.autofill-fix:-webkit-autofill:hover,
+.autofill-fix:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+  /* Honored directly by some engines... */
+  background-color: transparent;
+  /* ...and frozen before any tint can appear on the stubborn ones */
+  transition: background-color 9999s ease-in-out 0s;
+}

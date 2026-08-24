@@ -4,7 +4,6 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 import AuthInput from "./AuthInput";
 import AuthSocialButton from "./AuthSocialButton";
-import { Ripple } from "@/src/registry/magicui/ripple";
 import type { AuthMode } from "./auth.types";
 
 interface AuthFormProps {
@@ -51,34 +50,31 @@ export default function AuthForm({
         flex-col
         justify-center
         overflow-hidden
-        px-7
+        px-6
         py-8
-        sm:px-12
-        md:px-14
-        lg:px-20
-        xl:px-24
+        sm:px-8
+        md:px-10
+        lg:px-14
+        xl:px-16
       "
     >
-      {/* Brand-colored ripple background */}
-      <Ripple className="text-primary -z-10 dark:opacity-40" />
-
       <div className="mx-auto w-full">
 
         {/* Heading */}
-        <h2 className="text-xl tracking-tight text-foreground sm:text-2xl text-center">
+        <h2 className="text-xl tracking-tight text-white sm:text-2xl text-center">
           {isSignUp ? "Create Account" : "Sign In"}
         </h2>
 
-        {/* Google */}
+        {/* Social sign-in */}
         <div className="mt-4">
-          <AuthSocialButton isPending={isPending} />
+          <AuthSocialButton mode={mode} isPending={isPending} />
         </div>
 
         {/* Divider */}
         <div className="my-4 flex items-center gap-4">
           <div className="h-px flex-1 bg-border" />
 
-          <span className="text-sm text-muted-foreground">- OR -</span>
+            <span className="text-sm text-white">- OR -</span>
 
           <div className="h-px flex-1 bg-border" />
         </div>
@@ -115,10 +111,10 @@ export default function AuthForm({
         {/* Forgot password */}
         {!isSignUp && (
           <div className="mt-4 text-right">
-            <Link
-              href="/auth/forgot-password"
-              className="text-xs text-muted-foreground transition-colors hover:text-foreground"
-            >
+              <Link
+                href="/auth/forgot-password"
+                className="text-xs text-white transition-colors hover:text-brand"
+              >
               Forgot Password?
             </Link>
           </div>
@@ -147,16 +143,16 @@ export default function AuthForm({
 
         {/* Status */}
         {message && (
-          <p
-            role="status"
-            className="mt-4 text-center text-xs text-muted-foreground"
-          >
+            <p
+              role="status"
+              className="mt-4 text-center text-xs text-white"
+            >
             {message}
           </p>
         )}
 
         {/* Switch */}
-        <p className="mt-4 text-xs text-muted-foreground text-center">
+        <p className="mt-4 text-xs text-white text-center">
           {isSignUp ? (
             <>
               Already have an account?{" "}

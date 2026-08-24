@@ -3,7 +3,6 @@
 import Image from "next/image";
 import AuthSwitchButton from "./AuthSwitchButton";
 import type { AuthBrandPanelProps } from "./auth.types";
-import { TypographyH1 } from "@/src/components/shadcn-studio/typography/typography-01";
 
 export default function AuthBrandPanel({
   mode,
@@ -18,8 +17,8 @@ export default function AuthBrandPanel({
       className={[
         "relative z-20",
         "w-full",
-        "md:absolute md:h-full md:w-[40%]",
-        isSignUp ? "md:left-0 md:top-0" : "md:left-[60%] md:top-0",
+        "md:absolute md:h-full md:w-[50%]",
+        isSignUp ? "md:left-0 md:top-0" : "md:left-[50%] md:top-0",
         "bg-linear-to-b from-[#d5f051] to-[#64a331]",
         "transition-[left,top,width,height] duration-700 ease-linear",
       ].join(" ")}
@@ -43,11 +42,11 @@ export default function AuthBrandPanel({
 
         {/* Brand heading */}
         <div className="relative z-10 mt-2 hidden max-w-[360px] md:block">
-          <TypographyH1 className="text-secondary">
+          <h2 className="text-secondary text-3xl">
             Let&apos;s learn to solve
             <br />
             this Rubik&apos;s Cube!
-          </TypographyH1>
+          </h2>
         </div>
 
         {/* Cube */}
@@ -56,7 +55,7 @@ export default function AuthBrandPanel({
     "absolute hidden md:block",
     "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
     "w-[200px] lg:w-[260px]",
-    "transition-transform duration-700 ease-linear",
+    "transition-transform duration-700 ease-linear mt-10",
   ].join(" ")}
 >
   <Image
