@@ -19,14 +19,14 @@ export const TypingIndicator: FC<TypingIndicatorProps> = ({ className }) => {
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-2xl rounded-tl-md border border-[#CEFF1F]/40 bg-[#d8ec92]/90 dark:bg-[#0f2a02]/95 px-4 py-3 backdrop-blur-md shadow-[0_0_15px_rgba(206,255,31,0.25)]",
+        "inline-flex items-center gap-1.5 rounded-2xl rounded-tl-md border border-[var(--color-primary)]/40 bg-purple-50/90 dark:bg-[#120025]/95 px-4 py-3 backdrop-blur-md shadow-[0_0_15px_rgba(159,84,247,0.25)]",
         className,
       )}
     >
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
-          className="h-2.5 w-2.5 rounded-full bg-[#131824] dark:bg-[#CEFF1F]"
+          className="h-2.5 w-2.5 rounded-full bg-[var(--color-primary)] dark:bg-[var(--color-primary)]"
           animate={{ opacity: [0.4, 1, 0.4], y: [0, -4, 0] }}
           transition={{
             duration: 0.8,

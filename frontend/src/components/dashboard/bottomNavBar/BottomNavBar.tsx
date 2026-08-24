@@ -36,12 +36,12 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
           href="/"
           aria-label="AI Pather home"
           className="flex size-11 shrink-0 items-center justify-center rounded-full"
-          style={{ backgroundColor: "#ceff1f" }}
+          style={{ backgroundColor: "var(--color-primary)" }}
         >
           <Image
             src={brandLogo}
             alt="Brand logo"
-            className="ml-0.5 h-5 w-5"
+            className="ml-0.5 h-5 w-5 brightness-0 invert"
             height={20}
             width={20}
           />
