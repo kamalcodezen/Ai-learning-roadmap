@@ -53,22 +53,22 @@ export function HomeFloatingChat() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="relative mb-3 flex h-[590px] max-h-[86vh] w-[385px] sm:w-[445px] flex-col overflow-hidden rounded-3xl bg-gradient-to-b from-[#f4ffd6] via-[#eaffbd] to-[#dff5a5] dark:from-[#0f2a02] dark:via-[#1a3a05] dark:to-[#304c0a] text-zinc-950 dark:text-white backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-[#a8d844]/60 dark:border-[#CEFF1F]/30"
+            className="relative mb-3 flex h-[590px] max-h-[86vh] w-[385px] sm:w-[445px] flex-col overflow-hidden rounded-3xl bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] dark:from-[#0a0015] dark:via-[#120025] dark:to-[#1a0040] text-zinc-950 dark:text-white backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-[var(--color-primary)]/40 dark:border-[var(--color-primary)]/30"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Plasma Animated Border Glow Overlay */}
             <div className="pointer-events-none absolute inset-0 rounded-3xl animate-plasmaGlow z-0" />
 
             {/* Header */}
-            <div className="relative z-10 flex shrink-0 items-center justify-between border-b border-black/10 dark:border-[#CEFF1F]/20 px-5 py-4 bg-[#eaffbd]/70 dark:bg-black/40 backdrop-blur-md">
+            <div className="relative z-10 flex shrink-0 items-center justify-between border-b border-black/10 dark:border-[var(--color-primary)]/20 px-5 py-4 bg-purple-50/70 dark:bg-black/40 backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#CEFF1F] shadow-[0_0_15px_rgba(206,255,31,0.5)] p-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[0_0_15px_rgba(159,84,247,0.5)] p-2">
                   <Image
                     src={logoSrc}
                     alt="AI Pathar"
                     width={22}
                     height={22}
-                    className="h-5.5 w-5.5 object-contain"
+                    className="h-5.5 w-5.5 object-contain brightness-0 invert"
                   />
                 </div>
                 <div>
@@ -76,8 +76,8 @@ export function HomeFloatingChat() {
                     AI Pathar
                   </h3>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="h-2 w-2 rounded-full bg-[#131824] dark:bg-[#CEFF1F] shadow-[0_0_8px_rgba(206,255,31,0.8)]" />
-                    <p className="text-xs text-zinc-800 dark:text-[#CEFF1F] font-semibold">
+                    <span className="h-2 w-2 rounded-full bg-[var(--color-primary)] dark:bg-[var(--color-primary)] shadow-[0_0_8px_rgba(159,84,247,0.8)]" />
+                    <p className="text-xs text-zinc-800 dark:text-[var(--color-primary)] font-semibold">
                       AI Career Copilot
                     </p>
                   </div>
@@ -89,7 +89,7 @@ export function HomeFloatingChat() {
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setOpen(false)}
                 aria-label="Close chat"
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-black/10 dark:bg-white/10 text-zinc-800 dark:text-white transition-colors hover:bg-[#CEFF1F] hover:text-[#0B0F19]"
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-black/10 dark:bg-white/10 text-zinc-800 dark:text-white transition-colors hover:bg-[var(--color-primary)] hover:text-white"
               >
                 <X className="size-5" />
               </motion.button>
@@ -100,18 +100,18 @@ export function HomeFloatingChat() {
               ref={scrollContainerRef}
               tabIndex={0}
               onWheel={(e) => e.stopPropagation()}
-              className="relative z-10 min-h-0 flex-1 space-y-4 overflow-y-scroll overscroll-contain p-4 outline-none scrollbar-thin scrollbar-thumb-zinc-600/30 dark:scrollbar-thumb-[#CEFF1F]/40 scrollbar-track-transparent"
+              className="relative z-10 min-h-0 flex-1 space-y-4 overflow-y-scroll overscroll-contain p-4 outline-none scrollbar-thin scrollbar-thumb-zinc-600/30 dark:scrollbar-thumb-[var(--color-primary)]/40 scrollbar-track-transparent"
             >
               {messages.length === 0 ? (
                 <div className="flex min-h-full flex-col items-center justify-center text-center p-2">
-                  <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-3xl border border-black/15 dark:border-[#CEFF1F]/40 bg-[#cce872]/60 dark:bg-[#CEFF1F]/15 text-zinc-950 dark:text-[#CEFF1F] shadow-[0_0_20px_rgba(206,255,31,0.3)]">
+                  <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-3xl border border-black/15 dark:border-[var(--color-primary)]/40 bg-purple-200/60 dark:bg-[var(--color-primary)]/15 text-zinc-950 dark:text-[var(--color-primary)] shadow-[0_0_20px_rgba(159,84,247,0.3)]">
                     <Sparkles className="size-8" />
                   </div>
                   <h4 className="text-xl font-extrabold text-zinc-950 dark:text-white tracking-wide">
                     {"How can I help you?".split("").map((letter, index) => (
                       <span
                         key={index}
-                        className="inline-block animate-loaderLetter text-zinc-950 dark:text-[#CEFF1F]"
+                        className="inline-block animate-loaderLetter text-zinc-950 dark:text-[var(--color-primary)]"
                         style={{ animationDelay: `${index * 0.05}s` }}
                       >
                         {letter === " " ? "\u00A0" : letter}
@@ -137,7 +137,7 @@ export function HomeFloatingChat() {
                         type="button"
                         onClick={() => sendMessage(suggestion)}
                         disabled={isLoading}
-                        className="rounded-2xl border border-black/10 dark:border-[#CEFF1F]/30 bg-[#eaffbd]/85 dark:bg-black/40 px-4 py-3 text-left text-sm font-semibold text-zinc-950 dark:text-zinc-100 transition hover:border-[#131824] dark:hover:border-[#CEFF1F] hover:bg-[#dff5a5] dark:hover:bg-[#CEFF1F]/20 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+                        className="rounded-2xl border border-black/10 dark:border-[var(--color-primary)]/30 bg-purple-100/85 dark:bg-black/40 px-4 py-3 text-left text-sm font-semibold text-zinc-950 dark:text-zinc-100 transition hover:border-black dark:hover:border-[var(--color-primary)] hover:bg-purple-200 dark:hover:bg-[var(--color-primary)]/20 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {suggestion}
                       </button>
@@ -170,13 +170,13 @@ export function HomeFloatingChat() {
                         )}
                       >
                         {!isUser && (
-                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#CEFF1F] shadow-[0_0_10px_rgba(206,255,31,0.4)] p-1.5">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[0_0_10px_rgba(159,84,247,0.4)] p-1.5">
                             <Image
                               src={logoSrc}
                               alt="AI"
                               width={20}
                               height={20}
-                              className="h-5 w-5 object-contain"
+                              className="h-5 w-5 object-contain brightness-0 invert"
                             />
                           </div>
                         )}
@@ -185,8 +185,8 @@ export function HomeFloatingChat() {
                           className={cn(
                             "max-w-[85%] rounded-2xl px-4.5 py-3.5 text-sm leading-relaxed",
                             isUser
-                              ? "rounded-tr-md bg-[#131824] text-[#CEFF1F] dark:bg-[#CEFF1F] dark:text-[#0B0F19] shadow-[0_4px_16px_rgba(0,0,0,0.25)] font-bold"
-                              : "rounded-tl-md border border-black/10 dark:border-[#CEFF1F]/30 bg-[#eaffbd]/95 dark:bg-black/70 text-zinc-950 dark:text-zinc-100 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.08)]",
+                              ? "rounded-tr-md bg-[var(--color-primary)] text-white dark:bg-[var(--color-primary)] dark:text-white shadow-[0_4px_16px_rgba(0,0,0,0.25)] font-bold"
+                              : "rounded-tl-md border border-black/10 dark:border-[var(--color-primary)]/30 bg-purple-50/95 dark:bg-black/70 text-zinc-950 dark:text-zinc-100 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.08)]",
                           )}
                           whileHover={{ scale: 1.01, y: -1 }}
                           transition={{ duration: 0.2, ease: "easeOut" }}
@@ -216,12 +216,12 @@ export function HomeFloatingChat() {
                                     </p>
                                   ),
                                   strong: ({ children }) => (
-                                    <strong className="font-extrabold text-zinc-950 dark:text-[#CEFF1F]">
+                                    <strong className="font-extrabold text-zinc-950 dark:text-[var(--color-primary)]">
                                       {children}
                                     </strong>
                                   ),
                                   em: ({ children }) => (
-                                    <em className="text-zinc-800 dark:text-[#CEFF1F]/90 font-semibold">
+                                    <em className="text-zinc-800 dark:text-[var(--color-primary)]/90 font-semibold">
                                       {children}
                                     </em>
                                   ),
@@ -241,7 +241,7 @@ export function HomeFloatingChat() {
                                     </li>
                                   ),
                                   blockquote: ({ children }) => (
-                                    <blockquote className="my-2.5 border-l-2 border-zinc-950 dark:border-[#CEFF1F] pl-3.5 italic text-zinc-800 dark:text-zinc-300 font-medium">
+                                    <blockquote className="my-2.5 border-l-2 border-zinc-950 dark:border-[var(--color-primary)] pl-3.5 italic text-zinc-800 dark:text-zinc-300 font-medium">
                                       {children}
                                     </blockquote>
                                   ),
@@ -249,12 +249,12 @@ export function HomeFloatingChat() {
                                     const isBlock =
                                       className?.includes("language-");
                                     return isBlock ? (
-                                      <pre className="my-2.5 overflow-x-auto rounded-xl border border-black/20 dark:border-[#CEFF1F]/40 bg-black/90 p-3.5 text-xs text-[#CEFF1F]">
+                                      <pre className="my-2.5 overflow-x-auto rounded-xl border border-black/20 dark:border-[var(--color-primary)]/40 bg-black/90 p-3.5 text-xs text-[var(--color-primary)]">
                                         <code {...props}>{children}</code>
                                       </pre>
                                     ) : (
                                       <code
-                                        className="rounded bg-black/15 dark:bg-black/60 border border-black/10 dark:border-[#CEFF1F]/40 px-1.5 py-0.5 text-xs font-bold text-zinc-950 dark:text-[#CEFF1F]"
+                                        className="rounded bg-black/15 dark:bg-black/60 border border-black/10 dark:border-[var(--color-primary)]/40 px-1.5 py-0.5 text-xs font-bold text-zinc-950 dark:text-[var(--color-primary)]"
                                         {...props}
                                       >
                                         {children}
@@ -262,19 +262,19 @@ export function HomeFloatingChat() {
                                     );
                                   },
                                   table: ({ children }) => (
-                                    <div className="my-2.5 overflow-x-auto rounded-lg border border-black/15 dark:border-[#CEFF1F]/40">
+                                    <div className="my-2.5 overflow-x-auto rounded-lg border border-black/15 dark:border-[var(--color-primary)]/40">
                                       <table className="w-full text-left text-xs">
                                         {children}
                                       </table>
                                     </div>
                                   ),
                                   th: ({ children }) => (
-                                    <th className="border-b border-black/15 dark:border-[#CEFF1F]/40 bg-[#cce872]/80 dark:bg-[#0f2a02] p-2.5 font-bold text-zinc-950 dark:text-white">
+                                    <th className="border-b border-black/15 dark:border-[var(--color-primary)]/40 bg-purple-200/80 dark:bg-[var(--color-surface)] p-2.5 font-bold text-zinc-950 dark:text-white">
                                       {children}
                                     </th>
                                   ),
                                   td: ({ children }) => (
-                                    <td className="border-b border-black/10 dark:border-[#CEFF1F]/20 p-2.5 text-zinc-900 dark:text-zinc-200">
+                                    <td className="border-b border-black/10 dark:border-[var(--color-primary)]/20 p-2.5 text-zinc-900 dark:text-zinc-200">
                                       {children}
                                     </td>
                                   ),
@@ -298,8 +298,8 @@ export function HomeFloatingChat() {
             </div>
 
             {/* Input Footer */}
-            <div className="relative z-10 shrink-0 border-t border-black/10 dark:border-[#CEFF1F]/20 p-3.5 bg-[#eaffbd]/80 dark:bg-black/75 backdrop-blur-md">
-              <div className="flex items-center gap-2 rounded-2xl border-2 border-black/20 dark:border-[#CEFF1F]/40 bg-[#f4ffd6] dark:bg-[#071701] px-4 py-2.5 shadow-sm focus-within:border-black dark:focus-within:border-[#CEFF1F] transition-all">
+            <div className="relative z-10 shrink-0 border-t border-black/10 dark:border-[var(--color-primary)]/20 p-3.5 bg-purple-50/80 dark:bg-black/75 backdrop-blur-md">
+              <div className="flex items-center gap-2 rounded-2xl border-2 border-black/20 dark:border-[var(--color-primary)]/40 bg-white dark:bg-[var(--color-surface)] px-4 py-2.5 shadow-sm focus-within:border-[var(--color-primary)] dark:focus-within:border-[var(--color-primary)] transition-all">
                 <input
                   type="text"
                   value={input}
@@ -318,7 +318,7 @@ export function HomeFloatingChat() {
                   className={cn(
                     "flex h-9 w-9 items-center justify-center rounded-xl transition-all",
                     input.trim() && !isLoading
-                      ? "bg-[#131824] text-[#CEFF1F] dark:bg-[#CEFF1F] dark:text-[#0B0F19] shadow-md hover:brightness-110"
+                      ? "bg-[var(--color-primary)] text-white dark:bg-[var(--color-primary)] dark:text-white shadow-md hover:brightness-110"
                       : "bg-black/15 text-zinc-600 dark:bg-white/10 dark:text-zinc-500 cursor-not-allowed",
                   )}
                 >

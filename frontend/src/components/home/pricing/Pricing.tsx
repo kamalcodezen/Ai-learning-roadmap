@@ -17,7 +17,7 @@ const Pricing = () => {
   };
 
   return (
-    <section className="bg-muted/40  dark:bg-transparent  lg:px-10  relative w-full overflow-hidden py-12 pt-0 px-4 sm:px-8 md:px-12">
+    <section className="bg-muted/40  dark:bg-transparent  lg:px-10  relative w-full overflow-hidden py-section px-4 sm:px-8 md:px-12">
       <div className=" global-pos relative w-full">
         {/* Header */}
         <Header billing={billing} onBillingChange={setBilling} />
@@ -29,13 +29,13 @@ const Pricing = () => {
               key={plan.name}
               className={`relative rounded-3xl p-6 shadow-[var(--shadow)] transition-all duration-300 hover:-translate-y-1 ${
                 plan.popular
-                  ? "z-10 mb-7 border-2 border-primary bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)] bg-card dark:bg-none lg:-mt-8 lg:py-8"
+                  ? "z-10 mb-7 border-2 border-primary bg-[linear-gradient(to_bottom,#f3e8ff_0%,#ede5ff_45%,#ddd0ff_100%)] bg-card dark:bg-none lg:-mt-8 lg:py-8"
                   : "border border-border bg-card"
               }`}
             >
               {/* Most Popular */}
               {plan.popular && (
-                <div className="absolute right-0 top-0 rounded-bl-xl rounded-tr-2xl bg-primary px-4 py-2 text-sm font-semibold text-secondary shadow-[0_0_20px_rgba(206,255,31,0.3)] dark:shadow-[0_0_25px_rgba(206,255,31,0.4)]">
+                <div className="absolute right-0 top-0 rounded-bl-xl rounded-tr-2xl bg-primary px-4 py-2 text-sm font-semibold text-secondary shadow-[0_0_20px_rgba(159,84,247,0.3)] dark:shadow-[0_0_25px_rgba(185,120,255,0.4)]">
                   ★ Most Popular
                 </div>
               )}

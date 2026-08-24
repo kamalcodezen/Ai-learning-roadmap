@@ -23,12 +23,12 @@ export default function NavLinks() {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden items-center gap-7 lg:flex">
+      <nav className="hidden items-center gap-5 lg:flex">
         {navLinks.map((link) => (
           <div key={link.label} className="relative">
             <Link
               href={link.href}
-              className="font-poppins flex items-center text-body-large font-normal text-muted-foreground transition-colors duration-200 hover:text-foreground"
+              className="font-poppins flex items-center text-[calc(var(--font-size-semi-paragraph)-1px)] font-normal transition-colors duration-200 hover:text-foreground"
             >
               {link.label}
             </Link>

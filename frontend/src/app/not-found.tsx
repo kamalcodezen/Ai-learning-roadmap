@@ -13,10 +13,10 @@ import {
 
 export default function NotFound() {
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#060910] px-4 py-16 text-foreground">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4 py-16 text-foreground">
       {/* ব্যাকগ্রাউন্ড রেডিয়াল লাইট ইফেক্ট ও গ্রিড */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(206,255,31,0.08),rgba(255,255,255,0))]" />
-      <div className="pointer-events-none absolute -top-32 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-[#CEFF1F]/5 blur-[140px]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(159,84,247,0.08),rgba(255,255,255,0))]" />
+      <div className="pointer-events-none absolute -top-32 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-[var(--color-primary)]/5 blur-[140px]" />
 
       {/* গ্রিড লাইন ওভারলে */}
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
@@ -28,7 +28,7 @@ export default function NotFound() {
           animate={{ opacity: 1, y: 0 }}
           className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#131824]/80 px-3.5 py-1.5 backdrop-blur-md"
         >
-          <LuSearchX className="size-3.5 text-[#CEFF1F]" />
+          <LuSearchX className="size-3.5 text-[var(--color-primary)]" />
           <span className="font-mono text-xs font-medium text-slate-300">
             Error 404: Roadmap Node Missing
           </span>
@@ -50,9 +50,9 @@ export default function NotFound() {
               initial={{ rotate: -10, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="flex size-14 items-center justify-center rounded-2xl border border-[#CEFF1F]/30 bg-[#131824] shadow-[0_0_30px_rgba(206,255,31,0.2)] sm:size-16"
+              className="flex size-14 items-center justify-center rounded-2xl border border-[var(--color-primary)]/30 bg-[#131824] shadow-[0_0_30px_rgba(159,84,247,0.2)] sm:size-16"
             >
-              <LuCompass className="size-7 text-[#CEFF1F] animate-spin [animation-duration:12s]" />
+              <LuCompass className="size-7 text-[var(--color-primary)] animate-spin [animation-duration:12s]" />
             </motion.div>
           </div>
         </div>
@@ -90,7 +90,7 @@ export default function NotFound() {
         >
           <Link
             href="/"
-            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#CEFF1F] px-6 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-[#b8e61b] hover:shadow-[0_0_20px_rgba(206,255,31,0.25)] active:scale-95"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[var(--color-secondary)] hover:shadow-[0_0_20px_rgba(159,84,247,0.25)] active:scale-95"
           >
             <LuHouse className="size-4" />
             <span>Back to Safety</span>
@@ -112,7 +112,7 @@ export default function NotFound() {
           transition={{ delay: 0.5 }}
           className="mt-12 inline-flex items-center gap-2 font-mono text-xs text-slate-500"
         >
-          <LuSparkles className="size-3 text-[#CEFF1F]" />
+          <LuSparkles className="size-3 text-[var(--color-primary)]" />
           <span>AI Pathfinder dynamically recalculating routes</span>
         </motion.div>
       </div>

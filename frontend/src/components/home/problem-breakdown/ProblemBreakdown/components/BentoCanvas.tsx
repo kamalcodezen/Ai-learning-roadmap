@@ -19,7 +19,7 @@ export default function BentoCanvas({
   return (
     <div 
       className="relative w-[52%] transition-all duration-700"
-      style={{ '--primary': '206 255 31', '--accent': '206 255 31' } as React.CSSProperties}
+      style={{ '--primary': '238 171 255', '--accent': '238 171 255' } as React.CSSProperties}
     >
       <div
         className="
@@ -50,8 +50,8 @@ export default function BentoCanvas({
           {/* Right: Dynamic Pill Badge */}
           <div className="flex items-center gap-2 rounded-full border border-[#3F3F46] bg-[#27272A] px-3 py-0.5 shadow-sm">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#CEFF1F] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#CEFF1F]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-primary)] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-primary)]" />
             </span>
             <span className="font-mono text-[10px] font-extrabold tracking-widest text-zinc-100 uppercase">
               {activeEyebrow}

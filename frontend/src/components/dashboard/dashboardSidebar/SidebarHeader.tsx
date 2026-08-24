@@ -21,12 +21,12 @@ export default function SidebarHeader({ onClose }: SidebarHeaderProps) {
       >
         <span
           className="flex size-8 items-center justify-center rounded-full"
-          style={{ backgroundColor: "#ceff1f" }}
+          style={{ backgroundColor: "var(--color-primary)" }}
         >
           <Image
             src={brandLogo}
             alt="Brand logo"
-            className="ml-1 h-4 w-4"
+            className="ml-1 h-4 w-4 brightness-0 invert"
             height={16}
             width={16}
           />

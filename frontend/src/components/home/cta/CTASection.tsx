@@ -40,7 +40,7 @@ function DotPattern({ className = '' }: { className?: string }) {
 
 export default function CTASection() {
   return (
-    <section className="relative overflow-hidden bg-background">
+    <section className="relative overflow-hidden  bg-background">
       {/* Subtle grid background */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.08] dark:opacity-[0.04]"
@@ -67,7 +67,7 @@ export default function CTASection() {
           </h1>
 
           <p className="font-poppins text-lg leading-7 text-muted-foreground mb-6 [&:not(:first-child)]:mt-6 text-balance mx-auto max-w-2xl">
-            Tell us where you want to go, and we’ll help you understand what to learn next
+            Tell us where you want to go, and we'll help you understand what to learn next
           </p>
 
           <div className="w-full mt-2 mb-4 flex justify-center items-center gap-3">
@@ -82,37 +82,37 @@ export default function CTASection() {
           </div>
         </div>
 
-        {/* ====== Green geometric blocks ====== */}
+        {/* ====== Purple geometric blocks ====== */}
         {/* Bottom-left block */}
         <div className="absolute bottom-0 left-0 hidden sm:flex items-end gap-0 pointer-events-none">
-          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-48 sm:h-85 md:h-85 lg:h-85 bg-[#ceff1f]" />
-          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-36 sm:h-60 md:h-60 lg:h-60 bg-[#ceff1f]" />
-          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-60 sm:h-60 md:h-60 lg:h-30 bg-[#ceff1f]" />
+          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-48 sm:h-85 md:h-85 lg:h-85 bg-primary" />
+          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-36 sm:h-60 md:h-60 lg:h-60 bg-primary" />
+          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-60 sm:h-60 md:h-60 lg:h-30 bg-primary" />
         </div>
 
-        {/* Bottom center connecting green bar */}
+        {/* Bottom center connecting bar */}
         <div className="absolute bottom-0 left-0 right-0 hidden sm:block pointer-events-none">
-          <div className="w-full h-14 sm:h-15 bg-[#ceff1f]" />
+          <div className="w-full h-14 sm:h-15 bg-primary" />
         </div>
 
         {/* Bottom-right block */}
         <div className="absolute bottom-0 right-0 hidden sm:flex items-end gap-0 pointer-events-none">
-          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-60 sm:h-60 md:h-60 lg:h-30 bg-[#ceff1f]" />
-          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-36 sm:h-60 md:h-60 lg:h-60 bg-[#ceff1f]" />
-          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-48 sm:h-85 md:h-85 lg:h-85 bg-[#ceff1f]" />
+          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-60 sm:h-60 md:h-60 lg:h-30 bg-primary" />
+          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-36 sm:h-60 md:h-60 lg:h-60 bg-primary" />
+          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-48 sm:h-85 md:h-85 lg:h-85 bg-primary" />
         </div>
 
         {/* Bottom corner labels */}
         <div className="absolute bottom-10 sm:bottom-6 left-8 sm:left-8 md:left-16 z-20 flex items-center gap-2">
-          <span className="block h-2 w-2 sm:h-3 sm:w-3 bg-[#060911] dark:bg-white dark:sm:bg-[#060911]" />
-          <span className="text-caption font-bold uppercase tracking-widest text-[#060911] dark:text-white dark:sm:text-[#060911]">
+          <span className="block h-2 w-2 sm:h-3 sm:w-3 bg-white dark:bg-white" />
+          <span className="text-caption font-bold uppercase tracking-widest text-white dark:text-white">
             Personalized Learning
           </span>
         </div>
 
         <div className="absolute bottom-10 sm:bottom-6 right-8 sm:right-8 md:right-16 z-20 flex items-center gap-2">
-          <span className="block h-2 w-2 sm:h-3 sm:w-3 bg-[#060911] dark:bg-white dark:sm:bg-[#060911]" />
-          <span className="text-caption font-bold uppercase tracking-widest text-[#060911] dark:text-white dark:sm:text-[#060911]">
+          <span className="block h-2 w-2 sm:h-3 sm:w-3 bg-white dark:bg-white" />
+          <span className="text-caption font-bold uppercase tracking-widest text-white dark:text-white">
             AI-Powered Paths
           </span>
         </div>

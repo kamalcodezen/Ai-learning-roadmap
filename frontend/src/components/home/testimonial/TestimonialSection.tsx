@@ -55,7 +55,7 @@ const duplicatedTestimonials = [...testimonials, ...testimonials];
 
 const TestimonialSection = () => {
   return (
-    <section className="relative w-full overflow-hidden py-10 px-4 sm:px-8 md:px-12  border-t border-border/40">
+    <section className="relative w-full overflow-hidden py-section px-4 sm:px-8 md:px-12  border-t border-border/40">
       <div className="global-pos relative z-10">
         <div className="text-left mb-10 md:mb-16">
           {/* <span className="text-[12px] font-mono tracking-widest text-muted-foreground uppercase mb-2 block">

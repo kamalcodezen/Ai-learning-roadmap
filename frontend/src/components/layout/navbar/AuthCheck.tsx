@@ -15,8 +15,8 @@ export default function AuthCheck() {
   // const isAuthenticated = false;
 
   const mockUser = {
-    name: "Jubair",
-    email: "jubair@example.com",
+    name: session?.user?.name,
+    email: session?.user?.email,
   };
 
   if (isAuthenticated) {
@@ -28,5 +28,5 @@ export default function AuthCheck() {
     );
   }
 
-  return <Button text="Start for Free" href="/signup" className="!font-poppins" />;
+  return <Button text="Start for Free" href="/signup" className="font-poppins" />;
 }

@@ -17,11 +17,11 @@
 }
 
 :root .border-glow-card {
-  background: linear-gradient(to bottom, #ffffff, #e4ffec);
+  background: linear-gradient(to bottom, #ffffff, #f3e8ff);
 }
 
 .dark .border-glow-card {
-  background: linear-gradient(to bottom, #062200, rgba(206, 255, 31, 0.5));
+  background: linear-gradient(to bottom, #0a0015, rgba(159, 84, 247, 0.3));
 }
 
 .border-glow-card > .edge-light {
