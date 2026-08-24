@@ -1,4 +1,5 @@
 import type { ErrorRequestHandler } from "express";
+import { ZodError } from "zod";
 
 export const errorMiddleware: ErrorRequestHandler = (
   error,
@@ -6,10 +7,23 @@ export const errorMiddleware: ErrorRequestHandler = (
   res,
   _next,
 ) => {
-  console.error(error);
+  // Zod validation error
+  if (error instanceof ZodError) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid request data.",
+      errors: error.issues.map((issue) => ({
+        field: issue.path.join("."),
+        message: issue.message,
+      })),
+    });
+  }
 
-  res.status(500).json({
+  // Unexpected server error
+  console.error("[Internal Server Error]", error);
+
+  return res.status(500).json({
     success: false,
-    message: "Internal server error",
+    message: "Internal server error.",
   });
 };
