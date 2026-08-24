@@ -33,8 +33,8 @@ export default function Button({
       <span
         className={`relative z-10 transition-all duration-500 ease-out group-hover:translate-x-8 ${
           variant === "primary"
-            ? "group-hover:text-secondary"
-            : "text-foreground group-hover:text-secondary"
+            ? "group-hover:text-white dark:group-hover:text-black"
+            : "text-foreground group-hover:text-white dark:group-hover:text-black"
         }`}
       >
         {text}
@@ -45,14 +45,14 @@ export default function Button({
         className={`absolute right-1 top-1 z-20 flex h-10 w-10 items-center justify-center rounded-full transition-all duration-500 ease-out group-hover:right-[calc(100%-44px)] group-hover:rotate-45 ${
           variant === "primary"
             ? ""
-            : "text-foreground group-hover:text-secondary"
+            : "text-foreground group-hover:text-white dark:group-hover:text-black"
         }`}
       >
         {icon ?? (
           <GoArrowUpRight
             className={`text-xl transition-colors duration-500 ${
               variant === "primary"
-                ? "text-foreground group-hover:text-secondary"
+                ? "text-foreground group-hover:text-white dark:group-hover:text-black"
                 : ""
             }`}
           />

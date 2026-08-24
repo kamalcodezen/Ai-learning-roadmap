@@ -39,7 +39,7 @@ export default function TextBody({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
         aria-label={plainHeading}
-        className="font-poppins text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl"
+        className="text-h1 sm:whitespace-nowrap sm:[text-wrap:unset]"
       >
         {renderHighlighted(heading)}
       </motion.h1>

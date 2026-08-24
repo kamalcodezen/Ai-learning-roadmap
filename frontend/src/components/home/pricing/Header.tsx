@@ -10,7 +10,7 @@ interface HeaderProps {
   onBillingChange: (billing: BillingPeriod) => void;
 }
 
-const CONFETTI_COLORS = ["#CEFF1F", "#131824", "#ffffff"];
+const CONFETTI_COLORS = ["#9F54F7", "#B978FF", "#ffffff"];
 
 const Header = ({ billing, onBillingChange }: HeaderProps) => {
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -102,7 +102,7 @@ const Header = ({ billing, onBillingChange }: HeaderProps) => {
           aria-checked={billing === "yearly"}
           aria-label="Toggle billing period"
           onClick={handleToggle}
-          className="relative h-8 w-14 rounded-full bg-secondary shadow-[var(--shadow)] dark:shadow-[0_0_15px_rgba(206,255,31,0.2)]"
+          className="relative h-8 w-14 rounded-full bg-secondary shadow-[var(--shadow)] dark:shadow-[0_0_15px_rgba(185,120,255,0.2)]"
         >
           <span
             className={`absolute top-1 h-6 w-6 rounded-full bg-primary transition-all ${

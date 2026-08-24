@@ -40,11 +40,11 @@ export default function ProfileDropdown({
     >
       <button
         type="button"
-        className="flex items-center gap-2 rounded-lg bg-brand py-1 pl-1 pr-2 transition-all"
+        className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-all"
+        style={{ background: "var(--gradient-primary)" }}
         aria-expanded={open}
       >
-        {/* User Icon */}
-        <span className="flex size-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-700">
+        <span className="flex size-9 items-center justify-center rounded-full bg-neutral-900 text-white">
 
           {/* Temporary user icon here */}
           <svg
@@ -62,7 +62,7 @@ export default function ProfileDropdown({
 
         </span>
 
-        <span className="hidden max-w-24 truncate text-sm font-medium text-neutral-800 sm:block">
+        <span className="hidden max-w-24 truncate text-sm font-medium text-white sm:block">
           {name}
         </span>
 
@@ -73,7 +73,7 @@ export default function ProfileDropdown({
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
-          className={`transition-transform duration-200 ${
+          className={`text-white transition-transform duration-200 ${
             open ? "rotate-180" : ""
           }`}
         >
@@ -85,8 +85,8 @@ export default function ProfileDropdown({
         <div
           data-aos="flip-left"
           className="absolute right-0 top-[calc(100%+8px)] w-60 overflow-hidden rounded-lg p-2 shadow-xl -mt-2
-          bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)]
-          dark:bg-[linear-gradient(to_bottom,#0f2a02_0%,#1a3a05_28%,#304c0a_55%,#6b861c_100%)]"
+          bg-[linear-gradient(to_bottom,#f3e8ff_0%,#ede5ff_45%,#ddd0ff_100%)]
+          dark:bg-[linear-gradient(to_bottom,#0a0015_0%,#120025_28%,#1a0040_55%,#2d1065_100%)]"
         >
           <div className="px-3 pb-2 pt-3">
             <p className="truncate text-sm font-semibold text-neutral-900 dark:text-white">
@@ -120,4 +120,3 @@ export default function ProfileDropdown({
     </div>
   );
 }
-

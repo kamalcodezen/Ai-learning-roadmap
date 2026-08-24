@@ -27,16 +27,16 @@ export const PlasmaTriggerButton: FC<PlasmaTriggerButtonProps> = ({
         transition={{ type: "spring", stiffness: 400, damping: 17 }}
         onClick={onClick}
         aria-label={isOpen ? "Close AI chat" : "Open AI chat"}
-        className="group relative flex items-center justify-center rounded-full p-0 outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#CEFF1F] cursor-pointer touch-manipulation select-none"
+        className="group relative flex items-center justify-center rounded-full p-0 outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] cursor-pointer touch-manipulation select-none"
       >
         <div
-          className="relative flex items-center justify-center font-sans select-none rounded-full cursor-pointer bg-[#CEFF1F]"
+          className="relative flex items-center justify-center font-sans select-none rounded-full cursor-pointer bg-[var(--color-primary)]"
           style={{ width: size, height: size }}
         >
           {/* Radar Ping Animation */}
           {!isOpen && (
             <span
-              className="absolute inset-0 rounded-full bg-[#CEFF1F] animate-chatPing pointer-events-none -z-10"
+              className="absolute inset-0 rounded-full bg-[var(--color-primary)] animate-chatPing pointer-events-none -z-10"
               style={{ width: size, height: size }}
             />
           )}
@@ -54,7 +54,7 @@ export const PlasmaTriggerButton: FC<PlasmaTriggerButtonProps> = ({
               />
             </div>
           ) : (
-            <X className="size-6 text-[#131824] z-10" />
+            <X className="size-6 text-white z-10" />
           )}
 
           {/* Rotating Pure Neon/Lime Glow */}
@@ -83,16 +83,16 @@ export const PlasmaTriggerButton: FC<PlasmaTriggerButtonProps> = ({
           100% {
             box-shadow:
               0 6px 12px 0 #ffffff inset,
-              0 12px 18px 0 #d9f99d inset,
-              0 0 6px 1.5px rgba(206, 255, 31, 0.7),
-              0 0 14px 3px rgba(206, 255, 31, 0.4);
+              0 12px 18px 0 #d8b4fe inset,
+              0 0 6px 1.5px rgba(159, 84, 247, 0.7),
+              0 0 14px 3px rgba(159, 84, 247, 0.4);
           }
           50% {
             box-shadow:
-              0 6px 12px 0 #eaffbd inset,
-              0 12px 18px 0 #a3e635 inset,
-              0 0 6px 1.5px rgba(206, 255, 31, 0.7),
-              0 0 14px 3px rgba(206, 255, 31, 0.4);
+              0 6px 12px 0 #e9d5ff inset,
+              0 12px 18px 0 #a855f7 inset,
+              0 0 6px 1.5px rgba(159, 84, 247, 0.7),
+              0 0 14px 3px rgba(159, 84, 247, 0.4);
           }
         }
         .animate-plasmaGlow {

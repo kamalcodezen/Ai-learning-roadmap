@@ -31,7 +31,10 @@ export default function BannerBackground({
             style={{ backgroundImage: `url(${image})` }}
           />
 
-          <div className="absolute inset-0 bg-linear-to-b from-background/40 to-background/75" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 to-background/75" />
+          
+          {/* Top edge fade gradient */}
+          <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-background to-transparent pointer-events-none" />
 
           <div className="absolute inset-0 backdrop-blur-[3px]" />
         </motion.div>
