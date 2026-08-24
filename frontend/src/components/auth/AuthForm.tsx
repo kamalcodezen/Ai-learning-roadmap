@@ -65,7 +65,7 @@ export default function AuthForm({
       <div className="mx-auto w-full">
 
         {/* Heading */}
-        <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl text-center">
+        <h2 className="text-xl tracking-tight text-foreground sm:text-2xl text-center">
           {isSignUp ? "Create Account" : "Sign In"}
         </h2>
 

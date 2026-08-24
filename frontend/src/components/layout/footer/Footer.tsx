@@ -10,7 +10,6 @@ import {
 } from "react-icons/fa6";
 import Link from "next/link";
 import Image from "next/image";
-import { SparklesCore } from "../../ui/sparkles";
 
 const mainLinks = [
   { title: "How It Works", href: "/#how-it-works" },
@@ -41,18 +40,28 @@ export default function Footer() {
         <div className="absolute inset-x-0 mx-auto top-0 bg-gradient-to-r from-transparent via-[#ceff1f] to-transparent h-[5px] w-1/4 blur-sm" />
         <div className="absolute inset-x-0 mx-auto top-0 bg-gradient-to-r from-transparent via-[#ceff1f] to-transparent h-px w-1/4" />
 
-        {/* Core component */}
-        <SparklesCore
-          background="transparent"
-          minSize={0.4}
-          maxSize={1}
-          particleDensity={1200}
-          className="w-full h-full"
-          particleColor="#ceff1f"
-        />
-
         {/* Radial Gradient to prevent sharp edges */}
         <div className="absolute inset-0 w-full h-full bg-[#060911] [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+      </div>
+
+      {/* Noise Overlay for Grunge Effect */}
+      <div 
+        className="absolute inset-0 z-0 opacity-20 mix-blend-overlay pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        }}
+      ></div>
+
+      {/* Top Right Aurora/Grunge Gradient */}
+      <div className="absolute top-0 right-0 w-[400px] md:w-[600px] h-[400px] md:h-[600px] pointer-events-none z-0 translate-x-1/4 -translate-y-1/4 opacity-60 mix-blend-screen">
+        <div className="absolute inset-0 border-[40px] md:border-[80px] border-[#ceff1f] rounded-[40%_60%_70%_30%] blur-[40px] md:blur-[70px]" />
+        <div className="absolute inset-8 md:inset-12 border-[20px] md:border-[40px] border-[#ceff1f] rounded-[60%_40%_30%_70%] blur-[30px] md:blur-[50px] opacity-70" />
+      </div>
+      
+      {/* Bottom Left Aurora/Grunge Gradient */}
+      <div className="absolute bottom-0 left-0 w-[450px] md:w-[700px] h-[450px] md:h-[700px] pointer-events-none z-0 -translate-x-1/4 translate-y-1/4 opacity-60 mix-blend-screen">
+        <div className="absolute inset-0 border-[50px] md:border-[100px] border-[#ceff1f] rounded-[30%_70%_50%_50%] blur-[50px] md:blur-[80px]" />
+        <div className="absolute inset-10 md:inset-16 border-[30px] md:border-[50px] border-[#ceff1f] rounded-[50%_50%_70%_30%] blur-[40px] md:blur-[60px] opacity-70" />
       </div>
 
       <div className="global-pos relative z-10 flex w-full flex-col items-center">
@@ -83,7 +92,7 @@ export default function Footer() {
               <Link
                 key={link.title}
                 href={link.href}
-                className="text-small font-medium text-slate-400 hover:text-[#ceff1f] transition-colors duration-300"
+                className="font-poppins text-small font-medium text-slate-400 hover:text-[#ceff1f] transition-colors duration-300"
               >
                 {link.title}
               </Link>

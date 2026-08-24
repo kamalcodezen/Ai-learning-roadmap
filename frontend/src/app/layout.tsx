@@ -1,8 +1,11 @@
-import { Poppins } from "next/font/google";
+import { Poppins, Geist } from "next/font/google";
 import "./globals.css";
 import Providers from "../providers/providers";
 import SmoothScroll from "../providers/SmoothScroll";
 import NextTopLoader from "nextjs-toploader";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
@@ -22,7 +25,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${poppins.variable} font-sans antialiased h-full scroll-smooth`}
+      className={cn("antialiased", "h-full", "scroll-smooth", poppins.variable, "font-sans", geist.variable)}
     >
       <body
         className="min-h-full flex flex-col antialiased"

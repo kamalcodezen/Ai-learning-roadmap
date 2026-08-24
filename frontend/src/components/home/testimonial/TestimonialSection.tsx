@@ -61,7 +61,7 @@ const TestimonialSection = () => {
           {/* <span className="text-[12px] font-mono tracking-widest text-muted-foreground uppercase mb-2 block">
     Testimonials
   </span> */}
-          <h2 className="font-poppins text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
+          <h2 className="font-poppins text-2xl sm:text-3xl tracking-tight text-foreground">
             What{" "}
             <i className="font-serif italic font-normal text-muted-foreground">
               Our Learners
@@ -105,7 +105,7 @@ const TestimonialSection = () => {
                         className="w-8 h-8 sm:w-12 sm:h-12 rounded-full object-cover border border-border"
                       />
                       <div className="flex flex-col flex-1 justify-center">
-                        <h5 className="text-sm sm:text-base font-semibold text-foreground">
+                        <h5 className="text-sm sm:text-base text-foreground">
                           {testimonial.name}
                         </h5>
                         <p className="text-xs sm:text-sm text-muted-foreground">

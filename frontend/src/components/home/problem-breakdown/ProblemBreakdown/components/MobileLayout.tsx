@@ -25,7 +25,7 @@ export default function MobileLayout({ states }: MobileLayoutProps) {
               </span>
             </div>
 
-            <h3 className="font-poppins text-h3 font-bold leading-snug text-foreground text-balance">
+            <h3 className="font-poppins text-h3 leading-snug text-foreground text-balance">
               {state.title}
             </h3>
 

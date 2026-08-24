@@ -41,7 +41,7 @@ export default function DesktopLayout({ states }: DesktopLayoutProps) {
   return (
     <div
       ref={containerRef}
-      className="relative hidden h-[260vh] lg:block mb-13"
+      className="relative hidden h-[260vh] lg:block"
     >
       {/* হেডার ও কন্টেন্ট একসাথে সেন্টারে স্টিকি হয়ে থাকবে */}
       <div className="sticky top-20 flex h-[calc(100vh-6rem)] w-full flex-col justify-center gap-6 mb-12">
@@ -49,7 +49,7 @@ export default function DesktopLayout({ states }: DesktopLayoutProps) {
         <ProblemHeader />
 
         {/* মেইন ক্যানভাস ও টাইমলাইন */}
-        <div className="flex w-full items-center justify-between gap-8">
+        <div className="flex w-full items-center justify-between gap-16">
           <BentoCanvas
             activeState={activeState}
             activeEyebrow={states[activeState]?.eyebrow}

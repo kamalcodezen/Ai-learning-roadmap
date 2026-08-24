@@ -1,23 +1,21 @@
 import React from "react";
+import { TypographyH1 } from "@/src/components/shadcn-studio/typography/typography-01";
 
 const Header = () => {
   return (
-    <div className="w-full text-left md:w-xl">
-      {/* Main Heading */}
-      <h2 className="font-poppins text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
-        The Evolution of{" "}
-        <i className="font-serif italic font-normal text-muted-foreground">
-          Career
-        </i>{" "}
-        <span className="font-medium underline decoration-primary/50 underline-offset-8 text-primary">
-          Learning.
-        </span>
-      </h2>
-      <p className="section-description text-base md:text-lg text-muted-foreground mt-1">
-        From static course libraries to an AI companion that maps, verifies and
-        adapts your entire career growth.
-      </p>
-    </div>
+    <section className="w-full rounded-t-[24px] px-4 py-6">
+      <div className="w-full text-left md:w-xl">
+        {/* Main Heading */}
+        <TypographyH1 className="max-w-5xl text-left text-foreground">
+          The Evolution of {" "}
+          <span className="text-primary"> Career Learning.</span>
+        </TypographyH1>
+        <p className="section-description text-base md:text-lg text-muted-foreground mt-2">
+          From static course libraries to an AI companion that maps, verifies and
+          adapts your entire career growth.
+        </p>
+      </div>
+    </section>
   );
 };
 

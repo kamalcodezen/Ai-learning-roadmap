@@ -16,7 +16,7 @@ export default function Logo() {
         <Image src={brandLogo} alt="Brand-logo" className="ml-1 w-4 h-4 md:w-5 md:h-5" height={20} width={20}/>
       </span>
 
-      <span className="font-sans text-h4 font-semibold text-foreground">
+      <span className="font-poppins text-h4 font-semibold text-foreground">
         AI Pather
       </span>
     </Link>

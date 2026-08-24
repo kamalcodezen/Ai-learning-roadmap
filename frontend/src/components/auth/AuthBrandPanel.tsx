@@ -3,6 +3,7 @@
 import Image from "next/image";
 import AuthSwitchButton from "./AuthSwitchButton";
 import type { AuthBrandPanelProps } from "./auth.types";
+import { TypographyH1 } from "@/src/components/shadcn-studio/typography/typography-01";
 
 export default function AuthBrandPanel({
   mode,
@@ -42,11 +43,11 @@ export default function AuthBrandPanel({
 
         {/* Brand heading */}
         <div className="relative z-10 mt-2 hidden max-w-[360px] md:block">
-          <h1 className="font-sans text-lg font-bold leading-[1.05] tracking-tight text-secondary sm:text-xl lg:text-2xl">
+          <TypographyH1 className="text-secondary">
             Let&apos;s learn to solve
             <br />
             this Rubik&apos;s Cube!
-          </h1>
+          </TypographyH1>
         </div>
 
         {/* Cube */}

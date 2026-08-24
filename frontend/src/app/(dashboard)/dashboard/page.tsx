@@ -2,6 +2,7 @@
 
 import { authClient } from "@/src/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { TypographyH1 } from "@/src/components/shadcn-studio/typography/typography-01";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function DashboardPage() {
 
   return (
     <main>
-      <h1>Dashboard</h1>
+      <TypographyH1>Dashboard</TypographyH1>
 
       <p>Welcome, {session.user.name}</p>
       <p>Email: {session.user.email}</p>

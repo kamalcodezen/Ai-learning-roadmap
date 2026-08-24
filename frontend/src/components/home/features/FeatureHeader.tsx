@@ -4,20 +4,14 @@ import React from "react";
 
 export default function FeatureHeader() {
   return (
-    <div className="w-full mb-12">
-      <h2 className="font-poppins text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
-        Accelerate{" "}
-        <i className="font-serif italic font-normal text-muted-foreground">
-          Growth
-        </i>{" "}
-        with{" "}
-        <span className="font-medium underline decoration-primary/50 underline-offset-8 text-primary">
-          Smart Execution
-        </span>
-      </h2>
-      <p className="section-description text-base md:text-lg text-muted-foreground mt-1 max-w-xl">
-        Bridge skill gaps, prove your capability with live evidence, and adapt
-        learning paths without guilt.
+    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 ">
+      <div className="max-w-xl">
+        <h2 className="font-poppins text-h2 tracking-tight text-foreground text-center md:text-start text-balance">
+          Accelerate Growth with <span className="text-primary font-extrabold">Smart Execution</span>
+        </h2>
+      </div>
+      <p className="section-description max-w-md text-body-large leading-relaxed md:text-right lg:text-right">
+        Bridge skill gaps, prove your capability with live evidence, and adapt learning paths without guilt.
       </p>
     </div>
   );

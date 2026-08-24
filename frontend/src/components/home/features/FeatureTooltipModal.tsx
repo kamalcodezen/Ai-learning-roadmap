@@ -53,7 +53,7 @@ export default function FeatureTooltipModal({
             />
 
             {/* Header */}
-            <h4 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
+            <h4 className="text-xl text-zinc-900 dark:text-zinc-100 tracking-tight">
               {feature.title}
             </h4>
 
@@ -107,7 +107,7 @@ export default function FeatureTooltipModal({
               </button>
 
               {/* Title */}
-              <h4 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight pr-8">
+              <h4 className="text-xl text-zinc-900 dark:text-zinc-100 tracking-tight pr-8">
                 {feature.title}
               </h4>
 
