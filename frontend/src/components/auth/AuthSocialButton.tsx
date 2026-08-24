@@ -2,21 +2,12 @@
 
 import { Button } from "@heroui/react";
 import { authClient } from "../../lib/auth-client";
+import { FcGoogle } from "react-icons/fc";
 
 interface AuthSocialButtonProps {
   isPending?: boolean;
 }
 
-function GoogleIcon() {
-  return (
-    <span
-      aria-hidden="true"
-      className="flex h-5 w-5 items-center justify-center font-bold text-brand"
-    >
-      G
-    </span>
-  );
-}
 
 export default function AuthSocialButton({
   isPending = false,
@@ -36,7 +27,7 @@ export default function AuthSocialButton({
       isPending={isPending}
       onPress={handleGoogleSignIn}
       className="
-        h-11
+        h-10
         rounded-lg
         border-border
         bg-transparent
@@ -47,7 +38,7 @@ export default function AuthSocialButton({
         hover:bg-muted
       "
     >
-      <GoogleIcon />
+      <FcGoogle className="text-2xl" />
       <span>Sign up with Google</span>
     </Button>
   );
