@@ -188,8 +188,8 @@ function Gauge({ value }: { value: number }) {
       >
         <defs>
           <linearGradient id="gaugeGradLight" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#9fe60d" />
-            <stop offset="100%" stopColor="#ceff1f" />
+            <stop offset="0%" stopColor="var(--color-secondary)" />
+            <stop offset="100%" stopColor="var(--color-primary)" />
           </linearGradient>
         </defs>
 
@@ -202,7 +202,7 @@ function Gauge({ value }: { value: number }) {
               y1={t.y1}
               x2={t.x2}
               y2={t.y2}
-              className={isFilled ? "stroke-[#9fe60d]" : (t.major ? "stroke-gray-300 dark:stroke-zinc-700" : "stroke-gray-100 dark:stroke-zinc-800")}
+              className={isFilled ? "stroke-[var(--color-primary)]" : (t.major ? "stroke-gray-300 dark:stroke-zinc-700" : "stroke-gray-100 dark:stroke-zinc-800")}
               strokeWidth={t.major ? 2 : 1.5}
               strokeLinecap="round"
             />
@@ -231,7 +231,7 @@ function Gauge({ value }: { value: number }) {
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pt-2">
         <span className="text-caption font-semibold tracking-widest text-muted-foreground">OVERALL SCORE</span>
         <div className="mt-2 flex items-baseline gap-1">
-          <span className="text-6xl font-bold tracking-tight text-[#9fe60d] tabular-nums">
+          <span className="text-6xl font-bold tracking-tight text-[var(--color-primary)] tabular-nums">
             {Math.round(v)}
           </span>
           <span className="text-body-large font-medium text-muted-foreground">/100</span>
@@ -260,13 +260,13 @@ function MetricsPanel({ values }: { values: number[] }) {
         return (
           <div key={metric.name} className="group relative flex items-center gap-4">
             <div className="flex w-32 shrink-0 items-center gap-3">
-              <Icon className="h-5 w-5 text-[#9fe60d]" />
+              <Icon className="h-5 w-5 text-[var(--color-primary)]" />
               <span className="text-sm font-medium text-gray-700 dark:text-zinc-300">{metric.name}</span>
             </div>
 
             <div className="relative h-2 flex-1 rounded-full bg-gray-100 dark:bg-zinc-800 overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-[#9fe60d]"
+                className="h-full rounded-full bg-[var(--color-primary)]"
                 initial={{ width: 0 }}
                 animate={{ width: `${val}%` }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: delayMs / 1000 }}
@@ -274,7 +274,7 @@ function MetricsPanel({ values }: { values: number[] }) {
             </div>
 
             <span className="w-12 text-right text-sm tabular-nums">
-              <strong className="text-[#9fe60d]">
+              <strong className="text-[var(--color-primary)]">
                 <AnimatedMetricNumber value={val} delayMs={delayMs} />
               </strong>
               <span className="text-gray-400 dark:text-zinc-500 text-xs">/100</span>
@@ -353,7 +353,7 @@ function Pipeline({ stage }: { stage: number }) {
                 animate={{ scale: active ? [1, 1.15, 1] : 1 }}
                 transition={{ duration: 0.5, ease: "easeInOut", delay: i * 0.05 }}
                 className={`relative flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-full border-2 transition-colors duration-500 bg-white dark:bg-zinc-950 z-10 ${cleared
-                    ? "border-[#9fe60d] text-[#9fe60d]"
+                    ? "border-[var(--color-primary)] text-[var(--color-primary)]"
                     : "border-gray-200 dark:border-zinc-800 text-gray-400 dark:text-zinc-600"
                   }`}
               >
@@ -370,7 +370,7 @@ function Pipeline({ stage }: { stage: number }) {
 
             {i < STAGES.length - 1 && (
               <div className="flex-1 px-1 md:px-2 mt-5 md:mt-7 z-0">
-                <div className={`h-1 md:h-1.5 w-full rounded-full transition-colors duration-500 ${connectorDone ? "bg-[#9fe60d]" : "bg-muted"}`} />
+                <div className={`h-1 md:h-1.5 w-full rounded-full transition-colors duration-500 ${connectorDone ? "bg-[var(--color-primary)]" : "bg-muted"}`} />
               </div>
             )}
           </Fragment>
@@ -422,7 +422,7 @@ export default function CareerTwinSection() {
   };
 
   return (
-    <section className="bg-gray-50/50 dark:!bg-black/50 overflow-hidden relative">
+    <section className="bg-[var(--color-surface)] py-section overflow-hidden relative">
       {/* Orbit Ring Background & Icons */}
       <div className="absolute top-[50%] left-1/2 w-[140vw] max-w-[1600px] h-[1100px] -translate-x-1/2 -translate-y-1/2 rounded-[100%] border border-dashed border-gray-300 dark:border-zinc-800 hidden lg:block z-0 pointer-events-none">
 
@@ -451,9 +451,9 @@ export default function CareerTwinSection() {
         <FloatingIcon icon={SiReact} delay={0.8} duration={5.1} className="top-[14.6%] left-[14.6%] -translate-x-1/2 -translate-y-1/2" colorClassName="text-[#61DAFB]" />
 
         {/* Decorative Dotted Accents */}
-        <div className="absolute top-[14.6%] right-[14.6%] w-2 h-2 bg-[#CEFF1F] rounded-full shadow-[0_0_10px_#CEFF1F] translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-[14.6%] left-[14.6%] w-2 h-2 bg-[#CEFF1F] rounded-full shadow-[0_0_10px_#CEFF1F] -translate-x-1/2 translate-y-1/2" />
-        <div className="absolute right-0 top-1/2 w-2 h-2 bg-[#CEFF1F] rounded-full shadow-[0_0_10px_#CEFF1F] translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-[14.6%] right-[14.6%] w-2 h-2 bg-[var(--color-primary)] rounded-full shadow-[0_0_10px_var(--color-primary)] translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-[14.6%] left-[14.6%] w-2 h-2 bg-[var(--color-primary)] rounded-full shadow-[0_0_10px_var(--color-primary)] -translate-x-1/2 translate-y-1/2" />
+        <div className="absolute right-0 top-1/2 w-2 h-2 bg-[var(--color-primary)] rounded-full shadow-[0_0_10px_var(--color-primary)] translate-x-1/2 -translate-y-1/2" />
       </div>
 
       <ContainerScroll
@@ -479,7 +479,7 @@ export default function CareerTwinSection() {
                 className="flex items-center justify-between rounded-xl border border-gray-200 dark:border-zinc-800 p-3 hover:border-gray-300 dark:hover:border-zinc-700 transition-colors cursor-pointer bg-white dark:bg-zinc-900 z-20 relative"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 dark:bg-[#9fe60d]/10 text-[#9fe60d]">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-50 dark:bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
                     <FiUser className="h-5 w-5" />
                   </div>
                   <div className="flex flex-col items-start">
@@ -515,7 +515,7 @@ export default function CareerTwinSection() {
                           <span className="text-sm font-bold text-gray-900 dark:text-zinc-100">{r.label}</span>
                           <span className="text-xs text-gray-500 dark:text-zinc-400">Score: {r.score}</span>
                         </div>
-                        {idx === selectedRoleIndex && <FiCheck className="text-[#9fe60d] h-4 w-4" />}
+                        {idx === selectedRoleIndex && <FiCheck className="text-[var(--color-primary)] h-4 w-4" />}
                       </button>
                     ))}
                   </motion.div>
@@ -532,7 +532,7 @@ export default function CareerTwinSection() {
               whileTap={{ scale: 0.98 }}
               onClick={handleAction}
               disabled={isRedirecting}
-              className={`mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-[#CEFF1F] py-4 text-sm font-bold text-gray-900 shadow-[0_4px_14px_0_rgba(206,255,31,0.39)] transition-colors ${isRedirecting ? "opacity-80 cursor-wait" : ""}`}
+              className={`mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] py-4 text-sm font-bold text-white shadow-[0_4px_14px_0_rgba(159,84,247,0.39)] transition-colors ${isRedirecting ? "opacity-80 cursor-wait" : ""}`}
             >
               {isRedirecting ? (
                 <>

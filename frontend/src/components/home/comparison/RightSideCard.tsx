@@ -33,10 +33,10 @@ const features = [
 
 const RightSideCard = () => {
   return (
-    <div className="h-full w-full max-w-2xl overflow-hidden rounded-md border border-zinc-300 bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)] p-2 dark:border-white/15 dark:bg-[linear-gradient(to_bottom,#0f2a02_0%,#1a3a05_28%,#304c0a_55%,#6b861c_100%)]">
+    <div className="h-full w-full max-w-2xl overflow-hidden rounded-md border border-zinc-300 bg-[linear-gradient(to_bottom,#f3e8ff_0%,#ede5ff_45%,#ddd0ff_100%)] p-2 dark:border-white/15 dark:bg-[linear-gradient(to_bottom,#0a0015_0%,#120025_28%,#1a0040_55%,#2d1065_100%)]">
       {/* Brand Header */}
       <div className="rounded-[22px] border border-primary/50 bg-primary px-6 py-5">
-        <h2 className="text-center text-2xl text-secondary md:text-3xl">
+        <h2 className="text-center text-2xl text-white md:text-3xl">
           AI Pather
         </h2>
       </div>
@@ -56,7 +56,7 @@ const RightSideCard = () => {
                 <div
                   className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border ${
                     index < 2
-                      ? "border-primary bg-primary text-secondary"
+                      ? "border-primary bg-primary text-white"
                       : "border-black/20 bg-white/60 text-black dark:border-white/20 dark:bg-white/10 dark:text-primary"
                   }`}
                 >
@@ -69,7 +69,7 @@ const RightSideCard = () => {
                     {feature.title}
                   </h3>
 
-                  <p className="mt-1 text-xs leading-5 text-zinc-700 dark:text-white/70">
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
                     {feature.description}
                   </p>
                 </div>
