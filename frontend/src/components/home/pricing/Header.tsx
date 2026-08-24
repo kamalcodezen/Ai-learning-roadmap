@@ -1,6 +1,6 @@
 "use client";
 
-import  { useRef } from "react";
+import  { useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 
 export type BillingPeriod = "monthly" | "yearly";
@@ -10,30 +10,68 @@ interface HeaderProps {
   onBillingChange: (billing: BillingPeriod) => void;
 }
 
+const CONFETTI_COLORS = ["#CEFF1F", "#131824", "#ffffff"];
+
 const Header = ({ billing, onBillingChange }: HeaderProps) => {
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const echoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Don't let a pending echo burst fire after unmount/navigation
+  useEffect(
+    () => () => {
+      if (echoTimeoutRef.current) clearTimeout(echoTimeoutRef.current);
+    },
+    [],
+  );
+
+  const getOrigin = () => {
+    const rect = toggleRef.current?.getBoundingClientRect();
+    return rect
+      ? {
+          x: (rect.left + rect.width / 2) / window.innerWidth,
+          y: (rect.top + rect.height / 2) / window.innerHeight,
+        }
+      : { x: 0.5, y: 0.5 };
+  };
 
   const fireConfetti = () => {
-    const rect = toggleRef.current?.getBoundingClientRect();
+    const origin = getOrigin();
+
+    // Wave 1 — tight, punchy burst from the toggle
     confetti({
-      particleCount: 80,
-      spread: 75,
+      particleCount: 140,
+      spread: 90,
       startVelocity: 45,
       scalar: 0.9,
       ticks: 200,
-      origin: rect
-        ? {
-            x: (rect.left + rect.width / 2) / window.innerWidth,
-            y: (rect.top + rect.height / 2) / window.innerHeight,
-          }
-        : { x: 0.5, y: 0.5 },
-      colors: ["#CEFF1F", "#131824", "#ffffff"],
+      origin,
+      colors: CONFETTI_COLORS,
     });
+
+    // Wave 2 — wider, softer echo ~80ms later for layered fullness
+    echoTimeoutRef.current = setTimeout(() => {
+      confetti({
+        particleCount: 100,
+        spread: 120,
+        startVelocity: 35,
+        scalar: 0.8,
+        ticks: 250,
+        origin,
+        colors: CONFETTI_COLORS,
+      });
+    }, 80);
   };
 
   const handleToggle = () => {
-    fireConfetti();
-    onBillingChange(billing === "monthly" ? "yearly" : "monthly");
+    const nextBilling: BillingPeriod =
+      billing === "monthly" ? "yearly" : "monthly";
+
+    // Celebrate only the upgrade moment (switching to yearly)
+    if (nextBilling === "yearly") {
+      fireConfetti();
+    }
+
+    onBillingChange(nextBilling);
   };
   return (
     <div className="text-left">
