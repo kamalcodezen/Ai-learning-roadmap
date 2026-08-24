@@ -49,6 +49,7 @@ export default function FoldText({
       style={{
         perspective: `${perspective}px`,
         color,
+        fontWeight,
       }}
       aria-label={text}
     >
