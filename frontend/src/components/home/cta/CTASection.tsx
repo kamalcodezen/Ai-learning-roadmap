@@ -40,7 +40,7 @@ function DotPattern({ className = '' }: { className?: string }) {
 
 export default function CTASection() {
   return (
-    <section className="relative overflow-hidden  bg-background">
+    <section className="section-pad pb-0 relative overflow-hidden">
       {/* Subtle grid background */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.08] dark:opacity-[0.04]"
@@ -67,7 +67,7 @@ export default function CTASection() {
           </h1>
 
           <p className="font-poppins text-lg leading-7 text-muted-foreground mb-6 [&:not(:first-child)]:mt-6 text-balance mx-auto max-w-2xl">
-            Tell us where you want to go, and we'll help you understand what to learn next
+            Tell us where you want to go, and we&apos;ll help you understand what to learn next
           </p>
 
           <div className="w-full mt-2 mb-4 flex justify-center items-center gap-3">

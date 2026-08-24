@@ -11,7 +11,7 @@ import ProblemHeader from "../ProblemHeader";
 
 export default function ProblemBreakdown() {
   return (
-    <section className="relative w-full overflow-x-clip bg-background py-section transition-colors duration-300">
+    <section className="section-pad relative w-full overflow-x-clip transition-colors duration-300">
       {/* TURBOPACK-SAFE HIGH-CONTRAST INLINE STYLES */}
       <ProblemBreakdownStyles />
 

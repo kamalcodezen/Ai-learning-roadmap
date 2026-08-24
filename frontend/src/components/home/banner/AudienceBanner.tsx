@@ -18,12 +18,12 @@ export default function AudienceBanner() {
   return (
     <section
       className="
+        section-pad
         relative
         isolate
         min-h-180
         overflow-hidden
         bg-background
-        py-section
       "
     >
       <BannerBackground image={activeItem.image} title={activeItem.title} />
