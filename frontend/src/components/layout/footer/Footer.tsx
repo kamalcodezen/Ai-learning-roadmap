@@ -32,7 +32,7 @@ const bottomLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative w-full flex flex-col items-center justify-center border-t border-white/10 bg-[#050510] bg-[radial-gradient(35%_128px_at_50%_0%,theme(backgroundColor.white/8%),transparent)] px-6 py-12 lg:py-16 mt-auto overflow-hidden">
+    <footer className="relative w-full flex flex-col items-center justify-center border-t border-white/10 bg-[#050510] bg-[radial-gradient(35%_128px_at_50%_0%,theme(backgroundColor.white/8%),transparent)] px-6 pt-0 pb-12 lg:pb-16 mt-auto overflow-hidden">
       <div className="absolute inset-x-0 -top-[1px] w-full h-40 pointer-events-none">
         {/* Gradients */}
         <div className="absolute inset-x-0 mx-auto top-0 bg-gradient-to-r from-transparent via-[var(--color-primary)] to-transparent h-[2px] w-3/4 blur-sm" />

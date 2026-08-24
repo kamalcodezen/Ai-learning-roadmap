@@ -55,23 +55,15 @@ const duplicatedTestimonials = [...testimonials, ...testimonials];
 
 const TestimonialSection = () => {
   return (
-    <section className="relative w-full overflow-hidden py-section px-4 sm:px-8 md:px-12  border-t border-border/40">
+    <section className="section-pad relative w-full overflow-hidden px-4 sm:px-8 md:px-12  border-t border-border/40">
       <div className="global-pos relative z-10">
-        <div className="text-left mb-10 md:mb-16">
-          {/* <span className="text-[12px] font-mono tracking-widest text-muted-foreground uppercase mb-2 block">
-    Testimonials
-  </span> */}
-          <h2 className="font-poppins text-2xl sm:text-3xl tracking-tight text-foreground">
-            What{" "}
-            <i className="font-serif italic font-normal text-muted-foreground">
-              Our Learners
-            </i>{" "}
-            Say About{" "}
-            <span className="font-medium underline decoration-primary/50 underline-offset-8">
+        <div className="mb-10 md:mb-16">
+          <h2 className="section-title">
+            What Our Learners Say About <span className="text-brand">
               Their Journey
-            </span>
+              </span>
           </h2>
-          <p className="section-description text-base md:text-lg">
+          <p className="section-subtitle mt-4">
             Join thousands of professionals who have eliminated their learning
             debt and built a verifiable career profile.
           </p>

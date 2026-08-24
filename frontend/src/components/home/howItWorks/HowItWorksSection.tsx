@@ -44,7 +44,7 @@ export default function HowItWorksSection() {
     return (
       <section
         id="how-it-works"
-        className="relative w-full overflow-hidden py-section px-4 sm:px-8 md:px-12"
+        className="section-pad relative w-full overflow-hidden px-4 sm:px-8 md:px-12"
       >
         <div className="global-pos flex flex-col items-center gap-8">
           <TextHeader />
@@ -75,7 +75,7 @@ export default function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="relative w-full px-4 py-section sm:px-8 md:px-12"
+      className="section-pad relative w-full px-4 sm:px-8 md:px-12"
     >
       <div className="global-pos flex flex-col">
         {/* হেডার */}

@@ -49,7 +49,7 @@ export default function TextBody({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.12, ease: "easeOut" }}
-        className="section-description mt-5 max-w-xl px-4 font-poppins text-sm sm:text-base"
+        className="section-description mt-5 max-w-xl px-4 font-poppins text-md sm:text-lg"
       >
         {renderHighlighted(subHeading)}
       </motion.p>

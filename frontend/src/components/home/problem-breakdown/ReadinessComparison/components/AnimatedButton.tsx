@@ -31,7 +31,7 @@ export default function AnimatedButton({
           ${
             isActive
               ? "w-[calc(100%-8px)] bg-primary"
-              : "w-7 bg-background group-hover:w-[calc(100%-8px)] group-hover:bg-primary"
+              : "w-7 bg-muted group-hover:w-[calc(100%-8px)] group-hover:bg-primary"
           }
         `}
       />
@@ -42,8 +42,8 @@ export default function AnimatedButton({
           relative z-10 text-[13px] tracking-wider transition-all duration-500 ease-out
           ${
             isActive
-              ? "translate-x-6 font-bold text-secondary"
-              : "group-hover:translate-x-6 group-hover:text-secondary"
+              ? "translate-x-6 font-bold text-white dark:text-black"
+              : "text-foreground group-hover:translate-x-6 group-hover:text-white dark:group-hover:text-black"
           }
         `}
       >
@@ -67,8 +67,8 @@ export default function AnimatedButton({
               text-base transition-colors duration-500
               ${
                 isActive
-                  ? "text-secondary"
-                  : "text-foreground group-hover:text-secondary"
+                  ? "text-white dark:text-black"
+                  : "text-foreground group-hover:text-white dark:group-hover:text-black"
               }
             `}
           />
@@ -77,6 +77,7 @@ export default function AnimatedButton({
     </>
   );
 
+  /* Mirrors components/ui/button.tsx: active = "primary", inactive = "soft" */
   const classes = `
     font-poppins
     group
@@ -87,15 +88,18 @@ export default function AnimatedButton({
     justify-between
     overflow-hidden
     rounded-full
-    bg-foreground
     px-4
     pl-5
     pr-11
     text-sm
     font-medium
-    text-background
     transition-colors
     duration-300
+    ${
+      isActive
+        ? "bg-foreground text-background"
+        : "border border-border bg-card-soft text-foreground shadow-sm"
+    }
     ${className}
   `;
 
