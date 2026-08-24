@@ -24,18 +24,19 @@ export default function AuthShell({
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background p-4 text-foreground">
+    <main className="relative z-10 flex min-h-screen items-center justify-center p-4 text-foreground">
       <div
         className="
           relative
+          flex flex-col
           w-full
-          max-w-220
+          max-w-5xl
+          min-h-[85vh]
+          shadow-2xl
+          rounded-3xl
           overflow-hidden
-          rounded-[32px]
-          border
-          border-border
-          bg-background
-          md:h-120
+          bg-white
+          dark:bg-card
         "
       >
         {/* Moving green brand section */}
