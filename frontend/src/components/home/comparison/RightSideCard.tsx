@@ -33,7 +33,7 @@ const features = [
 
 const RightSideCard = () => {
   return (
-    <div className="h-full w-full max-w-2xl overflow-hidden rounded-[28px] border border-zinc-300 bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)] p-2 dark:border-white/15 dark:bg-[linear-gradient(to_bottom,#0f2a02_0%,#1a3a05_28%,#304c0a_55%,#6b861c_100%)]">
+    <div className="h-full w-full max-w-2xl overflow-hidden rounded-md border border-zinc-300 bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)] p-2 dark:border-white/15 dark:bg-[linear-gradient(to_bottom,#0f2a02_0%,#1a3a05_28%,#304c0a_55%,#6b861c_100%)]">
       {/* Brand Header */}
       <div className="rounded-[22px] border border-primary/50 bg-primary px-6 py-5">
         <h2 className="text-center text-2xl text-secondary md:text-3xl">
@@ -42,18 +42,15 @@ const RightSideCard = () => {
       </div>
 
       {/* Features */}
-      <div className="px-5 py-7 md:px-7 md:py-8">
-        <div className="relative space-y-5">
-          {/* Vertical Line */}
-          <div className="absolute bottom-6 left-[23px] top-6 w-px bg-black/15 dark:bg-white/25" />
-
+      <div className="px-2 py-2 md:px-3 md:py-3">
+        <div className="relative space-y-3">
           {features.map((feature, index) => {
             const Icon = feature.icon;
 
             return (
               <div
                 key={feature.title}
-                className="relative flex min-h-[82px] items-center gap-4 rounded-2xl border border-black/10 bg-white/50 p-4 dark:border-white/10 dark:bg-black/25"
+                className="relative flex items-center gap-3 rounded-md border border-black/10 bg-white/50 p-3 dark:border-white/10 dark:bg-black/25"
               >
                 {/* Feature Icon */}
                 <div
@@ -72,7 +69,7 @@ const RightSideCard = () => {
                     {feature.title}
                   </h3>
 
-                  <p className="mt-1 text-sm leading-5 text-zinc-700 dark:text-white/70">
+                  <p className="mt-1 text-xs leading-5 text-zinc-700 dark:text-white/70">
                     {feature.description}
                   </p>
                 </div>

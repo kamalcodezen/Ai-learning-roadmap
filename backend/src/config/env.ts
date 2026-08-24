@@ -13,6 +13,14 @@ const envSchema = z.object({
   CORS_ORIGIN: z.string().url().default("http://localhost:3000"),
 
   DATABASE_URL: z.string().url(),
+
+  GROQ_API_KEY: z.string().default(""),
+
+  OPENROUTER_API_KEY: z.string().default(""),
+
+  GEMINI_API_KEY: z.string().default(""),
+
+  MISTRAL_API_KEY: z.string().default(""),
 });
 
 const env = envSchema.parse(process.env);

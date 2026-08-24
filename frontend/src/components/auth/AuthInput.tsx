@@ -86,7 +86,6 @@ export default function AuthInput({
           rounded-none
           border-0
           border-b
-          border-border
           bg-transparent
           px-0
           pb-1.5
@@ -96,7 +95,7 @@ export default function AuthInput({
           outline-none
           transition-colors
           placeholder:text-transparent
-          focus:border-primary
+          border-primary
         "
       />
 
@@ -109,7 +108,7 @@ export default function AuthInput({
           top-1/2
           -translate-y-1/2
           text-base
-          text-muted-foreground
+          text-foreground
           transition-all
           duration-300
           ease-linear

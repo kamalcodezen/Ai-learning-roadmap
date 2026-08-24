@@ -160,6 +160,7 @@
   --color-sidebar: rgb(var(--sidebar));
 
   --animate-x-slider: x-slider 40s linear infinite;
+  --animate-ripple: ripple 6s ease-in-out infinite;
 
   @keyframes x-slider {
     0% {
@@ -168,6 +169,21 @@
 
     100% {
       transform: translateX(calc(-50% - 10px));
+    }
+  }
+
+  /* Continuous breathe: rings swell, shrink, and swell again forever */
+  @keyframes ripple {
+    0% {
+      transform: translate(-50%, -50%) scale(0.75);
+    }
+
+    50% {
+      transform: translate(-50%, -50%) scale(1.15);
+    }
+
+    100% {
+      transform: translate(-50%, -50%) scale(0.75);
     }
   }
 }

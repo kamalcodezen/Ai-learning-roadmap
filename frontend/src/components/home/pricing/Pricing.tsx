@@ -1,205 +1,102 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import PricingCard from "./cards/ProPricingCard";
-import SimplePricingCard from "./cards/SimplePricingCard";
-import EnterprisePricingCard from "./cards/EnterprisePricingCard";
-import { Confetti, type ConfettiRef } from "@/src/registry/magicui/confetti";
+import React, { useState } from "react";
+import Header, { type BillingPeriod } from "./Header";
+import { pricingPlans, type PricingPlan } from "./plans";
+import { NumberTicker } from "@/src/registry/magicui/number-ticker";
+import Button from "../../ui/button";
 
-const freeFeatures: string[] = [
-  "One-user access",
-  "Personalized Learning Roadmap",
-  "AI Skill Gap Analysis",
-  "Project-based Milestones",
-  "Learning Resource Collection",
-];
+const Pricing = () => {
+  const [billing, setBilling] = useState<BillingPeriod>("monthly");
 
-const proFeatures: string[] = [
-  "Everything in Free",
-  "Advanced Skill Gap Analysis",
-  "Adaptive Learning Roadmap",
-  "Career Trajectory Insights",
-  "Priority AI Features",
-];
+  const getCurrentPrice = (plan: PricingPlan) =>
+    billing === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
 
-const enterpriseFeatures: string[] = [
-  "Everything in Pro",
-  "Unlimited Team Access",
-  "Custom AI Model Integration",
-  "Dedicated Success Manager",
-  "Enterprise Analytics & SLA",
-];
-
-/* Shared description block - rendered once per breakpoint */
-const DescriptionText = ({
-  className = "",
-  isYearly,
-  onBillingChange,
-}: {
-  className?: string;
-  isYearly: boolean;
-  onBillingChange: (yearly: boolean) => void;
-}) => (
-  <div className={`relative h-fit ${className}`}>
-    
-
-    <p className="text-sm leading-6 text-muted-foreground sm:text-base pr-20">
-      One simple plan for getting started, with advanced options for
-      learners and teams who want deeper AI-powered guidance.
-    </p>
-
-    {/* <div className="mt-5 flex items-center gap-3">
-      <span className="text-sm font-medium text-foreground">
-        Start for free
-      </span>
-      <span className="h-1 w-1 rounded-full bg-muted-foreground/60" />
-      <span className="text-sm text-muted-foreground">
-        Upgrade anytime
-      </span>
-    </div> */}
-
-    {/* Monthly / Yearly Billing Toggle */}
-    <div className="mt-5 inline-flex items-center rounded-full border border-border bg-card p-1 shadow-sm">
-      <button
-        type="button"
-        onClick={() => onBillingChange(false)}
-        aria-pressed={!isYearly}
-        className={`rounded-full px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider transition-colors duration-200 ${
-          !isYearly
-            ? "bg-primary text-[#131824] shadow-[0_0_12px_-2px_rgba(206,255,31,0.5)]"
-            : "text-muted-foreground hover:text-foreground"
-        }`}
-      >
-        Monthly
-      </button>
-      <button
-        type="button"
-        onClick={() => onBillingChange(true)}
-        aria-pressed={isYearly}
-        className={`rounded-full px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider transition-colors duration-200 ${
-          isYearly
-            ? "bg-primary text-[#131824] shadow-[0_0_12px_-2px_rgba(206,255,31,0.5)]"
-            : "text-muted-foreground hover:text-foreground"
-        }`}
-      >
-        Yearly
-      </button>
-    </div>
-  </div>
-);
-
-const Pricing: React.FC = () => {
-  const [isYearly, setIsYearly] = useState(false);
-  const confettiRef = useRef<ConfettiRef>(null);
-
-  const handleBillingChange = (yearly: boolean) => {
-    setIsYearly(yearly);
-    if (yearly) {
-      void confettiRef.current?.fire({
-        particleCount: 120,
-        spread: 80,
-        origin: { y: 0.6 },
-        colors: ["#CEFF1F", "#ffffff", "#131824"],
-      });
-    }
+  const handlePlanCta = (index: number) => {
+    alert(`Price: $${getCurrentPrice(pricingPlans[index])}`);
   };
 
   return (
-    <section
-      id="pricing"
-      className="relative w-full overflow-hidden py-10 px-4 sm:px-8 md:px-12"
-    >
-      {/* Yearly-plan celebration overlay */}
-      <Confetti
-        ref={confettiRef}
-        manualstart
-        className="pointer-events-none absolute inset-0 z-50 size-full"
-      />
+    <section className="bg-muted/40  dark:bg-transparent  lg:px-10  relative w-full overflow-hidden py-12 pt-0 px-4 sm:px-8 md:px-12">
+      <div className=" global-pos relative w-full">
+        {/* Header */}
+        <Header billing={billing} onBillingChange={setBilling} />
 
-      <div className="global-pos relative w-full">
-        {/* Main 3-Column Layout */}
-        <div className="mt-10 grid grid-cols-1 items-end gap-5 lg:grid-cols-3 2xl:items-stretch">
-          
-          {/* ================= LEFT COLUMN ================= */}
-          <div className="flex flex-col gap-5">
-            {/* Text Body - Height Fit */}
-            <div className="h-fit">
-              <h2 className="text-3xl tracking-tight text-foreground sm:text-4xl lg:text-5xl lg:leading-[1.08]">
-                <span className="inline">  
-                Simple pricing for your
+        {/* Pricing Cards */}
+        <div className="mt-16 grid grid-cols-1 items-stretch gap-7 lg:grid-cols-3 mx-auto max-w-7xl">
+          {pricingPlans.map((plan, index) => (
+            <div
+              key={plan.name}
+              className={`relative rounded-3xl p-6 shadow-[var(--shadow)] transition-all duration-300 hover:-translate-y-1 ${
+                plan.popular
+                  ? "z-10 mb-7 border-2 border-primary bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)] bg-card dark:bg-none lg:-mt-8 lg:py-8"
+                  : "border border-border bg-card"
+              }`}
+            >
+              {/* Most Popular */}
+              {plan.popular && (
+                <div className="absolute right-0 top-0 rounded-bl-xl rounded-tr-2xl bg-primary px-4 py-2 text-sm font-semibold text-secondary shadow-[0_0_20px_rgba(206,255,31,0.3)] dark:shadow-[0_0_25px_rgba(206,255,31,0.4)]">
+                  ★ Most Popular
+                </div>
+              )}
+
+              {/* Plan Name */}
+              <h3 className="pt-1 text-center text-base font-semibold text-foreground">
+                {plan.name}
+              </h3>
+
+              {/* Price */}
+              <div className="mt-8 flex items-end justify-center gap-2">
+                <span className="text-5xl font-bold leading-none text-foreground dark:text-primary">
+                  $
+                  <NumberTicker
+                    value={getCurrentPrice(plan)}
+                    startValue={plan.monthlyPrice}
+                  />
                 </span>
-                {/* <br className="hidden sm:block" /> */}
-                <span className="text-primary"> learning journey</span>
-              </h2>
 
-              <p className="section-description mt-4 text-sm sm:text-base">
-                Start building your personalized AI learning roadmap for free and
-                unlock advanced features when you are ready.
+                <span className="pb-1 text-sm font-semibold text-muted-foreground">
+                  / {billing === "yearly" ? "year" : "month"}
+                </span>
+              </div>
+
+              <p className="mt-4 text-center text-xs text-muted-foreground">
+                {billing === "yearly" ? "billed annually" : "billed monthly"}
+              </p>
+
+              {/* Features */}
+              <ul className="mt-7 space-y-4">
+                {plan.features.map((feature) => (
+                  <li
+                    key={feature}
+                    className="flex items-start gap-3 text-sm text-muted-foreground"
+                  >
+                    <span className="mt-0.5 font-semibold text-primary">✓</span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Divider */}
+              <div className="my-5 h-px bg-border " />
+
+              {/* Button */}
+              <div className="flex justify-center">
+                <Button
+                text={plan.cta}
+                variant={plan.popular ? "primary" : "soft"}
+                onClick={() => handlePlanCta(index)}
+                className="w-fit "
+              />
+              </div>
+
+              {/* Description */}
+              <p className="mt-6 text-center text-xs leading-5 text-muted-foreground">
+                {plan.description}
               </p>
             </div>
-
-            {/* Description Text - Mobile & Tablet only (placed after 1st text body) */}
-            <DescriptionText
-              className="lg:hidden"
-              isYearly={isYearly}
-              onBillingChange={handleBillingChange}
-            />
-
-            {/* Free Card - Simple Clean Design */}
-            <div className="2xl:flex-1">
-              <SimplePricingCard
-                badge="FREE"
-                price="Free"
-                description="Perfect for getting started with your personalized learning journey."
-                features={freeFeatures}
-                buttonText="Continue"
-              />
-            </div>
-          </div>
-
-          {/* ================= MIDDLE COLUMN (PRO PLAN - PREMIUM GLOW) ================= */}
-          <div className="flex">
-            <PricingCard
-              badge="PRO"
-              price={isYearly ? "$149" : "$19"}
-              priceSuffix={isYearly ? "/year" : "/month"}
-              description="For learners who want deeper AI guidance and advanced career insights."
-              features={proFeatures}
-              buttonText="Buy Now"
-              popular
-              className="w-full 2xl:min-h-[500px]"
-            />
-          </div>
-
-          {/* ================= RIGHT COLUMN ================= */}
-          <div className="flex flex-col gap-5">
-            {/* Description Container - Desktop only */}
-            <DescriptionText
-              className="hidden lg:block"
-              isYearly={isYearly}
-              onBillingChange={handleBillingChange}
-            />
-
-            {/* Enterprise Card - Dedicated Glowing Neon Component */}
-            <div className="2xl:flex-1">
-              <EnterprisePricingCard
-                badge="ENTERPRISE"
-                price="Custom"
-                description="Perfect for teams and organizations needing full custom roadmaps."
-                features={enterpriseFeatures}
-                buttonText="Contact"
-              />
-            </div>
-          </div>
-
+          ))}
         </div>
-
-        {/* Bottom Note */}
-        <p className="mx-auto mt-8 max-w-3xl text-center text-xs leading-5 text-muted-foreground sm:text-sm">
-          We keep our pricing simple and transparent. Choose the plan that fits
-          your learning journey and upgrade whenever you need more advanced
-          features.
-        </p>
       </div>
     </section>
   );

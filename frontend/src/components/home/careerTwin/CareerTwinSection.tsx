@@ -100,6 +100,8 @@ export function useReducedMotion(): boolean {
 export function useAnimatedNumber(target: number, duration = 1000, animate = true, delayMs = 0): number {
   const [value, setValue] = useState(target);
   const currentValRef = useRef(target);
+  // eslint-disable-next-line react-hooks/refs
+  currentValRef.current = value;
 
   useEffect(() => {
     if (!animate) {
