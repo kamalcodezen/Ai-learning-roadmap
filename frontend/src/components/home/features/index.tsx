@@ -17,7 +17,7 @@ export default function FeaturesSection() {
   };
 
   return (
-    <section className="relative w-full overflow-hidden py-4 px-4 sm:px-8 md:px-12">
+    <section className="relative w-full overflow-hidden py-section px-4 sm:px-8 md:px-12">
         <GridPattern
                 width={45}
                 height={45}
