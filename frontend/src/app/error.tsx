@@ -21,9 +21,9 @@ export default function Error({ error, reset }: ErrorProps) {
   }, [error]);
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#060910] px-4 py-16 text-foreground">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4 py-16 text-foreground">
       {/* ব্যাকগ্রাউন্ড রেডিয়াল লাইট ইফেক্ট */}
-      <div className="pointer-events-none absolute -top-24 left-1/2 h-[350px] w-[500px] -translate-x-1/2 rounded-full bg-[#CEFF1F]/5 blur-[120px]" />
+      <div className="pointer-events-none absolute -top-24 left-1/2 h-[350px] w-[500px] -translate-x-1/2 rounded-full bg-[var(--color-primary)]/5 blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-24 left-1/2 h-[300px] w-[450px] -translate-x-1/2 rounded-full bg-rose-500/5 blur-[120px]" />
 
       <div className="container relative z-10 mx-auto max-w-xl text-center">
@@ -66,11 +66,11 @@ export default function Error({ error, reset }: ErrorProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mt-6 overflow-hidden rounded-xl border border-white/10 bg-[#0B0F19]/90 text-left font-mono text-xs shadow-2xl backdrop-blur-md"
+            className="mt-6 overflow-hidden rounded-xl border border-white/10 bg-surface text-left font-mono text-xs shadow-2xl backdrop-blur-md"
           >
             <div className="flex items-center justify-between border-b border-white/5 bg-white/[0.02] px-4 py-2.5">
               <div className="flex items-center gap-2 text-slate-400">
-                <LuTerminal className="size-3.5 text-[#CEFF1F]" />
+                <LuTerminal className="size-3.5 text-[var(--color-primary)]" />
                 <span>runtime_trace.log</span>
               </div>
               {error.digest && (
@@ -94,7 +94,7 @@ export default function Error({ error, reset }: ErrorProps) {
         >
           <button
             onClick={() => reset()}
-            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#CEFF1F] px-6 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-[#b8e61b] hover:shadow-[0_0_20px_rgba(206,255,31,0.25)] active:scale-95"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[var(--color-secondary)] hover:shadow-[0_0_20px_rgba(159,84,247,0.25)] active:scale-95"
           >
             <LuRefreshCw className="size-4" />
             <span>Try Re-executing</span>
