@@ -32,7 +32,7 @@ export default function FoldText({
   perspective = 700,
   creaseShading = 0.55,
   fontWeight = 800,
-  color = "#0a0a0a",
+  color = "var(--color-heading-1)",
 }: FoldTextProps) {
   const units =
     splitBy === "word" ? text.split(" ") : Array.from(text);
