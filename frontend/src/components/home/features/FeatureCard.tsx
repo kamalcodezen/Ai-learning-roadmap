@@ -12,7 +12,7 @@ export default function FeatureCard({ feature }: FeatureCardProps) {
 
   return (
     <div
-      className="relative p-6 md:p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 bg-secondary dark:bg-primary backdrop-blur-md rounded-2xl h-full"
+      className="relative p-6 md:p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 bg-secondary dark:bg-primary backdrop-blur-md rounded-md h-full"
       style={{
         clipPath: "polygon(0% 0%, 82% 0%, 100% 12%, 100% 100%, 18% 100%, 0% 88%)",
       }}

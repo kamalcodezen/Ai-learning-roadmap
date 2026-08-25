@@ -83,7 +83,7 @@ const TestimonialSection = () => {
               return (
                 <div
                   key={indx}
-                  className="border flex flex-col bg-card border-border/60 rounded-xl shrink-0 grow-0 w-[65vw] sm:w-[400px] md:w-[500px] h-full shadow-sm hover:border-primary/50 transition-colors"
+                  className="border flex flex-col bg-card border-border/60 rounded-md shrink-0 grow-0 w-[65vw] sm:w-[400px] md:w-[500px] h-full shadow-sm hover:border-primary/50 transition-colors"
                 >
                   <p className="px-4 py-4 sm:px-6 sm:py-6 text-sm sm:text-xl font-medium text-foreground tracking-tight flex-1">
                     &quot;{testimonial.description}&quot;
