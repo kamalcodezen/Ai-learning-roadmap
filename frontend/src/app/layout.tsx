@@ -1,13 +1,13 @@
-import { Poppins } from "next/font/google";
+import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import Providers from "../providers/providers";
 import SmoothScroll from "../providers/SmoothScroll";
 import NextTopLoader from "nextjs-toploader";
 
-const poppins = Poppins({
-  weight: ["400", "500", "600", "700", "800"],
-  subsets: ["latin"],
-  variable: "--font-poppins",
+const hindSiliguri = Hind_Siliguri({
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["bengali", "latin"],
+  variable: "--font-hind-siliguri",
   display: "swap",
 });
 
@@ -22,7 +22,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`antialiased h-full scroll-smooth ${poppins.variable}`}
+      className={`antialiased h-full scroll-smooth ${hindSiliguri.variable}`}
     >
       <body
         className="min-h-full flex flex-col antialiased"
