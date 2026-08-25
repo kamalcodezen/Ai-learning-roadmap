@@ -7,7 +7,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      <main className="flex-grow bg-linear-to-b from-[#f4edff] to-white transition-colors duration-300 dark:from-black dark:to-black">
+      <main className="flex-grow bg-[#f4edff] transition-colors duration-300 dark:bg-[#2b1e42ec]">
         {children}
       </main>
       

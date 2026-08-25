@@ -50,6 +50,7 @@ export default function FoldText({
         perspective: `${perspective}px`,
         color,
         fontWeight,
+        textShadow: "0 0 24px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.25)",
       }}
       aria-label={text}
     >

@@ -23,7 +23,7 @@ const MiddleImg = () => {
               alt="Project logo"
               width={80}
               height={80}
-              className="h-15 w-15 object-contain brightness-0 invert"
+              className="h-15 w-15 object-contain brightness-0 invert dark:invert-0"
             />
           </div>
         </div>

@@ -12,7 +12,7 @@ export default function KnowledgeGapVisual({ variant }: { variant: "progress" | 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex flex-col p-6 bg-card border border-border rounded-xl"
+            className="flex flex-col p-6 bg-card border border-border rounded-md"
           >
                 <span className="text-caption font-mono uppercase tracking-[0.15em] text-muted-foreground mb-6">Learning Progress</span>
 
@@ -40,7 +40,7 @@ export default function KnowledgeGapVisual({ variant }: { variant: "progress" | 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex flex-col p-6 bg-card border border-border rounded-xl"
+            className="flex flex-col p-6 bg-card border border-border rounded-md"
           >
                 <div className="flex items-center gap-3 mb-5">
                   <span className="text-sm font-semibold text-foreground">BUT...</span>

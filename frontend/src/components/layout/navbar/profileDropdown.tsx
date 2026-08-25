@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { authClient } from "@/src/lib/auth-client";
 
 interface ProfileDropdownProps {
   name: string;
@@ -10,9 +13,10 @@ interface ProfileDropdownProps {
 }
 
 export const dropdownLinks = [
-  { label: "Profile", variant: "default" },
-  { label: "Settings", variant: "default" },
-  { label: "Sign out", variant: "danger" },
+  { label: "Profile", href: "/dashboard/profile", variant: "default" },
+  { label: "Dashboard", href: "/dashboard", variant: "default" },
+  { label: "Settings", href: "/dashboard/settings", variant: "default" },
+  { label: "Sign out", href: "#", variant: "danger" },
 ] as const;
 
 export default function ProfileDropdown({
@@ -20,6 +24,8 @@ export default function ProfileDropdown({
   email,
 }: ProfileDropdownProps) {
   const [open, setOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     AOS.init({ duration: 400, easing: "ease-out", once: true });
@@ -31,6 +37,19 @@ export default function ProfileDropdown({
     const frame = requestAnimationFrame(() => AOS.refreshHard());
     return () => cancelAnimationFrame(frame);
   }, [open]);
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.replace("/");
+          router.refresh();
+        },
+      },
+    });
+    setIsSigningOut(false);
+  };
 
   return (
     <div
@@ -101,19 +120,27 @@ export default function ProfileDropdown({
           </div>
 
           <div className="mt-1">
-            {dropdownLinks.map((link) => (
-              <button
-                key={link.label}
-                type="button"
-                className={`flex w-full px-3 py-2.5 text-left text-sm transition-colors ${
-                  link.variant === "danger"
-                    ? "rounded-md bg-red-500 font-medium text-white hover:bg-red-600"
-                    : "rounded-lg text-neutral-700 hover:bg-neutral-50 dark:text-white/75 dark:hover:bg-white/10"
-                }`}
-              >
-                {link.label}
-              </button>
-            ))}
+            {dropdownLinks.map((link) =>
+              link.variant === "danger" ? (
+                <button
+                  key={link.label}
+                  type="button"
+                  onClick={handleSignOut}
+                  disabled={isSigningOut}
+                  className="flex w-full px-3 py-2.5 text-left text-sm transition-colors rounded-md bg-red-500 font-medium text-white hover:bg-red-600 disabled:pointer-events-none disabled:opacity-60"
+                >
+                  {isSigningOut ? "Signing out..." : link.label}
+                </button>
+              ) : (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="flex w-full px-3 py-2.5 text-left text-sm transition-colors rounded-lg text-neutral-700 hover:bg-neutral-50 dark:text-white/75 dark:hover:bg-white/10"
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
           </div>
         </div>
       )}

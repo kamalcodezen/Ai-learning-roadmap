@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "motion/react";
 import FeatureHeader from "./FeatureHeader";
 import FeatureCard from "./FeatureCard";
 import FeatureTooltipModal from "./FeatureTooltipModal";
@@ -34,12 +33,8 @@ export default function FeaturesSection() {
             const tooltipPosition = index === featureItems.length - 1 ? "left" : "right";
 
             return (
-              <motion.div
+              <div
                 key={item.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                viewport={{ once: true }}
                 className="relative flex flex-col cursor-pointer"
                 onMouseEnter={() => setActiveId(item.id)}
                 onMouseLeave={() => setActiveId(null)}
@@ -51,7 +46,7 @@ export default function FeaturesSection() {
                   position={tooltipPosition}
                   onClose={() => setActiveId(null)}
                 />
-              </motion.div>
+              </div>
             );
           })}
         </div>

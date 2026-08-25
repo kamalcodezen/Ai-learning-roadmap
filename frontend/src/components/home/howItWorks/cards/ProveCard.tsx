@@ -9,7 +9,7 @@ export default function ProveCard() {
     <div className="flex flex-col h-full">
       <BorderGlow>
         <div className="border-glow-inner relative p-5 flex flex-col justify-between min-h-[260px]">
-          <div className="absolute -bottom-3 -left-3 bg-card border border-border p-2.5 rounded-xl shadow-lg flex items-center justify-center -rotate-3">
+          <div className="absolute -bottom-3 -left-3 bg-card border border-border p-2.5 rounded-md shadow-lg flex items-center justify-center -rotate-3">
             <FiGitBranch className="w-5 h-5 text-primary" />
           </div>
 
@@ -18,7 +18,7 @@ export default function ProveCard() {
             <h3 className="text-h3 mt-0.5">Prove</h3>
           </div>
 
-          <div className="soft-card rounded-2xl p-3 mt-3 space-y-2">
+          <div className="soft-card rounded-md p-3 mt-3 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -27,7 +27,7 @@ export default function ProveCard() {
               <FiExternalLink className="w-3 h-3 text-muted-foreground" />
             </div>
 
-            <div className="flex items-center gap-2 bg-card p-2 rounded-xl border border-border">
+            <div className="flex items-center gap-2 bg-card p-2 rounded-md border border-border">
               <FiShield className="w-4 h-4 text-primary shrink-0" />
               <div className="text-caption leading-tight">
                 <p className="font-semibold">Verified Skill State</p>

@@ -21,9 +21,10 @@ export default function AudienceBanner() {
         section-pad
         relative
         isolate
-        min-h-180
+        h-screen
         overflow-hidden
-        bg-background
+        bg-[#f4edff]
+        dark:bg-background
       "
     >
       <BannerBackground image={activeItem.image} title={activeItem.title} />

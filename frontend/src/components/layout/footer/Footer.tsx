@@ -73,7 +73,7 @@ export default function Footer() {
               className="flex items-center mt-20 space-x-3 md:space-x-4"
             >
               <Image
-                src="/logo-p.png"
+                src="/brand/logo-p-purple.png"
                 alt="AI Pather"
                 width={70}
                 height={70}

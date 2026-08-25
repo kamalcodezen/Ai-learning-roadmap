@@ -38,7 +38,7 @@ export default function GoogleAuthButton({
         text-white
         shadow-none
         hover:bg-muted
-        hover:text-secondary
+        hover:text-foreground
         dark:hover:text-white
       "
     >

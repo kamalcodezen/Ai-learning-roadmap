@@ -26,15 +26,14 @@ export default function BentoCanvas({
           group isolate relative
           flex h-[58vh] max-h-[580px] min-h-[420px] w-full flex-col
           rounded-[30px]
-          border-4 border-[#6C6C6C]
-          bg-[#222222]
-          shadow-[0_0_#0000004d,_0_9px_20px_#0000004a,_0_37px_37px_#00000042,_0_84px_50px_#00000026,_0_149px_60px_#0000000a,_0_233px_65px_#00000003]
+          border-4 border-brand
+          bg-brand/30
           transition-all duration-700
           ease-[cubic-bezier(0.22,1,0.36,1)]
         "
       >
         {/* MacBook Window Controls & Header Info */}
-        <div className="flex items-center justify-between px-6 pb-3 pt-4 shrink-0">
+        <div className="flex items-center justify-between px-6 pb-3 pt-4 shrink-0 bg-brand/20">
           {/* Left: Window Controls + Title */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -42,7 +41,7 @@ export default function BentoCanvas({
               <div className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
               <div className="h-3 w-3 rounded-full bg-[#27c93f]" />
             </div>
-            <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#A1A1AA] hidden sm:block">
+            <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-foreground hidden sm:block">
               Roadmap Intelligence Core
             </span>
           </div>

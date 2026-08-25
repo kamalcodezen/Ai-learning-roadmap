@@ -85,21 +85,21 @@ export default function CTASection() {
         {/* ====== Purple geometric blocks ====== */}
         {/* Bottom-left block */}
         <div className="absolute bottom-0 left-0 hidden sm:flex items-end gap-0 pointer-events-none">
-          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-48 sm:h-85 md:h-85 lg:h-85 bg-primary" />
-          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-36 sm:h-60 md:h-60 lg:h-60 bg-primary" />
-          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-60 sm:h-60 md:h-60 lg:h-30 bg-primary" />
+          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-48 sm:h-85 md:h-85 lg:h-85 bg-[#8142c9]" />
+          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-36 sm:h-60 md:h-60 lg:h-60 bg-[#8142c9]" />
+          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-60 sm:h-60 md:h-60 lg:h-30 bg-[#8142c9]" />
         </div>
 
         {/* Bottom center connecting bar */}
         <div className="absolute bottom-0 left-0 right-0 hidden sm:block pointer-events-none">
-          <div className="w-full h-14 sm:h-15 bg-primary" />
+          <div className="w-full h-14 sm:h-15 bg-[#8142c9]" />
         </div>
 
         {/* Bottom-right block */}
         <div className="absolute bottom-0 right-0 hidden sm:flex items-end gap-0 pointer-events-none">
-          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-60 sm:h-60 md:h-60 lg:h-30 bg-primary" />
-          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-36 sm:h-60 md:h-60 lg:h-60 bg-primary" />
-          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-48 sm:h-85 md:h-85 lg:h-85 bg-primary" />
+          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-60 sm:h-60 md:h-60 lg:h-30 bg-[#8142c9]" />
+          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-36 sm:h-60 md:h-60 lg:h-60 bg-[#8142c9]" />
+          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-48 sm:h-85 md:h-85 lg:h-85 bg-[#8142c9]" />
         </div>
 
         {/* Bottom corner labels */}

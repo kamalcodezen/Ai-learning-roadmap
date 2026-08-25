@@ -6,7 +6,7 @@
   -webkit-text-fill-color: #fff;
   caret-color: #fff;
   /* Honored directly by some engines... */
-  background-color: transparent;
+  background-color: transparent !important;
   /* ...and frozen before any tint can appear on the stubborn ones */
   transition: background-color 9999s ease-in-out 0s;
 }

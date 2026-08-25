@@ -5,6 +5,7 @@ import {
   Award,
   Video,
 } from "lucide-react";
+import { BorderBeam } from "@/src/components/ui/border-beam";
 
 const features = [
   {
@@ -20,61 +21,46 @@ const features = [
   {
     icon: HelpCircle,
     title: "Zero abandonment support",
-    description: "No recovery mechanisms or micro catch-up plans when falling behind.",
+    description: "No recovery mechanisms or micro catch-up plans.",
   },
   {
     icon: Briefcase,
     title: "Unchecked job readiness",
-    description: "No validation against actual job description requirements before applying.",
+    description: "No validation against actual job requirements.",
   },
 ];
 
 const LeftSideCard = () => {
   return (
-    <div className="h-full w-full max-w-2xl overflow-hidden rounded-md border border-zinc-300 bg-[linear-gradient(to_bottom,#f3e8ff_0%,#ede5ff_45%,#ddd0ff_100%)] p-2 dark:border-white/15 dark:bg-[linear-gradient(to_bottom,#0a0015_0%,#120025_28%,#1a0040_55%,#2d1065_100%)]">
+    <div className="group relative h-full w-full max-w-2xl overflow-hidden rounded-lg border border-border bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] p-6 transition-all duration-300 hover:border-muted-foreground/30 dark:from-[#0a0015] dark:via-[#120025] dark:to-[#2d1065] dark:hover:border-muted-foreground/20">
+      {/* Border Beams */}
+      <BorderBeam size={200} duration={8} colorFrom="#9F54F7" colorTo="#B978FF" />
+      <BorderBeam size={200} duration={8} delay={4} colorFrom="#B978FF" colorTo="#9F54F7" reverse />
+
+      {/* Top accent line */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-muted-foreground/40 to-transparent" />
+
       {/* Brand Header */}
-      <div className="rounded-[22px] border border-black/10 bg-card px-6 py-5 dark:border-white/15">
-        <h2 className="text-center text-2xl text-foreground md:text-3xl">
-          Coursera / Udemy
-        </h2>
-      </div>
+      <h2 className="mb-6 text-center text-2xl font-semibold text-foreground/80 md:text-3xl">
+        Course platforms
+      </h2>
 
-      {/* Features */}
-      <div className="px-2 py-2 md:px-3 md:py-3">
-        <div className="relative space-y-3">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
+      {/* Divider */}
+      <div className="mb-5 h-px bg-border" />
 
-            return (
-              <div
-                key={feature.title}
-                className="relative flex items-center gap-3 rounded-md border border-black/10 bg-white/50 p-3 dark:border-white/10 dark:bg-black/25"
-              >
-                {/* Feature Icon */}
-                <div
-                  className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border ${
-                    index < 2
-                      ? "border-primary bg-primary text-white"
-                      : "border-black/20 bg-white/60 text-black dark:border-white/20 dark:bg-white/10 dark:text-primary"
-                  }`}
-                >
-                  <Icon size={20} strokeWidth={2.2} />
-                </div>
-
-                {/* Feature Content */}
-                <div className="min-w-0">
-                  <h3 className="text-base leading-tight text-foreground md:text-lg">
-                    {feature.title}
-                  </h3>
-
-                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </div>
+      {/* Feature List */}
+      <div className="space-y-4">
+        {features.map((feature) => {
+          const Icon = feature.icon;
+          return (
+            <div key={feature.title} className="flex items-center gap-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted/50 dark:bg-white/5">
+                <Icon className="h-4 w-4 text-muted-foreground" />
               </div>
-            );
-          })}
-        </div>
+              <span className="text-sm font-medium text-foreground/70">{feature.title}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

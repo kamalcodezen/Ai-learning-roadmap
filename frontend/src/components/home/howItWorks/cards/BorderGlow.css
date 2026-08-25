@@ -3,10 +3,10 @@
   --cursor-angle: 45deg;
   --edge-sensitivity: 30;
   --color-sensitivity: calc(var(--edge-sensitivity) + 20);
-  --border-radius: 28px;
+  --border-radius: 15px;
   --glow-padding: 40px;
   --cone-spread: 25;
-
+  border-radius: 10px!important;
   position: relative;
   border-radius: var(--border-radius);
   isolation: isolate;
@@ -17,11 +17,11 @@
 }
 
 :root .border-glow-card {
-  background: linear-gradient(to bottom, #ffffff, #f3e8ff);
+  background: linear-gradient(to bottom, #faf5ff, #ede5ff);
 }
 
 .dark .border-glow-card {
-  background: linear-gradient(to bottom, #0a0015, rgba(159, 84, 247, 0.3));
+  background: linear-gradient(to bottom, #1a0e2e, rgba(159, 84, 247, 0.25));
 }
 
 .border-glow-card > .edge-light {
