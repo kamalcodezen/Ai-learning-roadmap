@@ -4,6 +4,7 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 import AuthInput from "./AuthInput";
 import AuthSocialButton from "./AuthSocialButton";
+import LightRays from "./LightRays";
 import type { AuthMode } from "./auth.types";
 
 interface AuthFormProps {
@@ -56,9 +57,24 @@ export default function AuthForm({
         md:px-10
         lg:px-14
         xl:px-16
+        bg-black/40
       "
     >
-      <div className="mx-auto w-full">
+      <LightRays
+        raysOrigin="top-center"
+        raysColor="#ffffff"
+        raysSpeed={1}
+        lightSpread={2.5}
+        rayLength={40}
+        followMouse={true}
+        mouseInfluence={0.1}
+        noiseAmount={0}
+        distortion={0}
+        pulsating={false}
+        fadeDistance={1}
+        saturation={1}
+      />
+      <div className="relative z-10 mx-auto w-full">
 
         {/* Heading */}
         <h2 className="text-xl tracking-tight text-white sm:text-2xl text-center">
@@ -130,10 +146,10 @@ export default function AuthForm({
             mt-4
             py-2
             rounded-full
-            bg-linear-to-r from-[#d5f051] to-[#64a331]
+            bg-linear-to-b from-[#9F54F7] to-[#9F54F7]
             text-base
             font-medium
-            text-secondary
+            text-foreground
             shadow-none
             hover:brightness-105
           "

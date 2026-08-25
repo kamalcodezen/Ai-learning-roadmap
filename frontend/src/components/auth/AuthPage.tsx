@@ -22,7 +22,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
             {/* Full-bleed animated silk background */}
             <div aria-hidden="true" className="absolute inset-0 z-0">
                 <Silk
-                    color={isDark ? "#304c0a" : "#839650"}
+                    color={isDark ? "#402066" : "#6a28b8"}
                     speed={4}
                     scale={1.2}
                     noiseIntensity={1.2}
@@ -34,8 +34,8 @@ export default function AuthPage({ mode }: AuthPageProps) {
                 cubeSrc="/images/cube.png"
                 logo={
                     <Link href="/" className="flex gap-2 items-center">
-                        <Image src={brandLogo} alt="Brand-logo" className="ml-1 h-fit" height={20} width={20} />
-                        <span className="font-sans text-[30px] font-semibold tracking-[-0.03em] text-neutral-800">
+                        <Image src={brandLogo} alt="Brand-logo" className="ml-1 h-fit dark:invert" height={20} width={20} />
+                        <span className="font-sans text-[30px] font-semibold tracking-[-0.03em] text-foreground">
                             Ai Pather
                         </span>
                     </Link>

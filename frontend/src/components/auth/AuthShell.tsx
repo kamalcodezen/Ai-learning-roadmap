@@ -36,7 +36,7 @@ export default function AuthShell({
           shadow-2xl
           rounded-3xl
           overflow-hidden
-          bg-secondary/60
+          bg-black/60
         "
       >
         {/* Moving green brand section */}
