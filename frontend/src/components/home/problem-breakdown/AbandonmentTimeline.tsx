@@ -35,7 +35,7 @@ export default function AbandonmentTimeline() {
            initial={{ opacity: 0, y: 10 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ delay: 0.6 }}
-           className="flex flex-col items-center text-center p-6 bg-card border border-border rounded-xl w-full"
+           className="flex flex-col items-center text-center p-6 bg-card border border-border rounded-md w-full"
          >
            <span className="text-small font-medium text-foreground tracking-widest mb-1 uppercase">12 Days Off Track</span>
            <div className="w-8 h-px bg-border my-4" />

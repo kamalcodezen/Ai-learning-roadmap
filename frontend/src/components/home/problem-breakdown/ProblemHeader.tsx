@@ -7,7 +7,7 @@ export default function ProblemHeader() {
               Break Down
               </span>
               </h2>
-      <p className="section-subtitle mt-4">
+      <p className="section-subtitle mt-1">
         Completing lessons is not the same as becoming job-ready.
       </p>
     </div>
