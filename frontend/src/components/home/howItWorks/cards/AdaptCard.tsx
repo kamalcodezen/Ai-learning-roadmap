@@ -10,7 +10,7 @@ export default function AdaptCard() {
     <div className="flex flex-col h-full">
       <BorderGlow>
         <div className="border-glow-inner relative p-5 flex flex-col justify-between min-h-[260px]">
-          <div className="absolute -top-3 -right-3 bg-card border border-border p-2.5 rounded-xl shadow-lg flex items-center justify-center rotate-6">
+          <div className="absolute -top-3 -right-3 bg-card border border-border p-2.5 rounded-md shadow-lg flex items-center justify-center rotate-6">
             <TbSparkles className="w-5 h-5 text-primary" />
           </div>
 
@@ -19,7 +19,7 @@ export default function AdaptCard() {
             <h3 className="text-h3 mt-0.5">Adapt</h3>
           </div>
 
-          <div className="soft-card rounded-2xl p-3 mt-3 space-y-2">
+          <div className="soft-card rounded-md p-3 mt-3 space-y-2">
             <div className="flex items-center justify-between text-caption">
               <span className="font-semibold text-muted-foreground">Roadmap Shift</span>
               <FiTrendingUp className="w-4 h-4 text-primary" />

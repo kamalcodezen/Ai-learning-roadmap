@@ -244,7 +244,7 @@ export default function BorderGlow({
         } as CSSProperties
       }
     >
-      <span className="edge-light rounded-3xl" />
+      <span className="edge-light rounded-md" />
       <div className="border-glow-inner">{children}</div>
     </div>
   );
