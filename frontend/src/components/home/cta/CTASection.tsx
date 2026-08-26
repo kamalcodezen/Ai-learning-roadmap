@@ -62,11 +62,11 @@ export default function CTASection() {
 
         {/* ====== Main content ====== */}
         <div className="max-w-5xl mx-auto text-center -mt-10 sm:mt-0 text-measure mx-auto">
-          <h2 className="text-display text-balance uppercase font-black tracking-tight text-foreground mb-4">
+          <h1 className="font-poppins scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl uppercase text-foreground mb-4 text-balance">
             Let&apos;s Build Your AI Career Path
-          </h2>
+          </h1>
 
-          <p className="text-body-large text-muted-foreground font-medium mb-6">
+          <p className="font-poppins text-lg leading-7 text-muted-foreground mb-6 [&:not(:first-child)]:mt-6 text-balance mx-auto max-w-2xl">
             Tell us where you want to go, and we’ll help you understand what to learn next
           </p>
 

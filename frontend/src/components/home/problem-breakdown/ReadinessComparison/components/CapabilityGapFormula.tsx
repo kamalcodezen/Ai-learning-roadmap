@@ -4,22 +4,18 @@
  */
 export default function CapabilityGapFormula() {
   return (
-    <div className="relative mx-auto w-full max-w-4xl">
+    <div className="relative mx-auto w-full max-w-4xl sm:mt-0 mt-12">
       {/* Ambient Halo behind Terminal */}
       <div className="pointer-events-none absolute inset-0 rounded-3xl bg-primary/10 blur-2xl -z-10" />
 
       {/* Header Badge */}
       <div className="mb-6 flex items-center justify-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card-soft px-4 py-1.5 shadow-sm backdrop-blur-md">
-          <span className="h-2 w-2 rounded-full bg-red-500 animate-ping" />
-          <span className="font-mono text-caption font-bold uppercase tracking-widest text-foreground">
-            Empirical Reality Gap
-          </span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card-soft px-4  shadow-sm backdrop-blur-md">
         </div>
       </div>
 
       {/* Main Telemetry Split Console */}
-      <div className="relative overflow-hidden rounded-[28px] border-2 border-border bg-card p-6 md:p-8 ">
+      <div className="relative overflow-hidden rounded-[16px] border-2 border-border bg-card p-6 md:p-8 ">
         {/* Micro Horizon Glow Accent */}
         <div className="pointer-events-none absolute inset-x-12 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-80" />
 

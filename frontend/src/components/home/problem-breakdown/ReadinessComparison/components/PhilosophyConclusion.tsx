@@ -27,7 +27,7 @@ export default function PhilosophyConclusion() {
           A 100% course completion bar is just a metric.
         </p>
 
-        <h4 className="mt-1 font-poppins text-h4 font-semibold text-foreground text-balance">
+        <h4 className="mt-1 font-poppins text-h4 text-foreground text-balance">
           Real engineering capability requires an{" "}
           <span className="relative inline-block font-bold text-primary">
             Adaptive Continuous OS

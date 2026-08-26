@@ -33,9 +33,9 @@ const LeftSideCard = () => {
   return (
     <div className="h-full w-full max-w-2xl overflow-hidden rounded-md border border-zinc-300 bg-[linear-gradient(to_bottom,#f4ffd6_0%,#eaffbd_45%,#dff5a5_100%)] p-2 dark:border-white/15 dark:bg-[linear-gradient(to_bottom,#0f2a02_0%,#1a3a05_28%,#304c0a_55%,#6b861c_100%)]">
       {/* Brand Header */}
-      <div className="rounded-md border border-black/10 bg-card px-4 py-3 dark:border-white/15">
-        <h2 className="text-center text-lg font-bold text-foreground">
-          Traditional Course Platforms
+      <div className="rounded-[22px] border border-black/10 bg-card px-6 py-5 dark:border-white/15">
+        <h2 className="text-center text-2xl text-foreground md:text-3xl">
+          Coursera / Udemy
         </h2>
       </div>
 
@@ -63,7 +63,7 @@ const LeftSideCard = () => {
 
                 {/* Feature Content */}
                 <div className="min-w-0">
-                  <h3 className="text-sm font-semibold leading-tight text-foreground">
+                  <h3 className="text-base leading-tight text-foreground md:text-lg">
                     {feature.title}
                   </h3>
 

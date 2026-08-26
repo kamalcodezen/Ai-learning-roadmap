@@ -29,7 +29,7 @@ export default function FeatureCard({ feature }: FeatureCardProps) {
             {feature.metric}
           </span>
         </div>
-        <h3 className="text-h3 font-bold tracking-tight text-background text-left">
+        <h3 className="text-h3 tracking-tight text-background text-left">
           {feature.title}
         </h3>
       </div>

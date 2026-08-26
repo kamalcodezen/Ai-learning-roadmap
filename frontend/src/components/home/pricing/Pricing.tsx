@@ -2,76 +2,18 @@
 
 import React, { useState } from "react";
 import Header, { type BillingPeriod } from "./Header";
+import { pricingPlans, type PricingPlan } from "./plans";
 import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import Button from "../../ui/button";
-
-type PricingPlan = {
-  name: string;
-  price: number;
-  features: string[];
-  description: string;
-  popular?: boolean;
-};
-
-
-const pricingPlans: PricingPlan[] = [
-  {
-    name: "Free",
-    price: 0,
-    features: [
-      "Basic Crop Monitoring",
-      "1 Hectare Coverage",
-      "Email Support",
-    ],
-    description: "Perfect for small farms just starting out.",
-  },
-  {
-    name: "Professional Plan",
-    price: 399,
-    features: [
-      "Up to 50 Hectares",
-      "Advanced Crop Monitoring",
-      "Disease Detection",
-      "Priority 24/7 Support",
-    ],
-    description: "Ideal for scaling farms and commercial operations.",
-    popular: true,
-  },
-  {
-    name: "Enterprise Plan",
-    price: 799,
-    features: [
-      "Unlimited Coverage",
-      "All Services Included",
-      "Smart Irrigation Control",
-      "Dedicated Account Manager",
-    ],
-    description: "Complete solution for large-scale operations.",
-  },
-];
 
 const Pricing = () => {
   const [billing, setBilling] = useState<BillingPeriod>("monthly");
 
-  const getCurrentPrice = (price: number) =>
-    billing === "yearly" ? Math.round(price * 0.8) : price;
+  const getCurrentPrice = (plan: PricingPlan) =>
+    billing === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
 
-  const handleFreeGetStarted = () => {
-    alert(`Price: $${getCurrentPrice(pricingPlans[0].price)}`);
-  };
-
-  const handleProfessionalGetStarted = () => {
-    alert(`Price: $${getCurrentPrice(pricingPlans[1].price)}`);
-  };
-
-  const handleEnterpriseGetStarted = () => {
-    alert(`Price: $${getCurrentPrice(pricingPlans[2].price)}`);
-  };
-
-  const getStartedHandlers: Record<string, () => void> = {
-    Free: handleFreeGetStarted,
-    "Professional Plan": handleProfessionalGetStarted,
-    "Enterprise Plan": handleEnterpriseGetStarted,
+  const handlePlanCta = (index: number) => {
+    alert(`Price: $${getCurrentPrice(pricingPlans[index])}`);
   };
 
   return (
@@ -82,7 +24,7 @@ const Pricing = () => {
 
         {/* Pricing Cards */}
         <div className="mt-16 grid grid-cols-1 items-stretch gap-7 lg:grid-cols-3 mx-auto max-w-7xl">
-          {pricingPlans.map((plan) => (
+          {pricingPlans.map((plan, index) => (
             <div
               key={plan.name}
               className={`relative rounded-3xl p-6 shadow-[var(--shadow)] transition-all duration-300 hover:-translate-y-1 ${
@@ -107,7 +49,10 @@ const Pricing = () => {
               <div className="mt-8 flex items-end justify-center gap-2">
                 <span className="text-5xl font-bold leading-none text-foreground dark:text-primary">
                   $
-                  <NumberTicker value={getCurrentPrice(plan.price)} />
+                  <NumberTicker
+                    value={getCurrentPrice(plan)}
+                    startValue={plan.monthlyPrice}
+                  />
                 </span>
 
                 <span className="pb-1 text-sm font-semibold text-muted-foreground">
@@ -138,9 +83,9 @@ const Pricing = () => {
               {/* Button */}
               <div className="flex justify-center">
                 <Button
-                text="Get Started"
+                text={plan.cta}
                 variant={plan.popular ? "primary" : "soft"}
-                onClick={getStartedHandlers[plan.name]}
+                onClick={() => handlePlanCta(index)}
                 className="w-fit "
               />
               </div>

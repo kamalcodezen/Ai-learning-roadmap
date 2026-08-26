@@ -32,7 +32,7 @@ export default function ProblemCard({
       <div className="flex flex-col flex-1 space-y-6">
         <div className="space-y-3">
           <span className="text-sm font-semibold text-primary/70">{number}</span>
-          <h3 className="font-sans text-2xl font-medium text-foreground tracking-tight">
+          <h3 className="font-sans text-2xl text-foreground tracking-tight">
             {title}
           </h3>
           <p className="text-muted-foreground text-sm leading-relaxed">
