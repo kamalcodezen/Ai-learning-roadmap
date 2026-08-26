@@ -31,8 +31,8 @@ export * from "./enums.js"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more Accounts
+ * const accounts = await prisma.account.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -42,7 +42,72 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
- * Model User
+ * Model account
  * 
  */
-export type User = Prisma.UserModel
+export type account = Prisma.accountModel
+/**
+ * Model session
+ * 
+ */
+export type session = Prisma.sessionModel
+/**
+ * Model user
+ * 
+ */
+export type user = Prisma.userModel
+/**
+ * Model verification
+ * 
+ */
+export type verification = Prisma.verificationModel
+/**
+ * Model CareerProfile
+ * 
+ */
+export type CareerProfile = Prisma.CareerProfileModel
+/**
+ * Model DiagnosticQuestion
+ * 
+ */
+export type DiagnosticQuestion = Prisma.DiagnosticQuestionModel
+/**
+ * Model DiagnosticAttempt
+ * 
+ */
+export type DiagnosticAttempt = Prisma.DiagnosticAttemptModel
+/**
+ * Model DiagnosticAnswer
+ * 
+ */
+export type DiagnosticAnswer = Prisma.DiagnosticAnswerModel
+/**
+ * Model SkillState
+ * 
+ */
+export type SkillState = Prisma.SkillStateModel
+/**
+ * Model Roadmap
+ * 
+ */
+export type Roadmap = Prisma.RoadmapModel
+/**
+ * Model Milestone
+ * 
+ */
+export type Milestone = Prisma.MilestoneModel
+/**
+ * Model Project
+ * 
+ */
+export type Project = Prisma.ProjectModel
+/**
+ * Model ActivityLog
+ * 
+ */
+export type ActivityLog = Prisma.ActivityLogModel
+/**
+ * Model SkillStateHistory
+ * 
+ */
+export type SkillStateHistory = Prisma.SkillStateHistoryModel
