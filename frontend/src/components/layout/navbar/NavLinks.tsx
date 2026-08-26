@@ -28,7 +28,7 @@ export default function NavLinks() {
           <div key={link.label} className="relative">
             <Link
               href={link.href}
-              className="flex items-center text-body-large font-normal text-muted-foreground transition-colors duration-200 hover:text-foreground"
+              className="font-poppins flex items-center text-body-large font-normal text-muted-foreground transition-colors duration-200 hover:text-foreground"
             >
               {link.label}
             </Link>
@@ -67,7 +67,7 @@ export default function NavLinks() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between rounded-xl px-4 py-3 text-sm text-muted-foreground transition-colors hover:bg-card-soft hover:text-foreground"
+                  className="font-poppins flex items-center justify-between rounded-xl px-4 py-3 text-sm text-muted-foreground transition-colors hover:bg-card-soft hover:text-foreground"
                 >
                   <span>{link.label}</span>
                 </Link>
