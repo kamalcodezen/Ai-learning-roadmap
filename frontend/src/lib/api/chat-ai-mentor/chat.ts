@@ -1,4 +1,5 @@
 import { serverMutation } from "../../core/server";
+import { authClient } from "../../auth-client";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -9,6 +10,7 @@ export interface ChatRequest {
   message: string;
   history?: ChatMessage[];
   context?: string;
+  userId?: string;
 }
 
 export interface ChatResult {
@@ -26,9 +28,13 @@ export interface ChatResponse {
 export const sendChatMessage = async (
   payload: ChatRequest,
 ): Promise<ChatResponse> => {
+  const session = await authClient.getSession();
+  const userId = session?.data?.user?.id || "mock-user-id";
+
   // ফ্রন্টএন্ড থেকে শুধু শেষ ৪টি প্রাসঙ্গিক মেসেজ যাবে
   const optimizedPayload: ChatRequest = {
     ...payload,
+    userId,
     history: payload.history
       ? payload.history
           .filter(
