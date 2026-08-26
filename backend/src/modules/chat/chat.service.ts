@@ -106,26 +106,38 @@ export class ChatService {
       const profile = await prisma.careerProfile.findUnique({ where: { userId } });
       const roadmap = await prisma.roadmap.findFirst({
         where: { userId, status: "ACTIVE" },
-        include: { milestones: { where: { status: "CURRENT" } } }
+        include: { milestones: { orderBy: { order: "asc" } } }
       });
-      const skillStates = await prisma.skillState.findMany({ 
+      const allSkillStates = await prisma.skillState.findMany({ 
         where: { userId },
-        orderBy: { knowledgeScore: 'asc' },
-        take: 3
       });
+      
+      const weakSkills = allSkillStates
+        .filter(s => s.knowledgeScore < 60)
+        .sort((a, b) => a.knowledgeScore - b.knowledgeScore)
+        .slice(0, 5);
 
       if (!profile) {
         return "USER CONTEXT: The user is brand new to the platform. They have not set up a career profile, skills, or a roadmap yet. You should politely ask them what their target career role is, what skills they currently know, and then generate a starter roadmap for them based on their response.";
       }
 
+      const avgKnowledge = allSkillStates.length ? Math.round(allSkillStates.reduce((a, s) => a + s.knowledgeScore, 0) / allSkillStates.length) : 0;
+
       let contextStr = `USER CONTEXT:\nTarget Role: ${profile.targetRole || (profile as any).targetRoleName}\nExperience: ${profile.experienceLevel || "Beginner"}`;
+      contextStr += `\nReadiness: ${avgKnowledge}/100`;
       
       if (roadmap && roadmap.milestones && roadmap.milestones.length > 0) {
-        contextStr += `\nCurrent Milestone: ${roadmap.milestones[0]?.title}`;
+        contextStr += `\nCurrent Roadmap Status: Active`;
+        const currentMilestone = roadmap.milestones.find((m: any) => m.status === "CURRENT") || roadmap.milestones[0];
+        if (currentMilestone) {
+           contextStr += `\nCurrent Milestone: ${currentMilestone.title}`;
+        }
+      } else {
+        contextStr += `\nCurrent Roadmap Status: None`;
       }
       
-      if (skillStates.length > 0) {
-        contextStr += `\nWeakest Skills to Improve: ${skillStates.map((s: any) => s.skillName).join(", ")}`;
+      if (weakSkills.length > 0) {
+        contextStr += `\nSkill Gaps (Needs Work): ${weakSkills.map((s: any) => s.skillName).join(", ")}`;
       }
 
       return contextStr;
