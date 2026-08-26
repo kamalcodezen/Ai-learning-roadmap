@@ -4,6 +4,7 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 import AuthInput from "./AuthInput";
 import AuthSocialButton from "./AuthSocialButton";
+import { Ripple } from "@/src/registry/magicui/ripple";
 import type { AuthMode } from "./auth.types";
 
 interface AuthFormProps {
@@ -43,11 +44,13 @@ export default function AuthForm({
     <form
       onSubmit={onSubmit}
       className="
+        relative
         flex
         h-full
         w-full
         flex-col
         justify-center
+        overflow-hidden
         px-7
         py-8
         sm:px-12
@@ -56,10 +59,13 @@ export default function AuthForm({
         xl:px-24
       "
     >
+      {/* Brand-colored ripple background */}
+      <Ripple className="text-primary -z-10 dark:opacity-40" />
+
       <div className="mx-auto w-full">
 
         {/* Heading */}
-        <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl text-center">
+        <h2 className="text-xl tracking-tight text-foreground sm:text-2xl text-center">
           {isSignUp ? "Create Account" : "Sign In"}
         </h2>
 
