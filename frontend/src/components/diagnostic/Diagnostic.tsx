@@ -71,13 +71,7 @@ export default function Diagnostic() {
       setErrorMessage("");
 
       // --------------------------------------------------------
-      // 1. CREATE ATTEMPT
-      // --------------------------------------------------------
-
-      const attemptResponse = await createDiagnosticAttempt(userId);
-
-      // --------------------------------------------------------
-      // 2. FETCH EXACTLY 5 QUESTIONS
+      // 1. FETCH EXACTLY 5 QUESTIONS (Backend creates attempt if needed)
       // --------------------------------------------------------
 
       const questionsResponse = await getDiagnosticQuestions(userId, 5);
@@ -90,9 +84,13 @@ export default function Diagnostic() {
         );
       }
 
-      // getDiagnosticQuestions backend actually creates a fresh attempt for these questions and invalidates older ones
-      // so we must use the attemptId attached to these questions to prevent submitting to an abandoned attempt
-      const activeAttemptId = (fetchedQuestions[0] as DiagnosticQuestion & { attemptId?: string }).attemptId || attemptResponse.data.id;
+      // getDiagnosticQuestions returns questions that have the attemptId attached
+      const activeAttemptId = (fetchedQuestions[0] as DiagnosticQuestion & { attemptId?: string }).attemptId;
+      
+      if (!activeAttemptId) {
+        throw new Error("Could not determine active attempt ID from questions.");
+      }
+      
       setAttemptId(activeAttemptId);
 
       setQuestions(fetchedQuestions);

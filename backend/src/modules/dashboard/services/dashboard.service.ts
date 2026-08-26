@@ -80,46 +80,42 @@ Generate 4 to 6 milestones tailored to their gaps.`;
 
 
 export const getDashboardOverview = async (userId: string) => {
-  const profile = await prisma.careerProfile.findUnique({
-    where: { userId },
-  });
-
-  const targetRole = profile?.targetRoleName || profile?.targetRole || "Unknown Role";
-  const experienceLevel = profile?.experienceLevel || "BEGINNER";
-
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
+  // 1. Fetch user independent data first (Parallel)
   const [
+    profile,
     skillStates,
-    diagnosticResult,
-    roadmap,
-    _recentAssessmentsCount,
-    _recentLearningCount,
     projects,
     activityLogs,
     skillStateHistories
   ] = await Promise.all([
+    prisma.careerProfile.findUnique({ where: { userId } }),
     prisma.skillState.findMany({ where: { userId } }),
+    prisma.project.findMany({ where: { userId }, select: { score: true } }),
+    prisma.activityLog.findMany({ where: { userId, createdAt: { gte: oneWeekAgo } }, select: { type: true } }),
+    prisma.skillStateHistory.findMany({ 
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      distinct: ['skillName'],
+      select: { skillName: true, knowledgeScore: true }
+    })
+  ]);
+
+  const targetRole = profile?.targetRoleName || profile?.targetRole || "Unknown Role";
+  const experienceLevel = profile?.experienceLevel || "BEGINNER";
+
+  // 2. Fetch role-dependent data (Parallel)
+  const [diagnosticResult, roadmap] = await Promise.all([
     prisma.diagnosticAttempt.findFirst({
       where: { userId, status: "COMPLETED", targetRole },
-      orderBy: { completedAt: "desc" }
+      orderBy: { completedAt: "desc" },
+      select: { score: true }
     }),
     prisma.roadmap.findFirst({
       where: { userId, status: "ACTIVE", targetRole },
-      include: { milestones: { orderBy: { order: "asc" } } }
-    }),
-    prisma.diagnosticAttempt.count({
-      where: { userId, status: "COMPLETED", completedAt: { gte: oneWeekAgo } }
-    }),
-    prisma.skillState.count({
-      where: { userId, lastReviewed: { gte: oneWeekAgo } }
-    }),
-    prisma.project.findMany({ where: { userId } }),
-    prisma.activityLog.findMany({ where: { userId, createdAt: { gte: oneWeekAgo } } }),
-    prisma.skillStateHistory.findMany({ 
-      where: { userId },
-      orderBy: { createdAt: 'desc' }
+      include: { milestones: { orderBy: { order: "asc" }, select: { title: true, description: true, status: true } } }
     })
   ]);
 

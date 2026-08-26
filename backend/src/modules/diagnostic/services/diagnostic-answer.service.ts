@@ -37,27 +37,23 @@ export const submitDiagnosticAnswer = async (
     throw new Error("This diagnostic question is no longer active.");
   }
 
-  // 5. Check duplicate answer
-  const existingAnswer = await prisma.diagnosticAnswer.findUnique({
+  const isCorrect =
+    data.selectedAnswer.trim() === question.correctAnswer.trim();
+
+  // 5. Save or update answer (Upsert)
+  // This prevents the "already answered" error if a user reloads the page and re-submits an answer for the same attempt.
+  const answer = await prisma.diagnosticAnswer.upsert({
     where: {
       attemptId_questionId: {
         attemptId,
         questionId: data.questionId,
       },
     },
-  });
-
-  if (existingAnswer) {
-    throw new Error("This question has already been answered.");
-  }
-
-  // 6. Check correct answer
-  const isCorrect =
-    data.selectedAnswer.trim() === question.correctAnswer.trim();
-
-  // 7. Save answer
-  const answer = await prisma.diagnosticAnswer.create({
-    data: {
+    update: {
+      selectedAnswer: data.selectedAnswer.trim(),
+      isCorrect,
+    },
+    create: {
       attemptId,
       questionId: data.questionId,
       selectedAnswer: data.selectedAnswer.trim(),
