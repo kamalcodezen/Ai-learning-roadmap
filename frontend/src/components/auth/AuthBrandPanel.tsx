@@ -3,6 +3,7 @@
 import Image from "next/image";
 import AuthSwitchButton from "./AuthSwitchButton";
 import type { AuthBrandPanelProps } from "./auth.types";
+import { TypographyH1 } from "@/src/components/shadcn-studio/typography/typography-01";
 
 export default function AuthBrandPanel({
   mode,
@@ -42,37 +43,31 @@ export default function AuthBrandPanel({
 
         {/* Brand heading */}
         <div className="relative z-10 mt-2 hidden max-w-[360px] md:block">
-          <h1 className="font-sans text-lg font-bold leading-[1.05] tracking-tight text-secondary sm:text-xl lg:text-2xl">
+          <TypographyH1 className="text-secondary">
             Let&apos;s learn to solve
             <br />
             this Rubik&apos;s Cube!
-          </h1>
+          </TypographyH1>
         </div>
 
         {/* Cube */}
         <div
-          className={[
-            "absolute hidden md:block",
-            "left-1/2 top-[52%]",
-            "w-[220px] -translate-x-1/2",
-            "sm:w-[200px]",
-            "md:left-[48%] md:top-[30%] md:w-[200px]",
-            "lg:w-[260px]",
-            "transition-transform duration-700 ease-linear",
-            isSignUp
-              ? "translate-x-[-38%] sm:translate-x-[-32%] md:translate-x-[-8%]"
-              : "translate-x-[-62%] sm:translate-x-[-68%] md:translate-x-[-92%]",
-          ].join(" ")}
-        >
-          <Image
-            src={cubeSrc}
-            alt="Rubik's cube"
-            width={600}
-            height={600}
-            priority
-            className="h-auto w-full object-contain"
-          />
-        </div>
+  className={[
+    "absolute hidden md:block",
+    "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+    "w-[200px] lg:w-[260px]",
+    "transition-transform duration-700 ease-linear",
+  ].join(" ")}
+>
+  <Image
+    src={cubeSrc}
+    alt="Rubik's cube"
+    width={600}
+    height={600}
+    priority
+    className="h-auto w-full object-contain"
+  />
+</div>
 
         {/* Switch button */}
         <AuthSwitchButton
