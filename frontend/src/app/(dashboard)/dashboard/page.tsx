@@ -1,7 +1,6 @@
-﻿"use client";
-
-import { useEffect, useState } from "react";
-import { authClient } from "@/src/lib/auth-client";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+import { auth } from "@/src/lib/auth";
 import { getDashboardOverview } from "@/src/lib/api/dashboard";
 import { DashboardData } from "@/src/components/dashboard/types";
 import DashboardHeader from "@/src/components/dashboard/DashboardHeader";
@@ -17,65 +16,33 @@ import CareerAlignmentCard from "@/src/components/dashboard/CareerAlignmentCard"
 import ApplicationReadinessCard from "@/src/components/dashboard/ApplicationReadinessCard";
 import ChatBox from "@/src/components/chat/ChatBox";
 import PortfolioStrengthCard from "@/src/components/dashboard/PortfolioStrengthCard";
-import { Skeleton } from "@/src/components/ui/skeleton";
 
-export default function DashboardPage() {
-  const { data: session, isPending: sessionPending } = authClient.useSession();
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [dataPending, setDataPending] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default async function DashboardPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  useEffect(() => {
-    async function loadData() {
-      if (!session?.user.id) return;
-      try {
-        setError(null);
-        const dashboardData = await getDashboardOverview(session.user.id);
-        setData(dashboardData);
-      } catch (error) {
-        console.error("Failed to load dashboard data:", error);
-        setError("Failed to load your dashboard. Please try refreshing the page.");
-      } finally {
-        setDataPending(false);
-      }
-    }
-    
-    if (!sessionPending) {
-      loadData();
-    }
-  }, [session?.user.id, sessionPending]);
-  
-  const isPending = sessionPending || dataPending;
+  if (!session?.user?.id) {
+    redirect("/");
+  }
 
-  if (error) {
+  let data: DashboardData;
+  try {
+    data = await getDashboardOverview(session.user.id);
+  } catch (error) {
+    console.error("Failed to load dashboard data:", error);
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-4 text-center">
         <h3 className="text-xl font-bold text-destructive">Dashboard Error</h3>
-        <p className="text-muted-foreground">{error}</p>
-        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-primary text-primary-foreground rounded-md">
-          Retry
-        </button>
-      </div>
-    );
-  }
-
-  if (isPending || !data) {
-    return (
-      <div className="space-y-8 animate-in fade-in duration-500">
-        <Skeleton className="h-24 w-full" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <Skeleton className="h-[400px] col-span-1" />
-          <Skeleton className="h-[400px] col-span-1 md:col-span-2 lg:col-span-1 xl:col-span-2" />
-          <Skeleton className="h-[400px] col-span-1" />
-        </div>
+        <p className="text-muted-foreground">Failed to load your dashboard. Please try refreshing the page.</p>
       </div>
     );
   }
 
   // Use session user if available, otherwise mock data user
   const userToPass = {
-    name: session?.user.name || data.user.name,
-    image: session?.user.image || data.user.image,
+    name: session.user.name || data.user.name,
+    image: session.user.image || data.user.image,
   };
 
   return (
