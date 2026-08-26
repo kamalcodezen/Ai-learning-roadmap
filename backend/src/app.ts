@@ -7,6 +7,9 @@ import { notFoundMiddleware } from "./middlewares/not-found.middleware.js";
 import { pinoHttp } from "pino-http";
 import logger from "./lib/logger.js";
 import chatRoutes from "./modules/chat/chat.routes.js";
+import careerProfileRoutes from "./modules/career-profile/career-profile.routes.js";
+import diagnosticRoutes from "./modules/diagnostic/diagnostic.routes.js";
+import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
 
 const isProduction = env.NODE_ENV === "production";
 
@@ -40,6 +43,15 @@ app.use(express.json());
 
 // API Chat Routes
 app.use("/api/chat", chatRoutes);
+
+// Diagnostic Routes (question)
+app.use("/api/diagnostic", diagnosticRoutes);
+
+// Dashboard and API endpoints
+app.use("/api", dashboardRoutes);
+
+// Career Profile Routes/ onboarding
+app.use("/api/career-profile", careerProfileRoutes);
 
 // Health check
 app.get("/health", (_req, res) => {

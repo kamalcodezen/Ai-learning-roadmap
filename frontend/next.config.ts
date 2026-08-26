@@ -13,6 +13,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/diagnostic",
+        destination: "/onboarding/diagnostic",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

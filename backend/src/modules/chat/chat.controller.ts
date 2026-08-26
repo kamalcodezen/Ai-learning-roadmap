@@ -20,6 +20,7 @@ const chatRequestSchema = z.object({
     .default([]),
 
   context: z.string().trim().max(6000).optional(),
+  userId: z.string().optional(),
 });
 
 export class ChatController {
@@ -32,10 +33,19 @@ export class ChatController {
         .filter((item) => item.content.trim().length > 0)
         .slice(-4);
 
+      let finalContext = validatedData.context;
+
+      if (validatedData.userId) {
+        const backendContext = await ChatService.fetchUserContext(validatedData.userId, validatedData.message);
+        if (backendContext) {
+          finalContext = backendContext;
+        }
+      }
+
       const result = await ChatService.processChat(
         validatedData.message,
         sanitizedHistory,
-        validatedData.context,
+        finalContext,
       );
 
       return res.status(200).json({

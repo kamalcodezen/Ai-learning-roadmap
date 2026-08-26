@@ -51,7 +51,20 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  account: 'account',
+  session: 'session',
+  user: 'user',
+  verification: 'verification',
+  CareerProfile: 'CareerProfile',
+  DiagnosticQuestion: 'DiagnosticQuestion',
+  DiagnosticAttempt: 'DiagnosticAttempt',
+  DiagnosticAnswer: 'DiagnosticAnswer',
+  SkillState: 'SkillState',
+  Roadmap: 'Roadmap',
+  Milestone: 'Milestone',
+  Project: 'Project',
+  ActivityLog: 'ActivityLog',
+  SkillStateHistory: 'SkillStateHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -70,15 +83,208 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const AccountScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  providerId: 'providerId',
+  userId: 'userId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  idToken: 'idToken',
+  accessTokenExpiresAt: 'accessTokenExpiresAt',
+  refreshTokenExpiresAt: 'refreshTokenExpiresAt',
+  scope: 'scope',
+  password: 'password',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const SessionScalarFieldEnum = {
+  id: 'id',
+  expiresAt: 'expiresAt',
+  token: 'token',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  userId: 'userId'
+} as const
+
+export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
-  email: 'email',
   name: 'name',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const VerificationScalarFieldEnum = {
+  id: 'id',
+  identifier: 'identifier',
+  value: 'value',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const CareerProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  targetRole: 'targetRole',
+  targetRoleName: 'targetRoleName',
+  experienceLevel: 'experienceLevel',
+  weeklyAvailableHours: 'weeklyAvailableHours',
+  onboardingCompleted: 'onboardingCompleted',
+  resumeScore: 'resumeScore',
+  interviewScore: 'interviewScore',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CareerProfileScalarFieldEnum = (typeof CareerProfileScalarFieldEnum)[keyof typeof CareerProfileScalarFieldEnum]
+
+
+export const DiagnosticQuestionScalarFieldEnum = {
+  id: 'id',
+  question: 'question',
+  description: 'description',
+  category: 'category',
+  skill: 'skill',
+  options: 'options',
+  correctAnswer: 'correctAnswer',
+  difficulty: 'difficulty',
+  order: 'order',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  attemptId: 'attemptId'
+} as const
+
+export type DiagnosticQuestionScalarFieldEnum = (typeof DiagnosticQuestionScalarFieldEnum)[keyof typeof DiagnosticQuestionScalarFieldEnum]
+
+
+export const DiagnosticAttemptScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  targetRole: 'targetRole',
+  status: 'status',
+  totalQuestions: 'totalQuestions',
+  answeredQuestions: 'answeredQuestions',
+  score: 'score',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type DiagnosticAttemptScalarFieldEnum = (typeof DiagnosticAttemptScalarFieldEnum)[keyof typeof DiagnosticAttemptScalarFieldEnum]
+
+
+export const DiagnosticAnswerScalarFieldEnum = {
+  id: 'id',
+  attemptId: 'attemptId',
+  questionId: 'questionId',
+  selectedAnswer: 'selectedAnswer',
+  isCorrect: 'isCorrect',
+  createdAt: 'createdAt'
+} as const
+
+export type DiagnosticAnswerScalarFieldEnum = (typeof DiagnosticAnswerScalarFieldEnum)[keyof typeof DiagnosticAnswerScalarFieldEnum]
+
+
+export const SkillStateScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  skillName: 'skillName',
+  knowledgeScore: 'knowledgeScore',
+  practiceScore: 'practiceScore',
+  projectScore: 'projectScore',
+  evidenceScore: 'evidenceScore',
+  lastReviewed: 'lastReviewed'
+} as const
+
+export type SkillStateScalarFieldEnum = (typeof SkillStateScalarFieldEnum)[keyof typeof SkillStateScalarFieldEnum]
+
+
+export const RoadmapScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  targetRole: 'targetRole',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RoadmapScalarFieldEnum = (typeof RoadmapScalarFieldEnum)[keyof typeof RoadmapScalarFieldEnum]
+
+
+export const MilestoneScalarFieldEnum = {
+  id: 'id',
+  roadmapId: 'roadmapId',
+  order: 'order',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  type: 'type',
+  estimatedTime: 'estimatedTime',
+  why: 'why',
+  unlocks: 'unlocks'
+} as const
+
+export type MilestoneScalarFieldEnum = (typeof MilestoneScalarFieldEnum)[keyof typeof MilestoneScalarFieldEnum]
+
+
+export const ProjectScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description',
+  repositoryUrl: 'repositoryUrl',
+  liveUrl: 'liveUrl',
+  score: 'score',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ActivityLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  description: 'description',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
+
+
+export const SkillStateHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  skillName: 'skillName',
+  knowledgeScore: 'knowledgeScore',
+  practiceScore: 'practiceScore',
+  projectScore: 'projectScore',
+  evidenceScore: 'evidenceScore',
+  createdAt: 'createdAt'
+} as const
+
+export type SkillStateHistoryScalarFieldEnum = (typeof SkillStateHistoryScalarFieldEnum)[keyof typeof SkillStateHistoryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -87,6 +293,21 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -103,4 +324,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

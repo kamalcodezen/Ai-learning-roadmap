@@ -44,7 +44,8 @@ export default function SignUpForm({ onSwitch }: SignUpFormProps) {
       return;
     }
 
-    router.push("/dashboard");
+    // New users must start with onboarding
+    router.push("/onboarding");
   };
 
   return (
