@@ -395,17 +395,19 @@ export default function CapabilityAudit() {
   return (
     <div className="mt-16 w-full global-container">
       {/* ── SECTION HEADER & NAVIGATION ── */}
-      <div className="text-center mb-10 flex flex-col items-center gap-6">
-        <span className="inline-flex items-center justify-center gap-2 font-poppins text-xs md:text-sm font-semibold tracking-[0.2em] text-secondary bg-primary px-4 py-1.5 rounded-full">
+      <div className="text-center mb-10 flex flex-col items-center gap-2">
+        <span className="section-badge">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shield-check"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg>
           THE 4 PROOF PILLARS
         </span>
         
-        <h4 className="font-poppins text-3xl md:text-5xl font-extrabold text-foreground text-balance tracking-tight">
-          Progress Is not Proof
+        <h4 className="section-title">
+          Progress Is <span className="text-brand">
+              not Proof
+              </span>
         </h4>
         
-        <p className="font-poppins text-sm md:text-base text-muted-foreground font-medium max-w-3xl mx-auto md:whitespace-nowrap">
+        <p className="section-subtitle md:whitespace-nowrap">
           AI Pather turns what you learn into visible evidence of what you can actually do
         </p>
 
@@ -417,11 +419,6 @@ export default function CapabilityAudit() {
             text={item.title}
             onClick={() => handleTabChange(idx)}
             isActive={activeCap === idx}
-            className={
-              activeCap === idx
-                ? "shadow-[0_0_18px_rgba(206,255,31,0.25)] ring-1 ring-primary"
-                : "opacity-60 hover:opacity-100"
-            }
           />
         ))}
         </div>
@@ -432,7 +429,10 @@ export default function CapabilityAudit() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5">
 
           {/* ━━━ CARD 1: THE OLD WAY (top-left, 4 col) ━━━ */}
-          <div className="md:col-span-4 order-3 md:order-1 rounded-xl border-2 border-border bg-background p-6 flex flex-col justify-between relative overflow-hidden min-h-[200px] shadow-sm">
+          <div className="group md:col-span-4 order-3 md:order-1 rounded-md border border-primary/15 bg-[linear-gradient(165deg,#faf5ff_0%,#ffffff_55%,#fcfaff_100%)] p-6 flex flex-col justify-between relative overflow-hidden min-h-[200px] shadow-sm dark:border-primary/20 dark:bg-[linear-gradient(165deg,#1c0e2e_0%,#0d0715_55%,#160b26_100%)]">
+            {/* corner blush — top-right + bottom-left */}
+            <div className="pointer-events-none absolute top-0 right-0 h-24 w-24 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10" />
+            <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-24 rounded-tr-full bg-gradient-to-tl from-primary/20 to-blue-500/10" />
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={pillar.id + "-old"}
@@ -465,7 +465,10 @@ export default function CapabilityAudit() {
           </div>
 
           {/* ━━━ CARD 2: HERO VISUAL (top-right, 8 col) ━━━ */}
-          <div className="md:col-span-8 order-1 md:order-2 rounded-xl border-2 border-border bg-background p-6 md:p-8 flex flex-col relative overflow-hidden min-h-[320px] shadow-md">
+          <div className="group md:col-span-8 order-1 md:order-2 rounded-md border border-primary/20 bg-[radial-gradient(130%_130%_at_88%_0%,#f7f0ff_0%,#fcf8ff_45%,#ffffff_100%)] p-6 md:p-8 flex flex-col relative overflow-hidden min-h-[320px] shadow-md dark:border-primary/20 dark:bg-[radial-gradient(130%_130%_at_88%_0%,#26113c_0%,#150b24_50%,#0b0613_100%)]">
+            {/* primary glow — bottom-left + top-right */}
+            <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-24 rounded-tr-full bg-gradient-to-tl from-primary/20 to-purple-500/10" />
+            <div className="pointer-events-none absolute top-0 right-0 h-24 w-24 rounded-bl-full bg-gradient-to-br from-primary/20 to-purple-500/10" />
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={pillar.id + "-hero"}
@@ -504,7 +507,10 @@ export default function CapabilityAudit() {
           </div>
 
           {/* ━━━ CARD 3: WHAT THIS PROVES (bottom-left, 4 col) ━━━ */}
-          <div className="md:col-span-4 order-4 md:order-3 rounded-xl border-2 border-border bg-background p-6 flex flex-col relative overflow-hidden min-h-[160px] shadow-sm">
+          <div className="group md:col-span-4 order-4 md:order-3 rounded-md border border-primary/15 bg-[linear-gradient(200deg,#f8f2ff_0%,#ffffff_55%,#fcfaff_100%)] p-6 flex flex-col relative overflow-hidden min-h-[160px] shadow-sm dark:border-primary/20 dark:bg-[linear-gradient(200deg,#190d2b_0%,#0b0613_55%,#120a20_100%)]">
+            {/* corner glow — top-left + bottom-right */}
+            <div className="pointer-events-none absolute top-0 left-0 h-24 w-24 rounded-br-full bg-gradient-to-bl from-primary/20 to-pink-500/10" />
+            <div className="pointer-events-none absolute bottom-0 right-0 h-24 w-24 rounded-tl-full bg-gradient-to-tr from-primary/20 to-pink-500/10" />
             <h5 className="font-poppins text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-foreground/50 mb-5">
               WHAT THIS PROVES
             </h5>
@@ -536,8 +542,11 @@ export default function CapabilityAudit() {
           </div>
 
           {/* ━━━ CARD 4: WHY THIS MATTERS (bottom-right, 8 col) ━━━ */}
-          <div className="md:col-span-8 order-5 md:order-4 rounded-xl border-2 border-border bg-background p-6 md:p-8 flex items-center relative overflow-hidden min-h-[100px] shadow-sm">
+          <div className="group md:col-span-8 order-5 md:order-4 rounded-md border border-primary/15 bg-[linear-gradient(165deg,#f5edff_0%,#ffffff_55%,#faf6ff_100%)] p-6 md:p-8 flex items-center relative overflow-hidden min-h-[100px] shadow-sm dark:border-primary/20 dark:bg-[linear-gradient(165deg,#180d29_0%,#0b0613_55%,#130a22_100%)]">
             <div className="absolute left-0 top-0 bottom-0 w-[4px] rounded-r-full bg-primary" />
+            {/* corner glow — bottom-right + top-left */}
+            <div className="pointer-events-none absolute bottom-0 right-0 h-24 w-24 rounded-tl-full bg-gradient-to-tr from-primary/20 to-indigo-500/10" />
+            <div className="pointer-events-none absolute top-0 left-0 h-24 w-24 rounded-br-full bg-gradient-to-bl from-primary/20 to-indigo-500/10" />
             <div className="pl-5 md:pl-7 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 w-full">
               <span className="font-poppins text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-foreground/50 flex-shrink-0">
                 WHY THIS MATTERS

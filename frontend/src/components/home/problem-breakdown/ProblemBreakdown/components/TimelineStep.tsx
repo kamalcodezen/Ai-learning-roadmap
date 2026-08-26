@@ -28,7 +28,7 @@ export default function TimelineStep({ state, isActive, isFirst, isLast }: Timel
           absolute left-3.5 top-6 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-200 z-20
           ${
             isActive
-              ? "border-black bg-background shadow-[0_0_12px_rgba(0,0,0,0.5)] dark:border-primary dark:shadow-[0_0_12px_rgb(var(--primary))]"
+              ? "border-brand bg-background shadow-[0_0_12px_rgba(159,84,247,0.4)] dark:border-primary dark:shadow-[0_0_12px_rgb(var(--primary))]"
               : "border-border bg-card-soft"
           }
         `}
@@ -38,7 +38,7 @@ export default function TimelineStep({ state, isActive, isFirst, isLast }: Timel
             h-2 w-2 rounded-full transition-all duration-200
             ${
               isActive
-                ? "bg-black scale-110 shadow-[0_0_6px_rgba(0,0,0,0.5)] dark:bg-primary dark:shadow-[0_0_6px_rgb(var(--primary))]"
+                ? "bg-brand scale-110 shadow-[0_0_6px_rgba(159,84,247,0.4)] dark:bg-primary dark:shadow-[0_0_6px_rgb(var(--primary))]"
                 : "bg-muted-foreground/50"
             }
           `}
@@ -49,13 +49,13 @@ export default function TimelineStep({ state, isActive, isFirst, isLast }: Timel
       {isActive && (
         <motion.div
           layoutId="activeWireSignal"
-          className={`
-            absolute left-[24px] w-[2px] -translate-x-1/2 shadow-[0_0_14px_rgba(0,0,0,0.5)] dark:shadow-[0_0_14px_rgb(var(--primary))] z-10
+            className={`
+            absolute left-[24px] w-[2px] -translate-x-1/2 shadow-[0_0_14px_rgba(159,84,247,0.4)] dark:shadow-[0_0_14px_rgb(var(--primary))] z-10
             ${isFirst 
-              ? 'top-[34px] h-12 bg-gradient-to-b from-black to-transparent dark:from-primary dark:to-transparent' 
+              ? 'top-[34px] h-12 bg-gradient-to-b from-brand to-transparent dark:from-primary dark:to-transparent' 
               : isLast
-                ? 'top-[34px] h-12 -translate-y-full bg-gradient-to-t from-black to-transparent dark:from-primary dark:to-transparent'
-                : 'top-[34px] h-24 -translate-y-1/2 bg-gradient-to-b from-transparent via-black to-transparent dark:from-transparent dark:via-primary dark:to-transparent'
+                ? 'top-[34px] h-12 -translate-y-full bg-gradient-to-t from-brand to-transparent dark:from-primary dark:to-transparent'
+                : 'top-[34px] h-24 -translate-y-1/2 bg-gradient-to-b from-transparent via-brand to-transparent dark:from-transparent dark:via-primary dark:to-transparent'
             }
           `}
           transition={{ type: "spring", stiffness: 120, damping: 20 }}
@@ -70,7 +70,7 @@ export default function TimelineStep({ state, isActive, isFirst, isLast }: Timel
               font-mono text-caption font-extrabold uppercase tracking-widest transition-colors duration-200
               ${
                 isActive
-                  ? "text-black drop-shadow-[0_0_6px_rgba(0,0,0,0.3)] dark:text-primary dark:drop-shadow-[0_0_6px_rgba(var(--primary),0.7)]"
+                  ? "text-brand dark:text-primary dark:drop-shadow-[0_0_6px_rgba(var(--primary),0.7)]"
                   : "text-muted-foreground"
               }
             `}
@@ -88,7 +88,7 @@ export default function TimelineStep({ state, isActive, isFirst, isLast }: Timel
             font-poppins text-h4 font-semibold tracking-tight transition-colors duration-200
             ${
               isActive
-                ? "text-foreground drop-shadow-sm"
+                ? "text-brand dark:text-foreground drop-shadow-sm"
                 : "text-foreground/60"
             }
           `}
@@ -101,7 +101,7 @@ export default function TimelineStep({ state, isActive, isFirst, isLast }: Timel
             max-w-md text-small font-normal transition-colors duration-200
             ${
               isActive
-                ? "text-foreground/90 font-medium"
+                ? "text-foreground dark:text-foreground/90 font-medium"
                 : "text-muted-foreground"
             }
           `}

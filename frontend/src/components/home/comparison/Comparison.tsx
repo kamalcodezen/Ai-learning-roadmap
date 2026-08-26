@@ -6,7 +6,7 @@ import RightSideCard from "./RightSideCard";
 
 const Comparison = () => {
   return (
-    <section className="relative w-full overflow-hidden py-12 px-4 sm:px-8 md:px-12">
+    <section id="comparison" className="section-pad relative w-full -mb-16 overflow-hidden px-4 sm:px-8 md:px-12">
       <div className="global-pos relative w-full">
       {/* Header */}
       <div>
@@ -14,7 +14,7 @@ const Comparison = () => {
       </div>
 
       {/* Comparison Grid */}
-      <div className="mt-8">
+      <div className="-mt-10">
         <div className="grid min-h-[500px] grid-cols-1 items-center gap-6 md:grid-cols-3 md:gap-8">
 
           {/* Left Card */}

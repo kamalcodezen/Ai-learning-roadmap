@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SessionGuard>
       
-      <div className="flex min-h-screen w-full dark:bg-[#0b0f19]">
+      <div className="flex min-h-screen w-full bg-background dark:bg-background">
         <DashboardSidebar />
         <section
           aria-label="Dashboard content"

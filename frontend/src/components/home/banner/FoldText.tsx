@@ -32,7 +32,7 @@ export default function FoldText({
   perspective = 700,
   creaseShading = 0.55,
   fontWeight = 800,
-  color = "#0a0a0a",
+  color = "var(--color-heading-1)",
 }: FoldTextProps) {
   const units =
     splitBy === "word" ? text.split(" ") : Array.from(text);
@@ -50,6 +50,7 @@ export default function FoldText({
         perspective: `${perspective}px`,
         color,
         fontWeight,
+        textShadow: "0 0 24px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.25)",
       }}
       aria-label={text}
     >
