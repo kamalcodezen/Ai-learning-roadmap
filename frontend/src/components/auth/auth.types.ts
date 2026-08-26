@@ -1,4 +1,5 @@
 export type AuthMode = "signin" | "signup";
+import { StaticImageData } from 'next/image';
 
 export interface AuthBrandPanelProps {
   mode: AuthMode;
@@ -10,5 +11,5 @@ export interface AuthBrandPanelProps {
 export interface AuthShellProps {
   initialMode: AuthMode;
   logo?: React.ReactNode;
-  cubeSrc: string;
+  cubeSrc: StaticImageData;
 }

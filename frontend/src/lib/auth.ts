@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { emailOTP } from "better-auth/plugins";
 import { Pool } from "pg";
 
 export const auth = betterAuth({
@@ -22,4 +23,18 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
+
+   plugins: [
+    emailOTP({
+      sendVerificationOnSignUp: true,
+
+      async sendVerificationOTP({ email, otp, type }) {
+        console.log("OTP:", otp);
+        console.log("Email:", email);
+        console.log("Type:", type);
+
+        // Send email here
+      },
+    }),
+  ],
 });

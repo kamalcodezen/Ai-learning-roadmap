@@ -5,7 +5,7 @@ import AuthShell from "./AuthShell";
 import Silk from "@/src/registry/magicui/silk";
 import type { AuthMode } from "./auth.types";
 import brandLogo from "../../../public/brand/AI-Pather-blue.png"
-// import cubeImg from "../../../public/images/cube.png"
+import cubeImg from "../../../public/images/cube.png"
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,7 +31,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
 
             <AuthShell
                 initialMode={mode}
-                cubeSrc="/images/cube.png"
+                cubeSrc={cubeImg}
                 logo={
                     <Link href="/" className="flex gap-2 items-center">
                         <Image src={brandLogo} alt="Brand-logo" className="ml-1 h-fit dark:invert" height={20} width={20} />
