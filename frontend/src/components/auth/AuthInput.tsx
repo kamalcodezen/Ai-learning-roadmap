@@ -1,5 +1,6 @@
 "use client";
 
+import "./auth.css";
 import { useState } from "react";
 
 interface AuthInputProps {
@@ -17,7 +18,7 @@ function EyeIcon({ visible }: { visible: boolean }) {
     <svg
       viewBox="0 0 24 24"
       fill="none"
-      className="h-5 w-5 text-muted-foreground"
+      className="h-5 w-5"
       aria-hidden="true"
     >
       {visible ? (
@@ -81,22 +82,22 @@ export default function AuthInput({
         required={required}
         minLength={minLength}
         className="
+          autofill-fix
           peer
           w-full
           rounded-none
           border-0
           border-b
-          border-border
           bg-transparent
           px-0
           pb-1.5
           pt-4
-          text-foreground
+          text-white
           shadow-none
           outline-none
           transition-colors
           placeholder:text-transparent
-          focus:border-primary
+          border-primary
         "
       />
 
@@ -109,18 +110,18 @@ export default function AuthInput({
           top-1/2
           -translate-y-1/2
           text-base
-          text-muted-foreground
+          text-white
           transition-all
           duration-300
           ease-linear
           peer-focus:top-0
           peer-focus:translate-y-0
           peer-focus:text-xs
-          peer-focus:text-foreground
+          peer-focus:text-white
           peer-[:not(:placeholder-shown)]:top-0
           peer-[:not(:placeholder-shown)]:translate-y-0
           peer-[:not(:placeholder-shown)]:text-xs
-          peer-[:not(:placeholder-shown)]:text-foreground
+          peer-[:not(:placeholder-shown)]:text-white
         "
       >
         {placeholder}
@@ -137,9 +138,9 @@ export default function AuthInput({
             top-1/2
             -translate-y-1/2
             p-1
-            text-muted-foreground
+            text-white
             transition-colors
-            hover:text-foreground
+            hover:text-brand
           "
         >
           <EyeIcon visible={showPassword} />

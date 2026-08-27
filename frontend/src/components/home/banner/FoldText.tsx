@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import type { Easing } from "motion/react";
+import { TypographyH1 } from "@/src/components/shadcn-studio/typography/typography-01";
 
 interface FoldTextProps {
   text: string;
@@ -30,101 +31,72 @@ export default function FoldText({
   ease = FOLD_EASE,
   perspective = 700,
   creaseShading = 0.55,
-  fontSize = 80,
   fontWeight = 800,
-  color = "currentColor",
+  color = "var(--color-heading-1)",
 }: FoldTextProps) {
-  const segments = text.split(/([ \n])/);
-  let globalIndex = 0;
+  const units =
+    splitBy === "word" ? text.split(" ") : Array.from(text);
+
+  const characters =
+    splitBy === "word"
+      ? units.map((unit, index) => ({
+          content: index < units.length - 1 ? `${unit} ` : unit,
+        }))
+      : units.map((character) => ({ content: character }));
 
   return (
-    <h1
-      className="font-sans"
+    <TypographyH1
       style={{
         perspective: `${perspective}px`,
-        fontSize: `clamp(2rem, 5vw, ${fontSize}px)`,
-        fontWeight,
         color,
-        lineHeight: 1,
+        fontWeight,
+        textShadow: "0 0 24px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.25)",
       }}
       aria-label={text}
     >
-      {segments.map((segment, segmentIndex) => {
-        if (segment === "\n") {
-          return <br key={`br-${segmentIndex}`} />;
-        }
-        if (segment === "") {
-          return null;
-        }
+      {characters.map(({ content }, index) => {
+        const isSpace = content === " " || content === "\u00A0";
 
-        const renderUnit = (content: string, index: number) => {
-          const isSpace = content === " " || content === "\u00A0";
-          return (
-            <motion.span
-              key={`${content}-${index}`}
-              initial={
-                trigger === "mount"
-                  ? { opacity: 0, rotateX: -75, y: 18 }
-                  : false
-              }
-              animate={
-                trigger === "hover" ? {} : { opacity: 1, rotateX: 0, y: 0 }
-              }
-              whileHover={
-                trigger === "hover" ? { rotateX: 0, y: 0 } : undefined
-              }
-              transition={{ duration, delay: index * stagger, ease }}
-              className="relative inline-block"
-              style={{
-                display: "inline-block",
-                transformOrigin:
-                  hinge === "bottom" ? "bottom center" : "top center",
-                transformStyle: "preserve-3d",
-                whiteSpace: isSpace ? "pre" : undefined,
-              }}
-            >
-              {isSpace ? "\u00A0" : content}
+        return (
+          <motion.span
+            key={`${content}-${index}`}
+            initial={
+              trigger === "mount"
+                ? { opacity: 0, rotateX: -75, y: 18 }
+                : false
+            }
+            animate={
+              trigger === "hover" ? {} : { opacity: 1, rotateX: 0, y: 0 }
+            }
+            whileHover={
+              trigger === "hover" ? { rotateX: 0, y: 0 } : undefined
+            }
+            transition={{ duration, delay: index * stagger, ease }}
+            className="relative inline-block"
+            style={{
+              display: "inline-block",
+              transformOrigin:
+                hinge === "bottom" ? "bottom center" : "top center",
+              transformStyle: "preserve-3d",
+              whiteSpace: isSpace ? "pre" : undefined,
+            }}
+          >
+            {isSpace ? "\u00A0" : content}
 
-              {creaseShading > 0 && !isSpace && (
-                <span
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-[35%]"
-                  style={{
-                    background:
-                      "linear-gradient(to bottom, transparent, rgba(0,0,0,0.18))",
-                    opacity: creaseShading,
-                  }}
-                  aria-hidden="true"
-                />
-              )}
-            </motion.span>
-          );
-        };
-
-        if (splitBy === "word") {
-          const currentIndex = globalIndex++;
-          return renderUnit(segment, currentIndex);
-        } else {
-          const chars = Array.from(segment);
-          const isSpaceSegment = segment === " ";
-
-          if (isSpaceSegment) {
-            const currentIndex = globalIndex++;
-            return renderUnit(segment, currentIndex);
-          }
-
-          return (
-            <span
-              key={`seg-${segmentIndex}`}
-              className="inline-block whitespace-nowrap"
-            >
-              {chars.map((char) => {
-                const currentIndex = globalIndex++;
-                return renderUnit(char, currentIndex);
-              })}
-            </span>
-          );
-        }
+            {creaseShading > 0 && (
+              <span
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-[35%]"
+                style={{
+                  background:
+                    "linear-gradient(to bottom, transparent, rgba(0,0,0,0.18))",
+                  opacity: creaseShading,
+                }}
+                aria-hidden="true"
+              />
+            )}
+          </motion.span>
+        );
       })}
-    </h1>
+    </TypographyH1>
   );
 }

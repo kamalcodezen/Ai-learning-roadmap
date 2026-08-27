@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "motion/react";
 import FeatureHeader from "./FeatureHeader";
 import FeatureCard from "./FeatureCard";
 import FeatureTooltipModal from "./FeatureTooltipModal";
@@ -17,7 +16,7 @@ export default function FeaturesSection() {
   };
 
   return (
-    <section className="relative w-full overflow-hidden py-4 px-4 sm:px-8 md:px-12">
+    <section className="section-pad relative w-full overflow-hidden px-4 sm:px-8 md:px-12">
         <GridPattern
                 width={45}
                 height={45}
@@ -25,7 +24,7 @@ export default function FeaturesSection() {
                 y={-1}
                 className="[mask-image:linear-gradient(to_bottom,white,transparent,transparent)] opacity-40 dark:opacity-20"
               />
-      <div className="container relative z-20 mx-auto max-w-7xl">
+      <div className="global-pos relative z-20">
         <FeatureHeader />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch relative">
@@ -34,12 +33,8 @@ export default function FeaturesSection() {
             const tooltipPosition = index === featureItems.length - 1 ? "left" : "right";
 
             return (
-              <motion.div
+              <div
                 key={item.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                viewport={{ once: true }}
                 className="relative flex flex-col cursor-pointer"
                 onMouseEnter={() => setActiveId(item.id)}
                 onMouseLeave={() => setActiveId(null)}
@@ -51,7 +46,7 @@ export default function FeaturesSection() {
                   position={tooltipPosition}
                   onClose={() => setActiveId(null)}
                 />
-              </motion.div>
+              </div>
             );
           })}
         </div>

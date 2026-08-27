@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import AuthSwitchButton from "./AuthSwitchButton";
+import { TypingAnimation } from "@/src/registry/magicui/typing-animation";
 import type { AuthBrandPanelProps } from "./auth.types";
 
 export default function AuthBrandPanel({
@@ -17,18 +18,18 @@ export default function AuthBrandPanel({
       className={[
         "relative z-20",
         "w-full",
-        "md:absolute md:h-full md:w-[40%]",
-        isSignUp ? "md:left-0 md:top-0" : "md:left-[60%] md:top-0",
-        "bg-linear-to-b from-[#d5f051] to-[#64a331]",
+        "md:absolute md:h-full md:w-[50%]",
+        isSignUp ? "md:left-0 md:top-0" : "md:left-[50%] md:top-0",
+        "bg-linear-to-b from-[#9F54F7] to-[#a054f792]",
         "transition-[left,top,width,height] duration-700 ease-linear",
       ].join(" ")}
     >
       <div
         className={[
-          "relative flex h-full w-full flex-col items-center text-center px-7 py-6 sm:px-10 sm:py-8 md:px-10 md:py-8 lg:px-14 lg:py-10",
+          "relative flex h-full w-full flex-col items-center text-center px-7 py-6 sm:px-10 sm:py-8 md:px-10 md:py-8 lg:px-14 lg:py-10 md:items-start",
           isSignUp
-            ? "md:items-start md:text-left"
-            : "md:items-end md:text-right",
+            ? ""
+            : "",
         ].join(" ")}
       >
         {/* Logo */}
@@ -42,37 +43,36 @@ export default function AuthBrandPanel({
 
         {/* Brand heading */}
         <div className="relative z-10 mt-2 hidden max-w-[360px] md:block">
-          <h1 className="font-sans text-lg font-bold leading-[1.05] tracking-tight text-secondary sm:text-xl lg:text-2xl">
-            Let&apos;s learn to solve
-            <br />
-            this Rubik&apos;s Cube!
-          </h1>
+          <h2 className="text-foreground text-3xl text-start">
+            <TypingAnimation
+              words={[
+                "Let's learn to solve this Rubik's Cube!",
+                "Let's crack this Rubik's Cube!",
+                "Let's master this Rubik's Cube!",
+              ]}
+              loop
+            />
+          </h2>
         </div>
 
         {/* Cube */}
         <div
-          className={[
-            "absolute hidden md:block",
-            "left-1/2 top-[52%]",
-            "w-[220px] -translate-x-1/2",
-            "sm:w-[200px]",
-            "md:left-[48%] md:top-[30%] md:w-[200px]",
-            "lg:w-[260px]",
-            "transition-transform duration-700 ease-linear",
-            isSignUp
-              ? "translate-x-[-38%] sm:translate-x-[-32%] md:translate-x-[-8%]"
-              : "translate-x-[-62%] sm:translate-x-[-68%] md:translate-x-[-92%]",
-          ].join(" ")}
-        >
-          <Image
-            src={cubeSrc}
-            alt="Rubik's cube"
-            width={600}
-            height={600}
-            priority
-            className="h-auto w-full object-contain"
-          />
-        </div>
+  className={[
+    "absolute hidden md:block",
+    "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+    "w-[200px] lg:w-[260px]",
+    "transition-transform duration-700 ease-linear mt-10",
+  ].join(" ")}
+>
+  <Image
+    src={cubeSrc}
+    alt="Rubik's cube"
+    width={600}
+    height={600}
+    priority
+    className="h-auto w-full object-contain"
+  />
+</div>
 
         {/* Switch button */}
         <AuthSwitchButton

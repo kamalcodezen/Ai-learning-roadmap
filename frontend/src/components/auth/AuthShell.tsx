@@ -24,18 +24,19 @@ export default function AuthShell({
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background p-4 text-foreground">
+    <main className="relative z-10 flex min-h-screen items-center justify-center p-4 text-white!">
       <div
         className="
           relative
+          flex flex-col
           w-full
-          max-w-220
+          max-w-5xl
+          h-fit
+          md:min-h-[85vh]
+          shadow-2xl
+          rounded-3xl
           overflow-hidden
-          rounded-[32px]
-          border
-          border-border
-          bg-background
-          md:h-120
+          bg-black/60
         "
       >
         {/* Moving green brand section */}
@@ -51,7 +52,7 @@ export default function AuthShell({
           aria-hidden={!isSignUp}
           className={[
             "relative z-10 w-full",
-            "md:absolute md:left-[40%] md:top-0 md:h-full md:w-[60%]",
+            "md:absolute md:left-[50%] md:top-0 md:h-full md:w-[50%]",
             isSignUp
               ? "opacity-100 max-md:block"
               : "pointer-events-none opacity-0 max-md:hidden",
@@ -66,7 +67,7 @@ export default function AuthShell({
           aria-hidden={isSignUp}
           className={[
             "relative z-10 w-full",
-            "md:absolute md:left-0 md:top-0 md:h-full md:w-[60%]",
+            "md:absolute md:left-0 md:top-0 md:h-full md:w-[50%]",
             isSignUp
               ? "pointer-events-none opacity-0 max-md:hidden"
               : "opacity-100 max-md:block",

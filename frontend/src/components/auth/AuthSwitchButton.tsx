@@ -21,12 +21,12 @@ export default function AuthSwitchButton({
       onClick={onSwitch}
       className={`
         rounded-full
-        bg-secondary
+        bg-foreground
         w-[93%]
         py-2
         text-sm
         font-medium
-        text-brand
+         text-background
         transition-[filter]
         duration-300
         hover:brightness-105

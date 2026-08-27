@@ -7,3 +7,345 @@ datasource db {
   provider = "postgresql"
 }
 
+enum ExperienceLevel {
+  BEGINNER
+  INTERMEDIATE
+}
+
+// ============================================================
+// BETTER AUTH — ACCOUNT
+// ============================================================
+
+model account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(6)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(6)
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime  @default(now()) @db.Timestamptz(6)
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+}
+
+// ============================================================
+// BETTER AUTH — SESSION
+// ============================================================
+
+model session {
+  id        String   @id
+  expiresAt DateTime @db.Timestamptz(6)
+  token     String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @db.Timestamptz(6)
+  ipAddress String?
+  userAgent String?
+  userId    String
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+}
+
+// ============================================================
+// BETTER AUTH — USER
+// ============================================================
+
+model user {
+  id            String   @id
+  name          String
+  email         String   @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @db.Timestamptz(6)
+
+  account account[]
+  session session[]
+
+  // CareerOS
+  careerProfile CareerProfile?
+
+  // Diagnostic
+  diagnosticAttempts DiagnosticAttempt[]
+
+  // New features
+  skillStates         SkillState[]
+  roadmaps            Roadmap[]
+  projects            Project[]
+  activityLogs        ActivityLog[]
+  skillStateHistories SkillStateHistory[]
+}
+
+// ============================================================
+// BETTER AUTH — VERIFICATION
+// ============================================================
+
+model verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([identifier])
+}
+
+// ============================================================
+// CAREER PROFILE
+// ============================================================
+
+model CareerProfile {
+  id String @id @default(cuid())
+
+  userId String @unique
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  targetRole     String
+  targetRoleName String
+
+  experienceLevel ExperienceLevel
+
+  weeklyAvailableHours Int @default(10)
+
+  onboardingCompleted Boolean @default(false)
+
+  resumeScore    Float?
+  interviewScore Float?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// DIAGNOSTIC — QUESTION BANK
+// ============================================================
+
+model DiagnosticQuestion {
+  id String @id @default(cuid())
+
+  question    String
+  description String?
+
+  category String
+  skill    String
+
+  options Json
+
+  correctAnswer String
+
+  difficulty String
+
+  order Int
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt
+
+  answers DiagnosticAnswer[]
+
+  attemptId String?
+  attempt   DiagnosticAttempt? @relation(fields: [attemptId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([category])
+  @@index([skill])
+  @@index([difficulty])
+  @@index([order])
+  @@index([isActive])
+}
+
+// ============================================================
+// DIAGNOSTIC — USER ATTEMPT
+// ============================================================
+
+model DiagnosticAttempt {
+  id String @id @default(cuid())
+
+  userId String
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  targetRole String?
+
+  status String @default("IN_PROGRESS")
+
+  totalQuestions    Int @default(0)
+  answeredQuestions Int @default(0)
+
+  score Int?
+
+  startedAt   DateTime  @default(now()) @db.Timestamptz(6)
+  completedAt DateTime? @db.Timestamptz(6)
+
+  answers   DiagnosticAnswer[]
+  questions DiagnosticQuestion[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+// ============================================================
+// DIAGNOSTIC — USER ANSWER
+// ============================================================
+
+model DiagnosticAnswer {
+  id String @id @default(cuid())
+
+  attemptId String
+
+  attempt DiagnosticAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  questionId String
+
+  question DiagnosticQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  selectedAnswer String
+
+  isCorrect Boolean?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([attemptId, questionId])
+  @@index([questionId])
+}
+
+// ============================================================
+// SKILL STATE
+// ============================================================
+
+model SkillState {
+  id String @id @default(cuid())
+
+  userId String
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  skillName      String
+  knowledgeScore Float  @default(0)
+  practiceScore  Float  @default(0)
+  projectScore   Float  @default(0)
+  evidenceScore  Float  @default(0)
+
+  lastReviewed DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([userId, skillName])
+  @@index([userId])
+}
+
+// ============================================================
+// ROADMAP & MILESTONES
+// ============================================================
+
+model Roadmap {
+  id String @id @default(cuid())
+
+  userId String
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  targetRole String
+
+  status String @default("ACTIVE")
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt
+
+  milestones Milestone[]
+
+  @@index([userId])
+}
+
+model Milestone {
+  id String @id @default(cuid())
+
+  roadmapId String
+  roadmap   Roadmap @relation(fields: [roadmapId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  order Int
+
+  title       String
+  description String?
+  status      String  @default("UPCOMING") // UPCOMING, CURRENT, COMPLETED
+
+  type          String?
+  estimatedTime String?
+  why           String?
+  unlocks       String[]
+
+  @@index([roadmapId])
+  @@index([order])
+}
+
+// ============================================================
+// PROJECTS & PORTFOLIO
+// ============================================================
+
+model Project {
+  id String @id @default(cuid())
+
+  userId String
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  title       String
+  description String?
+  
+  repositoryUrl String?
+  liveUrl       String?
+
+  score Float @default(0)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// ============================================================
+// ACTIVITY LOG & TRENDS
+// ============================================================
+
+model ActivityLog {
+  id String @id @default(cuid())
+
+  userId String
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  type        String // e.g., "ASSESSMENT", "LEARNING", "PROJECT", "PRACTICE"
+  description String?
+  
+  metadata Json?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model SkillStateHistory {
+  id String @id @default(cuid())
+
+  userId String
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  skillName String
+
+  knowledgeScore Float @default(0)
+  practiceScore  Float @default(0)
+  projectScore   Float @default(0)
+  evidenceScore  Float @default(0)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([userId])
+  @@index([skillName])
+}

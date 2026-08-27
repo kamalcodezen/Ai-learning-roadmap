@@ -12,30 +12,22 @@ export default function BannerBackground({
   title,
 }: BannerBackgroundProps) {
   return (
-    <>
-      {/* Base background */}
-      <div className="absolute inset-0 -z-30 bg-[#faf8f2]" />
+    <AnimatePresence mode="sync">
+      <motion.div
+        key={title}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.55 }}
+        className="absolute inset-0 -z-20"
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${image})` }}
+        />
 
-      {/* Dynamic centered-card background */}
-      <AnimatePresence mode="sync">
-        <motion.div
-          key={title}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.55 }}
-          className="absolute inset-0 -z-20"
-        >
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${image})` }}
-          />
-
-          <div className="absolute inset-0 bg-linear-to-b from-white/55 to-white" />
-
-          <div className="absolute inset-0 backdrop-blur-[3px]" />
-        </motion.div>
-      </AnimatePresence>
-    </>
+        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-[#f4edfff3] dark:from-brand/25 dark:to-[#281c3d]" />
+      </motion.div>
+    </AnimatePresence>
   );
 }

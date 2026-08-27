@@ -1,0 +1,12 @@
+.light-rays-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.light-rays-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}

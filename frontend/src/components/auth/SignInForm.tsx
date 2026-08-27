@@ -42,7 +42,34 @@ export default function SignInForm({ onSwitch }: SignInFormProps) {
       return;
     }
 
-    router.push("/dashboard");
+    try {
+      // TODO: CONNECT TO BACKEND API
+      // Future endpoint: GET /api/user/routing-state
+      // Expected response: { onboardingCompleted: boolean, diagnosticCompleted: boolean }
+      // 
+      // For now, if the API isn't built, we will catch the error and fallback to dashboard.
+      const res = await fetch("/api/user/routing-state");
+      
+      if (res.ok) {
+        const data = await res.json();
+        
+        if (!data.onboardingCompleted) {
+          router.push("/onboarding");
+          return;
+        }
+        
+        if (!data.diagnosticCompleted) {
+          router.push("/onboarding/diagnostic");
+          return;
+        }
+      }
+    } catch {
+      // API not ready, fallback below
+      console.warn("Routing state API not available yet. Falling back to dashboard.");
+    }
+
+    // Default fallback for existing users
+    router.push("/");
   };
 
   return (

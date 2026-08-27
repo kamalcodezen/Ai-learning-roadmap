@@ -11,18 +11,18 @@ export default function DiagnoseCard() {
       <BorderGlow>
         <div className="border-glow-inner relative p-5 flex flex-col justify-between min-h-[260px]">
           {/* Floating Badge Overlay */}
-          <div className="absolute -top-3 -left-3 bg-card border border-border p-2.5 rounded-xl shadow-lg flex items-center justify-center -rotate-6">
+          <div className="absolute -top-3 -left-3 bg-card border border-border p-2.5 rounded-md shadow-lg flex items-center justify-center -rotate-6">
             <FiTarget className="w-5 h-5 text-primary" />
           </div>
 
           {/* Card Header */}
           <div className="mt-2">
             <span className="text-xs font-mono font-semibold text-primary uppercase tracking-wider">Step 01</span>
-            <h3 className="text-xl font-bold mt-0.5">Diagnose</h3>
+            <h3 className="text-xl mt-0.5">Diagnose</h3>
           </div>
 
           {/* Inner Mock Visual */}
-          <div className="soft-card rounded-2xl p-3 space-y-2 mt-3">
+          <div className="soft-card rounded-md p-3 space-y-2 mt-3">
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground font-medium">Target: Senior Frontend</span>
               <span className="font-bold text-primary">82% Match</span>

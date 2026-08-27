@@ -4,22 +4,18 @@
  */
 export default function CapabilityGapFormula() {
   return (
-    <div className="relative mx-auto w-full max-w-4xl">
+    <div className="relative mx-auto w-full max-w-4xl sm:mt-0 mt-12">
       {/* Ambient Halo behind Terminal */}
       <div className="pointer-events-none absolute inset-0 rounded-3xl bg-primary/10 blur-2xl -z-10" />
 
       {/* Header Badge */}
       <div className="mb-6 flex items-center justify-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card-soft px-4 py-1.5 shadow-sm backdrop-blur-md">
-          <span className="h-2 w-2 rounded-full bg-red-500 animate-ping" />
-          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-foreground">
-            Empirical Reality Gap
-          </span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card-soft px-4  shadow-sm backdrop-blur-md">
         </div>
       </div>
 
       {/* Main Telemetry Split Console */}
-      <div className="relative overflow-hidden rounded-[28px] border-2 border-border bg-card p-6 md:p-8 ">
+      <div className="relative overflow-hidden rounded-[16px] border-2 border-border bg-card p-6 md:p-8 ">
         {/* Micro Horizon Glow Accent */}
         <div className="pointer-events-none absolute inset-x-12 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-80" />
 
@@ -36,10 +32,10 @@ export default function CapabilityGapFormula() {
           {/* 🔴 Left Gauge: Illusion of Progress */}
           <div className="flex flex-col rounded-2xl border border-border/80 bg-background/50 p-5 md:p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between border-b border-border/60 pb-3">
-              <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+              <span className="font-mono text-caption font-bold uppercase tracking-wider text-muted-foreground">
                 Vanity Metrics
               </span>
-              <span className="rounded-md border border-red-500/30 bg-red-500/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-red-400">
+              <span className="rounded-md border border-red-500/30 bg-red-500/10 px-2 py-0.5 font-mono text-caption font-semibold uppercase tracking-widest text-red-400">
                 Passive Signal
               </span>
             </div>
@@ -49,7 +45,7 @@ export default function CapabilityGapFormula() {
                 <span className="font-poppins text-base font-semibold text-foreground">
                   Video Watch Time
                 </span>
-                <span className="text-[13px] text-muted-foreground">
+                <span className="text-small text-muted-foreground">
                   Static playlist completion
                 </span>
               </div>
@@ -63,7 +59,7 @@ export default function CapabilityGapFormula() {
               <div className="h-2 w-full overflow-hidden rounded-full bg-border/60">
                 <div className="h-full w-[80%] rounded-full bg-muted-foreground/30" />
               </div>
-              <div className="flex justify-between font-mono text-[10px] text-muted-foreground/60">
+              <div className="flex justify-between font-mono text-caption text-muted-foreground/60">
                 <span>Progress bar full</span>
                 <span>False confidence</span>
               </div>
@@ -87,10 +83,10 @@ export default function CapabilityGapFormula() {
           <div className="relative flex flex-col overflow-hidden rounded-2xl border-2 border-primary/50 bg-gradient-to-b from-primary/[0.07] to-transparent p-5 md:p-6 shadow-[0_0_30px_-10px_rgba(var(--primary),0.2)] backdrop-blur-sm">
             {/* Active Pill Header */}
             <div className="flex items-center justify-between border-b border-primary/20 pb-3">
-              <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-primary">
+              <span className="font-mono text-caption font-bold uppercase tracking-wider text-primary">
                 True Proof-of-Work
               </span>
-              <span className="flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-primary">
+              <span className="flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/20 px-2 py-0.5 font-mono text-caption font-bold uppercase tracking-widest text-primary">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                 Verified Core
               </span>
@@ -101,7 +97,7 @@ export default function CapabilityGapFormula() {
                 <span className="font-poppins text-base font-semibold text-foreground">
                   Production Execution
                 </span>
-                <span className="text-[13px] text-primary/80 font-medium">
+                <span className="text-small text-primary/80 font-medium">
                   Architecture & live debugging
                 </span>
               </div>
@@ -115,7 +111,7 @@ export default function CapabilityGapFormula() {
               <div className="h-2 w-full overflow-hidden rounded-full bg-border">
                 <div className="h-full w-[18%] rounded-full bg-primary shadow-[0_0_10px_rgb(var(--primary))]" />
               </div>
-              <div className="flex justify-between font-mono text-[10px]">
+              <div className="flex justify-between font-mono text-caption">
                 <span className="text-primary font-semibold">
                   Actual capability
                 </span>

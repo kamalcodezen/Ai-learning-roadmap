@@ -35,8 +35,8 @@ export default function Navbar() {
         stiffness: 100,
         damping: 20,
       }}
-      className={`font-poppins fixed inset-x-0 top-0 z-50 pt-3 px-4 md:px-0 ${
-        scrolled ? "" : "bg-transparent"
+      className={`font-poppins fixed inset-x-0 top-0 z-50 px-4 md:px-0 ${
+        scrolled ? "pt-0" : "bg-background/50 pt-2"
       } `}
     >
       <div className="block md:hidden">
@@ -55,9 +55,8 @@ export default function Navbar() {
             transition-all duration-500 ease-out
             ${
               scrolled
-                ? //   Here max-w-140 temporary - it hard codedly changes the things for nav links
-                  "w-full max-w-[80%] rounded-full bg-background/70 px-3 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl sm:px-4"
-                : "w-full max-w-[80%] rounded-none px-4 md:px-0"
+                ? "w-full max-w-260 rounded-full bg-background/70 px-0 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl sm:px-2"
+                : "w-full max-w-[1400px] rounded-none py-2.5 px-6"
             }
           `}
       >

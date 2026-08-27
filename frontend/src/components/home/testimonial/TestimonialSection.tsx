@@ -55,23 +55,15 @@ const duplicatedTestimonials = [...testimonials, ...testimonials];
 
 const TestimonialSection = () => {
   return (
-    <section className="relative w-full overflow-hidden py-20 px-4 sm:px-8 md:px-12  border-t border-border/40">
-      <div className="container relative z-10 mx-auto max-w-7xl">
-        <div className="text-left mb-10 md:mb-16">
-          {/* <span className="text-[12px] font-mono tracking-widest text-muted-foreground uppercase mb-2 block">
-    Testimonials
-  </span> */}
-          <h2 className="font-poppins text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
-            What{" "}
-            <i className="font-serif italic font-normal text-muted-foreground">
-              Our Learners
-            </i>{" "}
-            Say About{" "}
-            <span className="font-medium underline decoration-primary/50 underline-offset-8">
+    <section className="section-pad relative w-full overflow-hidden px-4 sm:px-8 md:px-12  border-t border-border/40">
+      <div className="global-pos relative z-10">
+        <div className="mb-10 md:mb-16">
+          <h2 className="section-title">
+            What Our Learners Say About <span className="text-brand">
               Their Journey
-            </span>
+              </span>
           </h2>
-          <p className="section-description text-base md:text-lg">
+          <p className="section-subtitle mt-4">
             Join thousands of professionals who have eliminated their learning
             debt and built a verifiable career profile.
           </p>
@@ -84,14 +76,14 @@ const TestimonialSection = () => {
             WebkitMaskImage:
               "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
           }}
-          className="flex relative overflow-hidden w-full max-w-7xl mx-auto"
+          className="flex relative overflow-hidden w-full"
         >
           <div className="flex animate-x-slider gap-5 w-max hover:pause-animation">
             {duplicatedTestimonials.map((testimonial, indx) => {
               return (
                 <div
                   key={indx}
-                  className="border flex flex-col bg-card border-border/60 rounded-xl shrink-0 grow-0 w-[65vw] sm:w-[400px] md:w-[500px] h-full shadow-sm hover:border-primary/50 transition-colors"
+                  className="border flex flex-col bg-card border-border/60 rounded-md shrink-0 grow-0 w-[65vw] sm:w-[400px] md:w-[500px] h-full shadow-sm hover:border-primary/50 transition-colors"
                 >
                   <p className="px-4 py-4 sm:px-6 sm:py-6 text-sm sm:text-xl font-medium text-foreground tracking-tight flex-1">
                     &quot;{testimonial.description}&quot;
@@ -105,7 +97,7 @@ const TestimonialSection = () => {
                         className="w-8 h-8 sm:w-12 sm:h-12 rounded-full object-cover border border-border"
                       />
                       <div className="flex flex-col flex-1 justify-center">
-                        <h5 className="text-sm sm:text-base font-semibold text-foreground">
+                        <h5 className="text-sm sm:text-base text-foreground">
                           {testimonial.name}
                         </h5>
                         <p className="text-xs sm:text-sm text-muted-foreground">

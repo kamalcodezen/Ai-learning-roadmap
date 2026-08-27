@@ -1,45 +1,112 @@
 "use client";
 
+import { ReactNode } from "react";
 import { motion } from "motion/react";
-
-import FoldText from "./FoldText";
 
 interface TextBodyProps {
   heading: string;
   subHeading: string;
 }
 
+/* Renders text with *word* segments highlighted in brand purple */
+function renderHighlighted(text: string): ReactNode[] {
+  return text
+    .split(/(\*[^*]+\*)/g)
+    .filter(Boolean)
+    .map((part, index) => {
+      if (part.length > 2 && part.startsWith("*") && part.endsWith("*")) {
+        return (
+          <span
+            key={index}
+            className="
+              font-extrabold
+              text-[#9F54F7]
+              [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
+            "
+          >
+            {part.slice(1, -1)}
+          </span>
+        );
+      }
+
+      return <span key={index}>{part}</span>;
+    });
+}
+
 export default function TextBody({
   heading,
   subHeading,
 }: TextBodyProps) {
-  return (
-    <div className="mx-auto flex w-full max-w-full flex-col items-center text-center">
-      {heading.split("\n").map((line, idx) => (
-        <FoldText
-          key={`${line}-${idx}`}
-          text={line}
-          splitBy="char"
-          hinge="bottom"
-          trigger="mount"
-          duration={0.65}
-          stagger={0.045}
-          ease={[0.22, 1, 0.36, 1]}
-          perspective={700}
-          creaseShading={0}
-          fontSize={68}
-          fontWeight={800}
-        />
-      ))}
+  const plainHeading = heading.replace(/\*/g, "");
 
+  return (
+    <div className="mx-auto flex w-full max-w-5xl flex-col items-center pb-10 text-center sm:pb-14">
+
+      {/* Eyebrow */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="
+          mb-4
+          flex
+          items-center
+          gap-2
+          font-poppins
+          text-xs
+          font-semibold
+          uppercase
+          tracking-[0.18em]
+          text-[#9F54F7]
+          [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
+        "
+      >
+        <span className="text-sm">✦</span>
+        Track Your Journey
+      </motion.div>
+
+      {/* Heading */}
+      <motion.h1
+        key={heading}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+        aria-label={plainHeading}
+        className="
+          text-h1
+          font-extrabold
+          text-white
+          [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
+          sm:whitespace-nowrap
+          sm:[text-wrap:unset]
+        "
+      >
+        {renderHighlighted(heading)}
+      </motion.h1>
+
+      {/* Subtitle */}
       <motion.p
         key={`${heading}-subtitle`}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, delay: 0.12, ease: "easeOut" }}
-        className="mt-4 sm:mt-5 max-w-xl px-4 font-poppins text-[13px] leading-5 text-muted-foreground sm:text-sm sm:leading-6 md:text-base md:leading-7"
+        transition={{
+          duration: 0.45,
+          delay: 0.12,
+          ease: "easeOut",
+        }}
+        className="
+          section-description
+          mt-5
+          max-w-xl
+          px-4
+          font-poppins
+          text-md
+          text-white/80
+          [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
+          sm:text-lg
+        "
       >
-        {subHeading}
+        {renderHighlighted(subHeading)}
       </motion.p>
     </div>
   );

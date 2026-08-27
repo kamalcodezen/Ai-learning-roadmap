@@ -12,11 +12,16 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@google/genai": "^2.18.0",
+    "@mistralai/mistralai": "^2.6.4",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
+    "better-auth": "^1.7.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.6.2",
+    "groq-sdk": "^1.5.0",
     "helmet": "^8.3.0",
     "pg": "^8.23.0",
     "pino": "^10.3.1",

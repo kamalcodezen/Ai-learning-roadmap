@@ -11,13 +11,12 @@ export default function Logo() {
     >
       <span
         className="flex w-10 h-10 md:w-12 md:h-12 items-center justify-center rounded-full"
-        style={{ backgroundColor: "#ceff1f" }}
+        style={{ background: "var(--gradient-primary)" }}
       >
-        <Image src={brandLogo} alt="Brand-logo" className="ml-1 w-4 h-4 md:w-5 md:h-5" height={20} width={20}/>
+        <Image src={brandLogo} alt="Brand-logo" className="ml-1 w-4 h-4 md:w-5 md:h-5 brightness-0 invert" height={20} width={20}/>
       </span>
 
-        {/* Temporary hardcode text pixels */}
-      <span className="font-sans text-[20px] md:text-[24px] font-semibold text-foreground">
+      <span className="font-poppins text-h4 font-semibold text-foreground">
         AI Pather
       </span>
     </Link>

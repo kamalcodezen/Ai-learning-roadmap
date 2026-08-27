@@ -4,6 +4,7 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 import AuthInput from "./AuthInput";
 import AuthSocialButton from "./AuthSocialButton";
+import LightRays from "./LightRays";
 import type { AuthMode } from "./auth.types";
 
 interface AuthFormProps {
@@ -43,36 +44,53 @@ export default function AuthForm({
     <form
       onSubmit={onSubmit}
       className="
+        relative
         flex
         h-full
         w-full
         flex-col
         justify-center
-        px-7
+        overflow-hidden
+        px-6
         py-8
-        sm:px-12
-        md:px-14
-        lg:px-20
-        xl:px-24
+        sm:px-8
+        md:px-10
+        lg:px-14
+        xl:px-16
+        bg-black/40
       "
     >
-      <div className="mx-auto w-full">
+      <LightRays
+        raysOrigin="top-center"
+        raysColor="#ffffff"
+        raysSpeed={1}
+        lightSpread={2.5}
+        rayLength={40}
+        followMouse={true}
+        mouseInfluence={0.1}
+        noiseAmount={0}
+        distortion={0}
+        pulsating={false}
+        fadeDistance={1}
+        saturation={1}
+      />
+      <div className="relative z-10 mx-auto w-full">
 
         {/* Heading */}
-        <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl text-center">
+        <h2 className="text-xl tracking-tight text-white sm:text-2xl text-center">
           {isSignUp ? "Create Account" : "Sign In"}
         </h2>
 
-        {/* Google */}
+        {/* Social sign-in */}
         <div className="mt-4">
-          <AuthSocialButton isPending={isPending} />
+          <AuthSocialButton mode={mode} isPending={isPending} />
         </div>
 
         {/* Divider */}
         <div className="my-4 flex items-center gap-4">
           <div className="h-px flex-1 bg-border" />
 
-          <span className="text-sm text-muted-foreground">- OR -</span>
+            <span className="text-sm text-white">- OR -</span>
 
           <div className="h-px flex-1 bg-border" />
         </div>
@@ -109,10 +127,10 @@ export default function AuthForm({
         {/* Forgot password */}
         {!isSignUp && (
           <div className="mt-4 text-right">
-            <Link
-              href="/auth/forgot-password"
-              className="text-xs text-muted-foreground transition-colors hover:text-foreground"
-            >
+              <Link
+                href="/auth/forgot-password"
+                className="text-xs text-white transition-colors hover:text-brand"
+              >
               Forgot Password?
             </Link>
           </div>
@@ -128,10 +146,10 @@ export default function AuthForm({
             mt-4
             py-2
             rounded-full
-            bg-linear-to-r from-[#d5f051] to-[#64a331]
+            bg-linear-to-b from-[#9F54F7] to-[#9F54F7]
             text-base
             font-medium
-            text-secondary
+            text-foreground
             shadow-none
             hover:brightness-105
           "
@@ -141,16 +159,16 @@ export default function AuthForm({
 
         {/* Status */}
         {message && (
-          <p
-            role="status"
-            className="mt-4 text-center text-xs text-muted-foreground"
-          >
+            <p
+              role="status"
+              className="mt-4 text-center text-xs text-white"
+            >
             {message}
           </p>
         )}
 
         {/* Switch */}
-        <p className="mt-4 text-xs text-muted-foreground text-center">
+        <p className="mt-4 text-xs text-white text-center">
           {isSignUp ? (
             <>
               Already have an account?{" "}
