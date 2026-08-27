@@ -10,7 +10,15 @@ import chatRoutes from "./modules/chat/chat.routes.js";
 import careerProfileRoutes from "./modules/career-profile/career-profile.routes.js";
 import diagnosticRoutes from "./modules/diagnostic/diagnostic.routes.js";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
-
+import learningPathRoutes from "./modules/learning-path/learning-path.routes.js";
+import careertwinRoutes from "./modules/career-twin/career-twin.routes.js";
+import skillgapsRoutes from "./modules/skill-gaps/skill-gaps.routes.js";
+import progressRoutes from "./modules/progress/progress.routes.js";
+import proofgraphRoutes from "./modules/proof-graph/proof-graph.routes.js";
+import assessmentsRoutes from "./modules/assessments/assessments.routes.js";
+import careeralignmentRoutes from "./modules/career-alignment/career-alignment.routes.js";
+import applicationreadinessRoutes from "./modules/application-readiness/application-readiness.routes.js";
+import portfolioRoutes from "./modules/portfolio/portfolio.routes.js";
 const isProduction = env.NODE_ENV === "production";
 
 const app = express();
@@ -49,6 +57,21 @@ app.use("/api/diagnostic", diagnosticRoutes);
 
 // Dashboard and API endpoints
 app.use("/api", dashboardRoutes);
+
+// Learning Path Routes
+app.use("/api/learning-path", learningPathRoutes);
+
+// Extracted Features
+app.use("/api/career-twin", careertwinRoutes);
+app.use("/api/skill-gaps", skillgapsRoutes);
+app.use("/api/progress", progressRoutes);
+app.use("/api/proof-graph", proofgraphRoutes);
+app.use("/api/assessments", assessmentsRoutes);
+app.use("/api/career-alignment", careeralignmentRoutes);
+app.use("/api/application-readiness", applicationreadinessRoutes);
+
+// Portfolio Routes
+app.use("/api/portfolio", portfolioRoutes);
 
 // Career Profile Routes/ onboarding
 app.use("/api/career-profile", careerProfileRoutes);
