@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { RxCross2 } from "react-icons/rx";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { FiTarget, FiBarChart2, FiCpu, FiRefreshCw, FiGitBranch, FiShield } from "react-icons/fi";
+import { FiTarget, FiCpu, FiRefreshCw, FiGitBranch, FiShield } from "react-icons/fi";
 
 interface NavLink {
   label: string;
@@ -16,31 +16,31 @@ interface NavLink {
 const navLinks: NavLink[] = [
   {
     label: "Core Engines",
-    href: "#career-twin",
+    href: "/dashboard",
     children: [
       {
         label: "Career Twin Diagnostic",
-        href: "#career-twin",
+        href: "/career-twin",
         icon: <FiTarget size={14} />,
       },
       {
         label: "Cognitive Independence",
-        href: "#independence",
+        href: "/learning-path",
         icon: <FiCpu size={14} />,
       },
       {
         label: "Anti-Decay Memory",
-        href: "#anti-decay",
+        href: "/progress",
         icon: <FiRefreshCw size={14} />,
       },
       {
         label: "Zero-Clone Proof",
-        href: "#skill-proof",
+        href: "/proof-graph",
         icon: <FiGitBranch size={14} />,
       },
       {
         label: "JD Reality Gate",
-        href: "#reality-gate",
+        href: "/application-readiness",
         icon: <FiShield size={14} />,
       },
     ],
@@ -48,17 +48,17 @@ const navLinks: NavLink[] = [
 
   {
     label: "Live Proof Explorer",
-    href: "#proof-explorer",
+    href: "/portfolio",
   },
 
   {
-    label: "Roadmap vs Ai Pather",
-    href: "#comparison",
+    label: "Roadmap vs AI Pather",
+    href: "/#comparison",
   },
 
   {
     label: "Pricing",
-    href: "#pricing",
+    href: "/#pricing",
   },
 ];
 
