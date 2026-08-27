@@ -9,7 +9,7 @@ interface Props {
 
 export default function CareerAlignmentCard({ data }: Props) {
   return (
-    <Card>
+    <Card mouseGlow>
       <CardHeader>
         <CardTitle>Career Alignment</CardTitle>
       </CardHeader>

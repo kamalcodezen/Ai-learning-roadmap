@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Variants } from "motion/react";
 
@@ -40,11 +40,35 @@ export default function DashboardSidebar() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [drawerOpen]);
 
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  const handleWheel = useCallback((e: WheelEvent) => {
+    const nav = sidebarRef.current?.querySelector("nav");
+    if (!nav) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = nav;
+    const canScrollDown = scrollTop + clientHeight < scrollHeight;
+    const canScrollUp = scrollTop > 0;
+
+    if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
+      e.preventDefault();
+      nav.scrollTop += e.deltaY;
+    }
+  }, []);
+
+  useEffect(() => {
+    const el = sidebarRef.current;
+    if (!el) return;
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [handleWheel]);
+
   const closeDrawer = () => setDrawerOpen(false);
 
   return (
     <>
       <aside
+        ref={sidebarRef}
         aria-label="Dashboard sidebar"
         className="sidebar-container sidebar-gradient fixed left-0 top-0 z-40 hidden h-screen w-64 text-foreground lg:flex"
       >

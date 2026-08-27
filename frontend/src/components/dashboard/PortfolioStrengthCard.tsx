@@ -9,7 +9,7 @@ interface Props {
 
 export default function PortfolioStrengthCard({ data }: Props) {
   return (
-    <Card>
+    <Card mouseGlow>
       <CardHeader>
         <CardTitle>Portfolio Strength</CardTitle>
       </CardHeader>

@@ -11,7 +11,7 @@ export default function ApplicationReadinessCard({ data }: Props) {
   const isAvailable = Object.values(data).some(v => v !== null);
 
   return (
-    <Card>
+    <Card mouseGlow>
       <CardHeader>
         <CardTitle>Application Readiness</CardTitle>
       </CardHeader>

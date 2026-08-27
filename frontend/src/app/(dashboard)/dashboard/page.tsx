@@ -46,20 +46,20 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col gap-5 pb-4 animate-in fade-in duration-500">
       <DashboardHeader user={userToPass} career={data.career} />
       
       {/* High Priority Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <div className="col-span-1">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="col-auto lg:col-span-1  ">
           <CareerReadinessCard data={data.readiness} role={data.career.targetRole} />
         </div>
-        <div className="col-span-1 lg:col-span-2 xl:col-span-2 h-full flex">
+        <div className="col-auto lg:col-span-1  h-full flex">
           <div className="w-full h-full flex-1">
             <NextBestActionCard data={data.nextAction} />
           </div>
         </div>
-        <div className="col-span-1 h-full flex">
+        <div className="col-auto lg:col-span-2 h-full flex">
           <div className="w-full h-full flex-1">
             <RoadmapPreview data={data.roadmap} />
           </div>

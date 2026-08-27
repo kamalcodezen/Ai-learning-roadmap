@@ -22,7 +22,7 @@ export default function LearningDebtCard({ data }: Props) {
   }
 
   return (
-    <Card>
+    <Card mouseGlow>
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
           <span>Learning Debt</span>

@@ -22,7 +22,7 @@ export default function AssessmentProgressCard({ data }: Props) {
   }
 
   return (
-    <Card>
+    <Card mouseGlow>
       <CardHeader>
         <CardTitle>Assessments</CardTitle>
       </CardHeader>

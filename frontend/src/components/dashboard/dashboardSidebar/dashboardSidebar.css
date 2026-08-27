@@ -4,6 +4,14 @@
   overflow-x: clip;
 }
 
+.sidebar-container nav {
+  scrollbar-width: none;
+}
+
+.sidebar-container nav::-webkit-scrollbar {
+  display: none;
+}
+
 /* Active navigation item — LIGHT THEME
    Selected tab: bg-background, text-secondary, icon-secondary */
 .sidebar-active-item {
@@ -67,9 +75,9 @@
    Dark theme falls back to the solid card color.
    ========================================= */
 .sidebar-gradient {
-  background-image: linear-gradient(to bottom, #f4ffd6 0%, #eaffbd 45%, #dff5a5 100%);
+  background-image: linear-gradient(to bottom, #f4edff 0%, #ede5ff 45%, #e4d9ff 100%);
 }
 
 .dark .sidebar-gradient {
-  background-image: linear-gradient(to bottom, #0f2a02 0%, #1a3a05 28%, #304c0a 55%, #6b861c 100%);
+  background-image: linear-gradient(to bottom, #150a2c 0%, #241345 28%, #351c5e 55%, rgba(159, 84, 247, 0.55) 100%);
 }

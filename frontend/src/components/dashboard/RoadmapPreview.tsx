@@ -22,12 +22,15 @@ export default function RoadmapPreview({ data }: Props) {
   }
 
   return (
-    <Card>
+    <Card mouseGlow className="group relative overflow-hidden rounded-md p-6 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]">
+      {/* Corner shape */}
+      <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
+
       <CardHeader>
         <CardTitle>Your AI Roadmap</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col h-full">
-        <div className="space-y-4 mb-8">
+        <div className="flex flex-wrap gap-2 mb-8">
           {data.milestones.slice(0, 6).map((m, i) => (
             <div key={i} className="flex items-center gap-3">
               {m.status === "COMPLETED" && <CheckCircle2 className="w-5 h-5 text-primary" />}

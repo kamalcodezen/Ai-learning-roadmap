@@ -22,7 +22,7 @@ export default function SkillHealthCard({ data }: Props) {
   }
 
   return (
-    <Card>
+    <Card mouseGlow>
       <CardHeader>
         <CardTitle>Skill Health</CardTitle>
       </CardHeader>
