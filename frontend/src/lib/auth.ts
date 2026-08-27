@@ -2,10 +2,17 @@ import { betterAuth } from "better-auth";
 import { emailOTP } from "better-auth/plugins";
 import { Pool } from "pg";
 
-export const auth = betterAuth({
-  database: new Pool({
+const globalForPool = globalThis as unknown as { pool: Pool };
+export const pool =
+  globalForPool.pool ||
+  new Pool({
     connectionString: process.env.DATABASE_URL,
-  }),
+  });
+
+if (process.env.NODE_ENV !== "production") globalForPool.pool = pool;
+
+export const auth = betterAuth({
+  database: pool,
 
   baseURL: process.env.BETTER_AUTH_URL,
 

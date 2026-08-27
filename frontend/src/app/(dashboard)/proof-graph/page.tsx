@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 import { getProofGraph } from "@/src/lib/api/proof-graph";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
+import { Card, CardContent } from "@/src/components/ui/Card";
 import { CheckCircle2, Circle, AlertCircle, XCircle, ArrowDown, ShieldCheck, FileCode, CheckSquare, BrainCircuit, Activity } from "lucide-react";
 
 export default async function ProofGraphPage() {

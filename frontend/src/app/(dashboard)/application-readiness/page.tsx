@@ -2,9 +2,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 import { getApplicationReadiness } from "@/src/lib/api/application-readiness";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
-import { CheckCircle2, AlertTriangle, XCircle, Briefcase, ChevronRight, FileText, Code, MessagesSquare } from "lucide-react";
-import Link from "next/link";
+import { Card, CardContent } from "@/src/components/ui/Card";
+import { CheckCircle2, AlertTriangle, XCircle, Briefcase, FileText, Code, MessagesSquare } from "lucide-react";
 
 export default async function ApplicationReadinessPage() {
   const session = await auth.api.getSession({ headers: await headers() });

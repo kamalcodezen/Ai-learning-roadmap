@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
-import { Settings as SettingsIcon, Bell, Monitor, Shield } from "lucide-react";
+import { Bell, Monitor } from "lucide-react";
 
 export default function SettingsPage() {
   return (

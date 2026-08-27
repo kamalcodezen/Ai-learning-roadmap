@@ -1,6 +1,5 @@
 import {
   BarChart,
-  Briefcase,
   ClipboardCheck,
   FolderKanban,
   GitMerge,

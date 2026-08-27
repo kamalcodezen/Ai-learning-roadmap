@@ -8,7 +8,6 @@ import { authClient } from "@/src/lib/auth-client";
 
 import {
   completeDiagnosticAttempt,
-  createDiagnosticAttempt,
   submitDiagnosticAnswer,
   type DiagnosticCompleteResult,
 } from "@/src/lib/actions/diagnostic";

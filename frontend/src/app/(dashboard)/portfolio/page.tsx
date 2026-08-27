@@ -3,8 +3,7 @@ import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 import { getPortfolio } from "@/src/lib/api/portfolio";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
-import { FolderGit2, ExternalLink, GitBranch, CheckCircle2, AlertTriangle, FileCode2, Star, Plus } from "lucide-react";
-import Link from "next/link";
+import { FolderGit2, ExternalLink, GitBranch, CheckCircle2, AlertTriangle, FileCode2, Star } from "lucide-react";
 import { AlertButton } from "@/src/components/portfolio/AlertButton";
 
 export default async function PortfolioPage() {
