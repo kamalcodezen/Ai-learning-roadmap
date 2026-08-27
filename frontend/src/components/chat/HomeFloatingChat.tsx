@@ -192,9 +192,9 @@ export function HomeFloatingChat() {
                           transition={{ duration: 0.2, ease: "easeOut" }}
                         >
                           {isUser ? (
-                            <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                            <span className="whitespace-pre-wrap text-sm leading-relaxed text-white/80">
                               {message.content}
-                            </p>
+                            </span>
                           ) : (
                             <div className="markdown-content prose dark:prose-invert max-w-none text-sm leading-relaxed text-zinc-950 dark:text-zinc-100">
                               <ReactMarkdown
