@@ -1,5 +1,5 @@
 import prisma from "../../../lib/prisma.js";
-import { ChatService } from "../../chat/chat.service.js";
+import { ChatService } from "../../chat/services/chat.service.js";
 import { z } from "zod";
 
 const RoadmapResponseSchema = z.object({
