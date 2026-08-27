@@ -1,4 +1,4 @@
-import { ChatService } from "../../chat/chat.service.js";
+import { ChatService } from "../../chat/services/chat.service.js";
 
 export type GeneratedDiagnosticQuestion = {
   question: string;
