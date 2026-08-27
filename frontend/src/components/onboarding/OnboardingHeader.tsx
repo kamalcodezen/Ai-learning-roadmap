@@ -59,7 +59,7 @@ export function OnboardingHeader() {
             Career Twin Initialization
           </span>
         </div>
-        <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+        <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-[-0.04em] sm:text-5xl">
           Build the career path
           <br />
           <span className="text-muted-foreground">

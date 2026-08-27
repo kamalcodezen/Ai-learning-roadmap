@@ -30,14 +30,11 @@ export const sendChatMessage = async (
 ): Promise<ChatResponse> => {
   const session = await authClient.getSession();
   const userId = session?.data?.user?.id;
-  if (!userId) {
-    throw new Error("User not authenticated");
-  }
 
   // ফ্রন্টএন্ড থেকে শুধু শেষ ৪টি প্রাসঙ্গিক মেসেজ যাবে
   const optimizedPayload: ChatRequest = {
     ...payload,
-    userId,
+    ...(userId && { userId }),
     history: payload.history
       ? payload.history
           .filter(
