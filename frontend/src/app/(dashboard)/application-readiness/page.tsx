@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 import { getApplicationReadiness } from "@/src/lib/api/application-readiness";
@@ -7,7 +8,8 @@ import Link from "next/link";
 
 export default async function ApplicationReadinessPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const userId = session?.user?.id || "mock-user-id";
+  if (!session?.user?.id) { redirect("/"); }
+  const userId = session.user.id;
   const data = await getApplicationReadiness(userId);
 
   const getStatusDetails = (status: string) => {
