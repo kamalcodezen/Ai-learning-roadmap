@@ -18,18 +18,23 @@ export default function AudienceBanner() {
   return (
     <section
       className="
-        section-pad
         relative
         isolate
-        h-screen
+        min-h-screen
+        w-full
+        flex
+        items-center
+        justify-center
         overflow-hidden
+        pt-24
+        pb-12
         bg-[#f4edff]
         dark:bg-background
       "
     >
       <BannerBackground image={activeItem.image} title={activeItem.title} />
 
-      <div className="global-pos relative z-10 flex flex-col items-center px-6">
+      <div className="relative z-10 flex w-full max-w-7xl flex-col items-center justify-center px-6">
         <BannerHeader
           badge="A smarter way to learn"
           heading={activeItem.title}

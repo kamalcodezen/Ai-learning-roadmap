@@ -36,7 +36,7 @@
   --space-text-sm: 16px;
 
   /* ── Typography Tokens ── */
-  --font-family-primary: var(--font-poppins), 'Poppins', sans-serif;
+  --font-family-primary: var(--font-hind-siliguri), 'Hind Siliguri', sans-serif;
   --font-size-h1: 60px;
   --font-size-h2: 40px;
   --font-size-h4: 30px;
@@ -199,7 +199,7 @@
 ========================================= */
 @theme {
   --color-brand: #9F54F7;
-  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-hind-siliguri), ui-sans-serif, system-ui, sans-serif;
   --font-poppins: var(--font-poppins), sans-serif;
 
   /* Semantic Typography Hierarchy (kept for Tailwind utility compat) */
