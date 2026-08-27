@@ -85,12 +85,16 @@ export default function Diagnostic() {
       }
 
       // getDiagnosticQuestions returns questions that have the attemptId attached
-      const activeAttemptId = (fetchedQuestions[0] as DiagnosticQuestion & { attemptId?: string }).attemptId;
-      
+      const activeAttemptId = (
+        fetchedQuestions[0] as DiagnosticQuestion & { attemptId?: string }
+      ).attemptId;
+
       if (!activeAttemptId) {
-        throw new Error("Could not determine active attempt ID from questions.");
+        throw new Error(
+          "Could not determine active attempt ID from questions.",
+        );
       }
-      
+
       setAttemptId(activeAttemptId);
 
       setQuestions(fetchedQuestions);
@@ -293,7 +297,7 @@ export default function Diagnostic() {
             <button
               type="button"
               onClick={() => router.push("/dashboard")}
-              className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-secondary transition hover:opacity-90"
+              className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3  text-white text-sm font-semibold  transition hover:opacity-90"
             >
               Continue to Dashboard
               <ChevronRight className="h-4 w-4" />
@@ -361,7 +365,7 @@ export default function Diagnostic() {
           <button
             type="button"
             onClick={() => void handleStartDiagnostic()}
-            className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-semibold text-secondary transition hover:opacity-90"
+            className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
           >
             Start Diagnostic
             <ChevronRight className="h-4 w-4" />
@@ -525,7 +529,7 @@ export default function Diagnostic() {
               type="button"
               disabled={!selectedAnswer || status === "submitting"}
               onClick={() => void handleNext()}
-              className="inline-flex min-w-[140px] items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-secondary transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex min-w-[140px] items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {status === "submitting" ? (
                 <>

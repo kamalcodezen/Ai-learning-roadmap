@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 
-import { careerProfileSchema } from "./career-profile.schema.js";
-import { upsertCareerProfile } from "./career-profile.service.js";
+import { careerProfileSchema } from "../schemas/career-profile.schema.js";
+import { upsertCareerProfile } from "../services/career-profile.service.js";
 
 export const createOrUpdateCareerProfile = async (
   req: Request,

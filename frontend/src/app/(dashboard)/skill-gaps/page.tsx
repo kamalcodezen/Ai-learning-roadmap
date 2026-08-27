@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getSkillGaps } from "@/src/lib/api/skill-gaps";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
 import { AlertTriangle, TrendingUp, AlertCircle, ArrowRight, Activity } from "lucide-react";
@@ -9,7 +10,8 @@ export default async function SkillGapsPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  const userId = session?.user?.id || "mock-user-id";
+  if (!session?.user?.id) { redirect("/"); }
+  const userId = session.user.id;
   const data = await getSkillGaps(userId);
 
   return (

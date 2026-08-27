@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { z } from "zod";
-import { ChatService } from "./chat.service.js";
+import { ChatService } from "../services/chat.service.js";
 
 const chatRequestSchema = z.object({
   message: z

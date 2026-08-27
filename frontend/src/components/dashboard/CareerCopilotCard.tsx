@@ -4,16 +4,20 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card";
 import { Bot, Sparkles, Send, Loader2 } from "lucide-react";
 import { sendCareerCopilotMessage } from "@/src/lib/actions/career-copilot";
-import { DashboardData } from "./types";
+import { DashboardData } from "@/src/app/(dashboard)/dashboard/types";
 
 import { authClient } from "@/src/lib/auth-client";
 
 export default function CareerCopilotCard({ data }: { data?: DashboardData }) {
   const { data: session } = authClient.useSession();
-  const userId = session?.user?.id || "mock-user-id";
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<{ role: "user" | "ai"; text: string }[]>([]);
+
+  if (!session?.user?.id) {
+    return null;
+  }
+  const userId = session.user.id;
 
   const handleSend = async (messageText = input) => {
     if (!messageText.trim() || isLoading) return;

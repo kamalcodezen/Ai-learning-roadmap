@@ -54,7 +54,7 @@ export function OnboardingActionBar({ canContinue, handleContinue }: OnboardingA
             px-6
             text-sm
             font-bold
-            text-secondary
+            text-white
             shadow-[0_0_30px_rgba(206,255,31,0.12)]
             transition-all
             duration-300

@@ -1,4 +1,4 @@
-import { DashboardData } from "@/src/components/dashboard/types";
+import { DashboardData } from "@/src/app/(dashboard)/dashboard/types";
 import { serverFetch } from "../core/server";
 
 /**

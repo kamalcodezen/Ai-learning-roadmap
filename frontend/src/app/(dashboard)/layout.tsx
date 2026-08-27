@@ -16,7 +16,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <DashboardSidebar />
         <section
           aria-label="Dashboard content"
-          className="relative w-full min-w-0 flex-1 overflow-hidden px-4 pt-20 pb-28 sm:px-8 md:px-12 lg:pb-10 lg:pl-[272px] lg:pr-8 lg:pt-10"
+          className="relative w-full min-w-0 flex-1 px-4 pt-20 pb-28 sm:px-8 md:px-12 lg:pb-10 lg:pl-[272px] lg:pr-8 lg:pt-10"
         >
           <div className="global-pos relative w-full">{children}</div>
         </section>

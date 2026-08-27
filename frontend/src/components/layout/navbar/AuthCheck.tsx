@@ -14,7 +14,7 @@ export default function AuthCheck() {
 
    const isAuthenticated = !!session?.user;
 
-  const mockUser = {
+  const user = {
     name: session?.user?.name,
     email: session?.user?.email,
   };
@@ -22,8 +22,8 @@ export default function AuthCheck() {
   if (isAuthenticated) {
     return (
       <ProfileDropdown
-        name={mockUser.name ?? ""}
-        email={mockUser.email ?? ""}
+        name={user.name ?? ""}
+        email={user.email ?? ""}
       />
     );
   }

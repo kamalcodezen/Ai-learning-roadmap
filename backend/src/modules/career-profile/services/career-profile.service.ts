@@ -1,5 +1,5 @@
-import prisma from "../../lib/prisma.js";
-import type { CareerProfileInput } from "./career-profile.schema.js";
+import prisma from "../../../lib/prisma.js";
+import type { CareerProfileInput } from "../schemas/career-profile.schema.js";
 
 export const upsertCareerProfile = async (input: CareerProfileInput) => {
   const { userId, ...profileData } = input;

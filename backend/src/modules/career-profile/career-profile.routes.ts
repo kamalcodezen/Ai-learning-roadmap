@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { createOrUpdateCareerProfile } from "./career-profile.controller.js";
+import { createOrUpdateCareerProfile } from "./controllers/career-profile.controller.js";
 
 const router = Router();
 

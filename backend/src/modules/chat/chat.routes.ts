@@ -1,6 +1,6 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
-import { ChatController } from "./chat.controller.js";
+import { ChatController } from "./controllers/chat.controller.js";
 
 const router = Router();
 

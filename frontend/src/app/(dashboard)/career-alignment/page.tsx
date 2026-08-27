@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 import { getCareerAlignment } from "@/src/lib/api/career-alignment";
@@ -7,7 +8,8 @@ import Link from "next/link";
 
 export default async function CareerAlignmentPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const userId = session?.user?.id || "mock-user-id";
+  if (!session?.user?.id) { redirect("/"); }
+  const userId = session.user.id;
   const data = await getCareerAlignment(userId);
 
   return (

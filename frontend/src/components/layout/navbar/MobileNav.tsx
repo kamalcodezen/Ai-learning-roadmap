@@ -13,9 +13,9 @@ export default function MobileNav() {
   const { data: session } = authClient.useSession();
   const isAuthenticated = !!session?.user;
 
-  const mockUser = {
-    name: "Jubair",
-    email: "jubair@example.com",
+  const user = {
+    name: session?.user?.name || "User",
+    email: session?.user?.email || "",
   };
 
   return (
@@ -84,10 +84,10 @@ export default function MobileNav() {
                       </span>
                       <div className="min-w-0 text-left">
                         <p className="truncate text-sm font-semibold text-foreground">
-                          {mockUser.name}
+                          {user.name}
                         </p>
                         <p className="truncate text-xs text-muted-foreground">
-                          {mockUser.email}
+                          {user.email}
                         </p>
                       </div>
                     </div>

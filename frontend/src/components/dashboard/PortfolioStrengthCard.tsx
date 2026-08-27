@@ -22,8 +22,8 @@ export default function PortfolioStrengthCard({ data }: Props) {
           </div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center py-6">
-            <span className="text-4xl font-bold text-foreground mb-2">{data.score || '—'}</span>
-            <span className="text-sm text-muted-foreground">{data.projectCount} Project{data.projectCount !== 1 ? 's' : ''}</span>
+            <span className="text-4xl font-bold text-primary mb-2">{data.projectCount}</span>
+            <span className="text-sm text-muted-foreground">Project{data.projectCount !== 1 ? 's' : ''} Documented</span>
           </div>
         )}
         <Link 

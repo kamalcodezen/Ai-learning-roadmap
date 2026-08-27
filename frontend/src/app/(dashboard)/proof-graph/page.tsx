@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 import { getProofGraph } from "@/src/lib/api/proof-graph";
@@ -6,7 +7,8 @@ import { CheckCircle2, Circle, AlertCircle, XCircle, ArrowDown, ShieldCheck, Fil
 
 export default async function ProofGraphPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const userId = session?.user?.id || "mock-user-id";
+  if (!session?.user?.id) { redirect("/"); }
+  const userId = session.user.id;
   const data = await getProofGraph(userId);
 
   const getStatusIcon = (status: string) => {

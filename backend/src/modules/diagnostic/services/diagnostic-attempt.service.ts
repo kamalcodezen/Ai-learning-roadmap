@@ -1,5 +1,5 @@
 import prisma from "../../../lib/prisma.js";
-import { getOrGenerateLearningPath } from "../../dashboard/services/learning-path.service.js";
+import { getOrGenerateLearningPath } from "../../learning-path/services/learning-path.service.js";
 
 import type { CreateDiagnosticAttemptInput } from "../schemas/diagnostic-attempt.schema.js";
 
@@ -123,7 +123,7 @@ export const completeDiagnosticAttempt = async (attemptId: string) => {
   }
 
   // Trigger Roadmap Generation asynchronously
-  getOrGenerateLearningPath(attempt.userId).catch((error) => {
+  getOrGenerateLearningPath(attempt.userId).catch((error: unknown) => {
     console.error("Failed to generate learning path asynchronously:", error);
   });
 
