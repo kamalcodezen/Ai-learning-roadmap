@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "@/src/lib/auth";
 import { getDashboardOverview } from "@/src/lib/api/dashboard";
-import { DashboardData } from "@/src/components/dashboard/types";
+import { DashboardData } from "./types";
 import DashboardHeader from "@/src/components/dashboard/DashboardHeader";
 import CareerReadinessCard from "@/src/components/dashboard/CareerReadinessCard";
 import NextBestActionCard from "@/src/components/dashboard/NextBestActionCard";
@@ -14,8 +14,8 @@ import AssessmentProgressCard from "@/src/components/dashboard/AssessmentProgres
 import SkillProofPreview from "@/src/components/dashboard/SkillProofPreview";
 import CareerAlignmentCard from "@/src/components/dashboard/CareerAlignmentCard";
 import ApplicationReadinessCard from "@/src/components/dashboard/ApplicationReadinessCard";
-import ChatBox from "@/src/components/chat/ChatBox";
 import PortfolioStrengthCard from "@/src/components/dashboard/PortfolioStrengthCard";
+import ChatBox from "@/src/components/chat/ChatBox";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({
@@ -39,10 +39,9 @@ export default async function DashboardPage() {
     );
   }
 
-  // Use session user if available, otherwise mock data user
   const userToPass = {
-    name: session.user.name || data.user.name,
-    image: session.user.image || data.user.image,
+    name: session.user.name || "User",
+    image: session.user.image || null,
   };
 
   return (

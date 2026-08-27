@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getLearningPath } from "@/src/lib/api/learning-path";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
 import { CheckCircle2, Circle, ArrowRight, Clock, BookOpen, Target } from "lucide-react";
@@ -9,7 +10,8 @@ export default async function LearningPathPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  const userId = session?.user?.id || "mock-user-id";
+  if (!session?.user?.id) { redirect("/"); }
+  const userId = session.user.id;
   const data = await getLearningPath(userId);
 
   return (

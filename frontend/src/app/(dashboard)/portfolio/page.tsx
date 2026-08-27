@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 import { getPortfolio } from "@/src/lib/api/portfolio";
@@ -8,7 +9,8 @@ import { AlertButton } from "@/src/components/portfolio/AlertButton";
 
 export default async function PortfolioPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const userId = session?.user?.id || "mock-user-id";
+  if (!session?.user?.id) { redirect("/"); }
+  const userId = session.user.id;
   const data = await getPortfolio(userId);
 
   const renderEmptyState = () => (

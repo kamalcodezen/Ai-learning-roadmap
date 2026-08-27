@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getCareerTwin } from "@/src/lib/api/career-twin";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
 import Link from "next/link";
@@ -9,7 +10,8 @@ export default async function CareerTwinPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  const userId = session?.user?.id || "mock-user-id";
+  if (!session?.user?.id) { redirect("/"); }
+  const userId = session.user.id;
   const data = await getCareerTwin(userId);
 
   return (
