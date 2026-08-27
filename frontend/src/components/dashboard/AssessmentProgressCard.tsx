@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function AssessmentProgressCard({ data }: Props) {
-  if (!data || data.length === 0) {
+  if (!data) {
     return (
       <Card>
         <CardHeader>
@@ -28,22 +28,14 @@ export default function AssessmentProgressCard({ data }: Props) {
       </CardHeader>
       <CardContent className="flex flex-col h-full">
         <div className="space-y-4 mb-6">
-          {data.map((assessment, index) => (
-            <div key={index} className="flex justify-between items-center text-sm">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-foreground">{assessment.name}</span>
-                {assessment.status === 'COMPLETED' && (
-                  <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                    Completed <Check className="w-3 h-3" />
-                  </span>
-                )}
-              </div>
-              
-              <span className={`font-medium ${assessment.status === 'NOT_STARTED' ? 'text-muted-foreground' : 'text-foreground'}`}>
-                {assessment.score !== null ? `${assessment.score}%` : 'Not Started'}
-              </span>
-            </div>
-          ))}
+          <div className="flex justify-between items-center text-sm">
+            <span className="font-medium text-foreground">Completed</span>
+            <span className="font-bold text-primary">{data.completedCount}</span>
+          </div>
+          <div className="flex justify-between items-center text-sm">
+            <span className="font-medium text-foreground">Pending</span>
+            <span className="font-bold text-muted-foreground">{data.pendingCount}</span>
+          </div>
         </div>
         <Link 
           href="/assessments" 
