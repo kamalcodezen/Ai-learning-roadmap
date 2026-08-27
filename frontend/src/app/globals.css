@@ -402,9 +402,22 @@ button {
 
   .dashboard-card {
     @apply rounded-lg border p-6 backdrop-blur-md transition-all duration-300;
-    background: rgba(var(--card), 0.85);
-    border-color: rgb(var(--border));
-    box-shadow: var(--shadow);
+    background: #ffffff;
+    border-color: #E6E9EE;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  }
+
+  .dark .dashboard-card {
+    background: linear-gradient(to bottom, #1a0e2e, rgba(159, 84, 247, 0.12));
+    border-color: rgba(159, 84, 247, 0.15);
+  }
+
+  .dashboard-card:hover {
+    border-color: rgba(159, 84, 247, 0.3);
+  }
+
+  .dark .dashboard-card:hover {
+    border-color: rgba(159, 84, 247, 0.4);
   }
 
   .soft-card {
@@ -482,7 +495,6 @@ button {
 /* =========================================
    DARK HOVER GLOW SYSTEM
 ========================================= */
-.dark .dashboard-card:hover,
 .dark .book-card:hover {
   box-shadow:
     0 0 25px rgba(185, 120, 255, 0.15),
@@ -512,7 +524,21 @@ button {
     opacity: 0;
     }
   }
-}
+  --animate-meteor: meteor 5s linear infinite
+;
+  @keyframes meteor {
+  0% {
+    transform: rotate(var(--angle)) translateX(0);
+    opacity: 1;
+    }
+  70% {
+    opacity: 1;
+    }
+  100% {
+    transform: rotate(var(--angle)) translateX(-500px);
+    opacity: 0;
+    }
+  }}
 
 /* =========================================
    JIMU PRIMARY LOADING ANIMATION
