@@ -2,7 +2,6 @@
 
 import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 
 import { useSessionUser } from "../hooks/useSessionUser";
 
@@ -20,7 +19,7 @@ export default function SessionGuard({ children }: SessionGuardProps) {
     if (isPending || user) return;
 
     const timer = setTimeout(() => {
-      router.replace("/");
+      router.replace("/signin");
     }, SESSION_GRACE_MS);
 
     return () => clearTimeout(timer);
@@ -31,10 +30,10 @@ export default function SessionGuard({ children }: SessionGuardProps) {
       <div
         role="status"
         aria-live="polite"
-        className="flex min-h-screen items-center justify-center gap-3 text-muted-foreground dark:bg-[#0b0f19]"
+        className="flex min-h-screen flex-col items-center justify-center gap-4 text-muted-foreground dark:bg-[#0b0f1a]"
       >
-        <Loader2 className="size-5 animate-spin text-primary" aria-hidden="true" />
-        <span className="text-sm">Loading your dashboard…</span>
+        <div className="jimu-primary-loading" />
+        <span className="text-sm font-medium animate-pulse mt-20">Loading your dashboard…</span>
       </div>
     );
   }
