@@ -52,31 +52,20 @@ export interface DashboardData {
     careerReadiness: number | null;
   };
   assessments: {
-    name: string;
-    status: "COMPLETED" | "NOT_STARTED" | "IN_PROGRESS";
-    score: number | null;
-  }[];
+    pendingCount: number;
+    completedCount: number;
+  };
   proof: {
-    skillName: string;
-    knowledge: "COMPLETED" | "PENDING";
-    practice: "COMPLETED" | "PENDING";
-    evidence: "COMPLETED" | "PENDING" | "WARNING";
+    trackedSkillsCount: number;
   };
   careerAlignment: {
     target: string;
-    fitScore: number;
-    strong: string[];
-    needsAttention: string[];
+    isAvailable: boolean;
   };
   applicationReadiness: {
-    technical: number | null;
-    projects: number | null;
-    portfolio: number | null;
-    interview: number | null;
-    resume: number | null;
+    isAvailable: boolean;
   };
   portfolio: {
-    score: number | null;
     projectCount: number;
   };
 }
