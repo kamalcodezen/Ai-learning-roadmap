@@ -3,119 +3,89 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import {
-  LuCompass,
-  LuHouse,
-  LuArrowLeft,
-  LuSparkles,
-  LuSearchX,
-} from "react-icons/lu";
+import { LuArrowLeft, LuArrowUpRight } from "react-icons/lu";
 
 export default function NotFound() {
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-background px-4 py-16 text-foreground">
-      {/* ব্যাকগ্রাউন্ড রেডিয়াল লাইট ইফেক্ট ও গ্রিড */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(159,84,247,0.08),rgba(255,255,255,0))]" />
-      <div className="pointer-events-none absolute -top-32 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-[var(--color-primary)]/5 blur-[140px]" />
+    <main className="flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground">
+      <div className="w-full max-w-5xl">
+        <div className="grid items-center gap-12 md:grid-cols-[1fr_auto] md:gap-20">
+          {/* Left Content */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="mb-5 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">
+              Error 404
+            </p>
 
-      {/* গ্রিড লাইন ওভারলে */}
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+            <h1 className="max-w-2xl text-5xl font-semibold leading-[1.05] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+              The page you&apos;re looking for is{" "}
+              <span className="text-muted-foreground">somewhere else.</span>
+            </h1>
 
-      <div className="container relative z-10 mx-auto max-w-xl text-center">
-        {/* টপ ব্যাজ */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#131824]/80 px-3.5 py-1.5 backdrop-blur-md"
-        >
-          <LuSearchX className="size-3.5 text-[var(--color-primary)]" />
-          <span className="font-mono text-xs font-medium text-slate-300">
-            Error 404: Roadmap Node Missing
-          </span>
-        </motion.div>
+            <p className="mt-6 max-w-xl text-sm leading-7 text-muted-foreground sm:text-base">
+              This route could not be found. It may have been moved, removed, or
+              the address may be incorrect.
+            </p>
 
-        {/* সেন্ট্রাল আইকনিক 404 টাইপোগ্রাফি */}
-        <div className="relative my-4 flex items-center justify-center">
-          <motion.h1
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/"
+                className="group inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]"
+              >
+                Return Home
+                <LuArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => window.history.back()}
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-5 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground active:scale-[0.98]"
+              >
+                <LuArrowLeft className="size-4" />
+                Go Back
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Right 404 */}
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="select-none font-mono text-8xl font-extrabold tracking-tighter text-white/5 sm:text-9xl"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="select-none"
           >
-            404
-          </motion.h1>
-
-          <div className="absolute flex flex-col items-center">
-            <motion.div
-              initial={{ rotate: -10, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="flex size-14 items-center justify-center rounded-2xl border border-[var(--color-primary)]/30 bg-[#131824] shadow-[0_0_30px_rgba(159,84,247,0.2)] sm:size-16"
-            >
-              <LuCompass className="size-7 text-[var(--color-primary)] animate-spin [animation-duration:12s]" />
-            </motion.div>
-          </div>
+            <div className="font-mono text-[clamp(8rem,20vw,15rem)] font-bold leading-none tracking-[-0.1em] text-muted-foreground/10">
+              404
+            </div>
+          </motion.div>
         </div>
 
-        {/* হেডিং ও সাবটাইটেল */}
-        <motion.h2
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="font-poppins text-3xl font-semibold tracking-tight text-white sm:text-4xl"
-        >
-          Lost in the{" "}
-          <i className="font-serif italic font-normal text-slate-400">
-            latent space
-          </i>
-          ?
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-slate-400 sm:text-base"
-        >
-          আপনি যে লার্নিং পাথওয়ে বা নোডটি খুঁজছেন তা এখনো তৈরি হয়নি অথবা নতুন
-          রুটে স্থানান্তরিত হয়েছে।
-        </motion.p>
-
-        {/* অ্যাকশন বাটনসমূহ */}
+        {/* Bottom Divider */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5"
-        >
-          <Link
-            href="/"
-            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[var(--color-secondary)] hover:shadow-[0_0_20px_rgba(159,84,247,0.25)] active:scale-95"
-          >
-            <LuHouse className="size-4" />
-            <span>Back to Safety</span>
-          </Link>
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-16 origin-left border-t border-border"
+        />
 
-          <button
-            onClick={() => window.history.back()}
-            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-slate-300 transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white active:scale-95"
-          >
-            <LuArrowLeft className="size-4" />
-            <span>Previous Step</span>
-          </button>
-        </motion.div>
-
-        {/* বটম হেল্পার প্রম্পট */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-12 inline-flex items-center gap-2 font-mono text-xs text-slate-500"
+          className="mt-5 flex items-center justify-between"
         >
-          <LuSparkles className="size-3 text-[var(--color-primary)]" />
-          <span>AI Pathfinder dynamically recalculating routes</span>
+          <span className="text-xs font-medium text-muted-foreground">
+            AI Pather
+          </span>
+
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">
+            Page Not Found
+          </span>
         </motion.div>
       </div>
-    </div>
+    </main>
   );
 }
