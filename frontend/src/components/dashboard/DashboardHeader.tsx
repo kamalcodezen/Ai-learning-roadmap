@@ -1,4 +1,4 @@
-import { DashboardData } from "./types";
+import { DashboardData } from "@/src/app/(dashboard)/dashboard/types";
 
 interface DashboardHeaderProps {
   user: {

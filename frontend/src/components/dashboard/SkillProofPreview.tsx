@@ -14,22 +14,9 @@ export default function SkillProofPreview({ data }: Props) {
         <CardTitle>Skill Proof</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col h-full">
-        <h4 className="text-sm font-semibold text-foreground mb-4">{data.skillName || "Top Skill"}</h4>
-        <div className="space-y-4 mb-6">
-          <div className="flex items-center gap-3">
-            {data.knowledge === 'COMPLETED' ? <CheckCircle2 className="w-5 h-5 text-primary" /> : <Circle className="w-5 h-5 text-muted-foreground" />}
-            <span className="text-sm">Knowledge</span>
-          </div>
-          <div className="flex items-center gap-3">
-            {data.practice === 'COMPLETED' ? <CheckCircle2 className="w-5 h-5 text-primary" /> : <Circle className="w-5 h-5 text-muted-foreground" />}
-            <span className="text-sm">Practice</span>
-          </div>
-          <div className="flex items-center gap-3">
-            {data.evidence === 'COMPLETED' && <CheckCircle2 className="w-5 h-5 text-primary" />}
-            {data.evidence === 'WARNING' && <AlertCircle className="w-5 h-5 text-amber-500" />}
-            {data.evidence === 'PENDING' && <Circle className="w-5 h-5 text-muted-foreground" />}
-            <span className="text-sm">Project Evidence</span>
-          </div>
+        <div className="flex-1 flex flex-col items-center justify-center py-6 mb-6">
+          <span className="text-4xl font-bold text-primary mb-2">{data.trackedSkillsCount}</span>
+          <span className="text-sm text-muted-foreground">Skill{data.trackedSkillsCount !== 1 ? 's' : ''} Tracked</span>
         </div>
         <Link 
           href="/proof-graph" 

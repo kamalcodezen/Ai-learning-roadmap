@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card";
-import { DashboardData } from "./types";
+import { DashboardData } from "@/src/app/(dashboard)/dashboard/types";
 import Link from "next/link";
 import { ArrowRight, Zap } from "lucide-react";
 
