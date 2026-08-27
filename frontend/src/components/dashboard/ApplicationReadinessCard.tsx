@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function ApplicationReadinessCard({ data }: Props) {
-  const isAvailable = Object.values(data).some(v => v !== null);
+
 
   return (
     <Card mouseGlow>
@@ -16,32 +16,13 @@ export default function ApplicationReadinessCard({ data }: Props) {
         <CardTitle>Application Readiness</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col h-full">
-        {!isAvailable ? (
+        {!data.isAvailable ? (
           <div className="flex-1 flex items-center justify-center py-4 mb-4">
-            <p className="text-muted-foreground text-sm">Not available yet</p>
+            <p className="text-muted-foreground text-sm">Not enough data to assess.</p>
           </div>
         ) : (
-          <div className="space-y-3 mb-6">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Technical</span>
-              <span className="font-medium text-foreground">{data.technical ? `${data.technical}%` : '—'}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Projects</span>
-              <span className="font-medium text-foreground">{data.projects ? `${data.projects}%` : '—'}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Portfolio</span>
-              <span className="font-medium text-foreground">{data.portfolio ? `${data.portfolio}%` : '—'}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Interview</span>
-              <span className="font-medium text-foreground">{data.interview ? `${data.interview}%` : '—'}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Resume</span>
-              <span className="font-medium text-foreground">{data.resume ? `${data.resume}%` : '—'}</span>
-            </div>
+          <div className="flex-1 flex items-center justify-center py-4 mb-4">
+            <p className="text-foreground text-sm font-medium">Ready for calculation.</p>
           </div>
         )}
         <Link 
