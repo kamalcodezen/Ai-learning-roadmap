@@ -9,7 +9,7 @@ interface Props {
 
 export default function SkillProofPreview({ data }: Props) {
   return (
-    <Card>
+    <Card mouseGlow>
       <CardHeader>
         <CardTitle>Skill Proof</CardTitle>
       </CardHeader>

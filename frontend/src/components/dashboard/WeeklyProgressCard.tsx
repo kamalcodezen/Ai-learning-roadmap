@@ -11,7 +11,7 @@ export default function WeeklyProgressCard({ data }: Props) {
   const hasData = data && Object.values(data).some(v => v !== null && v > 0);
 
   return (
-    <Card>
+    <Card mouseGlow>
       <CardHeader>
         <CardTitle>This Week</CardTitle>
       </CardHeader>

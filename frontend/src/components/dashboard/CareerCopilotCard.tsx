@@ -42,7 +42,7 @@ export default function CareerCopilotCard({ data }: { data?: DashboardData }) {
   };
 
   return (
-    <Card className="col-span-1 md:col-span-2 lg:col-span-2 relative overflow-hidden border-primary/20 flex flex-col h-full min-h-[300px]">
+    <Card mouseGlow className="col-span-1 md:col-span-2 lg:col-span-2 relative overflow-hidden border-primary/20 flex flex-col h-full min-h-[300px]">
       <div className="absolute top-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -ml-20 -mt-20 pointer-events-none" />
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-primary">
