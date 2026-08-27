@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Ca
 import { User, Mail, Shield, Key } from "lucide-react";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({

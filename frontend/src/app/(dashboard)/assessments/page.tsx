@@ -2,8 +2,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 import { getAssessments } from "@/src/lib/api/assessments";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
-import { CheckCircle2, Circle, PlayCircle, Clock, Trophy, Target, ArrowRight } from "lucide-react";
+import { Card, CardContent } from "@/src/components/ui/Card";
+import { CheckCircle2, PlayCircle, Clock, Trophy, Target, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default async function AssessmentsPage() {

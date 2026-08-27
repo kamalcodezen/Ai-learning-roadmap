@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import { getLearningPath } from "@/src/lib/api/learning-path";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
-import { CheckCircle2, Circle, ArrowRight, Clock, BookOpen, Target } from "lucide-react";
-import Link from "next/link";
+import { Card, CardContent } from "@/src/components/ui/Card";
+import { CheckCircle2, ArrowRight, Clock, BookOpen, Target } from "lucide-react";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 

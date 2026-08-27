@@ -3,7 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
-import { useSessionUser } from "../hooks/useSessionUser";
+import { useDirectSessionFetch, SessionProvider } from "../hooks/useSessionUser";
 
 interface SessionGuardProps {
   children: ReactNode;
@@ -12,7 +12,7 @@ interface SessionGuardProps {
 const SESSION_GRACE_MS = 3000;
 
 export default function SessionGuard({ children }: SessionGuardProps) {
-  const { user, isPending } = useSessionUser();
+  const { user, isPending } = useDirectSessionFetch();
   const router = useRouter();
 
   useEffect(() => {
@@ -38,5 +38,9 @@ export default function SessionGuard({ children }: SessionGuardProps) {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <SessionProvider value={{ user, isPending }}>
+      {children}
+    </SessionProvider>
+  );
 }

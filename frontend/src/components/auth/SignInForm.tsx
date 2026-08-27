@@ -63,7 +63,7 @@ export default function SignInForm({ onSwitch }: SignInFormProps) {
           return;
         }
       }
-    } catch (err) {
+    } catch {
       // API not ready, fallback below
       console.warn("Routing state API not available yet. Falling back to dashboard.");
     }

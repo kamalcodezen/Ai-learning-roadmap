@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSkillGaps } from "@/src/lib/api/skill-gaps";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
+import { Card, CardContent } from "@/src/components/ui/Card";
 import { AlertTriangle, TrendingUp, AlertCircle, ArrowRight, Activity } from "lucide-react";
 import Link from "next/link";
 import { auth } from "@/src/lib/auth";

@@ -8,7 +8,7 @@ import { DashboardData } from "@/src/app/(dashboard)/dashboard/types";
 
 import { authClient } from "@/src/lib/auth-client";
 
-export default function CareerCopilotCard({ data }: { data?: DashboardData }) {
+export default function CareerCopilotCard({}: { data?: DashboardData }) {
   const { data: session } = authClient.useSession();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
