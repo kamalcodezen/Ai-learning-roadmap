@@ -2,12 +2,12 @@ import { GoogleGenAI } from "@google/genai";
 import Groq from "groq-sdk";
 import { Mistral } from "@mistralai/mistralai";
 
-import env from "../../config/env.js";
+import env from "../../../config/env.js";
 import {
   buildChatPrompt,
   detectQueryComplexity,
   type QueryComplexity,
-} from "./chat.prompts.js";
+} from "../chat.prompts.js";
 
 export interface MessageItem {
   role: "user" | "assistant";
@@ -93,7 +93,7 @@ const getRecentHistory = (history: any[] = []): MessageItem[] => {
     }));
 };
 
-import prisma from "../../lib/prisma.js";
+import prisma from "../../../lib/prisma.js";
 
 export class ChatService {
   static async fetchUserContext(userId: string, message: string): Promise<string | undefined> {
@@ -113,7 +113,7 @@ export class ChatService {
       });
       
       const weakSkills = allSkillStates
-        .filter(s => s.knowledgeScore < 60)
+        .filter((s: any) => s.knowledgeScore < 60)
         .sort((a, b) => a.knowledgeScore - b.knowledgeScore)
         .slice(0, 5);
 
@@ -121,7 +121,7 @@ export class ChatService {
         return "USER CONTEXT: The user is brand new to the platform. They have not set up a career profile, skills, or a roadmap yet. You should politely ask them what their target career role is, what skills they currently know, and then generate a starter roadmap for them based on their response.";
       }
 
-      const avgKnowledge = allSkillStates.length ? Math.round(allSkillStates.reduce((a, s) => a + s.knowledgeScore, 0) / allSkillStates.length) : 0;
+      const avgKnowledge = allSkillStates.length ? Math.round(allSkillStates.reduce((a: any, s: any) => a + s.knowledgeScore, 0) / allSkillStates.length) : 0;
 
       let contextStr = `USER CONTEXT:\nTarget Role: ${profile.targetRole || (profile as any).targetRoleName}\nExperience: ${profile.experienceLevel || "Beginner"}`;
       contextStr += `\nReadiness: ${avgKnowledge}/100`;
@@ -182,11 +182,11 @@ export class ChatService {
           groq.chat.completions.create({
             model: groqModel,
             messages,
-            max_tokens: maxTokens,
+            max_tokens: maxTokens as any,
             temperature: 0.2,
           }),
         );
-        const content = response.choices[0]?.message?.content?.trim();
+        const content = (response as any).choices[0]?.message?.content?.trim();
         if (content) {
           reply = content;
           provider = "Groq";
@@ -211,7 +211,7 @@ export class ChatService {
             body: JSON.stringify({
               model: OPENROUTER_MODEL,
               messages,
-              max_tokens: maxTokens,
+              max_tokens: maxTokens as any,
               temperature: 0.2,
             }),
           },
@@ -244,7 +244,7 @@ export class ChatService {
             contents: conversationText,
             config: {
               systemInstruction: systemPrompt,
-              maxOutputTokens: maxTokens,
+              maxOutputTokens: maxTokens as any,
               temperature: 0.2,
             },
           }),
@@ -271,7 +271,7 @@ export class ChatService {
             temperature: 0.2,
           }),
         );
-        const content = response.choices?.[0]?.message?.content;
+        const content = (response as any).choices?.[0]?.message?.content;
         if (typeof content === "string" && content.trim()) {
           reply = content.trim();
           provider = "Mistral";
@@ -314,12 +314,12 @@ export class ChatService {
           groq.chat.completions.create({
             model: GROQ_COMPLEX_MODEL,
             messages,
-            max_tokens: maxTokens,
+            max_tokens: maxTokens as any,
             temperature: 0.1,
             response_format: { type: "json_object" },
           }),
         );
-        const content = response.choices[0]?.message?.content?.trim();
+        const content = (response as any).choices[0]?.message?.content?.trim();
         if (content) {
           reply = content;
           provider = "Groq";
@@ -344,7 +344,7 @@ export class ChatService {
             body: JSON.stringify({
               model: OPENROUTER_MODEL,
               messages,
-              max_tokens: maxTokens,
+              max_tokens: maxTokens as any,
               temperature: 0.1,
               response_format: { type: "json_object" },
             }),
@@ -373,7 +373,7 @@ export class ChatService {
             contents: `user: ${userPrompt}`,
             config: {
               systemInstruction: systemInstruction,
-              maxOutputTokens: maxTokens,
+              maxOutputTokens: maxTokens as any,
               temperature: 0.1,
               responseMimeType: "application/json",
             },
@@ -402,7 +402,7 @@ export class ChatService {
             responseFormat: { type: "json_object" },
           }),
         );
-        const content = response.choices?.[0]?.message?.content;
+        const content = (response as any).choices?.[0]?.message?.content;
         if (typeof content === "string" && content.trim()) {
           reply = content.trim();
           provider = "Mistral";
@@ -420,3 +420,4 @@ export class ChatService {
     return { reply, provider, model };
   }
 }
+
