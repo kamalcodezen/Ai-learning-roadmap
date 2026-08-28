@@ -62,6 +62,11 @@ export type user = Prisma.userModel
  */
 export type verification = Prisma.verificationModel
 /**
+ * Model twoFactor
+ * 
+ */
+export type twoFactor = Prisma.twoFactorModel
+/**
  * Model CareerProfile
  * 
  */
