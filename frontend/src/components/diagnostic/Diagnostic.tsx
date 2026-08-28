@@ -328,7 +328,7 @@ export default function Diagnostic() {
           </div>
 
           <p className="mt-6 text-xs font-medium uppercase tracking-[0.18em] text-primary">
-            CareerOS Diagnostic
+            AI Pather Diagnostic
           </p>
 
           <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
@@ -337,7 +337,7 @@ export default function Diagnostic() {
 
           <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
             Answer 5 questions based on your current knowledge. Your result will
-            help CareerOS understand your starting point.
+            help AI Pather understand your starting point.
           </p>
 
           <div className="mx-auto mt-8 grid max-w-md gap-3 text-left sm:grid-cols-3">
@@ -416,7 +416,7 @@ export default function Diagnostic() {
 
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
-                CareerOS Diagnostic
+                AI Pather Diagnostic
               </p>
 
               <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
@@ -427,7 +427,7 @@ export default function Diagnostic() {
 
           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">
             Answer these questions based on what you know today. There are no
-            tricks—this helps CareerOS understand your starting point.
+            tricks—this helps AI Pather understand your starting point.
           </p>
         </header>
 
