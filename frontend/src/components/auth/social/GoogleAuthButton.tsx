@@ -17,7 +17,7 @@ export default function GoogleAuthButton({
   const handleGoogleSignIn = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/",
+      callbackURL: "/auth-success",
     });
   };
 
