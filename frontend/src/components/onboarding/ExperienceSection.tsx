@@ -91,7 +91,7 @@ export function ExperienceSection({ experience, setExperience }: ExperienceSecti
                       rounded-xl
                       ${
                         selected
-                          ? "bg-primary text-secondary"
+                          ? "bg-primary text-[#131824]"
                           : "bg-muted text-muted-foreground"
                       }
                     `}
@@ -120,7 +120,7 @@ export function ExperienceSection({ experience, setExperience }: ExperienceSecti
                     border
                     ${
                       selected
-                        ? "border-primary bg-primary text-secondary"
+                        ? "border-primary bg-primary text-white"
                         : "border-border"
                     }
                   `}
