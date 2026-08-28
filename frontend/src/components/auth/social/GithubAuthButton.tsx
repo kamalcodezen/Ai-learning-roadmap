@@ -17,7 +17,7 @@ export default function GithubAuthButton({
   const handleGithubSignIn = async () => {
     await authClient.signIn.social({
       provider: "github",
-      callbackURL: "/",
+      callbackURL: "/auth-success",
     });
   };
 

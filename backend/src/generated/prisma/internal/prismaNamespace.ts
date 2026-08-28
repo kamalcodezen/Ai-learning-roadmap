@@ -401,6 +401,7 @@ export const ModelName = {
   session: 'session',
   user: 'user',
   verification: 'verification',
+  twoFactor: 'twoFactor',
   CareerProfile: 'CareerProfile',
   DiagnosticQuestion: 'DiagnosticQuestion',
   DiagnosticAttempt: 'DiagnosticAttempt',
@@ -426,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verification" | "careerProfile" | "diagnosticQuestion" | "diagnosticAttempt" | "diagnosticAnswer" | "skillState" | "roadmap" | "milestone" | "project" | "activityLog" | "skillStateHistory"
+    modelProps: "account" | "session" | "user" | "verification" | "twoFactor" | "careerProfile" | "diagnosticQuestion" | "diagnosticAttempt" | "diagnosticAnswer" | "skillState" | "roadmap" | "milestone" | "project" | "activityLog" | "skillStateHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -723,6 +724,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.verificationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.VerificationCountAggregateOutputType> | number
+        }
+      }
+    }
+    twoFactor: {
+      payload: Prisma.$twoFactorPayload<ExtArgs>
+      fields: Prisma.twoFactorFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.twoFactorFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.twoFactorFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload>
+        }
+        findFirst: {
+          args: Prisma.twoFactorFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.twoFactorFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload>
+        }
+        findMany: {
+          args: Prisma.twoFactorFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload>[]
+        }
+        create: {
+          args: Prisma.twoFactorCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload>
+        }
+        createMany: {
+          args: Prisma.twoFactorCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.twoFactorCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload>[]
+        }
+        delete: {
+          args: Prisma.twoFactorDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload>
+        }
+        update: {
+          args: Prisma.twoFactorUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload>
+        }
+        deleteMany: {
+          args: Prisma.twoFactorDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.twoFactorUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.twoFactorUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload>[]
+        }
+        upsert: {
+          args: Prisma.twoFactorUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$twoFactorPayload>
+        }
+        aggregate: {
+          args: Prisma.TwoFactorAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTwoFactor>
+        }
+        groupBy: {
+          args: Prisma.twoFactorGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TwoFactorGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.twoFactorCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TwoFactorCountAggregateOutputType> | number
         }
       }
     }
@@ -1517,6 +1592,7 @@ export const AccountScalarFieldEnum = {
   refreshTokenExpiresAt: 'refreshTokenExpiresAt',
   scope: 'scope',
   password: 'password',
+  issuer: 'issuer',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1545,7 +1621,8 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  twoFactorEnabled: 'twoFactorEnabled'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1561,6 +1638,19 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const TwoFactorScalarFieldEnum = {
+  id: 'id',
+  secret: 'secret',
+  backupCodes: 'backupCodes',
+  userId: 'userId',
+  verified: 'verified',
+  failedVerificationCount: 'failedVerificationCount',
+  lockedUntil: 'lockedUntil'
+} as const
+
+export type TwoFactorScalarFieldEnum = (typeof TwoFactorScalarFieldEnum)[keyof typeof TwoFactorScalarFieldEnum]
 
 
 export const CareerProfileScalarFieldEnum = {
@@ -1799,20 +1889,6 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'ExperienceLevel'
- */
-export type EnumExperienceLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExperienceLevel'>
-    
-
-
-/**
- * Reference to a field of type 'ExperienceLevel[]'
- */
-export type ListEnumExperienceLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExperienceLevel[]'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1823,6 +1899,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ExperienceLevel'
+ */
+export type EnumExperienceLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExperienceLevel'>
+    
+
+
+/**
+ * Reference to a field of type 'ExperienceLevel[]'
+ */
+export type ListEnumExperienceLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExperienceLevel[]'>
     
 
 
@@ -2008,6 +2098,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.sessionOmit
   user?: Prisma.userOmit
   verification?: Prisma.verificationOmit
+  twoFactor?: Prisma.twoFactorOmit
   careerProfile?: Prisma.CareerProfileOmit
   diagnosticQuestion?: Prisma.DiagnosticQuestionOmit
   diagnosticAttempt?: Prisma.DiagnosticAttemptOmit

@@ -3,6 +3,7 @@
 import { Button } from "@heroui/react";
 import Link from "next/link";
 import AuthInput from "./AuthInput";
+import AuthOtpInput from "./AuthOtpInput";
 import AuthSocialButton from "./AuthSocialButton";
 import LightRays from "./LightRays";
 import type { AuthMode } from "./auth.types";
@@ -13,10 +14,14 @@ interface AuthFormProps {
   name: string;
   email: string;
   password: string;
+  otp: string;
 
   setName: (value: string) => void;
   setEmail: (value: string) => void;
   setPassword: (value: string) => void;
+  setOtp: (value: string) => void;
+
+  otpStep: boolean;
 
   message: string;
   isPending: boolean;
@@ -30,9 +35,12 @@ export default function AuthForm({
   name,
   email,
   password,
+  otp,
   setName,
   setEmail,
   setPassword,
+  setOtp,
+  otpStep,
   message,
   isPending,
   onSubmit,
@@ -97,38 +105,48 @@ export default function AuthForm({
 
         {/* Fields */}
         <div className="space-y-3">
-          {isSignUp && (
-            <AuthInput
-              name="name"
-              placeholder="Full Name"
-              value={name}
-              onChange={setName}
+          {otpStep ? (
+            <AuthOtpInput
+              value={otp}
+              onChange={setOtp}
+              length={6}
             />
+          ) : (
+            <>
+              {isSignUp && (
+                <AuthInput
+                  name="name"
+                  placeholder="Full Name"
+                  value={name}
+                  onChange={setName}
+                />
+              )}
+
+              <AuthInput
+                name="email"
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={setEmail}
+              />
+
+              <AuthInput
+                name="password"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={setPassword}
+                minLength={8}
+              />
+            </>
           )}
-
-          <AuthInput
-            name="email"
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={setEmail}
-          />
-
-          <AuthInput
-            name="password"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={setPassword}
-            minLength={8}
-          />
         </div>
 
         {/* Forgot password */}
-        {!isSignUp && (
+        {!isSignUp && !otpStep && (
           <div className="mt-4 text-right">
               <Link
-                href="/auth/forgot-password"
+                href="/forgot-password"
                 className="text-xs text-white transition-colors hover:text-brand"
               >
               Forgot Password?
@@ -154,7 +172,7 @@ export default function AuthForm({
             hover:brightness-105
           "
         >
-          {isSignUp ? "Create Account" : "Sign In"}
+          {otpStep ? "Verify OTP" : isSignUp ? "Create Account" : "Sign In"}
         </Button>
 
         {/* Status */}
