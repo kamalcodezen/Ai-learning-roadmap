@@ -1,7 +1,9 @@
-import { BrainCircuit, ShieldCheck, Sparkles, Target, Zap } from "lucide-react";
+import { BrainCircuit, ShieldCheck, Target, Zap } from "lucide-react";
 
 import { Card } from "@/src/components/ui/Card";
 import type { ExperienceLevel } from "./ExperienceSection";
+import brandLogo from "../../../public/brand/AI-Pather-blue.png"
+import Image from "next/image";
 
 interface CareerOSPreviewProps {
   currentRole: string;
@@ -143,7 +145,7 @@ export function CareerOSPreview({
           <div className="mt-5 rounded-2xl border border-primary/10 bg-primary/[0.035] p-4">
             <div className="flex gap-3">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                <Sparkles className="h-4 w-4 text-primary" />
+                <Image src={brandLogo} alt="Brand-logo" className="ml-1 w-4 h-4 md:w-5 md:h-5 brightness-0 dark:invert" height={20} width={20}/>
               </div>
 
               <div>
