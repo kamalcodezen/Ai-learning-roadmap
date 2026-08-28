@@ -543,14 +543,6 @@ export type DiagnosticAttemptUpdateOneWithoutQuestionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DiagnosticAttemptUpdateToOneWithWhereWithoutQuestionsInput, Prisma.DiagnosticAttemptUpdateWithoutQuestionsInput>, Prisma.DiagnosticAttemptUncheckedUpdateWithoutQuestionsInput>
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type DiagnosticAttemptCreateNestedOneWithoutAnswersInput = {
   create?: Prisma.XOR<Prisma.DiagnosticAttemptCreateWithoutAnswersInput, Prisma.DiagnosticAttemptUncheckedCreateWithoutAnswersInput>
   connectOrCreate?: Prisma.DiagnosticAttemptCreateOrConnectWithoutAnswersInput

@@ -55,6 +55,7 @@ export const ModelName = {
   session: 'session',
   user: 'user',
   verification: 'verification',
+  twoFactor: 'twoFactor',
   CareerProfile: 'CareerProfile',
   DiagnosticQuestion: 'DiagnosticQuestion',
   DiagnosticAttempt: 'DiagnosticAttempt',
@@ -95,6 +96,7 @@ export const AccountScalarFieldEnum = {
   refreshTokenExpiresAt: 'refreshTokenExpiresAt',
   scope: 'scope',
   password: 'password',
+  issuer: 'issuer',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -123,7 +125,8 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  twoFactorEnabled: 'twoFactorEnabled'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -139,6 +142,19 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const TwoFactorScalarFieldEnum = {
+  id: 'id',
+  secret: 'secret',
+  backupCodes: 'backupCodes',
+  userId: 'userId',
+  verified: 'verified',
+  failedVerificationCount: 'failedVerificationCount',
+  lockedUntil: 'lockedUntil'
+} as const
+
+export type TwoFactorScalarFieldEnum = (typeof TwoFactorScalarFieldEnum)[keyof typeof TwoFactorScalarFieldEnum]
 
 
 export const CareerProfileScalarFieldEnum = {

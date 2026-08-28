@@ -32,6 +32,7 @@ export type UserMinAggregateOutputType = {
   image: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  twoFactorEnabled: boolean | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -42,6 +43,7 @@ export type UserMaxAggregateOutputType = {
   image: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  twoFactorEnabled: boolean | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -52,6 +54,7 @@ export type UserCountAggregateOutputType = {
   image: number
   createdAt: number
   updatedAt: number
+  twoFactorEnabled: number
   _all: number
 }
 
@@ -64,6 +67,7 @@ export type UserMinAggregateInputType = {
   image?: true
   createdAt?: true
   updatedAt?: true
+  twoFactorEnabled?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -74,6 +78,7 @@ export type UserMaxAggregateInputType = {
   image?: true
   createdAt?: true
   updatedAt?: true
+  twoFactorEnabled?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -84,6 +89,7 @@ export type UserCountAggregateInputType = {
   image?: true
   createdAt?: true
   updatedAt?: true
+  twoFactorEnabled?: true
   _all?: true
 }
 
@@ -167,6 +173,7 @@ export type UserGroupByOutputType = {
   image: string | null
   createdAt: Date
   updatedAt: Date
+  twoFactorEnabled: boolean | null
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -198,6 +205,7 @@ export type userWhereInput = {
   image?: Prisma.StringNullableFilter<"user"> | string | null
   createdAt?: Prisma.DateTimeFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"user"> | Date | string
+  twoFactorEnabled?: Prisma.BoolNullableFilter<"user"> | boolean | null
   account?: Prisma.AccountListRelationFilter
   session?: Prisma.SessionListRelationFilter
   careerProfile?: Prisma.XOR<Prisma.CareerProfileNullableScalarRelationFilter, Prisma.CareerProfileWhereInput> | null
@@ -207,6 +215,7 @@ export type userWhereInput = {
   projects?: Prisma.ProjectListRelationFilter
   activityLogs?: Prisma.ActivityLogListRelationFilter
   skillStateHistories?: Prisma.SkillStateHistoryListRelationFilter
+  twoFactors?: Prisma.TwoFactorListRelationFilter
 }
 
 export type userOrderByWithRelationInput = {
@@ -217,6 +226,7 @@ export type userOrderByWithRelationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  twoFactorEnabled?: Prisma.SortOrderInput | Prisma.SortOrder
   account?: Prisma.accountOrderByRelationAggregateInput
   session?: Prisma.sessionOrderByRelationAggregateInput
   careerProfile?: Prisma.CareerProfileOrderByWithRelationInput
@@ -226,6 +236,7 @@ export type userOrderByWithRelationInput = {
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   activityLogs?: Prisma.ActivityLogOrderByRelationAggregateInput
   skillStateHistories?: Prisma.SkillStateHistoryOrderByRelationAggregateInput
+  twoFactors?: Prisma.twoFactorOrderByRelationAggregateInput
 }
 
 export type userWhereUniqueInput = Prisma.AtLeast<{
@@ -239,6 +250,7 @@ export type userWhereUniqueInput = Prisma.AtLeast<{
   image?: Prisma.StringNullableFilter<"user"> | string | null
   createdAt?: Prisma.DateTimeFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"user"> | Date | string
+  twoFactorEnabled?: Prisma.BoolNullableFilter<"user"> | boolean | null
   account?: Prisma.AccountListRelationFilter
   session?: Prisma.SessionListRelationFilter
   careerProfile?: Prisma.XOR<Prisma.CareerProfileNullableScalarRelationFilter, Prisma.CareerProfileWhereInput> | null
@@ -248,6 +260,7 @@ export type userWhereUniqueInput = Prisma.AtLeast<{
   projects?: Prisma.ProjectListRelationFilter
   activityLogs?: Prisma.ActivityLogListRelationFilter
   skillStateHistories?: Prisma.SkillStateHistoryListRelationFilter
+  twoFactors?: Prisma.TwoFactorListRelationFilter
 }, "id" | "email">
 
 export type userOrderByWithAggregationInput = {
@@ -258,6 +271,7 @@ export type userOrderByWithAggregationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  twoFactorEnabled?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.userCountOrderByAggregateInput
   _max?: Prisma.userMaxOrderByAggregateInput
   _min?: Prisma.userMinOrderByAggregateInput
@@ -274,6 +288,7 @@ export type userScalarWhereWithAggregatesInput = {
   image?: Prisma.StringNullableWithAggregatesFilter<"user"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"user"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"user"> | Date | string
+  twoFactorEnabled?: Prisma.BoolNullableWithAggregatesFilter<"user"> | boolean | null
 }
 
 export type userCreateInput = {
@@ -284,6 +299,7 @@ export type userCreateInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
@@ -293,6 +309,7 @@ export type userCreateInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateInput = {
@@ -303,6 +320,7 @@ export type userUncheckedCreateInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -312,6 +330,7 @@ export type userUncheckedCreateInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userUpdateInput = {
@@ -322,6 +341,7 @@ export type userUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
@@ -331,6 +351,7 @@ export type userUpdateInput = {
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateInput = {
@@ -341,6 +362,7 @@ export type userUncheckedUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -350,6 +372,7 @@ export type userUncheckedUpdateInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateManyInput = {
@@ -360,6 +383,7 @@ export type userCreateManyInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
 }
 
 export type userUpdateManyMutationInput = {
@@ -370,6 +394,7 @@ export type userUpdateManyMutationInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
 }
 
 export type userUncheckedUpdateManyInput = {
@@ -380,6 +405,7 @@ export type userUncheckedUpdateManyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
 }
 
 export type UserScalarRelationFilter = {
@@ -395,6 +421,7 @@ export type userCountOrderByAggregateInput = {
   image?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  twoFactorEnabled?: Prisma.SortOrder
 }
 
 export type userMaxOrderByAggregateInput = {
@@ -405,6 +432,7 @@ export type userMaxOrderByAggregateInput = {
   image?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  twoFactorEnabled?: Prisma.SortOrder
 }
 
 export type userMinOrderByAggregateInput = {
@@ -415,6 +443,7 @@ export type userMinOrderByAggregateInput = {
   image?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  twoFactorEnabled?: Prisma.SortOrder
 }
 
 export type userCreateNestedOneWithoutAccountInput = {
@@ -447,6 +476,24 @@ export type userUpdateOneRequiredWithoutSessionNestedInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
+}
+
+export type userCreateNestedOneWithoutTwoFactorsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutTwoFactorsInput, Prisma.userUncheckedCreateWithoutTwoFactorsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutTwoFactorsInput
+  connect?: Prisma.userWhereUniqueInput
+}
+
+export type userUpdateOneRequiredWithoutTwoFactorsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutTwoFactorsInput, Prisma.userUncheckedCreateWithoutTwoFactorsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutTwoFactorsInput
+  upsert?: Prisma.userUpsertWithoutTwoFactorsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutTwoFactorsInput, Prisma.userUpdateWithoutTwoFactorsInput>, Prisma.userUncheckedUpdateWithoutTwoFactorsInput>
 }
 
 export type userCreateNestedOneWithoutCareerProfileInput = {
@@ -555,6 +602,7 @@ export type userCreateWithoutAccountInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
@@ -563,6 +611,7 @@ export type userCreateWithoutAccountInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutAccountInput = {
@@ -573,6 +622,7 @@ export type userUncheckedCreateWithoutAccountInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
@@ -581,6 +631,7 @@ export type userUncheckedCreateWithoutAccountInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutAccountInput = {
@@ -607,6 +658,7 @@ export type userUpdateWithoutAccountInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
@@ -615,6 +667,7 @@ export type userUpdateWithoutAccountInput = {
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutAccountInput = {
@@ -625,6 +678,7 @@ export type userUncheckedUpdateWithoutAccountInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
@@ -633,6 +687,7 @@ export type userUncheckedUpdateWithoutAccountInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutSessionInput = {
@@ -643,6 +698,7 @@ export type userCreateWithoutSessionInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
@@ -651,6 +707,7 @@ export type userCreateWithoutSessionInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSessionInput = {
@@ -661,6 +718,7 @@ export type userUncheckedCreateWithoutSessionInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
@@ -669,6 +727,7 @@ export type userUncheckedCreateWithoutSessionInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSessionInput = {
@@ -695,6 +754,7 @@ export type userUpdateWithoutSessionInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
@@ -703,6 +763,7 @@ export type userUpdateWithoutSessionInput = {
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSessionInput = {
@@ -713,7 +774,105 @@ export type userUncheckedUpdateWithoutSessionInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
+  roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type userCreateWithoutTwoFactorsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
+  account?: Prisma.accountCreateNestedManyWithoutUserInput
+  session?: Prisma.sessionCreateNestedManyWithoutUserInput
+  careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
+  roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+}
+
+export type userUncheckedCreateWithoutTwoFactorsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
+  account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
+  roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type userCreateOrConnectWithoutTwoFactorsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutTwoFactorsInput, Prisma.userUncheckedCreateWithoutTwoFactorsInput>
+}
+
+export type userUpsertWithoutTwoFactorsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutTwoFactorsInput, Prisma.userUncheckedUpdateWithoutTwoFactorsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutTwoFactorsInput, Prisma.userUncheckedCreateWithoutTwoFactorsInput>
+  where?: Prisma.userWhereInput
+}
+
+export type userUpdateToOneWithWhereWithoutTwoFactorsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutTwoFactorsInput, Prisma.userUncheckedUpdateWithoutTwoFactorsInput>
+}
+
+export type userUpdateWithoutTwoFactorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  account?: Prisma.accountUpdateManyWithoutUserNestedInput
+  session?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
+  roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type userUncheckedUpdateWithoutTwoFactorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
@@ -731,6 +890,7 @@ export type userCreateWithoutCareerProfileInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
@@ -739,6 +899,7 @@ export type userCreateWithoutCareerProfileInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutCareerProfileInput = {
@@ -749,6 +910,7 @@ export type userUncheckedCreateWithoutCareerProfileInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
@@ -757,6 +919,7 @@ export type userUncheckedCreateWithoutCareerProfileInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutCareerProfileInput = {
@@ -783,6 +946,7 @@ export type userUpdateWithoutCareerProfileInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
@@ -791,6 +955,7 @@ export type userUpdateWithoutCareerProfileInput = {
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutCareerProfileInput = {
@@ -801,6 +966,7 @@ export type userUncheckedUpdateWithoutCareerProfileInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
@@ -809,6 +975,7 @@ export type userUncheckedUpdateWithoutCareerProfileInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutDiagnosticAttemptsInput = {
@@ -819,6 +986,7 @@ export type userCreateWithoutDiagnosticAttemptsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
@@ -827,6 +995,7 @@ export type userCreateWithoutDiagnosticAttemptsInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutDiagnosticAttemptsInput = {
@@ -837,6 +1006,7 @@ export type userUncheckedCreateWithoutDiagnosticAttemptsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -845,6 +1015,7 @@ export type userUncheckedCreateWithoutDiagnosticAttemptsInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutDiagnosticAttemptsInput = {
@@ -871,6 +1042,7 @@ export type userUpdateWithoutDiagnosticAttemptsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
@@ -879,6 +1051,7 @@ export type userUpdateWithoutDiagnosticAttemptsInput = {
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutDiagnosticAttemptsInput = {
@@ -889,6 +1062,7 @@ export type userUncheckedUpdateWithoutDiagnosticAttemptsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -897,6 +1071,7 @@ export type userUncheckedUpdateWithoutDiagnosticAttemptsInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutSkillStatesInput = {
@@ -907,6 +1082,7 @@ export type userCreateWithoutSkillStatesInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
@@ -915,6 +1091,7 @@ export type userCreateWithoutSkillStatesInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSkillStatesInput = {
@@ -925,6 +1102,7 @@ export type userUncheckedCreateWithoutSkillStatesInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -933,6 +1111,7 @@ export type userUncheckedCreateWithoutSkillStatesInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSkillStatesInput = {
@@ -959,6 +1138,7 @@ export type userUpdateWithoutSkillStatesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
@@ -967,6 +1147,7 @@ export type userUpdateWithoutSkillStatesInput = {
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSkillStatesInput = {
@@ -977,6 +1158,7 @@ export type userUncheckedUpdateWithoutSkillStatesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -985,6 +1167,7 @@ export type userUncheckedUpdateWithoutSkillStatesInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutRoadmapsInput = {
@@ -995,6 +1178,7 @@ export type userCreateWithoutRoadmapsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
@@ -1003,6 +1187,7 @@ export type userCreateWithoutRoadmapsInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutRoadmapsInput = {
@@ -1013,6 +1198,7 @@ export type userUncheckedCreateWithoutRoadmapsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1021,6 +1207,7 @@ export type userUncheckedCreateWithoutRoadmapsInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutRoadmapsInput = {
@@ -1047,6 +1234,7 @@ export type userUpdateWithoutRoadmapsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
@@ -1055,6 +1243,7 @@ export type userUpdateWithoutRoadmapsInput = {
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutRoadmapsInput = {
@@ -1065,6 +1254,7 @@ export type userUncheckedUpdateWithoutRoadmapsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1073,6 +1263,7 @@ export type userUncheckedUpdateWithoutRoadmapsInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutProjectsInput = {
@@ -1083,6 +1274,7 @@ export type userCreateWithoutProjectsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
@@ -1091,6 +1283,7 @@ export type userCreateWithoutProjectsInput = {
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutProjectsInput = {
@@ -1101,6 +1294,7 @@ export type userUncheckedCreateWithoutProjectsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1109,6 +1303,7 @@ export type userUncheckedCreateWithoutProjectsInput = {
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutProjectsInput = {
@@ -1135,6 +1330,7 @@ export type userUpdateWithoutProjectsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
@@ -1143,6 +1339,7 @@ export type userUpdateWithoutProjectsInput = {
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutProjectsInput = {
@@ -1153,6 +1350,7 @@ export type userUncheckedUpdateWithoutProjectsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1161,6 +1359,7 @@ export type userUncheckedUpdateWithoutProjectsInput = {
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutActivityLogsInput = {
@@ -1171,6 +1370,7 @@ export type userCreateWithoutActivityLogsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
@@ -1179,6 +1379,7 @@ export type userCreateWithoutActivityLogsInput = {
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutActivityLogsInput = {
@@ -1189,6 +1390,7 @@ export type userUncheckedCreateWithoutActivityLogsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1197,6 +1399,7 @@ export type userUncheckedCreateWithoutActivityLogsInput = {
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutActivityLogsInput = {
@@ -1223,6 +1426,7 @@ export type userUpdateWithoutActivityLogsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
@@ -1231,6 +1435,7 @@ export type userUpdateWithoutActivityLogsInput = {
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutActivityLogsInput = {
@@ -1241,6 +1446,7 @@ export type userUncheckedUpdateWithoutActivityLogsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1249,6 +1455,7 @@ export type userUncheckedUpdateWithoutActivityLogsInput = {
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutSkillStateHistoriesInput = {
@@ -1259,6 +1466,7 @@ export type userCreateWithoutSkillStateHistoriesInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
@@ -1267,6 +1475,7 @@ export type userCreateWithoutSkillStateHistoriesInput = {
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSkillStateHistoriesInput = {
@@ -1277,6 +1486,7 @@ export type userUncheckedCreateWithoutSkillStateHistoriesInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1285,6 +1495,7 @@ export type userUncheckedCreateWithoutSkillStateHistoriesInput = {
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSkillStateHistoriesInput = {
@@ -1311,6 +1522,7 @@ export type userUpdateWithoutSkillStateHistoriesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
@@ -1319,6 +1531,7 @@ export type userUpdateWithoutSkillStateHistoriesInput = {
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSkillStateHistoriesInput = {
@@ -1329,6 +1542,7 @@ export type userUncheckedUpdateWithoutSkillStateHistoriesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1337,6 +1551,7 @@ export type userUncheckedUpdateWithoutSkillStateHistoriesInput = {
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1353,6 +1568,7 @@ export type UserCountOutputType = {
   projects: number
   activityLogs: number
   skillStateHistories: number
+  twoFactors: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1364,6 +1580,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   projects?: boolean | UserCountOutputTypeCountProjectsArgs
   activityLogs?: boolean | UserCountOutputTypeCountActivityLogsArgs
   skillStateHistories?: boolean | UserCountOutputTypeCountSkillStateHistoriesArgs
+  twoFactors?: boolean | UserCountOutputTypeCountTwoFactorsArgs
 }
 
 /**
@@ -1432,6 +1649,13 @@ export type UserCountOutputTypeCountSkillStateHistoriesArgs<ExtArgs extends runt
   where?: Prisma.SkillStateHistoryWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTwoFactorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.twoFactorWhereInput
+}
+
 
 export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1441,6 +1665,7 @@ export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  twoFactorEnabled?: boolean
   account?: boolean | Prisma.user$accountArgs<ExtArgs>
   session?: boolean | Prisma.user$sessionArgs<ExtArgs>
   careerProfile?: boolean | Prisma.user$careerProfileArgs<ExtArgs>
@@ -1450,6 +1675,7 @@ export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   projects?: boolean | Prisma.user$projectsArgs<ExtArgs>
   activityLogs?: boolean | Prisma.user$activityLogsArgs<ExtArgs>
   skillStateHistories?: boolean | Prisma.user$skillStateHistoriesArgs<ExtArgs>
+  twoFactors?: boolean | Prisma.user$twoFactorsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1461,6 +1687,7 @@ export type userSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  twoFactorEnabled?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type userSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1471,6 +1698,7 @@ export type userSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  twoFactorEnabled?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type userSelectScalar = {
@@ -1481,9 +1709,10 @@ export type userSelectScalar = {
   image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  twoFactorEnabled?: boolean
 }
 
-export type userOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type userOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "twoFactorEnabled", ExtArgs["result"]["user"]>
 export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   account?: boolean | Prisma.user$accountArgs<ExtArgs>
   session?: boolean | Prisma.user$sessionArgs<ExtArgs>
@@ -1494,6 +1723,7 @@ export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   projects?: boolean | Prisma.user$projectsArgs<ExtArgs>
   activityLogs?: boolean | Prisma.user$activityLogsArgs<ExtArgs>
   skillStateHistories?: boolean | Prisma.user$skillStateHistoriesArgs<ExtArgs>
+  twoFactors?: boolean | Prisma.user$twoFactorsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type userIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1511,6 +1741,7 @@ export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     projects: Prisma.$ProjectPayload<ExtArgs>[]
     activityLogs: Prisma.$ActivityLogPayload<ExtArgs>[]
     skillStateHistories: Prisma.$SkillStateHistoryPayload<ExtArgs>[]
+    twoFactors: Prisma.$twoFactorPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1520,6 +1751,7 @@ export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     image: string | null
     createdAt: Date
     updatedAt: Date
+    twoFactorEnabled: boolean | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1923,6 +2155,7 @@ export interface Prisma__userClient<T, Null = never, ExtArgs extends runtime.Typ
   projects<T extends Prisma.user$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activityLogs<T extends Prisma.user$activityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   skillStateHistories<T extends Prisma.user$skillStateHistoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$skillStateHistoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SkillStateHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  twoFactors<T extends Prisma.user$twoFactorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$twoFactorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$twoFactorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1959,6 +2192,7 @@ export interface userFieldRefs {
   readonly image: Prisma.FieldRef<"user", 'String'>
   readonly createdAt: Prisma.FieldRef<"user", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"user", 'DateTime'>
+  readonly twoFactorEnabled: Prisma.FieldRef<"user", 'Boolean'>
 }
     
 
@@ -2560,6 +2794,30 @@ export type user$skillStateHistoriesArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.SkillStateHistoryScalarFieldEnum | Prisma.SkillStateHistoryScalarFieldEnum[]
+}
+
+/**
+ * user.twoFactors
+ */
+export type user$twoFactorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the twoFactor
+   */
+  select?: Prisma.twoFactorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the twoFactor
+   */
+  omit?: Prisma.twoFactorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.twoFactorInclude<ExtArgs> | null
+  where?: Prisma.twoFactorWhereInput
+  orderBy?: Prisma.twoFactorOrderByWithRelationInput | Prisma.twoFactorOrderByWithRelationInput[]
+  cursor?: Prisma.twoFactorWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TwoFactorScalarFieldEnum | Prisma.TwoFactorScalarFieldEnum[]
 }
 
 /**
