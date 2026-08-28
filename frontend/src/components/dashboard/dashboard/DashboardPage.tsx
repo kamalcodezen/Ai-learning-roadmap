@@ -16,6 +16,9 @@ import CareerAlignmentCard from "../CareerAlignmentCard";
 import ApplicationReadinessCard from "../ApplicationReadinessCard";
 import PortfolioStrengthCard from "../PortfolioStrengthCard";
 import ChatBox from "@/src/components/chat/ChatBox";
+import WelcomeStatsSection from "../home/WelcomeStatsSection"
+import OverallProgress from "../home/OverallProgress"
+import ShortRoadmap from "../home/ShortRoadmap";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({
@@ -46,21 +49,24 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-5 pb-4 animate-in fade-in duration-500">
-      <DashboardHeader user={userToPass} career={data.career} />
+      <WelcomeStatsSection readiness={data.readiness} />
 
       {/* High Priority Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="col-auto lg:col-span-1  ">
-          <CareerReadinessCard data={data.readiness} role={data.career.targetRole} />
+          <div className="flex flex-col gap-6 h-full">
+            {/* <CareerReadinessCard data={data.readiness} role={data.career.targetRole} /> */}
+            <OverallProgress value={data.readiness.score} role={data.career.targetRole} />
+          </div>
         </div>
         <div className="col-auto lg:col-span-1  h-full flex">
           <div className="w-full h-full flex-1">
             <NextBestActionCard data={data.nextAction} />
           </div>
         </div>
-        <div className="col-auto lg:col-span-2 h-full flex">
+        <div className="col-auto lg:col-span-1 h-full flex">
           <div className="w-full h-full flex-1">
-            <RoadmapPreview data={data.roadmap} />
+            <ShortRoadmap data={data.roadmap} />
           </div>
         </div>
       </div>
@@ -74,10 +80,10 @@ export default async function DashboardPage() {
         <AssessmentProgressCard data={data.assessments} />
 
         {/* Row 3 */}
-        <CareerAlignmentCard data={data.careerAlignment} />
+        {/* <CareerAlignmentCard data={data.careerAlignment} />
         <SkillProofPreview data={data.proof} />
         <ApplicationReadinessCard data={data.applicationReadiness} />
-        <PortfolioStrengthCard data={data.portfolio} />
+        <PortfolioStrengthCard data={data.portfolio} /> */}
       </div>
 
       {/* Dedicated AI Copilot Section */}
