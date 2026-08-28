@@ -28,6 +28,7 @@ model account {
   refreshTokenExpiresAt DateTime? @db.Timestamptz(6)
   scope                 String?
   password              String?
+  issuer                String?
   createdAt             DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt             DateTime  @default(now()) @db.Timestamptz(6)
 
@@ -60,13 +61,14 @@ model session {
 // ============================================================
 
 model user {
-  id            String   @id
-  name          String
-  email         String   @unique
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt     DateTime @default(now()) @db.Timestamptz(6)
+  id               String   @id
+  name             String
+  email            String   @unique
+  emailVerified    Boolean
+  image            String?
+  createdAt        DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime @default(now()) @db.Timestamptz(6)
+  twoFactorEnabled Boolean?
 
   account account[]
   session session[]
@@ -83,6 +85,7 @@ model user {
   projects            Project[]
   activityLogs        ActivityLog[]
   skillStateHistories SkillStateHistory[]
+  twoFactors          twoFactor[]
 }
 
 // ============================================================
@@ -98,6 +101,24 @@ model verification {
   updatedAt  DateTime @default(now()) @db.Timestamptz(6)
 
   @@index([identifier])
+}
+
+// ============================================================
+// BETTER AUTH — TWO FACTOR
+// ============================================================
+
+model twoFactor {
+  id          String @id
+  secret                  String
+  backupCodes             String
+  userId                  String
+  verified                Boolean   @default(false)
+  failedVerificationCount Int?
+  lockedUntil             DateTime? @db.Timestamptz(6)
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
 }
 
 // ============================================================
@@ -297,7 +318,7 @@ model Project {
 
   title       String
   description String?
-  
+
   repositoryUrl String?
   liveUrl       String?
 
@@ -321,7 +342,7 @@ model ActivityLog {
 
   type        String // e.g., "ASSESSMENT", "LEARNING", "PROJECT", "PRACTICE"
   description String?
-  
+
   metadata Json?
 
   createdAt DateTime @default(now()) @db.Timestamptz(6)
