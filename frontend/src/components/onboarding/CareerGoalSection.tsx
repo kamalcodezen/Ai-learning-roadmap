@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
   Check,
   ChevronDown,
@@ -14,6 +17,9 @@ import {
   type CareerTrackCategory,
 } from "@/src/components/onboarding/careerTracks";
 
+import { Card } from "@/src/components/ui/Card";
+import { BorderBeam } from "@/src/components/ui/border-beam";
+
 interface CareerGoalSectionProps {
   selectedTrack: string;
   showAllTracks: boolean;
@@ -29,6 +35,118 @@ interface CareerGoalSectionProps {
   filteredTracks: { id: string; title: string; description: string }[];
   handleTrackSelect: (trackId: string) => void;
   handleCustomGoalSelect: () => void;
+}
+
+interface TrackCardProps {
+  id: string;
+  title: string;
+  description: string;
+  selected: boolean;
+  onSelect: (trackId: string) => void;
+}
+
+/**
+ * Selectable career track card. Shows the MagicUI border beams running
+ * along the edges while hovered (beams mount/unmount on hover).
+ */
+function TrackCard({ id, title, description, selected, onSelect }: TrackCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <button
+      type="button"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => onSelect(id)}
+      className={`
+        group
+        relative
+        overflow-hidden
+        rounded-2xl
+        border
+        p-5
+        text-left
+        transition-all
+        duration-300
+        ${
+          selected
+            ? "border-primary/50 bg-primary/[0.08] shadow-[0_0_35px_rgba(206,255,31,0.08)]"
+            : "border-border bg-card-soft hover:-translate-y-0.5 hover:bg-muted"
+        }
+      `}
+    >
+      {isHovered && (
+        <>
+          <BorderBeam
+            duration={6}
+            size={300}
+            borderWidth={2}
+            className="from-transparent via-[#9F54F7] to-transparent"
+          />
+          <BorderBeam
+            duration={6}
+            delay={3}
+            size={300}
+            borderWidth={2}
+            className="from-transparent via-[#c084fc] to-transparent"
+          />
+        </>
+      )}
+
+      {selected && (
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.08] via-transparent to-transparent" />
+      )}
+
+      <div className="relative">
+        <div className="mb-5 flex items-center justify-between">
+          <div
+            className={`
+              flex
+              h-8
+              w-8
+              items-center
+              justify-center
+              rounded-lg
+              ${
+                selected
+                  ? "bg-primary text-[#131824]"
+                  : "bg-muted text-muted-foreground"
+              }
+            `}
+          >
+            <Sparkles className="h-4 w-4" />
+          </div>
+
+          <span
+            className={`
+              flex
+              h-5
+              w-5
+              items-center
+              justify-center
+              rounded-full
+              border
+              ${
+                selected
+                  ? "border-primary bg-primary text-white"
+                  : "border-border bg-background"
+              }
+            `}
+          >
+            {selected && <Check className="h-3 w-3" />}
+          </span>
+        </div>
+
+        <h3 className="text-sm font-semibold sm:text-base">
+          {title}
+        </h3>
+
+        <p className="mt-2 text-xs leading-5 text-muted-foreground">
+          {description}
+        </p>
+      </div>
+    </button>
+  );
 }
 
 export function CareerGoalSection({
@@ -48,18 +166,14 @@ export function CareerGoalSection({
   handleCustomGoalSelect,
 }: CareerGoalSectionProps) {
   return (
-    <section
-      className="
-        rounded-[28px]
-        border
-        border-border
-        bg-card/80
-        p-5
-        shadow-[var(--shadow)]
-        backdrop-blur-xl
-        sm:p-7
-      "
+    <Card
+      mouseGlow
+      className="group relative overflow-hidden rounded-md p-5 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)] sm:p-7"
     >
+      {/* Corner shape */}
+      <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
+
+      <div className="relative z-10">
       <div className="mb-6 flex items-start gap-4">
         <div
           className="
@@ -79,12 +193,12 @@ export function CareerGoalSection({
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold sm:text-xl">
+          <h2 className="text-xl font-semibold">
             What do you want to become?
           </h2>
 
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            Choose the career direction CareerOS should optimize your
+            Choose the career direction AI Pather should optimize your
             learning path for.
           </p>
         </div>
@@ -97,80 +211,14 @@ export function CareerGoalSection({
               const selected = selectedTrack === track.id;
 
               return (
-                <button
+                <TrackCard
                   key={track.id}
-                  type="button"
-                  onClick={() => handleTrackSelect(track.id)}
-                  className={`
-                    group
-                    relative
-                    overflow-hidden
-                    rounded-2xl
-                    border
-                    p-5
-                    text-left
-                    transition-all
-                    duration-300
-                    ${
-                      selected
-                        ? "border-primary/50 bg-primary/[0.08] shadow-[0_0_35px_rgba(206,255,31,0.08)]"
-                        : "border-border bg-card-soft hover:-translate-y-0.5 hover:border-primary/30 hover:bg-muted"
-                    }
-                  `}
-                >
-                  {selected && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.08] via-transparent to-transparent" />
-                  )}
-
-                  <div className="relative">
-                    <div className="mb-5 flex items-center justify-between">
-                      <div
-                        className={`
-                          flex
-                          h-8
-                          w-8
-                          items-center
-                          justify-center
-                          rounded-lg
-                          ${
-                            selected
-                              ? "bg-primary text-secondary"
-                              : "bg-muted text-muted-foreground"
-                          }
-                        `}
-                      >
-                        <Sparkles className="h-4 w-4" />
-                      </div>
-
-                      <span
-                        className={`
-                          flex
-                          h-5
-                          w-5
-                          items-center
-                          justify-center
-                          rounded-full
-                          border
-                          ${
-                            selected
-                              ? "border-primary bg-primary text-secondary"
-                              : "border-border bg-background"
-                          }
-                        `}
-                      >
-                        {selected && <Check className="h-3 w-3" />}
-                      </span>
-                    </div>
-
-                    <h3 className="text-sm font-semibold sm:text-base">
-                      {track.title}
-                    </h3>
-
-                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                      {track.description}
-                    </p>
-                  </div>
-                </button>
+                  id={track.id}
+                  title={track.title}
+                  description={track.description}
+                  selected={selected}
+                  onSelect={handleTrackSelect}
+                />
               );
             })}
           </div>
@@ -234,7 +282,7 @@ export function CareerGoalSection({
         <div className="rounded-2xl border border-border bg-card-soft p-4 sm:p-5">
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h3 className="font-semibold">Explore Career Tracks</h3>
+              <h3 className="text-base font-semibold">Explore Career Tracks</h3>
 
               <p className="mt-1 text-xs text-muted-foreground">
                 Find the direction that best matches your goal.
@@ -291,7 +339,7 @@ export function CareerGoalSection({
                 transition
                 ${
                   activeCategory === "all"
-                    ? "border-primary bg-primary text-secondary"
+                    ? "border-transparent bg-[#1c1c1c] text-white dark:bg-[#2d2d2d] dark:text-white"
                     : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
                 }
               `}
@@ -315,7 +363,7 @@ export function CareerGoalSection({
                   transition
                   ${
                     activeCategory === category.id
-                      ? "border-primary bg-primary text-secondary"
+                      ? "border-transparent bg-[#1c1c1c] text-white dark:bg-[#2d2d2d] dark:text-white"
                       : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
                   }
                 `}
@@ -370,7 +418,7 @@ export function CareerGoalSection({
                         border
                         ${
                           selected
-                            ? "border-primary bg-primary text-secondary"
+                            ? "border-primary bg-primary text-white"
                             : "border-border"
                         }
                       `}
@@ -438,13 +486,13 @@ export function CareerGoalSection({
                 <Plus className="h-3.5 w-3.5 text-primary" />
               </div>
 
-              <h3 className="font-semibold">
+              <h3 className="text-base font-semibold">
                 Create your custom career goal
               </h3>
             </div>
 
             <p className="text-xs leading-5 text-muted-foreground">
-              Describe the role you want. CareerOS will use it as
+              Describe the role you want. AI Pather will use it as
               context for your personalized diagnostic.
             </p>
           </div>
@@ -464,6 +512,7 @@ export function CareerGoalSection({
           </div>
         </div>
       )}
-    </section>
+      </div>
+    </Card>
   );
 }
