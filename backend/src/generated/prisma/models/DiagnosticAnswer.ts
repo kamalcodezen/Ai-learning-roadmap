@@ -431,10 +431,6 @@ export type DiagnosticAnswerUncheckedUpdateManyWithoutAttemptNestedInput = {
   deleteMany?: Prisma.DiagnosticAnswerScalarWhereInput | Prisma.DiagnosticAnswerScalarWhereInput[]
 }
 
-export type NullableBoolFieldUpdateOperationsInput = {
-  set?: boolean | null
-}
-
 export type DiagnosticAnswerCreateWithoutQuestionInput = {
   id?: string
   selectedAnswer: string
