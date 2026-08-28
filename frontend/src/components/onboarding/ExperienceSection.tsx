@@ -1,5 +1,7 @@
 import { BrainCircuit, Check, Zap } from "lucide-react";
 
+import { Card } from "@/src/components/ui/Card";
+
 export type ExperienceLevel = "beginner" | "intermediate";
 
 export const experienceLevels: {
@@ -30,31 +32,24 @@ interface ExperienceSectionProps {
 
 export function ExperienceSection({ experience, setExperience }: ExperienceSectionProps) {
   return (
-    <section
-      className="
-        rounded-[28px]
-        border
-        border-border
-        bg-card/80
-        p-5
-        shadow-[var(--shadow)]
-        backdrop-blur-xl
-        sm:p-7
-      "
+    <Card
+      mouseGlow
+      className="group relative overflow-hidden rounded-md p-5 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)] sm:p-7"
     >
+      <div className="relative z-10">
       <div className="mb-6">
         <div className="mb-2 flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
             <BrainCircuit className="h-4 w-4 text-primary" />
           </div>
 
-          <h2 className="text-lg font-semibold sm:text-xl">
+          <h2 className="text-xl font-semibold">
             What is your current level?
           </h2>
         </div>
 
         <p className="text-sm text-muted-foreground">
-          This helps CareerOS calibrate your initial diagnostic.
+          This helps AI Pather calibrate your initial diagnostic.
         </p>
       </div>
 
@@ -137,6 +132,7 @@ export function ExperienceSection({ experience, setExperience }: ExperienceSecti
           );
         })}
       </div>
-    </section>
+      </div>
+    </Card>
   );
 }

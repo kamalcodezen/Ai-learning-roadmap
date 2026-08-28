@@ -1,0 +1,93 @@
+/* Adapted from Uiverse.io by Li-Deheng — the next-arrow button effect,
+   applied permanently (always running, not gated behind :hover).
+   A soft pulsing shadow ring is used instead of the original rectangular
+   outline so it follows the button's rounded corners. */
+
+.diagnostic-btn {
+  --color-text: #ffffff;
+  --color-shadow: #00000040;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  font-family: "Poppins", var(--font-family-primary), sans-serif;
+  font-weight: 700;
+  color: var(--color-text);
+  background: var(--color-primary);
+  animation: pulse-ring 1.4s ease-in-out infinite;
+  transition: all 0.8s ease;
+}
+
+.diagnostic-btn:active {
+  transform: scale(0.95);
+}
+
+.diagnostic-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+  box-shadow: none;
+  animation: none;
+}
+
+.diagnostic-btn:disabled svg {
+  margin-right: -0.16em;
+}
+
+.diagnostic-btn:disabled svg polygon {
+  animation: none;
+}
+
+.diagnostic-btn span {
+  margin-right: 0.3em;
+  transition: 0.5s;
+  text-shadow: 5px 5px 5px var(--color-shadow);
+}
+
+.diagnostic-btn svg {
+  height: 0.8em;
+  margin-right: 0.66em;
+  position: relative;
+  transition: 0.5s;
+  filter: drop-shadow(5px 5px 2.5px var(--color-shadow));
+}
+
+.diagnostic-btn svg polygon {
+  fill: var(--color-text);
+}
+
+.diagnostic-btn svg polygon:nth-child(1) {
+  animation: opacity 1s infinite 0.6s;
+}
+
+.diagnostic-btn svg polygon:nth-child(2) {
+  animation: opacity 1s infinite 0.4s;
+}
+
+.diagnostic-btn svg polygon:nth-child(3) {
+  animation: opacity 1s infinite 0.2s;
+}
+
+@keyframes opacity {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0.35em 0 var(--color-primary);
+  }
+  50% {
+    box-shadow: 0 0 0.9em 0 var(--color-primary);
+  }
+  100% {
+    box-shadow: 0 0 0.35em 0 var(--color-primary);
+  }
+}

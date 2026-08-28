@@ -1,4 +1,6 @@
 import { BrainCircuit, ShieldCheck, Sparkles, Target, Zap } from "lucide-react";
+
+import { Card } from "@/src/components/ui/Card";
 import type { ExperienceLevel } from "./ExperienceSection";
 
 interface CareerOSPreviewProps {
@@ -20,17 +22,11 @@ export function CareerOSPreview({
 }: CareerOSPreviewProps) {
   return (
     <aside className="xl:sticky xl:top-8 xl:self-start">
-      <div
-        className="
-          overflow-hidden
-          rounded-[28px]
-          border
-          border-border
-          bg-card/80
-          shadow-[var(--shadow)]
-          backdrop-blur-xl
-        "
+      <Card
+        mouseGlow
+        className="group relative overflow-hidden rounded-md transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]"
       >
+        <div className="relative z-10">
         <div className="border-b border-border p-5">
           <div className="flex items-center justify-between">
             <div>
@@ -181,6 +177,7 @@ export function CareerOSPreview({
           </div>
         </div>
       </div>
+    </Card>
     </aside>
   );
 }

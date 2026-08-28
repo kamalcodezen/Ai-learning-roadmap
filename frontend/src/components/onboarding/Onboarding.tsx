@@ -198,7 +198,7 @@ export default function OnboardingPage() {
   // ============================================================
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-background text-foreground">
+    <main className="relative h-screen overflow-hidden bg-background text-foreground">
       {/* ====================================================== */}
       {/* PREMIUM BACKGROUND */}
       {/* ====================================================== */}
@@ -225,8 +225,15 @@ export default function OnboardingPage() {
       {/* PAGE CONTAINER */}
       {/* ====================================================== */}
 
-      <div className="relative z-10 mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <OnboardingHeader />
+      <div className="relative z-10 mx-auto flex h-full w-[90%] max-w-screen-xl flex-col justify-center py-8">
+        <div className="overflow-hidden rounded-2xl border border-border bg-background shadow-2xl">
+          <div className="max-h-[85vh] overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
+        <OnboardingHeader
+          canContinue={canContinue}
+          selectedTrack={selectedTrack}
+          customGoal={customGoal}
+          experience={experience}
+        />
 
         {/* ==================================================== */}
         {/* MAIN GRID */}
@@ -277,6 +284,8 @@ export default function OnboardingPage() {
         />
 
         <OnboardingFooter />
+          </div>
+        </div>
       </div>
     </main>
   );
