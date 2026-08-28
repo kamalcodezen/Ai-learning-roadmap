@@ -1,6 +1,10 @@
-import { Sparkles } from "lucide-react";
+import Image from "next/image";
+
+import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 
 import type { ExperienceLevel } from "./ExperienceSection";
+import brandLogo from "../../../public/brand/AI-Pather-blue.png"
+import Link from "next/link";
 
 interface OnboardingHeaderProps {
   canContinue: boolean;
@@ -27,38 +31,57 @@ export function OnboardingHeader({
     <>
       <header className="mb-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div
-            className="
-              flex
-              h-10
-              w-10
-              items-center
-              justify-center
-              rounded-xl
-              border
-              border-primary/20
-              bg-primary/10
-              shadow-[0_0_30px_rgba(206,255,31,0.08)]
-            "
-          >
-            <Sparkles className="h-5 w-5 text-primary" />
-          </div>
+          <Link
+  className="
+    flex
+    items-center
+    gap-3
+  "
+  href="/"
+>
+  {/* Inside this div is just the logo icon box */}
+  <div
+    className="
+      flex
+      h-10
+      w-10
+      items-center
+      justify-center
+      rounded-xl
+      border
+      border-primary/20
+      bg-primary/10
+      shadow-[0_0_30px_rgba(206,255,31,0.08)]
+    "
+  >
+    <Image 
+      src={brandLogo} 
+      alt="Brand-logo" 
+      className="ml-1 w-4 h-4 md:w-5 md:h-5 brightness-0 dark:invert" 
+      height={20} 
+      width={20}
+    />
+  </div>
 
-          <div>
-            <div className="text-sm font-bold tracking-tight">AI Pather</div>
-            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-              Your learning partner
-            </div>
-          </div>
-        </div>
+  {/* This div holds the text next to the logo icon */}
+  <div>
+    <div className="text-sm font-bold tracking-tight">AI Pather</div>
+    <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+      Your learning partner
+    </div>
+  </div>
+</Link>
+</div>
+
 
         <div className="hidden items-center gap-3 sm:flex">
           <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary">
             STEP 01
           </span>
-          <span className="text-xs text-muted-foreground">
+          <span className="hidden text-xs text-muted-foreground md:inline">
             Career Profile
           </span>
+          <AnimatedThemeToggler />
         </div>
       </header>
 
