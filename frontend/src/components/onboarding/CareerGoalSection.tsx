@@ -109,7 +109,7 @@ function TrackCard({ id, title, description, selected, onSelect }: TrackCardProp
               rounded-lg
               ${
                 selected
-                  ? "bg-primary text-secondary"
+                  ? "bg-primary text-[#131824]"
                   : "bg-muted text-muted-foreground"
               }
             `}
@@ -128,7 +128,7 @@ function TrackCard({ id, title, description, selected, onSelect }: TrackCardProp
               border
               ${
                 selected
-                  ? "border-primary bg-primary text-secondary"
+                  ? "border-primary bg-primary text-white"
                   : "border-border bg-background"
               }
             `}
@@ -418,7 +418,7 @@ export function CareerGoalSection({
                         border
                         ${
                           selected
-                            ? "border-primary bg-primary text-secondary"
+                            ? "border-primary bg-primary text-white"
                             : "border-border"
                         }
                       `}
