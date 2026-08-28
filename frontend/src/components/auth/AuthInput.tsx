@@ -11,6 +11,7 @@ interface AuthInputProps {
   onChange: (value: string) => void;
   required?: boolean;
   minLength?: number;
+  maxLength?: number;
 }
 
 function EyeIcon({ visible }: { visible: boolean }) {
@@ -64,8 +65,10 @@ export default function AuthInput({
   onChange,
   required = true,
   minLength,
+  maxLength,
 }: AuthInputProps) {
   const [showPassword, setShowPassword] = useState(false);
+
 
   const isPassword = type === "password";
   const actualType = isPassword && showPassword ? "text" : type;
@@ -79,8 +82,11 @@ export default function AuthInput({
         placeholder=" "
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        autoComplete={type === "password" ? "current-password" : type === "email" ? "email" : "off"}
         required={required}
         minLength={minLength}
+        maxLength={maxLength}
+
         className="
           autofill-fix
           peer
