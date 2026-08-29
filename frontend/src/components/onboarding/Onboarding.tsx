@@ -175,7 +175,7 @@ export default function OnboardingPage() {
       // Diagnostic
       // --------------------------------------------------------
 
-      router.push("/onboarding/diagnostic");
+      router.push("/diagnostic");
     } catch (error: unknown) {
       console.error("Failed to save career profile:", error);
     } finally {
