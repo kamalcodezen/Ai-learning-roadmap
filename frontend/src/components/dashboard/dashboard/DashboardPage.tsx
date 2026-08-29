@@ -3,18 +3,11 @@ import { headers } from "next/headers";
 import { auth } from "@/src/lib/auth";
 import { getDashboardOverview } from "@/src/lib/api/dashboard";
 import { DashboardData } from "../types";
-import DashboardHeader from "../DashboardHeader";
-import CareerReadinessCard from "../CareerReadinessCard";
 import NextBestActionCard from "../NextBestActionCard";
-import RoadmapPreview from "../RoadmapPreview";
 import LearningDebtCard from "../LearningDebtCard";
 import SkillHealthCard from "../SkillHealthCard";
 import WeeklyProgressCard from "../WeeklyProgressCard";
 import AssessmentProgressCard from "../AssessmentProgressCard";
-import SkillProofPreview from "../SkillProofPreview";
-import CareerAlignmentCard from "../CareerAlignmentCard";
-import ApplicationReadinessCard from "../ApplicationReadinessCard";
-import PortfolioStrengthCard from "../PortfolioStrengthCard";
 import ChatBox from "@/src/components/chat/ChatBox";
 import WelcomeStatsSection from "../home/WelcomeStatsSection"
 import OverallProgress from "../home/OverallProgress"
@@ -42,10 +35,7 @@ export default async function DashboardPage() {
     );
   }
 
-  const userToPass = {
-    name: session.user.name || "User",
-    image: session.user.image || null,
-  };
+
 
   return (
     <div className="flex flex-col gap-5 pb-4 animate-in fade-in duration-500">
