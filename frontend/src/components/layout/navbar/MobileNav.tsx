@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
 import Logo from './Logo';
 import Button from '../../ui/button';
@@ -61,8 +62,8 @@ export default function MobileNav() {
             >
               <div className="flex flex-col items-center gap-6 pt-6 pb-2 px-4">
                 <div className="flex flex-col gap-6 w-full items-center mt-2">
-                  <a href="#" className="text-body text-muted-foreground hover:text-foreground transition-colors">About Us</a>
-                  <a href="#" className="text-body text-muted-foreground hover:text-foreground transition-colors">How it works</a>
+                  <Link href="/about" onClick={() => setIsOpen(false)} className="text-body text-muted-foreground hover:text-foreground transition-colors">About Us</Link>
+                  <Link href="/#how-it-works" onClick={() => setIsOpen(false)} className="text-body text-muted-foreground hover:text-foreground transition-colors">How it works</Link>
                 </div>
                 
                 {/* Profile Section (mobile - no background colors) */}
