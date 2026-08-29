@@ -30,8 +30,8 @@ const mistral = env.MISTRAL_API_KEY
   : null;
 
 // Models
-const GROQ_SIMPLE_MODEL = "openai/gpt-oss-20b";
-const GROQ_COMPLEX_MODEL = "qwen/qwen3.8-27b";
+const GROQ_SIMPLE_MODEL = "openai/gpt-oss-120b";
+const GROQ_COMPLEX_MODEL = "openai/gpt-oss-120b";
 const OPENROUTER_MODEL = "qwen/qwen-2.5-coder-32b-instruct";
 const GEMINI_MODEL = "gemini-3.6-flash";
 const MISTRAL_MODEL = "mistral-small-latest";
