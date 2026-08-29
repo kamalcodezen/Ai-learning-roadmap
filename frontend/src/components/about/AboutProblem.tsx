@@ -38,7 +38,7 @@ export default function AboutProblem() {
           <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground text-balance">
             The internet gave us more to learn.{" "}
             <span className="bg-linear-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
-              Not a better way to learn.
+              Not a better way to learn
             </span>
           </h2>
 
