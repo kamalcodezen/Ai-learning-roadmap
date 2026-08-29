@@ -12,14 +12,17 @@ export const metadata: Metadata = {
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SessionGuard>
-      <div className="flex min-h-screen w-full bg-background dark:bg-[#0b0f1a]">
-        <DashboardSidebar />
-        <section
-          aria-label="Dashboard content"
-          className="relative w-full min-w-0 flex-1 px-4 pt-20 pb-28 sm:px-8 md:px-12 lg:pb-10 lg:pl-[272px] lg:pr-8 lg:pt-10"
-        >
-          <div className="global-pos relative w-full">{children}</div>
-        </section>
+      <div className="h-screen w-full overflow-hidden bg-[#eae0ff] lg:pt-[15px] lg:pb-[15px] lg:pr-[15px] dark:bg-[#5b3491]">
+        <div className="flex h-full w-full overflow-hidden bg-background lg:rounded-2xl dark:bg-[#0b0f1a]">
+          <DashboardSidebar />
+          <section
+            aria-label="Dashboard content"
+            data-lenis-prevent-wheel
+            className="relative min-h-0 w-full flex-1 overflow-y-auto pl-4 sm:pl-8 md:pl-12 lg:pl-[272px]"
+          >
+            <div className="global-pos relative w-full -ml-5 lg:ml-0 pt-20 lg:pt-5 p-5 lg:pl-2">{children}</div>
+          </section>
+        </div>
       </div>
     </SessionGuard>
   );

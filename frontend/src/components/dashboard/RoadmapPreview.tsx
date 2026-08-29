@@ -30,7 +30,7 @@ export default function RoadmapPreview({ data }: Props) {
         <CardTitle>Your AI Roadmap</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col h-full">
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-col gap-3 mb-8">
           {data.milestones.slice(0, 6).map((m, i) => (
             <div key={i} className="flex items-center gap-3">
               {m.status === "COMPLETED" && <CheckCircle2 className="w-5 h-5 text-primary" />}

@@ -70,14 +70,14 @@
 }
 
 /* =========================================
-   LIGHT-THEME SIDEBAR BACKGROUND
-   Uses the HowItWorks card gradient.
-   Dark theme falls back to the solid card color.
+   SIDEBAR BACKGROUND
+   Shares the dashboard wrapper solids:
+   #eae0ff (light) / #5b3491 (dark).
    ========================================= */
 .sidebar-gradient {
-  background-image: linear-gradient(to bottom, #f4edff 0%, #ede5ff 45%, #e4d9ff 100%);
+  background-color: #eae0ff;
 }
 
 .dark .sidebar-gradient {
-  background-image: linear-gradient(to bottom, #150a2c 0%, #241345 28%, #351c5e 55%, rgba(159, 84, 247, 0.55) 100%);
+  background-color: #5b3491;
 }
