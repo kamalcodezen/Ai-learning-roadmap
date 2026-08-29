@@ -12,10 +12,10 @@ interface ProfileDropdownProps {
   email?: string;
 }
 
-export const dropdownLinks = [
-  { label: "Profile", href: "/dashboard/profile", variant: "default" },
-  { label: "Dashboard", href: "/dashboard", variant: "default" },
-  { label: "Settings", href: "/dashboard/settings", variant: "default" },
+export const getDropdownLinks = (prefix: string) => [
+  { label: "Profile", href: `${prefix}/profile`, variant: "default" },
+  { label: "Dashboard", href: `${prefix}`, variant: "default" },
+  { label: "Settings", href: `${prefix}/settings`, variant: "default" },
   { label: "Sign out", href: "#", variant: "danger" },
 ] as const;
 
@@ -26,6 +26,11 @@ export default function ProfileDropdown({
   const [open, setOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const router = useRouter();
+
+  const { data: session } = authClient.useSession();
+  const userRole = (session?.user as { role?: string })?.role || "learner";
+  const prefix = userRole === "admin" ? "/dashboard/admin" : "/dashboard/learner";
+  const links = getDropdownLinks(prefix);
 
   useEffect(() => {
     AOS.init({ duration: 400, easing: "ease-out", once: true });
@@ -120,7 +125,7 @@ export default function ProfileDropdown({
           </div>
 
           <div className="mt-1">
-            {dropdownLinks.map((link) =>
+            {links.map((link) =>
               link.variant === "danger" ? (
                 <button
                   key={link.label}

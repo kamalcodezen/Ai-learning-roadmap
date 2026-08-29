@@ -90,7 +90,7 @@ export default function SignInForm({ onSwitch }: SignInFormProps) {
         }
         
         if (!data.diagnosticCompleted) {
-          router.push("/onboarding/diagnostic");
+          router.push("/diagnostic");
           return;
         }
       }

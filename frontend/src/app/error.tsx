@@ -150,7 +150,7 @@ export default function Error({ error, reset }: ErrorProps) {
 
           {/* Secondary Action Button */}
           <Link
-            href="/dashboard"
+            href="/dashboard/learner"
             className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#2A3143] bg-[#131824] px-7 py-3.5 text-sm font-semibold text-[#FAFAFA] transition-all duration-200 hover:border-[#CEFF1F]/50 hover:bg-[#1A202F] active:scale-95"
           >
             <LuLayoutDashboard className="size-4 text-[#CEFF1F]" />

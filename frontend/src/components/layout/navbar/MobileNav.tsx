@@ -7,7 +7,7 @@ import Logo from './Logo';
 import Button from '../../ui/button';
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 import { authClient } from "@/src/lib/auth-client";
-import { dropdownLinks } from "./profileDropdown";
+import { getDropdownLinks } from "./profileDropdown";
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +18,10 @@ export default function MobileNav() {
     name: session?.user?.name || "User",
     email: session?.user?.email || "",
   };
+
+  const userRole = (session?.user as { role?: string })?.role || "learner";
+  const prefix = userRole === "admin" ? "/dashboard/admin" : "/dashboard/learner";
+  const links = getDropdownLinks(prefix);
 
   return (
     <div className="w-full flex justify-center relative mt-2">
@@ -94,7 +98,7 @@ export default function MobileNav() {
                     </div>
 
                     <div className="flex w-full flex-col items-center gap-1">
-                      {dropdownLinks.map((link) =>
+                      {links.map((link) =>
                         link.variant === "danger" ? (
                           <button
                             key={link.label}
