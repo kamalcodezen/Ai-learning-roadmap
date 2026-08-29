@@ -1,6 +1,7 @@
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import Providers from "../providers/providers";
+import ReactQueryProvider from "../components/providers/ReactQueryProvider";
 import SmoothScroll from "../providers/SmoothScroll";
 import NextTopLoader from "nextjs-toploader";
 
@@ -34,11 +35,13 @@ export default function RootLayout({
           shadow="0 0 10px var(--color-accent), 0 0 5px var(--color-accent)"
         />
         <SmoothScroll>
-          <Providers>
-            <main className="min-h-screen transition-colors duration-300">
-              {children}
-            </main>
-          </Providers>
+          <ReactQueryProvider>
+            <Providers>
+              <main className="min-h-screen transition-colors duration-300">
+                {children}
+              </main>
+            </Providers>
+          </ReactQueryProvider>
         </SmoothScroll>
       </body>
     </html>
