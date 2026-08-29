@@ -27,7 +27,7 @@ export const getAssessments = async (userId: string) => {
     status: a.status === "COMPLETED" ? "completed" : "in_progress",
     score: a.score || undefined,
     description: "Evaluation of your current skills.",
-    href: "/onboarding/diagnostic"
+    href: "/diagnostic"
   }));
   
   // 5. Add a placeholder if empty so the UI doesn't look broken
@@ -39,7 +39,7 @@ export const getAssessments = async (userId: string) => {
       status: "not_started",
       score: undefined,
       description: "Baseline evaluation of your current development skills.",
-      href: "/onboarding/diagnostic"
+      href: "/diagnostic"
     });
   }
 

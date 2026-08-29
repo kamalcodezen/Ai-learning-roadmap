@@ -149,7 +149,7 @@ export const getDashboardOverview = async (userId: string) => {
       description: "Complete your first diagnostic test to establish your baseline.",
       reason: "Required to generate your personalized learning path.",
       actionLabel: "Start Diagnostic",
-      href: "/onboarding/diagnostic"
+      href: "/diagnostic"
     };
   } else if (criticalGaps.length > 0) {
     const gap = criticalGaps[0]!;
