@@ -60,6 +60,7 @@ DO NOT wrap the JSON in markdown code blocks. DO NOT include any conversational 
 
     let content = result.reply;
     
+    console.log(`[Diagnostic AI] Used Provider: ${result.provider} (Model: ${result.model})`);
     console.log("[Diagnostic AI] Raw Output:", content);
 
     // Extract the first JSON object or array found in the response
