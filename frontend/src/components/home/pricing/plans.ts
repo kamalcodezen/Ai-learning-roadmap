@@ -34,7 +34,7 @@ export const pricingPlans: PricingPlan[] = [
     yearlyPrice: 199,
     monthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PRICE_ID || "",
     yearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PRICE_ID || "",
-    cta: "Get Started",
+    cta: "Get Plan",
     features: [
       "Unlimited Skill Proof Graphing",
       "Automated Learning Debt Resolution",
@@ -52,7 +52,7 @@ export const pricingPlans: PricingPlan[] = [
     yearlyPrice: 699,
     monthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_MONTHLY_PRICE_ID || "",
     yearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_YEARLY_PRICE_ID || "",
-    cta: "Contact Sales",
+    cta: "Get Plan",
     features: [
       "Unlimited Organization Members",
       "All Pro Features Included",
