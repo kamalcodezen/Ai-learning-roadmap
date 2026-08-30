@@ -7,7 +7,6 @@ import {
   FiUnlock,
   FiAward,
   FiRefreshCw,
-  FiArrowRight,
   FiCheckCircle,
   FiActivity,
 } from "react-icons/fi";
