@@ -9,6 +9,7 @@ import { Lock, ArrowLeft, Sparkles } from "lucide-react";
 import brandLogo from "../../../public/brand/AI-Pather-blue.png";
 import type { PricingPlan } from "../home/pricing/plans";
 import Button from "../ui/button";
+import BackToHome from "../ui/BackToHome";
 import { BorderBeam } from "@/src/components/ui/border-beam";
 
 type BillingPeriod = "monthly" | "yearly";
@@ -94,13 +95,14 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
       <div className="pointer-events-none absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-[#9F54F7]/20 blur-3xl dark:bg-[#9F54F7]/25" />
       <div className="pointer-events-none absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-[#8523F5]/10 blur-3xl dark:bg-[#8523F5]/20" />
 
-      <motion.section
-        initial={{ opacity: 0, y: 24, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative w-full max-w-xl overflow-hidden rounded-3xl border border-primary/40 bg-[linear-gradient(to_bottom,#fcfaff_0%,#f4eeff_45%,#e9dcff_100%)] p-8 dark:bg-[linear-gradient(to_bottom,rgba(243,232,255,0.12)_0%,rgba(237,229,255,0.08)_45%,rgba(221,208,255,0.05)_100%)] sm:p-10"
-      >
-        <BorderBeam
+<motion.section
+          initial={{ opacity: 0, y: 24, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="relative w-full max-w-xl overflow-hidden rounded-3xl border border-primary/40 bg-[linear-gradient(to_bottom,#fcfaff_0%,#f4eeff_45%,#e9dcff_100%)] p-8 dark:bg-[linear-gradient(to_bottom,rgba(243,232,255,0.12)_0%,rgba(237,229,255,0.08)_45%,rgba(221,208,255,0.05)_100%)] sm:p-10"
+        >
+          <BackToHome />
+          <BorderBeam
           duration={6}
           size={200}
           borderWidth={2}
