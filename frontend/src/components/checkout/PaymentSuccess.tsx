@@ -14,6 +14,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import Button from "../ui/button";
+import { BorderBeam } from "@/src/components/ui/border-beam";
 
 interface PaymentSuccessProps {
   sessionId?: string | null;
@@ -41,10 +42,11 @@ export default function PaymentSuccess({
     const raw = sessionStorage.getItem("checkout_metadata");
     if (!raw) return;
     try {
-      console.log("Checkout metadata:", JSON.parse(raw));
+      const stored = JSON.parse(raw) as Record<string, unknown>;
+      console.log("Checkout metadata:", { ...stored, session_id: sessionId ?? null });
     } catch {
     }
-  }, []);
+  }, [sessionId]);
 
   useEffect(() => {
     if (isCancelled) return;
@@ -81,8 +83,8 @@ export default function PaymentSuccess({
 
   const sessionLabel = useMemo(() => {
     if (!sessionId) return null;
-    return sessionId.length > 28
-      ? `${sessionId.slice(0, 28)}…`
+    return sessionId.length > 16
+      ? `${sessionId.slice(0, 16)}…`
       : sessionId;
   }, [sessionId]);
 
@@ -104,6 +106,14 @@ export default function PaymentSuccess({
 
   return (
     <main className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#f4edff] px-5 py-16 dark:bg-[#120a1e]">
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.08] dark:opacity-[0.04]"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, rgb(var(--foreground)) 1px, transparent 1px), linear-gradient(to bottom, rgb(var(--foreground)) 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+        }}
+      />
       {/* Soft ambient glow */}
       <div className="pointer-events-none absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-[#9F54F7]/20 blur-3xl dark:bg-[#9F54F7]/25" />
       <div className="pointer-events-none absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-[#8523F5]/10 blur-3xl dark:bg-[#8523F5]/20" />
@@ -114,8 +124,21 @@ export default function PaymentSuccess({
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="relative w-full max-w-xl overflow-hidden rounded-3xl border border-primary/40 bg-[linear-gradient(to_bottom,#fcfaff_0%,#f4eeff_45%,#e9dcff_100%)] p-8 dark:bg-[linear-gradient(to_bottom,rgba(243,232,255,0.12)_0%,rgba(237,229,255,0.08)_45%,rgba(221,208,255,0.05)_100%)] sm:p-10"
       >
+        <BorderBeam
+          duration={6}
+          size={200}
+          borderWidth={2}
+          className="from-transparent via-[#9F54F7] to-transparent"
+        />
+        <BorderBeam
+          duration={6}
+          delay={3}
+          size={200}
+          borderWidth={2}
+          className="from-transparent via-[#c084fc] to-transparent"
+        />
         {/* Confirmation pill */}
-        <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold tracking-wide text-secondary dark:text-primary">
+        <div className="mx-auto flex w-fit items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold tracking-wide text-secondary dark:text-primary">
           <span className="text-sm">✦</span>
           {isCancelled ? "Checkout Cancelled" : "Payment Confirmed"}
         </div>
@@ -199,27 +222,27 @@ export default function PaymentSuccess({
         )}
 
         {/* Actions */}
-        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           {isCancelled ? (
             <>
               <Button
                 text="Browse Plans"
                 onClick={() => router.push("/#pricing")}
-                className="w-full sm:w-auto"
+                className="w-fit md:w-auto"
               />
               <Button
                 text="Try Again"
                 variant="soft"
                 onClick={() => router.back()}
-                className="w-full sm:w-auto"
+                className="w-fit md:w-auto"
               />
             </>
           ) : (
             <>
               <Button
-                text="Go to Dashboard"
-                onClick={() => router.push("/dashboard")}
-                className="w-full sm:w-auto"
+                text="Go to Homepage"
+                onClick={() => router.push("/")}
+                className="w-fit md:w-auto"
               />
               <Button
                 text="Contact Support"
@@ -227,7 +250,7 @@ export default function PaymentSuccess({
                 onClick={() => {
                   window.location.href = "mailto:support@aipather.com";
                 }}
-                className="w-full sm:w-auto"
+                className="w-fit md:w-auto"
               />
             </>
           )}
