@@ -18,9 +18,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <section
             aria-label="Dashboard content"
             data-lenis-prevent-wheel
-            className="relative min-h-0 w-full flex-1 overflow-y-auto pl-4 sm:pl-8 md:pl-12 lg:pl-[272px]"
+            className="relative min-h-0 w-full flex-1 overflow-y-auto lg:pl-[258px]"
           >
-            <div className="global-pos relative w-full -ml-5 lg:ml-0 pt-20 lg:pt-5 p-5 lg:pl-2">{children}</div>
+            <div className="relative w-full p-4 pt-20 md:pt-16 lg:p-8 lg:pt-8">{children}</div>
           </section>
         </div>
       </div>
