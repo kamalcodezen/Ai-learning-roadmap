@@ -4,6 +4,7 @@ export const baseUrl =
 const request = async (path: string, options?: RequestInit) => {
   const response = await fetch(`${baseUrl}${path}`, {
     ...options,
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...options?.headers,

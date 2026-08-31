@@ -13,34 +13,34 @@ interface NavLink {
   children?: { label: string; href: string; icon: React.ReactNode }[];
 }
 
-const navLinks: NavLink[] = [
+const getNavLinks = (prefix: string): NavLink[] => [
   {
     label: "Core Engines",
-    href: "/dashboard",
+    href: `${prefix}`,
     children: [
       {
         label: "Career Twin Diagnostic",
-        href: "/career-twin",
+        href: `${prefix}/career-twin`,
         icon: <FiTarget size={14} />,
       },
       {
         label: "Cognitive Independence",
-        href: "/learning-path",
+        href: `${prefix}/learning-path`,
         icon: <FiCpu size={14} />,
       },
       {
         label: "Anti-Decay Memory",
-        href: "/progress",
+        href: `${prefix}/progress`,
         icon: <FiRefreshCw size={14} />,
       },
       {
         label: "Zero-Clone Proof",
-        href: "/proof-graph",
+        href: `${prefix}/proof-graph`,
         icon: <FiGitBranch size={14} />,
       },
       {
         label: "JD Reality Gate",
-        href: "/application-readiness",
+        href: `${prefix}/application-readiness`,
         icon: <FiShield size={14} />,
       },
     ],
@@ -48,7 +48,7 @@ const navLinks: NavLink[] = [
 
   {
     label: "Live Proof Explorer",
-    href: "/portfolio",
+    href: `${prefix}/portfolio`,
   },
 
   {
@@ -66,15 +66,22 @@ const navLinks: NavLink[] = [
   },
 ];
 
+import { authClient } from "@/src/lib/auth-client";
+
 export default function NavLinks() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+
+  const { data: session } = authClient.useSession();
+  const userRole = (session?.user as { role?: string })?.role?.toUpperCase() || "LEARNER";
+  const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
+  const links = getNavLinks(prefix);
 
   return (
     <>
       {/* Desktop Navigation */}
       <nav className="hidden items-center gap-1 lg:flex">
-        {navLinks.map((link, index) => {
+        {links.map((link, index) => {
           const hasChildren = link.children && link.children.length > 0;
           const isActive = activeDropdown === index;
 
@@ -182,7 +189,7 @@ export default function NavLinks() {
             className="absolute left-4 right-4 top-[calc(100%+8px)] rounded-2xl border border-border bg-card p-3 shadow-xl lg:hidden"
           >
             <nav className="flex flex-col">
-              {navLinks.map((link) => (
+              {links.map((link) => (
                 <div key={link.label}>
                   <Link
                     href={link.href}

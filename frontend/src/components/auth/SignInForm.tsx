@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { showToast } from "@/src/components/ui/toast";
 import AuthForm from "./AuthForm";
+import { serverFetch } from "@/src/lib/core/server";
 
 interface SignInFormProps {
   onSwitch: () => void;
@@ -73,30 +74,21 @@ export default function SignInForm({ onSwitch }: SignInFormProps) {
     }
 
     try {
-      // TODO: CONNECT TO BACKEND API
-      // Future endpoint: GET /api/user/routing-state
-      // Expected response: { onboardingCompleted: boolean, diagnosticCompleted: boolean }
-      // 
-      // For now, if the API isn't built, we will catch the error and fallback to dashboard.
-      const res = await fetch("/api/user/routing-state");
+      const data = await serverFetch("/api/career-profile/routing-state");
       
-      if (res.ok) {
-        const data = await res.json();
-
-        
-        if (!data.onboardingCompleted) {
+      if (data?.success) {
+        if (!data.data.onboardingCompleted) {
           router.push("/onboarding");
           return;
         }
         
-        if (!data.diagnosticCompleted) {
-          router.push("/onboarding/diagnostic");
+        if (!data.data.diagnosticCompleted) {
+          router.push("/diagnostic");
           return;
         }
       }
-    } catch {
-      // API not ready, fallback below
-      console.warn("Routing state API not available yet. Falling back to dashboard.");
+    } catch (error) {
+      console.warn("Routing state API error. Falling back to dashboard.", error);
     }
 
     // Default fallback for existing users

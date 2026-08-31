@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import DashboardSidebar from "@/src/components/dashboard/dashboardSidebar/DashboardSidebar";
-import SessionGuard from "@/src/components/dashboard/sessionGuard/SessionGuard";
+import DashboardSidebar from "@/src/components/dashboard/shared/dashboardSidebar/DashboardSidebar";
+import SessionGuard from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 
 export const metadata: Metadata = {
   title: "Dashboard | AI Pather",

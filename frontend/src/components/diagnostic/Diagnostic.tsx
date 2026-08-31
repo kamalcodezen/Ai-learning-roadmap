@@ -10,11 +10,11 @@ import {
   completeDiagnosticAttempt,
   submitDiagnosticAnswer,
   type DiagnosticCompleteResult,
-} from "@/src/lib/actions/diagnostic";
+} from "@/src/lib/actions/learner/diagnostic";
 import {
   getDiagnosticQuestions,
   type DiagnosticQuestion,
-} from "@/src/lib/api/diagnostic";
+} from "@/src/lib/api/learner/diagnostic";
 
 type DiagnosticStatus =
   | "idle"
@@ -295,7 +295,7 @@ export default function Diagnostic() {
 
             <button
               type="button"
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.push("/dashboard/learner")}
               className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3  text-white text-sm font-semibold  transition hover:opacity-90"
             >
               Continue to Dashboard
