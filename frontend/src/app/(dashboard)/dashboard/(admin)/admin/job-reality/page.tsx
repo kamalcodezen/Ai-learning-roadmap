@@ -1,4 +1,24 @@
+import { Metadata } from "next";
+import AdminJobRealityView from "@/src/components/dashboard/admin/AdminJobRealityView";
 
-import AdminJobRealityView from '@/src/components/dashboard/admin/AdminJobRealityView';
-export default function Page() { return <div className='flex w-full flex-col gap-6 p-4 md:p-8'><h1 className='text-3xl font-bold'>Job Reality</h1><AdminJobRealityView /></div>; }
+export const metadata: Metadata = {
+  title: "Job Reality | Admin | AI Pather",
+};
 
+export default function Page() {
+  return (
+    <div className="w-full">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">
+            Job <span className="text-brand">Reality</span>
+          </h1>
+          <p className="section-subtitle mt-1 text-left">
+            Explore popular roles and job-market alignment for learners.
+          </p>
+        </div>
+      </div>
+      <AdminJobRealityView />
+    </div>
+  );
+}

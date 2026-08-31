@@ -1,4 +1,22 @@
 
 import AdminLearningDebtView from '@/src/components/dashboard/admin/AdminLearningDebtView';
-export default function Page() { return <div className='flex w-full flex-col gap-6 p-4 md:p-8'><h1 className='text-3xl font-bold'>Learning Debt</h1><AdminLearningDebtView /></div>; }
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Learning Debt | Admin | AI Pather",
+};
+
+export default function Page() {
+  return (
+    <div className="w-full">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Learning <span className="text-brand">Debt</span></h1>
+          <p className="section-subtitle mt-1 text-left">Surface where learners fall behind so interventions can be targeted.</p>
+        </div>
+      </div>
+      <AdminLearningDebtView />
+    </div>
+  );
+}
 

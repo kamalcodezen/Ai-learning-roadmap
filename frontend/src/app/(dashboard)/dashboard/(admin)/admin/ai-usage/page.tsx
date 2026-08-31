@@ -1,4 +1,24 @@
+import { Metadata } from "next";
+import AdminAiUsageView from "@/src/components/dashboard/admin/AdminAiUsageView";
 
-import AdminAiUsageView from '@/src/components/dashboard/admin/AdminAiUsageView';
-export default function Page() { return <div className='flex w-full flex-col gap-6 p-4 md:p-8'><h1 className='text-3xl font-bold'>AI Usage</h1><AdminAiUsageView /></div>; }
+export const metadata: Metadata = {
+  title: "AI Usage | Admin | AI Patter",
+};
 
+export default function Page() {
+  return (
+    <div className="w-full">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">
+            AI <span className="text-brand">Usage</span>
+          </h1>
+          <p className="section-subtitle mt-1 text-left">
+            Monitor AI call volume, success rates, and provider breakdowns.
+          </p>
+        </div>
+      </div>
+      <AdminAiUsageView />
+    </div>
+  );
+}

@@ -5,122 +5,150 @@ import { useQuery } from "@tanstack/react-query";
 import { getAdminRoadmaps } from "@/src/lib/api/admin/roadmaps";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
-import { Search, Route, ArrowLeft, ArrowRight, User } from "lucide-react";
-import GenericPageSkeleton from "../shared/GenericPageSkeleton";
-
+import { ArrowLeft, ArrowRight, Route, User } from "lucide-react";
 import { useDebounce } from "use-debounce";
+import {
+  Label,
+  ListBox,
+  SearchField,
+  Select,
+  Skeleton,
+} from "@heroui/react";
+import { Card, CardContent, CardHeader } from "@/src/components/ui/Card";
 
 export default function AdminRoadmapsView() {
   const { data: session } = authClient.useSession();
   const userId = session?.user?.id;
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [roleFilter, setRoleFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
   const [debouncedSearch] = useDebounce(searchTerm, 500);
-  const [debouncedRole] = useDebounce(roleFilter, 500);
   const take = 20;
-  const skip = (page - 1) * take;
+  const skip = page * take;
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["adminRoadmaps", userId, skip, take, debouncedSearch, statusFilter, debouncedRole],
-    queryFn: () => getAdminRoadmaps(userId!, skip, take, debouncedSearch, statusFilter, debouncedRole),
+    queryKey: ["adminRoadmaps", userId, skip, take, debouncedSearch, statusFilter],
+    queryFn: () => getAdminRoadmaps(userId!, skip, take, debouncedSearch, statusFilter),
     enabled: !!userId,
   });
 
-  if (isLoading) return <GenericPageSkeleton />;
+  if (isLoading && !data) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Skeleton className="h-10 flex-1 rounded-md" />
+          <Skeleton className="h-10 w-40 rounded-md" />
+          <Skeleton className="h-10 w-28 rounded-md" />
+        </div>
+        <Skeleton className="h-[400px] w-full rounded-xl" />
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-5 w-44 rounded-md" />
+          <Skeleton className="h-9 w-40 rounded-md" />
+        </div>
+      </div>
+    );
+  }
 
   if (error || !data) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 text-center bg-red-500/10 rounded-xl border border-red-500/20">
-        <p className="text-red-500 font-medium">Failed to load roadmaps.</p>
+      <div className="flex h-[400px] items-center justify-center rounded-xl bg-red-500/10 border border-red-500/20">
+        <p className="text-red-500 font-medium">Unable to load roadmaps. Please try again.</p>
       </div>
     );
   }
 
   const { roadmaps, total } = data;
-  const totalPages = Math.ceil(total / take) || 1;
+  const totalPages = Math.ceil(total / take);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
-        <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search by learner name or email..."
+    <Card className="gap-0 p-0 border-[5px] border-[#eae0ff] dark:border-[#5b3491]">
+      <CardHeader className="border-b border-border gap-0 p-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <SearchField
+            className="flex-1 w-full max-w-md"
             value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setPage(1);
-            }}
-            className="h-10 w-full rounded-md border border-input bg-background pl-9 pr-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          />
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          <input
-            type="text"
-            placeholder="Filter by target role..."
-            value={roleFilter}
-            onChange={(e) => {
-              setRoleFilter(e.target.value);
-              setPage(1);
-            }}
-            className="h-10 w-full sm:w-48 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          />
-          <select
-            value={statusFilter}
-            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="h-10 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onChange={(val) => { setSearchTerm(val); setPage(0); }}
           >
-            <option value="">All Statuses</option>
-            <option value="ACTIVE">Active</option>
-            <option value="COMPLETED">Completed</option>
-          </select>
+            <Label>Search</Label>
+            <SearchField.Group>
+              <SearchField.SearchIcon />
+              <SearchField.Input className="w-full" placeholder="Search by learner name or email..." />
+              <SearchField.ClearButton />
+            </SearchField.Group>
+          </SearchField>
+          <Select
+            className="w-full sm:w-48"
+            placeholder="All Statuses"
+            value={statusFilter || null}
+            onChange={(val) => { setStatusFilter(val ? String(val) : ""); setPage(0); }}
+          >
+            <Label>Status</Label>
+            <Select.Trigger>
+              <Select.Value />
+              <Select.Indicator />
+            </Select.Trigger>
+            <Select.Popover>
+              <ListBox>
+                <ListBox.Item key="ACTIVE" id="ACTIVE" textValue="Active">
+                  Active
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+                <ListBox.Item key="COMPLETED" id="COMPLETED" textValue="Completed">
+                  Completed
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              </ListBox>
+            </Select.Popover>
+          </Select>
           <button
             onClick={() => exportAdminData(userId!, 'roadmaps')}
-            className="h-10 px-4 rounded-md bg-secondary text-secondary-foreground text-sm font-medium hover:bg-secondary/80 transition-colors"
+            className="w-full sm:w-auto bg-[var(--color-brand)] text-white h-10 px-4 rounded-md text-sm font-medium hover:brightness-110 transition"
           >
             Export CSV
           </button>
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="rounded-xl border border-border/50 bg-card overflow-hidden shadow-sm">
+      <CardContent className="p-0">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
+          <table className="w-full min-w-[600px] border-collapse">
+            <thead>
               <tr>
-                <th className="px-6 py-4 font-medium">Target Role</th>
-                <th className="px-6 py-4 font-medium">Learner</th>
-                <th className="px-6 py-4 font-medium">Status</th>
-                <th className="px-6 py-4 font-medium">Progress</th>
-                <th className="px-6 py-4 font-medium">Created Date</th>
+                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Target Role</th>
+                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Learner</th>
+                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Status</th>
+                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Progress</th>
+                <th className="p-4 text-right font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Created Date</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border/50">
+            <tbody>
               {roadmaps.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
-                    <div className="flex flex-col items-center gap-2">
+                  <td colSpan={5} className="p-4">
+                    <div className="py-8 text-center text-muted-foreground flex flex-col items-center gap-2">
                       <Route className="h-8 w-8 opacity-50" />
-                      <p>No roadmaps found.</p>
+                      No roadmaps found matching your search.
                     </div>
                   </td>
                 </tr>
               ) : (
-                roadmaps.map((rm: { id: string; title: string; category: string; enrolled: number; targetRole: string; user: { name: string; email: string }; status: string; createdAt: string; milestones?: Array<{ status: string }> }) => {
+                roadmaps.map((rm: { id: string; targetRole: string; status: string; createdAt: string; user: { name: string; email: string }; milestones?: Array<{ status: string }> }) => {
                   const totalMilestones = rm.milestones?.length || 0;
                   const completedMilestones = rm.milestones?.filter((m: { status: string }) => m.status === "COMPLETED").length || 0;
                   const progress = totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0;
 
                   return (
-                    <tr key={rm.id} className="hover:bg-muted/30 transition-colors">
-                      <td className="px-6 py-4 font-medium text-foreground">
-                        {rm.targetRole}
+                    <tr key={rm.id} className="border-t border-[var(--color-border)] hover:bg-muted/30 transition-colors">
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                            <Route className="size-4" />
+                          </div>
+                          <div className="font-medium text-foreground">{rm.targetRole}</div>
+                        </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="p-4">
                         <div className="flex items-center gap-2">
                           <User className="h-4 w-4 text-muted-foreground" />
                           <div>
@@ -129,23 +157,23 @@ export default function AdminRoadmapsView() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-                          rm.status === 'ACTIVE' ? 'bg-green-500/10 text-green-500' : 
-                          rm.status === 'COMPLETED' ? 'bg-blue-500/10 text-blue-500' : 'bg-muted text-muted-foreground'
+                      <td className="p-4">
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                          rm.status === 'ACTIVE' ? 'bg-green-500/10 text-green-500' :
+                          rm.status === 'COMPLETED' ? 'bg-blue-500/10 text-blue-500' : 'bg-[var(--color-muted)] text-[var(--color-text-primary)]'
                         }`}>
                           {rm.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="p-4">
                         <div className="flex items-center gap-2">
-                          <div className="h-2 w-24 rounded-full bg-muted overflow-hidden">
-                            <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
+                          <div className="h-2 w-24 rounded-full bg-[var(--color-muted)] overflow-hidden">
+                            <div className="h-full bg-[var(--color-primary)]" style={{ width: `${progress}%` }} />
                           </div>
                           <span className="text-xs text-muted-foreground">{progress}%</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-muted-foreground">
+                      <td className="p-4 text-right whitespace-nowrap text-muted-foreground">
                         {new Date(rm.createdAt).toLocaleDateString()}
                       </td>
                     </tr>
@@ -155,23 +183,31 @@ export default function AdminRoadmapsView() {
             </tbody>
           </table>
         </div>
-      </div>
 
-      {total > take && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            Showing {skip + 1} to {Math.min(skip + take, total)} of {total} results
-          </p>
-          <div className="flex gap-2">
-            <button className="px-3 py-1 text-sm border rounded-md disabled:opacity-50 flex items-center gap-1 hover:bg-muted transition-colors" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
-              <ArrowLeft className="h-4 w-4 mr-1" /> Prev
-            </button>
-            <button className="px-3 py-1 text-sm border rounded-md disabled:opacity-50 flex items-center gap-1 hover:bg-muted transition-colors" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>
-              Next <ArrowRight className="h-4 w-4 ml-1" />
-            </button>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-border px-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Showing {page * take + 1} to {Math.min((page + 1) * take, total)} of {total} roadmaps
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPage(p => Math.max(0, p - 1))}
+                disabled={page === 0}
+                className="px-4 py-1.5 text-sm rounded-md bg-[var(--color-muted)] text-foreground font-medium hover:brightness-110 disabled:opacity-50 transition"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1 inline" /> Previous
+              </button>
+              <button
+                onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                disabled={page >= totalPages - 1}
+                className="px-4 py-1.5 text-sm rounded-md bg-[var(--color-primary)] text-white font-medium hover:brightness-110 disabled:opacity-50 transition"
+              >
+                Next <ArrowRight className="h-4 w-4 ml-1 inline" />
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
