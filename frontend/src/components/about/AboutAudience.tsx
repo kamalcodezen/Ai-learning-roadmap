@@ -8,8 +8,7 @@ import {
   FiCompass,
   FiTrendingUp,
   FiCheckCircle,
-  FiArrowRight,
-} from "react-icons/fi";
+  } from "react-icons/fi";
 
 const audiences = [
   {

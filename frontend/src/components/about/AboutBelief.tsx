@@ -10,8 +10,7 @@ import {
   FiAward,
   FiArrowRight,
   FiTerminal,
-  FiLayers,
-} from "react-icons/fi";
+  } from "react-icons/fi";
 
 const pillars = [
   {
