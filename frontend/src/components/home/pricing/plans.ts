@@ -1,7 +1,10 @@
 export type PricingPlan = {
+  slug: string;
   name: string;
   monthlyPrice: number;
   yearlyPrice: number;
+  monthlyPriceId?: string;
+  yearlyPriceId?: string;
   cta: string;
   features: string[];
   description: string;
@@ -11,6 +14,7 @@ export type PricingPlan = {
 // yearlyPrice = monthlyPrice * 12 * 0.8 → keeps the header's "Save 20%" honest
 export const pricingPlans: PricingPlan[] = [
   {
+    slug: "starter",
     name: "Starter",
     monthlyPrice: 0,
     yearlyPrice: 0,
@@ -24,10 +28,13 @@ export const pricingPlans: PricingPlan[] = [
     description: "Find your baseline. Start free.",
   },
   {
+    slug: "pro-career-os",
     name: "Pro Career OS",
     monthlyPrice: 29,
     yearlyPrice: 199,
-    cta: "Get Started",
+    monthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PRICE_ID || "",
+    yearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PRICE_ID || "",
+    cta: "Get Plan",
     features: [
       "Unlimited Skill Proof Graphing",
       "Automated Learning Debt Resolution",
@@ -39,10 +46,13 @@ export const pricingPlans: PricingPlan[] = [
     popular: true,
   },
   {
+    slug: "enterprise",
     name: "Enterprise",
     monthlyPrice: 99,
     yearlyPrice: 699,
-    cta: "Contact Sales",
+    monthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_MONTHLY_PRICE_ID || "",
+    yearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_YEARLY_PRICE_ID || "",
+    cta: "Get Plan",
     features: [
       "Unlimited Organization Members",
       "All Pro Features Included",

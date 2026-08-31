@@ -7,8 +7,6 @@ import {
   FiTarget,
   FiCpu,
   FiZap,
-  FiTrendingUp,
-  FiShield,
   FiLayers,
 } from "react-icons/fi";
 
@@ -119,7 +117,7 @@ export default function CapabilitySkillGraph() {
 
           {/* Interactive Nodes Row */}
           <div className="relative z-10 flex items-center justify-between gap-1 sm:gap-2">
-            {nodes.map((node, index) => {
+            {nodes.map((node) => {
               const isSelected = selectedNode.id === node.id;
               let icon = <FiCpu className="size-4" />;
               let badgeColor = "bg-primary/20 text-primary border-primary/40";
