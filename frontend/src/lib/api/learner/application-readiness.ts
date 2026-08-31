@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch } from "../../core/server";
 
 export interface ReadinessCategory {
   id: string;
@@ -18,9 +18,9 @@ export interface ApplicationReadinessData {
 /**
  * Retrieves the Application Readiness analysis data.
  */
-export const getApplicationReadiness = async (userId: string): Promise<ApplicationReadinessData> => {
+export const getApplicationReadiness = async (): Promise<ApplicationReadinessData> => {
   try {
-    return await serverFetch(`/api/application-readiness?userId=${userId}`);
+    return await serverFetch(`/api/application-readiness`);
   } catch (error) {
     console.error("Failed to fetch application readiness:", error);
     throw error;

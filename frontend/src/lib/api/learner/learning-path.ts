@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch } from "../../core/server";
 
 export interface Milestone {
   id: string;
@@ -25,6 +25,6 @@ export interface LearningPathData {
 /**
  * Retrieves the AI-generated Learning Path/Roadmap data.
  */
-export const getLearningPath = async (userId: string): Promise<LearningPathData> => {
-  return await serverFetch(`/api/learning-path?userId=${userId}`);
+export const getLearningPath = async (): Promise<LearningPathData> => {
+  return await serverFetch(`/api/learning-path`);
 };

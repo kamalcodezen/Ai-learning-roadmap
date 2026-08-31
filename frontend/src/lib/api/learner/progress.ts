@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch } from "../../core/server";
 
 export interface ActivityItem {
   id: string;
@@ -19,6 +19,6 @@ export interface ProgressData {
 /**
  * Retrieves the Progress analytics data.
  */
-export const getProgress = async (userId: string): Promise<ProgressData> => {
-  return await serverFetch(`/api/progress?userId=${userId}`);
+export const getProgress = async (): Promise<ProgressData> => {
+  return await serverFetch(`/api/progress`);
 };

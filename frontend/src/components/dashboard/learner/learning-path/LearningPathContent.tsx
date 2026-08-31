@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import { getLearningPath } from "@/src/lib/api/learning-path";
+import { getLearningPath } from "@/src/lib/api/learner/learning-path";
 import { useQuery } from "@tanstack/react-query";
 import LearningPathSkeleton from "./LearningPathSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
@@ -13,7 +13,7 @@ export default function LearningPathContent() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["learningPath", session?.user?.id],
-    queryFn: () => getLearningPath(session!.user!.id),
+    queryFn: () => getLearningPath(),
     enabled: !!session?.user?.id,
   });
 

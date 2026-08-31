@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import { getProgress } from "@/src/lib/api/progress";
+import { getProgress } from "@/src/lib/api/learner/progress";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
@@ -13,7 +13,7 @@ export default function ProgressPage() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["progress", session?.user?.id],
-    queryFn: () => getProgress(session!.user!.id),
+    queryFn: () => getProgress(),
     enabled: !!session?.user?.id,
   });
 

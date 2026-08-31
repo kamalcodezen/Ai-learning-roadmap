@@ -10,11 +10,11 @@ import {
   completeDiagnosticAttempt,
   submitDiagnosticAnswer,
   type DiagnosticCompleteResult,
-} from "@/src/lib/actions/diagnostic";
+} from "@/src/lib/actions/learner/diagnostic";
 import {
   getDiagnosticQuestions,
   type DiagnosticQuestion,
-} from "@/src/lib/api/diagnostic";
+} from "@/src/lib/api/learner/diagnostic";
 
 type DiagnosticStatus =
   | "idle"

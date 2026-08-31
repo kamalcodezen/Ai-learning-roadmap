@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import { getCareerTwin } from "@/src/lib/api/career-twin";
+import { getCareerTwin } from "@/src/lib/api/learner/career-twin";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
@@ -14,7 +14,7 @@ export default function CareerTwinPage() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["careerTwin", session?.user?.id],
-    queryFn: () => getCareerTwin(session!.user!.id),
+    queryFn: () => getCareerTwin(),
     enabled: !!session?.user?.id,
   });
 

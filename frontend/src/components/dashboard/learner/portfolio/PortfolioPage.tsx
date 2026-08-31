@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import { getPortfolio } from "@/src/lib/api/portfolio";
+import { getPortfolio } from "@/src/lib/api/learner/portfolio";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
@@ -14,7 +14,7 @@ export default function PortfolioPage() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["portfolio", session?.user?.id],
-    queryFn: () => getPortfolio(session!.user!.id),
+    queryFn: () => getPortfolio(),
     enabled: !!session?.user?.id,
   });
 

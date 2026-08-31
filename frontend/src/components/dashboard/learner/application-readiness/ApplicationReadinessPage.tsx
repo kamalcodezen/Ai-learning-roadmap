@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import { getApplicationReadiness } from "@/src/lib/api/application-readiness";
+import { getApplicationReadiness } from "@/src/lib/api/learner/application-readiness";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
@@ -13,7 +13,7 @@ export default function ApplicationReadinessPage() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["applicationReadiness", session?.user?.id],
-    queryFn: () => getApplicationReadiness(session!.user!.id),
+    queryFn: () => getApplicationReadiness(),
     enabled: !!session?.user?.id,
   });
 

@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch } from "../../core/server";
 
 export interface SkillGap {
   id: string;
@@ -23,6 +23,6 @@ export interface SkillGapsData {
 /**
  * Retrieves the Skill Gaps analysis data.
  */
-export const getSkillGaps = async (userId: string): Promise<SkillGapsData> => {
-  return await serverFetch(`/api/skill-gaps?userId=${userId}`);
+export const getSkillGaps = async (): Promise<SkillGapsData> => {
+  return await serverFetch(`/api/skill-gaps`);
 };

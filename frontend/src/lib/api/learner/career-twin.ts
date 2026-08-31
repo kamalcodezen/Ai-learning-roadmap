@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch } from "../../core/server";
 
 export interface CareerTwinData {
   targetRole: string;
@@ -26,6 +26,6 @@ export interface CareerTwinData {
 /**
  * Retrieves the Career Twin profile data.
  */
-export const getCareerTwin = async (userId: string): Promise<CareerTwinData> => {
-  return await serverFetch(`/api/career-twin?userId=${userId}`);
+export const getCareerTwin = async (): Promise<CareerTwinData> => {
+  return await serverFetch(`/api/career-twin`);
 };

@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import { getProofGraph } from "@/src/lib/api/proof-graph";
+import { getProofGraph } from "@/src/lib/api/learner/proof-graph";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
@@ -13,7 +13,7 @@ export default function ProofGraphPage() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["proofGraph", session?.user?.id],
-    queryFn: () => getProofGraph(session!.user!.id),
+    queryFn: () => getProofGraph(),
     enabled: !!session?.user?.id,
   });
 

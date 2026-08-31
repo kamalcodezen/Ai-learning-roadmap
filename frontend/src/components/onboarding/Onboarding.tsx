@@ -14,7 +14,7 @@ import { authClient } from "@/src/lib/auth-client";
 import {
   onboardingCareerProfile,
   type CareerProfilePayload,
-} from "@/src/lib/actions/career-profile";
+} from "@/src/lib/actions/learner/career-profile";
 
 import { OnboardingHeader } from "./OnboardingHeader";
 import { CareerGoalSection } from "./CareerGoalSection";

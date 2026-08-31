@@ -1,4 +1,4 @@
-import { serverMutation } from "../core/server";
+import { serverMutation } from "../../core/server";
 
 export type CareerProfilePayload = {
   userId: string;

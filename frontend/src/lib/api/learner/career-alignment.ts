@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch } from "../../core/server";
 
 export interface AlignmentData {
   targetRole: string;
@@ -18,9 +18,9 @@ export interface AlignmentData {
 /**
  * Retrieves the Career Alignment analysis data.
  */
-export const getCareerAlignment = async (userId: string): Promise<AlignmentData> => {
+export const getCareerAlignment = async (): Promise<AlignmentData> => {
   try {
-    return await serverFetch(`/api/career-alignment?userId=${userId}`);
+    return await serverFetch(`/api/career-alignment`);
   } catch (error) {
     console.error("Failed to fetch career alignment:", error);
     throw error;

@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch } from "../../core/server";
 
 export interface ProjectData {
   id: string;
@@ -22,9 +22,9 @@ export interface PortfolioData {
 /**
  * Retrieves the Portfolio Strength analysis data.
  */
-export const getPortfolio = async (userId: string): Promise<PortfolioData> => {
+export const getPortfolio = async (): Promise<PortfolioData> => {
   try {
-    return await serverFetch(`/api/portfolio?userId=${userId}`);
+    return await serverFetch(`/api/portfolio`);
   } catch (error) {
     console.error("Failed to fetch portfolio:", error);
     throw error;

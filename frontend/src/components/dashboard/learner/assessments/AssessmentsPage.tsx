@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import { getAssessments } from "@/src/lib/api/assessments";
+import { getAssessments } from "@/src/lib/api/learner/assessments";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
@@ -14,7 +14,7 @@ export default function AssessmentsPage() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["assessments", session?.user?.id],
-    queryFn: () => getAssessments(session!.user!.id),
+    queryFn: () => getAssessments(),
     enabled: !!session?.user?.id,
   });
 

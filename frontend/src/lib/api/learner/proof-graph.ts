@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch } from "../../core/server";
 
 export interface ProofNode {
   id: string;
@@ -18,6 +18,6 @@ export interface ProofGraphData {
 /**
  * Retrieves the Skill Proof Graph data.
  */
-export const getProofGraph = async (userId: string): Promise<ProofGraphData> => {
-  return await serverFetch(`/api/proof-graph?userId=${userId}`);
+export const getProofGraph = async (): Promise<ProofGraphData> => {
+  return await serverFetch(`/api/proof-graph`);
 };

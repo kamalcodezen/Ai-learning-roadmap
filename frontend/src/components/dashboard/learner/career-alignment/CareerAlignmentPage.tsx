@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import { getCareerAlignment } from "@/src/lib/api/career-alignment";
+import { getCareerAlignment } from "@/src/lib/api/learner/career-alignment";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
@@ -14,7 +14,7 @@ export default function CareerAlignmentPage() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["careerAlignment", session?.user?.id],
-    queryFn: () => getCareerAlignment(session!.user!.id),
+    queryFn: () => getCareerAlignment(),
     enabled: !!session?.user?.id,
   });
 

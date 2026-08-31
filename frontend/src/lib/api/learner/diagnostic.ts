@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch } from "../../core/server";
 
 // ============================================================
 // DIAGNOSTIC QUESTION
@@ -29,5 +29,5 @@ export const getDiagnosticQuestions = async (
   userId: string,
   limit = 5,
 ): Promise<DiagnosticQuestionsResponse> => {
-  return serverFetch(`/api/diagnostic/questions?userId=${userId}&limit=${limit}`);
+  return serverFetch(`/api/diagnostic/questions?limit=${limit}`);
 };

@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import { getSkillGaps } from "@/src/lib/api/skill-gaps";
+import { getSkillGaps } from "@/src/lib/api/learner/skill-gaps";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
@@ -14,7 +14,7 @@ export default function SkillGapsPage() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["skillGaps", session?.user?.id],
-    queryFn: () => getSkillGaps(session!.user!.id),
+    queryFn: () => getSkillGaps(),
     enabled: !!session?.user?.id,
   });
 

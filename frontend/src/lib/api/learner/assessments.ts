@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server";
+import { serverFetch } from "../../core/server";
 
 export interface AssessmentItem {
   id: string;
@@ -21,9 +21,9 @@ export interface AssessmentsData {
 /**
  * Retrieves the Assessments dashboard data.
  */
-export const getAssessments = async (userId: string): Promise<AssessmentsData> => {
+export const getAssessments = async (): Promise<AssessmentsData> => {
   try {
-    return await serverFetch(`/api/assessments?userId=${userId}`);
+    return await serverFetch(`/api/assessments`);
   } catch (error) {
     console.error("Failed to fetch assessments:", error);
     throw error;

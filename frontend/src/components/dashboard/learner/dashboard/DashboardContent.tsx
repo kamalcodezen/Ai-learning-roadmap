@@ -2,10 +2,10 @@
 
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import { getDashboardOverview } from "@/src/lib/api/dashboard";
+import { getDashboardOverview } from "@/src/lib/api/learner/dashboard";
 import { useQuery } from "@tanstack/react-query";
 import DashboardSkeleton from "./DashboardSkeleton";
-import { DashboardData } from "../../shared/types";
+import {  } from "../../shared/types";
 import NextBestActionCard from "../NextBestActionCard";
 import LearningDebtCard from "../LearningDebtCard";
 import SkillHealthCard from "../SkillHealthCard";
@@ -21,7 +21,7 @@ export default function DashboardContent() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboardData", session?.user?.id],
-    queryFn: () => getDashboardOverview(session!.user!.id),
+    queryFn: () => getDashboardOverview(),
     enabled: !!session?.user?.id,
   });
 
