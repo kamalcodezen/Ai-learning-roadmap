@@ -7,11 +7,11 @@ export const metadata: Metadata = {
 
 export default function AdminUsersPage() {
   return (
-    <div className="mx-auto w-full max-w-7xl pb-24 lg:pb-8">
+    <div className="w-full">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">User Management</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Manage roles, permissions, and accounts across the platform.</p>
+          <h1 className="section-title text-left">User <span className="text-brand">Management</span></h1>
+          <p className="section-subtitle mt-1 text-left">Manage roles, permissions, and accounts across the platform.</p>
         </div>
       </div>
       
