@@ -13,6 +13,7 @@ import {
   Users,
   BookOpen,
   ShieldCheck,
+  FileText,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -28,12 +29,77 @@ export interface NavSection {
 }
 
 export const getDashboardNavSections = (prefix: string): NavSection[] => {
-  const learnerPrefix = "/dashboard/learner";
+  const isAdmin = prefix === "/dashboard/admin";
 
+  if (isAdmin) {
+    return [
+      {
+        title: "OVERVIEW",
+        items: [
+          { href: `${prefix}/dashboard`, label: "Dashboard", icon: LayoutDashboard },
+          { href: `${prefix}/analytics`, label: "Analytics", icon: BarChart },
+        ],
+      },
+      {
+        title: "USERS",
+        items: [
+          { href: `${prefix}/users`, label: "All Users", icon: Users },
+        ],
+      },
+      {
+        title: "LEARNING",
+        items: [
+          { href: `${prefix}/roadmaps`, label: "Roadmaps", icon: Route },
+          { href: `${prefix}/skill-health`, label: "Skill Health", icon: Target },
+          { href: `${prefix}/learning-debt`, label: "Learning Debt", icon: BookOpen },
+          { href: `${prefix}/assessments`, label: "Assessments", icon: ClipboardCheck },
+          { href: `${prefix}/projects`, label: "Projects", icon: FolderKanban },
+        ],
+      },
+      {
+        title: "PROOF",
+        items: [
+          { href: `${prefix}/skill-proof`, label: "Skill Proof", icon: GitMerge },
+        ],
+      },
+      {
+        title: "CAREER",
+        items: [
+          { href: `${prefix}/career-readiness`, label: "Career Readiness", icon: Target },
+          { href: `${prefix}/job-reality`, label: "Job Reality", icon: Map },
+        ],
+      },
+      {
+        title: "AI",
+        items: [
+          { href: `${prefix}/ai-usage`, label: "AI Usage", icon: BarChart },
+        ],
+      },
+      {
+        title: "SYSTEM",
+        items: [
+          { href: `${prefix}/activity`, label: "Activity", icon: LayoutDashboard },
+          { href: `${prefix}/audit-logs`, label: "Audit Logs", icon: FileText },
+          { href: `${prefix}/error-logs`, label: "Error Logs", icon: ShieldCheck },
+          { href: `${prefix}/system-health`, label: "System Health", icon: ShieldCheck },
+        ],
+      },
+      {
+        title: "ACCOUNT",
+        items: [
+          { href: `${prefix}/profile`, label: "Profile", icon: User },
+          { href: `${prefix}/settings`, label: "Settings", icon: Settings },
+        ],
+      },
+    ];
+  }
+
+  // Learner routes
+  const learnerPrefix = "/dashboard/learner";
   return [
     {
       title: "OVERVIEW",
-      items: [{ href: `${prefix}`, label: "Dashboard", icon: LayoutDashboard }],
+      items: [{ href: `${learnerPrefix}`, label: "Dashboard", icon: LayoutDashboard }],
     },
     {
       title: "LEARN",
@@ -70,10 +136,20 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
 };
 
 export const getBottomNavItems = (prefix: string): NavLink[] => {
-  const learnerPrefix = "/dashboard/learner";
+  const isAdmin = prefix === "/dashboard/admin";
 
+  if (isAdmin) {
+    return [
+      { href: `${prefix}/dashboard`, label: "Home", icon: LayoutDashboard },
+      { href: `${prefix}/users`, label: "Users", icon: Users },
+      { href: `${prefix}/system-health`, label: "System", icon: ShieldCheck },
+      { href: `${prefix}/profile`, label: "Profile", icon: User },
+    ];
+  }
+
+  const learnerPrefix = "/dashboard/learner";
   return [
-    { href: `${prefix}`, label: "Home", icon: LayoutDashboard },
+    { href: `${learnerPrefix}`, label: "Home", icon: LayoutDashboard },
     { href: `${learnerPrefix}/learning-path`, label: "Paths", icon: Route },
     { href: `${learnerPrefix}/portfolio`, label: "Projects", icon: FolderKanban },
     { href: `${learnerPrefix}/career-twin`, label: "Twin", icon: UserCheck },

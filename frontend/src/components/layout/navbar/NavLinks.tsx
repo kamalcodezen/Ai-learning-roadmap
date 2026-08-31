@@ -73,8 +73,8 @@ export default function NavLinks() {
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
 
   const { data: session } = authClient.useSession();
-  const userRole = (session?.user as { role?: string })?.role || "learner";
-  const prefix = userRole === "admin" ? "/dashboard/admin" : "/dashboard/learner";
+  const userRole = (session?.user as { role?: string })?.role?.toUpperCase() || "LEARNER";
+  const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
   const links = getNavLinks(prefix);
 
   return (

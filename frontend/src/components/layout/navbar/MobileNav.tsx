@@ -21,7 +21,7 @@ export default function MobileNav() {
 
   const userRole = (session?.user as { role?: string })?.role || "learner";
   const prefix = userRole === "admin" ? "/dashboard/admin" : "/dashboard/learner";
-  const links = getDropdownLinks(prefix);
+  const links = getDropdownLinks(userRole, prefix);
 
   return (
     <div className="w-full flex justify-center relative mt-2">
