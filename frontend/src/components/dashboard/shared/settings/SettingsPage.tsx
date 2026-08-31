@@ -1,7 +1,23 @@
+"use client";
+
+import { authClient } from "@/src/lib/auth-client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
-import { Bell, Monitor } from "lucide-react";
+import { Monitor, User, Mail, Shield, Key } from "lucide-react";
+import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
+import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
+import Link from "next/link";
 
 export default function SettingsPage() {
+  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+
+  if (isSessionLoading) {
+    return <GenericPageSkeleton />;
+  }
+
+  const user = session?.user;
+  const userRole = ((user as { role?: string })?.role || "learner").toLowerCase();
+  const profileLink = `/dashboard/${userRole}/profile`;
+
   return (
     <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
       <div className="flex flex-col gap-2">
@@ -10,56 +26,84 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* PERSONAL INFO CARD */}
         <Card className="border-primary/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Monitor className="w-5 h-5 text-primary" /> Appearance
+              <User className="w-5 h-5 text-primary" /> Personal Information
             </CardTitle>
+            <p className="text-sm text-muted-foreground">Your basic account details.</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-xl font-bold text-primary shrink-0">
+                {user?.name?.[0]?.toUpperCase() || "U"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-lg truncate">{user?.name || "User"}</p>
+                <p className="text-sm text-muted-foreground truncate">{user?.email}</p>
+              </div>
+            </div>
+            
+            <Link 
+              href={profileLink}
+              className="inline-block text-sm text-primary hover:underline"
+            >
+              Edit name on Profile page &rarr;
+            </Link>
+          </CardContent>
+        </Card>
+
+        {/* APPEARANCE CARD */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Monitor className="w-5 h-5" /> Appearance
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">Customize the look and feel of the application.</p>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between p-3 bg-card-soft rounded-lg border border-border">
               <div>
-                <p className="font-medium">Theme</p>
-                <p className="text-xs text-muted-foreground">Select your preferred color theme</p>
+                <p className="font-medium">Theme Toggle</p>
+                <p className="text-xs text-muted-foreground">Switch between Light and Dark mode</p>
               </div>
-              <select className="bg-background border border-border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
-                <option>System</option>
-                <option>Dark</option>
-                <option>Light</option>
-              </select>
+              <div className="bg-background border border-border rounded-full flex items-center justify-center">
+                <AnimatedThemeToggler />
+              </div>
             </div>
           </CardContent>
         </Card>
 
+        {/* SECURITY CARD */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Bell className="w-5 h-5" /> Notifications
+              <Key className="w-5 h-5" /> Security Settings
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-card-soft rounded-lg border border-border">
-              <div>
-                <p className="font-medium">Email Alerts</p>
-                <p className="text-xs text-muted-foreground">Receive weekly progress reports</p>
-              </div>
-              <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                <input type="checkbox" name="toggle" id="toggle1" defaultChecked className="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-primary" style={{ right: 0, borderColor: 'var(--primary)' }}/>
-                <label htmlFor="toggle1" className="toggle-label block overflow-hidden h-5 rounded-full bg-primary/20 cursor-pointer"></label>
-              </div>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-card-soft rounded-lg border border-border">
-              <div>
-                <p className="font-medium">Milestone Notifications</p>
-                <p className="text-xs text-muted-foreground">When you complete a major path</p>
-              </div>
-              <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                <input type="checkbox" name="toggle" id="toggle2" defaultChecked className="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-primary" style={{ right: 0, borderColor: 'var(--primary)' }}/>
-                <label htmlFor="toggle2" className="toggle-label block overflow-hidden h-5 rounded-full bg-primary/20 cursor-pointer"></label>
-              </div>
+          <CardContent className="space-y-4 text-sm">
+            <div className="space-y-3">
+              <Link 
+                href={profileLink}
+                className="flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg bg-card-soft border border-border hover:border-primary/50 transition-colors"
+              >
+                <Shield className="w-4 h-4 text-muted-foreground" />
+                <span className="font-medium">Change Password on Profile</span>
+              </Link>
+              
+              <Link 
+                href="/forgot-password"
+                className="flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg bg-card-soft border border-border hover:border-primary/50 transition-colors"
+              >
+                <Mail className="w-4 h-4 text-muted-foreground" />
+                <span className="font-medium">Reset Password via Email</span>
+              </Link>
             </div>
           </CardContent>
         </Card>
+
       </div>
     </div>
   );
