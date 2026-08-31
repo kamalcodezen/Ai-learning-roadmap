@@ -1,4 +1,20 @@
+import { Metadata } from "next";
+import AdminCareerReadinessView from "@/src/components/dashboard/admin/AdminCareerReadinessView";
 
-import AdminCareerReadinessView from '@/src/components/dashboard/admin/AdminCareerReadinessView';
-export default function Page() { return <div className='flex w-full flex-col gap-6 p-4 md:p-8'><h1 className='text-3xl font-bold'>Career Readiness</h1><AdminCareerReadinessView /></div>; }
+export const metadata: Metadata = {
+  title: "Career Readiness | Admin | AI Pather",
+};
 
+export default function Page() {
+  return (
+    <div className="w-full">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Career <span className="text-brand">Readiness</span></h1>
+          <p className="section-subtitle mt-1 text-left">Assess learner preparedness for target career roles.</p>
+        </div>
+      </div>
+      <AdminCareerReadinessView />
+    </div>
+  );
+}

@@ -1,11 +1,18 @@
+import { Metadata } from "next";
 import AdminProjectsView from "@/src/components/dashboard/admin/AdminProjectsView";
 
-export default function AdminProjectsPage() {
+export const metadata: Metadata = {
+  title: "Projects Overview | Admin | AI Pather",
+};
+
+export default function Page() {
   return (
-    <div className="flex w-full flex-col gap-6 p-4 md:p-8">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">Projects</h1>
-        <p className="text-muted-foreground">Track learner projects and portfolio evidence.</p>
+    <div className="w-full">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Projects <span className="text-brand">Overview</span></h1>
+          <p className="section-subtitle mt-1 text-left">Track learner projects and portfolio evidence.</p>
+        </div>
       </div>
       <AdminProjectsView />
     </div>

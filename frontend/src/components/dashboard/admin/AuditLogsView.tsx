@@ -1,17 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAdminAuditLogs } from "@/src/lib/api/admin/audit-logs";
+import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
-import { ArrowLeft, ArrowRight, FileText, User } from "lucide-react";
-import GenericPageSkeleton from "../shared/GenericPageSkeleton";
-
+import { FileText, User } from "lucide-react";
+import { useDebounce } from "use-debounce";
+import { Label, SearchField, Skeleton } from "@heroui/react";
+import { Card, CardContent, CardHeader } from "@/src/components/ui/Card";
 
 export default function AuditLogsView() {
   const { data: session } = authClient.useSession();
   const userId = session?.user?.id;
 
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 500);
   const [page, setPage] = useState(1);
   const take = 20;
   const skip = (page - 1) * take;
@@ -22,63 +26,112 @@ export default function AuditLogsView() {
     enabled: !!userId,
   });
 
-  if (isLoading) {
-    return <GenericPageSkeleton />;
-  }
+  const filteredLogs = useMemo(() => {
+    if (!data?.logs) return [];
+    if (!debouncedSearch) return data.logs;
+    const q = debouncedSearch.toLowerCase();
+    return data.logs.filter(
+      (log: { action: string; admin: { name: string }; targetId: string | null }) =>
+        log.action.toLowerCase().includes(q) ||
+        log.admin.name.toLowerCase().includes(q) ||
+        (log.targetId && log.targetId.toLowerCase().includes(q))
+    );
+  }, [data, debouncedSearch]);
 
-  if (error || !data) {
+  if (isLoading && !data) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 text-center bg-red-500/10 rounded-xl border border-red-500/20">
-        <p className="text-red-500 font-medium">Failed to load audit logs.</p>
+      <div className="space-y-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Skeleton className="h-10 flex-1 rounded-md" />
+          <Skeleton className="h-10 w-28 rounded-md" />
+        </div>
+        <Skeleton className="h-[400px] w-full rounded-xl" />
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-5 w-44 rounded-md" />
+          <Skeleton className="h-9 w-40 rounded-md" />
+        </div>
       </div>
     );
   }
 
-  const { logs, total } = data;
+  if (error || !data) {
+    return (
+      <div className="flex h-[400px] items-center justify-center rounded-xl bg-red-500/10 border border-red-500/20">
+        <p className="text-red-500 font-medium">Unable to load audit logs. Please try again.</p>
+      </div>
+    );
+  }
+
+  const { total } = data;
   const totalPages = Math.ceil(total / take) || 1;
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-xl border border-border/50 bg-card overflow-hidden shadow-sm">
+    <Card className="gap-0 p-0 border-[5px] border-[#eae0ff] dark:border-[#5b3491]">
+      <CardHeader className="border-b border-border gap-0 p-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <SearchField
+            className="flex-1 w-full max-w-md"
+            value={search}
+            onChange={(val) => { setSearch(val); setPage(1); }}
+          >
+            <Label>Search</Label>
+            <SearchField.Group>
+              <SearchField.SearchIcon />
+              <SearchField.Input className="w-full" placeholder="Search by action, admin name or target..." />
+              <SearchField.ClearButton />
+            </SearchField.Group>
+          </SearchField>
+          <button
+            onClick={() => exportAdminData(userId!, "audit-logs")}
+            className="w-full sm:w-auto bg-[var(--color-brand)] text-white h-10 px-4 rounded-md text-sm font-medium hover:brightness-110 transition"
+          >
+            Export CSV
+          </button>
+        </div>
+      </CardHeader>
+
+      <CardContent className="p-0">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-muted/50 text-muted-foreground border-b border-border/50">
+          <table className="w-full min-w-[600px] border-collapse">
+            <thead>
               <tr>
-                <th className="px-6 py-4 font-medium">Action</th>
-                <th className="px-6 py-4 font-medium">Admin</th>
-                <th className="px-6 py-4 font-medium">Target ID</th>
-                <th className="px-6 py-4 font-medium">Details</th>
-                <th className="px-6 py-4 font-medium">Date</th>
+                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Action</th>
+                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Admin</th>
+                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Target ID</th>
+                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Details</th>
+                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Date</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border/50">
-              {logs.length === 0 ? (
+            <tbody>
+              {filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
-                    <div className="flex flex-col items-center gap-2">
+                  <td colSpan={5} className="p-4">
+                    <div className="py-8 text-center text-muted-foreground flex flex-col items-center gap-2">
                       <FileText className="h-8 w-8 opacity-50" />
-                      <p>No audit logs found.</p>
+                      No audit logs found matching your search.
                     </div>
                   </td>
                 </tr>
               ) : (
-                logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="px-6 py-4">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+                filteredLogs.map((log: { id: string; action: string; admin: { name: string; email: string }; targetId: string | null; details: Record<string, unknown>; createdAt: string }) => (
+                  <tr key={log.id} className="border-t border-[var(--color-border)] hover:bg-muted/30 transition-colors">
+                    <td className="p-4">
+                      <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary">
                         {log.action}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-muted-foreground" />
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                          <User className="size-4" />
+                        </div>
                         <div>
-                          <p className="font-medium text-foreground">{log.admin.name}</p>
-                          <p className="text-xs text-muted-foreground">{log.admin.email}</p>
+                          <div className="font-medium text-foreground">{log.admin.name}</div>
+                          <div className="text-xs text-muted-foreground">{log.admin.email}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="p-4">
                       {log.targetId ? (
                         <span className="font-mono text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
                           {log.targetId}
@@ -87,10 +140,10 @@ export default function AuditLogsView() {
                         <span className="text-muted-foreground">-</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-xs text-muted-foreground max-w-[200px] truncate">
+                    <td className="p-4 text-xs text-muted-foreground max-w-[200px] truncate">
                       {log.details ? JSON.stringify(log.details) : "-"}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-muted-foreground">
+                    <td className="p-4 whitespace-nowrap text-muted-foreground">
                       {new Date(log.createdAt).toLocaleString()}
                     </td>
                   </tr>
@@ -99,31 +152,31 @@ export default function AuditLogsView() {
             </tbody>
           </table>
         </div>
-      </div>
 
-      {total > take && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            Showing {skip + 1} to {Math.min(skip + take, total)} of {total} results
-          </p>
-          <div className="flex gap-2">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="gap-1"
-            >
-              <ArrowLeft className="h-4 w-4" /> Previous
-            </button>
-            <button
-              disabled={page >= totalPages}
-              onClick={() => setPage((p) => p + 1)}
-              className="gap-1"
-            >
-              Next <ArrowRight className="h-4 w-4" />
-            </button>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-border px-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Showing {skip + 1} to {Math.min(skip + take, total)} of {total} results
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="px-4 py-1.5 text-sm rounded-md bg-[var(--color-muted)] text-foreground font-medium hover:brightness-110 disabled:opacity-50 transition"
+              >
+                Previous
+              </button>
+              <button
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => p + 1)}
+                className="px-4 py-1.5 text-sm rounded-md bg-[var(--color-primary)] text-white font-medium hover:brightness-110 disabled:opacity-50 transition"
+              >
+                Next
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

@@ -1,13 +1,14 @@
 import { serverFetch } from "../../core/server";
 
 export interface AdminUserListResult {
-  users: Array<{
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    createdAt: string;
-  }>;
+    users: Array<{
+      id: string;
+      name: string;
+      email: string;
+      role: string;
+      createdAt: string;
+      image?: string | null;
+    }>;
   total: number;
 }
 
