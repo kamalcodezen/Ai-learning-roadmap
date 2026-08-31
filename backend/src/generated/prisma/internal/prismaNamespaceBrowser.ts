@@ -65,7 +65,11 @@ export const ModelName = {
   Milestone: 'Milestone',
   Project: 'Project',
   ActivityLog: 'ActivityLog',
-  SkillStateHistory: 'SkillStateHistory'
+  SkillStateHistory: 'SkillStateHistory',
+  AdminAuditLog: 'AdminAuditLog',
+  AiUsageLog: 'AiUsageLog',
+  ErrorLog: 'ErrorLog',
+  AnalyticsSnapshot: 'AnalyticsSnapshot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -124,6 +128,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
+  role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   twoFactorEnabled: 'twoFactorEnabled'
@@ -301,6 +306,63 @@ export const SkillStateHistoryScalarFieldEnum = {
 } as const
 
 export type SkillStateHistoryScalarFieldEnum = (typeof SkillStateHistoryScalarFieldEnum)[keyof typeof SkillStateHistoryScalarFieldEnum]
+
+
+export const AdminAuditLogScalarFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  action: 'action',
+  targetId: 'targetId',
+  details: 'details',
+  createdAt: 'createdAt'
+} as const
+
+export type AdminAuditLogScalarFieldEnum = (typeof AdminAuditLogScalarFieldEnum)[keyof typeof AdminAuditLogScalarFieldEnum]
+
+
+export const AiUsageLogScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  model: 'model',
+  feature: 'feature',
+  status: 'status',
+  durationMs: 'durationMs',
+  tokensUsed: 'tokensUsed',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type AiUsageLogScalarFieldEnum = (typeof AiUsageLogScalarFieldEnum)[keyof typeof AiUsageLogScalarFieldEnum]
+
+
+export const ErrorLogScalarFieldEnum = {
+  id: 'id',
+  errorType: 'errorType',
+  message: 'message',
+  endpoint: 'endpoint',
+  method: 'method',
+  statusCode: 'statusCode',
+  userId: 'userId',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type ErrorLogScalarFieldEnum = (typeof ErrorLogScalarFieldEnum)[keyof typeof ErrorLogScalarFieldEnum]
+
+
+export const AnalyticsSnapshotScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  totalUsers: 'totalUsers',
+  totalRoadmaps: 'totalRoadmaps',
+  totalAssessments: 'totalAssessments',
+  totalProjects: 'totalProjects',
+  activeUsers: 'activeUsers',
+  careerReadyCount: 'careerReadyCount',
+  createdAt: 'createdAt'
+} as const
+
+export type AnalyticsSnapshotScalarFieldEnum = (typeof AnalyticsSnapshotScalarFieldEnum)[keyof typeof AnalyticsSnapshotScalarFieldEnum]
 
 
 export const SortOrder = {
