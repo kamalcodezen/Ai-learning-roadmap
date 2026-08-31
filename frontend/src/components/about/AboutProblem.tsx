@@ -7,7 +7,7 @@ import {
   FiArrowDown,
   FiXCircle,
   FiCheckCircle,
-  } from "react-icons/fi";
+} from "react-icons/fi";
 import { BorderBeam } from "@/src/components/ui/border-beam";
 
 export default function AboutProblem() {
