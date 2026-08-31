@@ -24,6 +24,11 @@ export default function SignOutButton({ onSignOut }: SignOutButtonProps) {
           router.replace("/");
           router.refresh();
         },
+        onError: () => {
+          onSignOut?.();
+          router.replace("/");
+          router.refresh();
+        },
       },
     });
 

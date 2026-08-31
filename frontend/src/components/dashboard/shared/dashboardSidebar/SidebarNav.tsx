@@ -18,8 +18,8 @@ export default function SidebarNav({
   const { data: session } = authClient.useSession();
   const user = session?.user;
 
-  const userRole = (user as { role?: string })?.role || "learner";
-  const prefix = userRole === "admin" ? "/dashboard/admin" : "/dashboard/learner";
+  const userRole = (user as { role?: string })?.role || "LEARNER";
+  const prefix = userRole.toUpperCase() === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
   const dashboardNavSections = getDashboardNavSections(prefix);
 
   const isActive = (href: string) =>

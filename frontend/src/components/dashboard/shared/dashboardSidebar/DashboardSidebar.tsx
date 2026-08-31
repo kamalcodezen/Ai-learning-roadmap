@@ -27,8 +27,8 @@ export default function DashboardSidebar() {
   const user = session?.user;
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const userRole = (user as { role?: string })?.role || "learner";
-  const prefix = userRole === "admin" ? "/dashboard/admin" : "/dashboard/learner";
+  const userRole = (user as { role?: string })?.role || "LEARNER";
+  const prefix = userRole.toUpperCase() === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
   const bottomNavItems = getBottomNavItems(prefix);
 
   useEffect(() => {

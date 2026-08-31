@@ -12,12 +12,23 @@ interface ProfileDropdownProps {
   email?: string;
 }
 
-export const getDropdownLinks = (prefix: string) => [
-  { label: "Profile", href: `${prefix}/profile`, variant: "default" },
-  { label: "Dashboard", href: `${prefix}`, variant: "default" },
-  { label: "Settings", href: `${prefix}/settings`, variant: "default" },
-  { label: "Sign out", href: "#", variant: "danger" },
-] as const;
+export const getDropdownLinks = (role: string, prefix: string) => {
+  if (role === "ADMIN") {
+    return [
+      { label: "Profile", href: `${prefix}/profile`, variant: "default" },
+      { label: "Dashboard", href: `${prefix}/dashboard`, variant: "default" },
+      { label: "Settings", href: `${prefix}/settings`, variant: "default" },
+      { label: "Sign out", href: "#", variant: "danger" },
+    ] as const;
+  }
+  
+  return [
+    { label: "Profile", href: `${prefix}/profile`, variant: "default" },
+    { label: "Dashboard", href: `${prefix}`, variant: "default" },
+    { label: "Settings", href: `${prefix}/settings`, variant: "default" },
+    { label: "Sign out", href: "#", variant: "danger" },
+  ] as const;
+};
 
 export default function ProfileDropdown({
   name,
@@ -28,9 +39,9 @@ export default function ProfileDropdown({
   const router = useRouter();
 
   const { data: session } = authClient.useSession();
-  const userRole = (session?.user as { role?: string })?.role || "learner";
-  const prefix = userRole === "admin" ? "/dashboard/admin" : "/dashboard/learner";
-  const links = getDropdownLinks(prefix);
+  const userRole = (session?.user as { role?: string })?.role?.toUpperCase() || "LEARNER";
+  const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
+  const links = getDropdownLinks(userRole, prefix);
 
   useEffect(() => {
     AOS.init({ duration: 400, easing: "ease-out", once: true });
@@ -48,6 +59,10 @@ export default function ProfileDropdown({
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
+          router.replace("/");
+          router.refresh();
+        },
+        onError: () => {
           router.replace("/");
           router.refresh();
         },
