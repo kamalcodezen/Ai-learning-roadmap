@@ -7,4 +7,8 @@ const router = Router();
 // Endpoint: /api/learning-path?userId=${userId}
 router.get("/", requireAuth, learningPathController.getLearningPath);
 
+// Endpoint: /api/learning-path/:milestoneId/complete?userId=${userId}
+router.post("/:milestoneId/complete", requireAuth, learningPathController.completeMilestone);
+
+
 export default router;
