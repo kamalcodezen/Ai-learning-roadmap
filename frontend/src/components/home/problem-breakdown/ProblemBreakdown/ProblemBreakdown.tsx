@@ -11,7 +11,7 @@ import ProblemHeader from "../ProblemHeader";
 
 export default function ProblemBreakdown() {
   return (
-    <section className="section-pad relative w-full overflow-x-clip transition-colors duration-300">
+    <section id="problem-breakdown" className="section-pad relative w-full overflow-x-clip transition-colors duration-300">
       {/* TURBOPACK-SAFE HIGH-CONTRAST INLINE STYLES */}
       <ProblemBreakdownStyles />
 
