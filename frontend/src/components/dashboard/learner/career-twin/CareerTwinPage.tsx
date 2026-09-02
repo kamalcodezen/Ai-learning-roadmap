@@ -76,7 +76,7 @@ export default function CareerTwinPage() {
                     </div>
                     <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                       <div
-                        className={`h-full rounded-full ${value > 70 ? 'bg-green-500' : value > 30 ? 'bg-amber-500' : 'bg-red-500'}`}
+                        className={`h-full rounded-full ${(value as number) > 70 ? 'bg-green-500' : (value as number) > 30 ? 'bg-amber-500' : 'bg-red-500'}`}
                         style={{ width: `${value}%` }}
                       />
                     </div>
