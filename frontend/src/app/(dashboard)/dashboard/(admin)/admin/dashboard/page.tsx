@@ -7,14 +7,7 @@ export const metadata: Metadata = {
 
 export default function AdminDashboardPage() {
   return (
-    <div className="mx-auto w-full max-w-7xl pb-24 lg:pb-8">
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Admin Overview</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Monitor platform health and user activity.</p>
-        </div>
-      </div>
-      
+    <div className="flex w-full flex-col gap-6">
       <DashboardStats />
     </div>
   );

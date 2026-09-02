@@ -1,4 +1,20 @@
+import AdminSkillHealthView from "@/src/components/dashboard/admin/AdminSkillHealthView";
+import { Metadata } from "next";
 
-import AdminSkillHealthView from '@/src/components/dashboard/admin/AdminSkillHealthView';
-export default function Page() { return <div className='flex w-full flex-col gap-6 p-4 md:p-8'><h1 className='text-3xl font-bold'>Skill Health</h1><AdminSkillHealthView /></div>; }
+export const metadata: Metadata = {
+  title: "Skill Health | Admin | AI Pather",
+};
 
+export default function Page() {
+  return (
+    <div className="w-full">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Skill <span className="text-brand">Health</span></h1>
+          <p className="section-subtitle mt-1 text-left">Overview of strong and weak skills across learners.</p>
+        </div>
+      </div>
+      <AdminSkillHealthView />
+    </div>
+  );
+}

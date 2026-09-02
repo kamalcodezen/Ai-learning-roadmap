@@ -1,11 +1,18 @@
 import AdminAssessmentsView from "@/src/components/dashboard/admin/AdminAssessmentsView";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Assessments | Admin | AI Pather",
+};
 
 export default function AdminAssessmentsPage() {
   return (
-    <div className="flex w-full flex-col gap-6 p-4 md:p-8">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">Assessments</h1>
-        <p className="text-muted-foreground">View platform-wide assessment analytics.</p>
+    <div className="w-full">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Assessment <span className="text-brand">Analytics</span></h1>
+          <p className="section-subtitle mt-1 text-left">Review platform-wide assessment attempts, completion and performance.</p>
+        </div>
       </div>
       <AdminAssessmentsView />
     </div>

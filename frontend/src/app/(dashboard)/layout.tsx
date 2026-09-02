@@ -16,9 +16,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <div className="h-screen w-full overflow-hidden bg-[#eae0ff] lg:pt-[15px] lg:pb-[15px] lg:pr-[15px] dark:bg-[#5b3491]">
         <div className="flex h-full w-full overflow-hidden bg-background lg:rounded-2xl dark:bg-[#0b0f1a]">
           <DashboardSidebar />
-          <DashboardScrollProvider>
-            {children}
-          </DashboardScrollProvider>
+          <DashboardScrollProvider>{children}</DashboardScrollProvider>
         </div>
       </div>
     </SessionGuard>

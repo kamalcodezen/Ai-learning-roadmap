@@ -57,15 +57,15 @@ const TestimonialSection = () => {
   return (
     <section className="section-pad relative w-full overflow-hidden px-4 sm:px-8 md:px-12  border-t border-border/40">
       <div className="global-pos relative z-10">
-        <div className="mb-10 md:mb-16">
+        <div className="mb-6 md:mb-8">
           <h2 className="section-title">
             What Our Learners Say About <span className="text-brand">
               Their Journey
               </span>
           </h2>
-          <p className="section-subtitle mt-4">
+          <p className="section-subtitle mt-2 max-w-max">
             Join thousands of professionals who have eliminated their learning
-            debt and built a verifiable career profile.
+            debt and built a verifiable career profile
           </p>
         </div>
 

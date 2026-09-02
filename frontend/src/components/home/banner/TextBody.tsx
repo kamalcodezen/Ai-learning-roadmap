@@ -40,7 +40,7 @@ export default function TextBody({
   const plainHeading = heading.replace(/\*/g, "");
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col items-center pb-10 text-center sm:pb-14">
+    <div className="mx-auto flex w-full max-w-5xl flex-col items-center pb-2 text-center sm:pb-14">
 
       {/* Eyebrow */}
       <motion.div
@@ -48,7 +48,7 @@ export default function TextBody({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="
-          mb-4
+          mb-2
           flex
           items-center
           gap-2
@@ -59,6 +59,7 @@ export default function TextBody({
           tracking-[0.18em]
           text-[#9F54F7]
           [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
+          sm:mb-4
         "
       >
         <span className="text-sm">✦</span>
@@ -73,10 +74,11 @@ export default function TextBody({
         transition={{ duration: 0.45, ease: "easeOut" }}
         aria-label={plainHeading}
         className="
-          text-h1
+          text-3xl
           font-extrabold
           text-white
           [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
+          sm:text-h1
           sm:whitespace-nowrap
           sm:[text-wrap:unset]
         "
@@ -96,13 +98,14 @@ export default function TextBody({
         }}
         className="
           section-description
-          mt-5
+          mt-2
           max-w-xl
           px-4
           font-poppins
-          text-md
+          text-sm
           text-white/80
           [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
+          sm:mt-5
           sm:text-lg
         "
       >

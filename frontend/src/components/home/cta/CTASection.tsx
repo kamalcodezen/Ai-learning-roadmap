@@ -40,7 +40,7 @@ function DotPattern({ className = '' }: { className?: string }) {
 
 export default function CTASection() {
   return (
-    <section id="pricing" className="section-pad pb-0 relative overflow-hidden">
+    <section className="section-pad pb-0 relative overflow-hidden">
       {/* Subtle grid background */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.08] dark:opacity-[0.04]"
@@ -66,7 +66,7 @@ export default function CTASection() {
             Let&apos;s Build Your AI Career Path
           </h1>
 
-          <p className="font-poppins text-lg leading-7 text-muted-foreground mb-6 [&:not(:first-child)]:mt-6 text-balance mx-auto max-w-2xl">
+          <p className="font-poppins text-lg leading-7 text-muted-foreground mb-6 [&:not(:first-child)]:mt-6 text-balance mx-auto max-w-max">
             Tell us where you want to go, and we&apos;ll help you understand what to learn next
           </p>
 
