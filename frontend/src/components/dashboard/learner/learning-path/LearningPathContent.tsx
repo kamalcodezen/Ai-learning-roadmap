@@ -1,20 +1,30 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { authClient } from "@/src/lib/auth-client";
-import { getLearningPath } from "@/src/lib/api/learner/learning-path";
-import { useQuery } from "@tanstack/react-query";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
+import { getLearningPath, completeMilestone } from "@/src/lib/api/learner/learning-path";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import LearningPathSkeleton from "./LearningPathSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
 import { CheckCircle2, ArrowRight, Clock, BookOpen, Target } from "lucide-react";
 
 export default function LearningPathContent() {
-  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+  const { data: session, isPending: isSessionLoading } = useDashboardSession();
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["learningPath", session?.user?.id],
     queryFn: () => getLearningPath(),
     enabled: !!session?.user?.id,
+  });
+
+  const completeMutation = useMutation({
+    mutationFn: (milestoneId: string) => completeMilestone(milestoneId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["learningPath", session?.user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["dashboardData", session?.user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["careerTwin", session?.user?.id] });
+    },
   });
 
   if (isSessionLoading) {
@@ -132,8 +142,11 @@ export default function LearningPathContent() {
                       )}
 
                       {milestone.status === 'current' ? (
-                        <button className="w-full bg-primary text-primary-foreground py-2.5 rounded-lg text-sm font-medium hover:brightness-110 flex items-center justify-center gap-2 transition-all">
-                          Continue Learning <ArrowRight className="w-4 h-4" />
+                        <button 
+                          onClick={() => completeMutation.mutate(milestone.id)}
+                          disabled={completeMutation.isPending}
+                          className="w-full bg-primary text-primary-foreground py-2.5 rounded-lg text-sm font-medium hover:brightness-110 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                          {completeMutation.isPending && completeMutation.variables === milestone.id ? "Completing..." : "Complete Milestone"} <ArrowRight className="w-4 h-4" />
                         </button>
                       ) : milestone.status === 'upcoming' ? (
                         <button className="w-full bg-muted text-muted-foreground py-2.5 rounded-lg text-sm font-medium border border-border hover:bg-card-soft transition-all" disabled>
