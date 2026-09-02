@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { getAssessments } from "@/src/lib/api/learner/assessments";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
@@ -10,7 +10,7 @@ import { CheckCircle2, PlayCircle, Clock, Trophy, Target, ArrowRight } from "luc
 import Link from "next/link";
 
 export default function AssessmentsPage() {
-  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+  const { data: session, isPending: isSessionLoading } = useDashboardSession();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["assessments", session?.user?.id],
