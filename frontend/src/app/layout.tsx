@@ -23,7 +23,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`antialiased scroll-smooth ${hindSiliguri.variable}`}
+      className={`antialiased ${hindSiliguri.variable}`}
     >
       <body
         className="flex flex-col antialiased"
