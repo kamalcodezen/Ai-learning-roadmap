@@ -27,6 +27,7 @@ import { useTheme } from "next-themes";
 import { authClient } from "@/src/lib/auth-client";
 import { showToast } from "@/src/components/ui/toast";
 import AdminGlowCard from "@/src/components/dashboard/admin/AdminGlowCard";
+import Image from "next/image";
 
 export interface ProfileMetric {
   label: string;
@@ -80,7 +81,8 @@ export default function DashboardProfile({
   const { theme } = useTheme();
   const dark = theme === "dark";
   const primary = dark ? "#B978FF" : "#9F54F7";
-  const gridStroke = "color-mix(in srgb, var(--color-foreground) 40%, transparent)";
+  const gridStroke =
+    "color-mix(in srgb, var(--color-foreground) 40%, transparent)";
   const tickColor = dark ? "#a8a8a8" : "#6b6b6b";
 
   const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
@@ -132,7 +134,10 @@ export default function DashboardProfile({
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      return showToast({ variant: "error", message: "Please select a valid image file" });
+      return showToast({
+        variant: "error",
+        message: "Please select a valid image file",
+      });
     }
 
     setIsUpdatingAvatar(true);
@@ -171,7 +176,8 @@ export default function DashboardProfile({
     } catch (error) {
       showToast({
         variant: "error",
-        message: (error as Error)?.message || "Failed to update profile picture",
+        message:
+          (error as Error)?.message || "Failed to update profile picture",
       });
     } finally {
       setIsUpdatingAvatar(false);
@@ -183,7 +189,7 @@ export default function DashboardProfile({
       {/* ============ COVER & AVATAR ============ */}
       <div className="dashboard-card relative !p-0 overflow-hidden">
         <div className="h-48 md:h-64 w-full relative bg-gradient-to-r from-primary/40 via-secondary/20 to-primary/40">
-          <img
+          <Image
             src={coverImage}
             alt="Profile Cover"
             className="w-full h-full object-cover opacity-80"
@@ -266,7 +272,8 @@ export default function DashboardProfile({
                     <Edit2 size={16} />
                   </button>
                   <span className="text-base sm:text-sm bg-primary/20 text-primary font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider h-5 flex items-center font-urbanist">
-                    {(activeUser as { role?: string } | undefined)?.role || roleLabel}
+                    {(activeUser as { role?: string } | undefined)?.role ||
+                      roleLabel}
                   </span>
                 </h1>
               )}
@@ -323,10 +330,14 @@ export default function DashboardProfile({
 
           {quickMetrics.length > 0 && (
             <AdminGlowCard corner="bottom-left">
-              <h3 className="text-lg font-bold font-poppins mb-3">Quick Metrics</h3>
+              <h3 className="text-lg font-bold font-poppins mb-3">
+                Quick Metrics
+              </h3>
               <div
                 className={`grid gap-2 text-center`}
-                style={{ gridTemplateColumns: `repeat(${quickMetrics.length}, minmax(0, 1fr))` }}
+                style={{
+                  gridTemplateColumns: `repeat(${quickMetrics.length}, minmax(0, 1fr))`,
+                }}
               >
                 {quickMetrics.map((metric, idx) => (
                   <div
@@ -366,9 +377,23 @@ export default function DashboardProfile({
                     margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                   >
                     <defs>
-                      <linearGradient id="profilePrimary" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={primary} stopOpacity={0.3} />
-                        <stop offset="95%" stopColor={primary} stopOpacity={0} />
+                      <linearGradient
+                        id="profilePrimary"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="5%"
+                          stopColor={primary}
+                          stopOpacity={0.3}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor={primary}
+                          stopOpacity={0}
+                        />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
