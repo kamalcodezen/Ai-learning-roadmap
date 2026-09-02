@@ -73,7 +73,9 @@ export default function TextBody({
         transition={{ duration: 0.45, ease: "easeOut" }}
         aria-label={plainHeading}
         className="
-          text-h1
+          text-[40px]
+          md:text-6xl
+          lg:text-7xl
           font-extrabold
           text-white
           [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
@@ -97,10 +99,11 @@ export default function TextBody({
         className="
           section-description
           mt-5
-          max-w-xl
+          max-w-[95%]
+          md:max-w-xl
           px-4
           font-poppins
-          text-md
+          text-lg
           text-white/80
           [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
           sm:text-lg
