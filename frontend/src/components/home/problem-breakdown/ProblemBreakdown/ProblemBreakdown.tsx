@@ -11,13 +11,13 @@ import ProblemHeader from "../ProblemHeader";
 
 export default function ProblemBreakdown() {
   return (
-    <section className="section-pad relative w-full overflow-x-clip transition-colors duration-300">
+    <section className="section-pad !pt-4 sm:!pt-6 lg:!pt-16 relative w-full overflow-x-clip transition-colors duration-300">
       {/* TURBOPACK-SAFE HIGH-CONTRAST INLINE STYLES */}
       <ProblemBreakdownStyles />
 
       <div className="global-pos px-4 sm:px-6 lg:px-8">
         {/* শুধুমাত্র মোবাইলে দৃশ্যমান, ডেস্কটপে হাইড থাকবে */}
-        <div className="block lg:hidden">
+        <div className="block lg:hidden mt-5 sm:mt-8">
           <ProblemHeader />
         </div>
 
