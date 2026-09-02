@@ -83,6 +83,11 @@ export type Milestone = Prisma.MilestoneModel
  */
 export type Project = Prisma.ProjectModel
 /**
+ * Model ProjectEvidence
+ * 
+ */
+export type ProjectEvidence = Prisma.ProjectEvidenceModel
+/**
  * Model ActivityLog
  * 
  */
@@ -112,3 +117,18 @@ export type ErrorLog = Prisma.ErrorLogModel
  * 
  */
 export type AnalyticsSnapshot = Prisma.AnalyticsSnapshotModel
+/**
+ * Model InterviewSession
+ * 
+ */
+export type InterviewSession = Prisma.InterviewSessionModel
+/**
+ * Model InterviewQuestion
+ * 
+ */
+export type InterviewQuestion = Prisma.InterviewQuestionModel
+/**
+ * Model InterviewAnswer
+ * 
+ */
+export type InterviewAnswer = Prisma.InterviewAnswerModel
