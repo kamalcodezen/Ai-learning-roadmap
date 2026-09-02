@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { getProgress } from "@/src/lib/api/learner/progress";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Ca
 import { Clock, Calendar, Flame, TrendingUp, BookOpen, FileCode, CheckSquare } from "lucide-react";
 
 export default function ProgressPage() {
-  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+  const { data: session, isPending: isSessionLoading } = useDashboardSession();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["progress", session?.user?.id],
