@@ -26,7 +26,7 @@ export default function MobileCardCarousel({
   };
 
   return (
-    <div className="w-full py-6">
+    <div className="w-full py-2">
       <Swiper
         modules={[EffectCoverflow]}
         effect="coverflow"

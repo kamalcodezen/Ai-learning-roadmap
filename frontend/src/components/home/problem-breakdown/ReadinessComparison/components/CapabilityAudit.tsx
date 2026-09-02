@@ -401,7 +401,7 @@ export default function CapabilityAudit() {
           THE 4 PROOF PILLARS
         </span>
         
-        <h4 className="section-title">
+        <h4 className="section-title font-bold">
           Progress Is <span className="text-brand">
               not Proof
               </span>

@@ -20,14 +20,16 @@ export default function AudienceBanner() {
       className="
         relative
         isolate
-        min-h-screen
         w-full
         flex
         items-center
         justify-center
         overflow-hidden
-        pt-24
-        pb-12
+        pt-20
+        pb-8
+        sm:pt-24
+        sm:pb-12
+        sm:min-h-screen
         bg-[#f4edff]
         dark:bg-background
       "

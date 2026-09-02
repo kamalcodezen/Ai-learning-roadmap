@@ -81,13 +81,13 @@ const Header = ({ billing, onBillingChange }: HeaderProps) => {
     }`;
 
   return (
-    <div className="text-center">
-      <h2 className="font-poppins text-3xl font-extrabold leading-[1.05] tracking-tight text-foreground md:text-4xl">
+    <div className="text-left">
+      <h2 className="section-title font-bold">
         Simple Plans, <span className="text-brand">Maximum Learning</span>
       </h2>
 
-      <p className="mx-auto section-description mt-4 max-w-xl font-poppins text-lg text-muted-foreground">
-        Start for free with full diagnostics, or upgrade to unlock unlimited skill proofing and real-time job readiness analysis.
+      <p className="section-subtitle mt-2 max-w-max">
+        Start for free with full diagnostics, or upgrade to unlock unlimited skill proofing and real-time job readiness analysis
       </p>
 
       {/* Billing Toggle — button pair, selected side highlighted */}

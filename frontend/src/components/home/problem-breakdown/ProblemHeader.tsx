@@ -2,15 +2,12 @@
 
 export default function ProblemHeader() {
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col items-center pb-0 text-center lg:pb-10">
-      <h2 className="font-poppins text-3xl font-extrabold leading-[1.05] tracking-tight text-foreground md:text-4xl">
-        Why Static Roadmaps{" "}
-        <span className="text-brand">
-          Break Down
-        </span>
+    <div className="w-full">
+      <h2 className="section-title font-bold">
+        Why Learning Paths <span className="text-brand">Fail</span>
       </h2>
-      <p className="section-description mt-4 max-w-[95%] px-4 font-poppins text-lg text-muted-foreground md:max-w-xl">
-        Completing lessons is not the same as becoming job-ready.
+      <p className="section-subtitle mt-1 max-w-3xl lg:max-w-5xl mb-2 sm:mb-5">
+        Completing lessons doesn&apos;t prove mastery, reveal your gaps, or prepare you for real work
       </p>
     </div>
   );

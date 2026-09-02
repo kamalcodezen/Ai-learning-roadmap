@@ -2,57 +2,104 @@
 
 import React from "react";
 import {
-  LuCompass,
-  LuBrainCircuit,
-  LuMilestone,
-} from "react-icons/lu";
+  Sparkles,
+  SearchCheck,
+  Route,
+  Brain,
+  ClipboardCheck,
+  CodeXml,
+  BadgeCheck,
+  Target,
+} from "lucide-react";
+import { MarqueeAnimation } from "@/src/components/ui/marquee-animation";
+
+const MARQUEE_ITEMS = [
+  {
+    id: "career-analysis",
+    label: "AI Career Analysis",
+    icon: Sparkles,
+  },
+  {
+    id: "skill-gap",
+    label: "Skill Gap Diagnosis",
+    icon: SearchCheck,
+  },
+  {
+    id: "personalized-roadmaps",
+    label: "Personalized Roadmaps",
+    icon: Route,
+  },
+  {
+    id: "adaptive-learning",
+    label: "Adaptive Learning",
+    icon: Brain,
+  },
+  {
+    id: "practical-assessments",
+    label: "Practical Assessments",
+    icon: ClipboardCheck,
+  },
+  {
+    id: "real-world-projects",
+    label: "Real-World Projects",
+    icon: CodeXml,
+  },
+  {
+    id: "skill-mastery",
+    label: "Skill Mastery",
+    icon: BadgeCheck,
+  },
+  {
+    id: "career-readiness",
+    label: "Career Readiness",
+    icon: Target,
+  },
+];
 
 export default function ProgressBridgeSection() {
-
   return (
-    <section className="section-pad relative w-full overflow-hidden">
-      {/* ========================================================
-          1. ICONIC HORIZONTAL LEARNING ROADMAP PULSE LINE
-          ======================================================== */}
-      <div className="relative w-full">
-        {/* ব্যাকগ্রাউন্ড বেস লাইন */}
-        <div className="absolute inset-x-0 top-1/2 h-[1px] w-full -translate-y-1/2 bg-border" />
+    <section
+      aria-label="AI Pather Core Capabilities"
+      className="relative w-full overflow-hidden bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] py-3 sm:py-4 md:py-5 shadow-[0_6px_32px_rgba(159,84,247,0.3)] transition-colors dark:shadow-[0_6px_32px_rgba(185,120,255,0.25)]"
+    >
+      {/* Left and right soft edge gradients for smooth entry and exit */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 sm:w-44 bg-gradient-to-r from-[var(--color-primary)] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 sm:w-44 bg-gradient-to-l from-[var(--color-secondary)] to-transparent" />
 
-        {/* সেন্ট্রাল নিয়ন গ্রিন পালস গ্রেডিয়েন্ট */}
-        <div className="absolute inset-x-0 top-1/2 mx-auto h-[2px] w-3/4 -translate-y-1/2 bg-gradient-to-r from-transparent via-[var(--color-primary)] to-transparent shadow-[0_0_15px_var(--color-primary)]" />
-        <div className="absolute inset-x-0 top-1/2 mx-auto h-[6px] w-1/4 -translate-y-1/2 bg-gradient-to-r from-transparent via-[var(--color-primary)] to-transparent blur-[3px]" />
+      {/* Single Continuous Horizontal Marquee */}
+      <MarqueeAnimation
+        direction="left"
+        baseVelocity={-1.5}
+        pauseOnHover={false}
+        className="py-1"
+      >
+        {MARQUEE_ITEMS.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div key={item.id} className="flex items-center">
+              {/* Extra Large Item: Icon + Label with Hover Zoom Effect */}
+              <div className="group/item flex cursor-pointer items-center gap-3.5 text-white transition-all duration-300 ease-out hover:scale-105 sm:hover:scale-110 sm:gap-4.5">
+                <Icon
+                  className="size-7 shrink-0 text-white/95 transition-all duration-300 ease-out group-hover/item:scale-115 group-hover/item:text-white group-hover/item:drop-shadow-[0_0_12px_rgba(255,255,255,0.8)] sm:size-8 md:size-9"
+                  strokeWidth={2.2}
+                  aria-hidden="true"
+                />
+                <span className="whitespace-nowrap font-sans text-xl font-bold tracking-tight text-white drop-shadow-sm transition-all duration-300 ease-out group-hover/item:text-white group-hover/item:drop-shadow-[0_0_14px_rgba(255,255,255,0.6)] sm:text-2xl md:text-3xl">
+                  {item.label}
+                </span>
+              </div>
 
-        {/* ইন্টারঅ্যাক্টিভ নোডস (AI Learning Roadmap Trail) */}
-        <div className="global-pos flex items-center justify-between px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Node 1: AI Roadmap Active Path */}
-          <div className="flex items-center gap-2 rounded-full border border-border bg-card/90 px-3 py-1.5 backdrop-blur-md">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-primary)] opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-primary)]"></span>
-            </span>
-            <LuCompass className="size-3.5 text-[var(--color-primary)]" />
-            <span className="font-mono text-caption font-medium text-muted-foreground">
-              AI Roadmap: Active Path
-            </span>
-          </div>
-
-          {/* Node 2: Adaptive Milestone Engine */}
-          <div className="hidden items-center gap-2 rounded-full border border-primary/30 bg-card px-3.5 py-1.5 shadow-[0_0_15px_color-mix(in_srgb,var(--color-primary)_15%,transparent)] sm:flex">
-            <LuBrainCircuit className="size-3.5 text-[var(--color-primary)] animate-pulse" />
-            <span className="font-mono text-caption font-semibold text-[var(--color-primary)]">
-              Adaptive Roadmap Engine
-            </span>
-          </div>
-
-          {/* Node 3: Continuous Skill Sync */}
-          <div className="flex items-center gap-2 rounded-full border border-border bg-card/90 px-3 py-1.5 backdrop-blur-md">
-            <LuMilestone className="size-3.5 text-emerald-400" />
-            <span className="font-mono text-caption text-muted-foreground">
-              Continuous Skill Sync
-            </span>
-          </div>
-        </div>
-      </div>
+              {/* Glowing Dot Separator */}
+              <span
+                className="mx-8 flex items-center justify-center sm:mx-12 md:mx-14"
+                aria-hidden="true"
+              >
+                <span className="size-2.5 rounded-full bg-white/70 shadow-[0_0_12px_rgba(255,255,255,0.95)] sm:size-3" />
+              </span>
+            </div>
+          );
+        })}
+      </MarqueeAnimation>
     </section>
   );
 }
