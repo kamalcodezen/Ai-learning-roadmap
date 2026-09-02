@@ -482,7 +482,7 @@ export default function CareerTwinSection() {
       <ContainerScroll
         titleComponent={
           <>
-            <h2 className="section-title">
+            <h2 className="section-title font-bold">
               Career <span className="text-brand">
               twin
               </span>
