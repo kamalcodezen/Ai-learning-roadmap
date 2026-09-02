@@ -64,12 +64,16 @@ export const ModelName = {
   Roadmap: 'Roadmap',
   Milestone: 'Milestone',
   Project: 'Project',
+  ProjectEvidence: 'ProjectEvidence',
   ActivityLog: 'ActivityLog',
   SkillStateHistory: 'SkillStateHistory',
   AdminAuditLog: 'AdminAuditLog',
   AiUsageLog: 'AiUsageLog',
   ErrorLog: 'ErrorLog',
-  AnalyticsSnapshot: 'AnalyticsSnapshot'
+  AnalyticsSnapshot: 'AnalyticsSnapshot',
+  InterviewSession: 'InterviewSession',
+  InterviewQuestion: 'InterviewQuestion',
+  InterviewAnswer: 'InterviewAnswer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -219,6 +223,7 @@ export const DiagnosticAnswerScalarFieldEnum = {
   questionId: 'questionId',
   selectedAnswer: 'selectedAnswer',
   isCorrect: 'isCorrect',
+  evaluation: 'evaluation',
   createdAt: 'createdAt'
 } as const
 
@@ -274,12 +279,29 @@ export const ProjectScalarFieldEnum = {
   description: 'description',
   repositoryUrl: 'repositoryUrl',
   liveUrl: 'liveUrl',
+  techStack: 'techStack',
+  explanationQuality: 'explanationQuality',
+  isVerified: 'isVerified',
+  aiReview: 'aiReview',
   score: 'score',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectEvidenceScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  userId: 'userId',
+  skillName: 'skillName',
+  evidenceType: 'evidenceType',
+  url: 'url',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectEvidenceScalarFieldEnum = (typeof ProjectEvidenceScalarFieldEnum)[keyof typeof ProjectEvidenceScalarFieldEnum]
 
 
 export const ActivityLogScalarFieldEnum = {
@@ -363,6 +385,41 @@ export const AnalyticsSnapshotScalarFieldEnum = {
 } as const
 
 export type AnalyticsSnapshotScalarFieldEnum = (typeof AnalyticsSnapshotScalarFieldEnum)[keyof typeof AnalyticsSnapshotScalarFieldEnum]
+
+
+export const InterviewSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  targetRole: 'targetRole',
+  status: 'status',
+  score: 'score',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type InterviewSessionScalarFieldEnum = (typeof InterviewSessionScalarFieldEnum)[keyof typeof InterviewSessionScalarFieldEnum]
+
+
+export const InterviewQuestionScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  question: 'question',
+  order: 'order'
+} as const
+
+export type InterviewQuestionScalarFieldEnum = (typeof InterviewQuestionScalarFieldEnum)[keyof typeof InterviewQuestionScalarFieldEnum]
+
+
+export const InterviewAnswerScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  questionId: 'questionId',
+  answerText: 'answerText',
+  evaluation: 'evaluation',
+  createdAt: 'createdAt'
+} as const
+
+export type InterviewAnswerScalarFieldEnum = (typeof InterviewAnswerScalarFieldEnum)[keyof typeof InterviewAnswerScalarFieldEnum]
 
 
 export const SortOrder = {
