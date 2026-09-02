@@ -218,6 +218,7 @@ export type userWhereInput = {
   session?: Prisma.SessionListRelationFilter
   careerProfile?: Prisma.XOR<Prisma.CareerProfileNullableScalarRelationFilter, Prisma.CareerProfileWhereInput> | null
   diagnosticAttempts?: Prisma.DiagnosticAttemptListRelationFilter
+  interviewSessions?: Prisma.InterviewSessionListRelationFilter
   skillStates?: Prisma.SkillStateListRelationFilter
   roadmaps?: Prisma.RoadmapListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
@@ -241,6 +242,7 @@ export type userOrderByWithRelationInput = {
   session?: Prisma.sessionOrderByRelationAggregateInput
   careerProfile?: Prisma.CareerProfileOrderByWithRelationInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptOrderByRelationAggregateInput
+  interviewSessions?: Prisma.InterviewSessionOrderByRelationAggregateInput
   skillStates?: Prisma.SkillStateOrderByRelationAggregateInput
   roadmaps?: Prisma.RoadmapOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
@@ -267,6 +269,7 @@ export type userWhereUniqueInput = Prisma.AtLeast<{
   session?: Prisma.SessionListRelationFilter
   careerProfile?: Prisma.XOR<Prisma.CareerProfileNullableScalarRelationFilter, Prisma.CareerProfileWhereInput> | null
   diagnosticAttempts?: Prisma.DiagnosticAttemptListRelationFilter
+  interviewSessions?: Prisma.InterviewSessionListRelationFilter
   skillStates?: Prisma.SkillStateListRelationFilter
   roadmaps?: Prisma.RoadmapListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
@@ -320,6 +323,7 @@ export type userCreateInput = {
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -343,6 +347,7 @@ export type userUncheckedCreateInput = {
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -366,6 +371,7 @@ export type userUpdateInput = {
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -389,6 +395,7 @@ export type userUncheckedUpdateInput = {
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -637,6 +644,20 @@ export type userUpdateOneRequiredWithoutAdminAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutAdminAuditLogsInput, Prisma.userUpdateWithoutAdminAuditLogsInput>, Prisma.userUncheckedUpdateWithoutAdminAuditLogsInput>
 }
 
+export type userCreateNestedOneWithoutInterviewSessionsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutInterviewSessionsInput, Prisma.userUncheckedCreateWithoutInterviewSessionsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutInterviewSessionsInput
+  connect?: Prisma.userWhereUniqueInput
+}
+
+export type userUpdateOneRequiredWithoutInterviewSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutInterviewSessionsInput, Prisma.userUncheckedCreateWithoutInterviewSessionsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutInterviewSessionsInput
+  upsert?: Prisma.userUpsertWithoutInterviewSessionsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutInterviewSessionsInput, Prisma.userUpdateWithoutInterviewSessionsInput>, Prisma.userUncheckedUpdateWithoutInterviewSessionsInput>
+}
+
 export type userCreateWithoutAccountInput = {
   id: string
   name: string
@@ -650,6 +671,7 @@ export type userCreateWithoutAccountInput = {
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -672,6 +694,7 @@ export type userUncheckedCreateWithoutAccountInput = {
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -710,6 +733,7 @@ export type userUpdateWithoutAccountInput = {
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -732,6 +756,7 @@ export type userUncheckedUpdateWithoutAccountInput = {
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -754,6 +779,7 @@ export type userCreateWithoutSessionInput = {
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -776,6 +802,7 @@ export type userUncheckedCreateWithoutSessionInput = {
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -814,6 +841,7 @@ export type userUpdateWithoutSessionInput = {
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -836,6 +864,7 @@ export type userUncheckedUpdateWithoutSessionInput = {
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -859,6 +888,7 @@ export type userCreateWithoutTwoFactorsInput = {
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -881,6 +911,7 @@ export type userUncheckedCreateWithoutTwoFactorsInput = {
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -919,6 +950,7 @@ export type userUpdateWithoutTwoFactorsInput = {
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -941,6 +973,7 @@ export type userUncheckedUpdateWithoutTwoFactorsInput = {
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -962,6 +995,7 @@ export type userCreateWithoutCareerProfileInput = {
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -984,6 +1018,7 @@ export type userUncheckedCreateWithoutCareerProfileInput = {
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1022,6 +1057,7 @@ export type userUpdateWithoutCareerProfileInput = {
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1044,6 +1080,7 @@ export type userUncheckedUpdateWithoutCareerProfileInput = {
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1066,6 +1103,7 @@ export type userCreateWithoutDiagnosticAttemptsInput = {
   account?: Prisma.accountCreateNestedManyWithoutUserInput
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1088,6 +1126,7 @@ export type userUncheckedCreateWithoutDiagnosticAttemptsInput = {
   account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1126,6 +1165,7 @@ export type userUpdateWithoutDiagnosticAttemptsInput = {
   account?: Prisma.accountUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1148,6 +1188,7 @@ export type userUncheckedUpdateWithoutDiagnosticAttemptsInput = {
   account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1171,6 +1212,7 @@ export type userCreateWithoutSkillStatesInput = {
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
@@ -1193,6 +1235,7 @@ export type userUncheckedCreateWithoutSkillStatesInput = {
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
@@ -1231,6 +1274,7 @@ export type userUpdateWithoutSkillStatesInput = {
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
@@ -1253,6 +1297,7 @@ export type userUncheckedUpdateWithoutSkillStatesInput = {
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
@@ -1275,6 +1320,7 @@ export type userCreateWithoutRoadmapsInput = {
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
@@ -1297,6 +1343,7 @@ export type userUncheckedCreateWithoutRoadmapsInput = {
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
@@ -1335,6 +1382,7 @@ export type userUpdateWithoutRoadmapsInput = {
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
@@ -1357,6 +1405,7 @@ export type userUncheckedUpdateWithoutRoadmapsInput = {
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
@@ -1379,6 +1428,7 @@ export type userCreateWithoutProjectsInput = {
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
@@ -1401,6 +1451,7 @@ export type userUncheckedCreateWithoutProjectsInput = {
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
@@ -1439,6 +1490,7 @@ export type userUpdateWithoutProjectsInput = {
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
@@ -1461,6 +1513,7 @@ export type userUncheckedUpdateWithoutProjectsInput = {
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
@@ -1483,6 +1536,7 @@ export type userCreateWithoutActivityLogsInput = {
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1505,6 +1559,7 @@ export type userUncheckedCreateWithoutActivityLogsInput = {
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1543,6 +1598,7 @@ export type userUpdateWithoutActivityLogsInput = {
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1565,6 +1621,7 @@ export type userUncheckedUpdateWithoutActivityLogsInput = {
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1587,6 +1644,7 @@ export type userCreateWithoutSkillStateHistoriesInput = {
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1609,6 +1667,7 @@ export type userUncheckedCreateWithoutSkillStateHistoriesInput = {
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1647,6 +1706,7 @@ export type userUpdateWithoutSkillStateHistoriesInput = {
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1669,6 +1729,7 @@ export type userUncheckedUpdateWithoutSkillStateHistoriesInput = {
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1691,6 +1752,7 @@ export type userCreateWithoutAdminAuditLogsInput = {
   session?: Prisma.sessionCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1713,6 +1775,7 @@ export type userUncheckedCreateWithoutAdminAuditLogsInput = {
   session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
   careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
   skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
   roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1751,6 +1814,7 @@ export type userUpdateWithoutAdminAuditLogsInput = {
   session?: Prisma.sessionUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1773,12 +1837,121 @@ export type userUncheckedUpdateWithoutAdminAuditLogsInput = {
   session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
   careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
   diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
   skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
   roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type userCreateWithoutInterviewSessionsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
+  account?: Prisma.accountCreateNestedManyWithoutUserInput
+  session?: Prisma.sessionCreateNestedManyWithoutUserInput
+  careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
+  roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+}
+
+export type userUncheckedCreateWithoutInterviewSessionsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
+  account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
+  roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+}
+
+export type userCreateOrConnectWithoutInterviewSessionsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutInterviewSessionsInput, Prisma.userUncheckedCreateWithoutInterviewSessionsInput>
+}
+
+export type userUpsertWithoutInterviewSessionsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutInterviewSessionsInput, Prisma.userUncheckedUpdateWithoutInterviewSessionsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutInterviewSessionsInput, Prisma.userUncheckedCreateWithoutInterviewSessionsInput>
+  where?: Prisma.userWhereInput
+}
+
+export type userUpdateToOneWithWhereWithoutInterviewSessionsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutInterviewSessionsInput, Prisma.userUncheckedUpdateWithoutInterviewSessionsInput>
+}
+
+export type userUpdateWithoutInterviewSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  account?: Prisma.accountUpdateManyWithoutUserNestedInput
+  session?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
+  roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+}
+
+export type userUncheckedUpdateWithoutInterviewSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
+  roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 
@@ -1790,6 +1963,7 @@ export type UserCountOutputType = {
   account: number
   session: number
   diagnosticAttempts: number
+  interviewSessions: number
   skillStates: number
   roadmaps: number
   projects: number
@@ -1803,6 +1977,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   account?: boolean | UserCountOutputTypeCountAccountArgs
   session?: boolean | UserCountOutputTypeCountSessionArgs
   diagnosticAttempts?: boolean | UserCountOutputTypeCountDiagnosticAttemptsArgs
+  interviewSessions?: boolean | UserCountOutputTypeCountInterviewSessionsArgs
   skillStates?: boolean | UserCountOutputTypeCountSkillStatesArgs
   roadmaps?: boolean | UserCountOutputTypeCountRoadmapsArgs
   projects?: boolean | UserCountOutputTypeCountProjectsArgs
@@ -1841,6 +2016,13 @@ export type UserCountOutputTypeCountSessionArgs<ExtArgs extends runtime.Types.Ex
  */
 export type UserCountOutputTypeCountDiagnosticAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DiagnosticAttemptWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountInterviewSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InterviewSessionWhereInput
 }
 
 /**
@@ -1907,6 +2089,7 @@ export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   session?: boolean | Prisma.user$sessionArgs<ExtArgs>
   careerProfile?: boolean | Prisma.user$careerProfileArgs<ExtArgs>
   diagnosticAttempts?: boolean | Prisma.user$diagnosticAttemptsArgs<ExtArgs>
+  interviewSessions?: boolean | Prisma.user$interviewSessionsArgs<ExtArgs>
   skillStates?: boolean | Prisma.user$skillStatesArgs<ExtArgs>
   roadmaps?: boolean | Prisma.user$roadmapsArgs<ExtArgs>
   projects?: boolean | Prisma.user$projectsArgs<ExtArgs>
@@ -1959,6 +2142,7 @@ export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   session?: boolean | Prisma.user$sessionArgs<ExtArgs>
   careerProfile?: boolean | Prisma.user$careerProfileArgs<ExtArgs>
   diagnosticAttempts?: boolean | Prisma.user$diagnosticAttemptsArgs<ExtArgs>
+  interviewSessions?: boolean | Prisma.user$interviewSessionsArgs<ExtArgs>
   skillStates?: boolean | Prisma.user$skillStatesArgs<ExtArgs>
   roadmaps?: boolean | Prisma.user$roadmapsArgs<ExtArgs>
   projects?: boolean | Prisma.user$projectsArgs<ExtArgs>
@@ -1978,6 +2162,7 @@ export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     session: Prisma.$sessionPayload<ExtArgs>[]
     careerProfile: Prisma.$CareerProfilePayload<ExtArgs> | null
     diagnosticAttempts: Prisma.$DiagnosticAttemptPayload<ExtArgs>[]
+    interviewSessions: Prisma.$InterviewSessionPayload<ExtArgs>[]
     skillStates: Prisma.$SkillStatePayload<ExtArgs>[]
     roadmaps: Prisma.$RoadmapPayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
@@ -2394,6 +2579,7 @@ export interface Prisma__userClient<T, Null = never, ExtArgs extends runtime.Typ
   session<T extends Prisma.user$sessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$sessionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$sessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   careerProfile<T extends Prisma.user$careerProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$careerProfileArgs<ExtArgs>>): Prisma.Prisma__CareerProfileClient<runtime.Types.Result.GetResult<Prisma.$CareerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   diagnosticAttempts<T extends Prisma.user$diagnosticAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$diagnosticAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DiagnosticAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  interviewSessions<T extends Prisma.user$interviewSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$interviewSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InterviewSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   skillStates<T extends Prisma.user$skillStatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$skillStatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SkillStatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   roadmaps<T extends Prisma.user$roadmapsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$roadmapsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.user$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2920,6 +3106,30 @@ export type user$diagnosticAttemptsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.DiagnosticAttemptScalarFieldEnum | Prisma.DiagnosticAttemptScalarFieldEnum[]
+}
+
+/**
+ * user.interviewSessions
+ */
+export type user$interviewSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InterviewSession
+   */
+  select?: Prisma.InterviewSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InterviewSession
+   */
+  omit?: Prisma.InterviewSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InterviewSessionInclude<ExtArgs> | null
+  where?: Prisma.InterviewSessionWhereInput
+  orderBy?: Prisma.InterviewSessionOrderByWithRelationInput | Prisma.InterviewSessionOrderByWithRelationInput[]
+  cursor?: Prisma.InterviewSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InterviewSessionScalarFieldEnum | Prisma.InterviewSessionScalarFieldEnum[]
 }
 
 /**
