@@ -99,7 +99,7 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
           initial={{ opacity: 0, y: 24, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="relative w-full max-w-xl overflow-hidden rounded-3xl border border-primary/40 bg-[linear-gradient(to_bottom,#fcfaff_0%,#f4eeff_45%,#e9dcff_100%)] p-8 dark:bg-[linear-gradient(to_bottom,rgba(243,232,255,0.12)_0%,rgba(237,229,255,0.08)_45%,rgba(221,208,255,0.05)_100%)] sm:p-10"
+          className="relative w-full max-w-xl overflow-visible rounded-3xl border border-primary/40 bg-[linear-gradient(to_bottom,#fcfaff_0%,#f4eeff_45%,#e9dcff_100%)] p-8 dark:bg-[linear-gradient(to_bottom,rgba(243,232,255,0.12)_0%,rgba(237,229,255,0.08)_45%,rgba(221,208,255,0.05)_100%)] sm:p-10 md:grid md:max-w-4xl md:grid-cols-2 md:items-start md:gap-8"
         >
           <BackToHome />
           <BorderBeam
@@ -115,31 +115,34 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
           borderWidth={2}
           className="from-transparent via-[#c084fc] to-transparent"
         />
-        <Link href="/" className="flex items-center justify-center gap-2">
-          <Image
-            src={brandLogo}
-            alt="Brand-logo"
-            className="ml-1 h-fit dark:invert"
-            height={20}
-            width={20}
-          />
-          <span className="font-sans text-[30px] font-semibold tracking-[-0.03em] text-foreground">
-            Ai Pather
-          </span>
-        </Link>
+        {/* Brand + Plan summary — left column on md+ */}
+        <div className="md:flex md:flex-col">
+          <Link href="/" className="flex items-center justify-center gap-2">
+            <Image
+              src={brandLogo}
+              alt="Brand-logo"
+              className="ml-1 h-fit dark:invert"
+              height={20}
+              width={20}
+            />
+            <span className="font-sans text-[30px] font-semibold tracking-[-0.03em] text-foreground">
+              Ai Pather
+            </span>
+          </Link>
 
-        {/* Plan summary */}
-        <div className="mt-6 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/70 p-5 backdrop-blur-md dark:bg-card/40">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <Sparkles className="h-4 w-4 text-primary" />
-            {plan.name}
-            <span className="text-xs text-muted-foreground">
-              {billing === "yearly" ? "· billed annually" : "· billed monthly"}
+          {/* Plan summary */}
+          <div className="mt-6 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/70 p-5 backdrop-blur-md dark:bg-card/40 md:mt-4 md:flex-col md:items-start md:gap-6">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <Sparkles className="h-4 w-4 text-primary" />
+              {plan.name}
+              <span className="text-xs text-muted-foreground">
+                {billing === "yearly" ? "· billed annually" : "· billed monthly"}
+              </span>
+            </div>
+            <span className="shrink-0 text-lg font-bold text-secondary dark:text-primary">
+              {priceLabel}
             </span>
           </div>
-          <span className="shrink-0 text-lg font-bold text-secondary dark:text-primary">
-            {priceLabel}
-          </span>
         </div>
 
         {/* Form */}
@@ -148,7 +151,7 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
           action={!isStarter && priceId ? "/api/checkout_sessions" : undefined}
           method="POST"
           onSubmit={handleSubmit}
-          className="mt-7 space-y-5"
+          className="mt-7 space-y-5 md:row-span-2 md:mt-0"
         >
           {!isStarter && priceId && (
             <input type="hidden" name="priceId" value={priceId} />
@@ -212,7 +215,7 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
         <button
           type="button"
           onClick={() => router.push("/#pricing")}
-          className="mt-6 flex w-full items-center justify-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+          className="mt-6 md:mt-49 flex w-full items-center justify-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Pricing Plans

@@ -91,7 +91,7 @@ const Header = ({ billing, onBillingChange }: HeaderProps) => {
       </p>
 
       {/* Billing Toggle — button pair, selected side highlighted */}
-      <div className="mt-8 flex justify-center">
+      <div className="mt-5 flex justify-center">
         <div
           ref={toggleRef}
           role="group"

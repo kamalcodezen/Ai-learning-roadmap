@@ -40,7 +40,7 @@ function DotPattern({ className = '' }: { className?: string }) {
 
 export default function CTASection() {
   return (
-    <section id="pricing" className="section-pad pb-0 relative overflow-hidden">
+    <section className="section-pad pb-0 relative overflow-hidden">
       {/* Subtle grid background */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.08] dark:opacity-[0.04]"
