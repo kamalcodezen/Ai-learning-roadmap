@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, ChevronRight, Loader2, Target } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { CheckCircle2, ChevronRight, Loader2, Target, Mic, MicOff } from "lucide-react";
 
 import { authClient } from "@/src/lib/auth-client";
 
@@ -26,6 +27,7 @@ type DiagnosticStatus =
 
 export default function Diagnostic() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: session, isPending: isSessionLoading } =
     authClient.useSession();
@@ -43,6 +45,85 @@ export default function Diagnostic() {
   const [status, setStatus] = useState<DiagnosticStatus>("idle");
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [isRecording, setIsRecording] = useState(false);
+  const recognitionRef = useRef<{ stop: () => void } | null>(null);
+
+  useEffect(() => {
+    // Cleanup speech recognition on unmount
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      recognitionRef.current?.stop();
+      setIsRecording(false);
+      return;
+    }
+
+    const SpeechRecognition = (window as unknown as { SpeechRecognition: new () => unknown, webkitSpeechRecognition: new () => unknown }).SpeechRecognition || (window as unknown as { SpeechRecognition: new () => unknown, webkitSpeechRecognition: new () => unknown }).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setErrorMessage("Speech recognition is not supported in this browser. Please type your answer.");
+      return;
+    }
+
+    try {
+      const recog = new SpeechRecognition() as { continuous: boolean; interimResults: boolean; onresult: (event: { results: Iterable<[{ transcript: string }]> }) => void; onerror: (event: { error: string }) => void; onend: () => void; start: () => void; stop: () => void; };
+      recog.continuous = true;
+      recog.interimResults = true;
+
+      const initialText = selectedAnswer;
+
+      recog.onresult = (event: { results: Iterable<[{ transcript: string }]> }) => {
+        const currentTranscript = Array.from(event.results)
+          .map((result) => result[0].transcript)
+          .join('');
+          
+        setSelectedAnswer(initialText + (initialText && currentTranscript ? ' ' : '') + currentTranscript);
+      };
+
+      recog.onerror = (event: { error: string }) => {
+        console.error("Speech recognition error:", event.error);
+        if (event.error === 'not-allowed') {
+          setErrorMessage("Microphone access denied. Please allow it in your browser settings.");
+          setIsRecording(false);
+        } else if (event.error === 'network') {
+          setErrorMessage("Network error with speech recognition.");
+          setIsRecording(false);
+        } else if (event.error === 'no-speech') {
+          // Ignore no-speech, let it continue or wait for end
+        } else {
+          setErrorMessage("Microphone error: " + event.error);
+          setIsRecording(false);
+        }
+      };
+
+      recog.onend = () => {
+        // Only set to false if it's currently true, to allow manual stop to work smoothly
+        setIsRecording((prev) => {
+          if (prev) {
+             // Optional: automatically restart if continuous is desired but browser stopped it
+             // but for now just stop.
+             return false;
+          }
+          return prev;
+        });
+      };
+
+      recog.start();
+      recognitionRef.current = recog;
+      setIsRecording(true);
+      setErrorMessage("");
+    } catch (err) {
+      console.error(err);
+      setErrorMessage("Could not start microphone.");
+      setIsRecording(false);
+    }
+  };
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -70,16 +151,16 @@ export default function Diagnostic() {
       setErrorMessage("");
 
       // --------------------------------------------------------
-      // 1. FETCH EXACTLY 5 QUESTIONS (Backend creates attempt if needed)
+      // 1. FETCH EXACTLY 6 QUESTIONS (Backend creates attempt if needed)
       // --------------------------------------------------------
 
-      const questionsResponse = await getDiagnosticQuestions(userId, 5);
+      const questionsResponse = await getDiagnosticQuestions(userId, 6);
 
       const fetchedQuestions = questionsResponse.data;
 
-      if (fetchedQuestions.length !== 5) {
+      if (fetchedQuestions.length !== 6 && fetchedQuestions.length !== 5) {
         throw new Error(
-          `Expected 5 diagnostic questions, but received ${fetchedQuestions.length}.`,
+          `Expected diagnostic questions, but received ${fetchedQuestions.length}.`,
         );
       }
 
@@ -146,6 +227,12 @@ export default function Diagnostic() {
       if (isLastQuestion) {
         const completeResponse = await completeDiagnosticAttempt(attemptId);
 
+        // Invalidate both Dashboard and Career Twin queries so they fetch the latest score
+        if (session?.user?.id) {
+          queryClient.invalidateQueries({ queryKey: ["dashboardData", session.user.id] });
+          queryClient.invalidateQueries({ queryKey: ["careerTwin", session.user.id] });
+        }
+
         setResult(completeResponse.data);
         setStatus("completed");
 
@@ -157,6 +244,11 @@ export default function Diagnostic() {
       // --------------------------------------------------------
 
       setCurrentQuestionIndex((previousIndex) => previousIndex + 1);
+
+      if (isRecording) {
+        recognitionRef.current?.stop();
+        setIsRecording(false);
+      }
 
       setSelectedAnswer("");
       setStatus("ready");
@@ -477,40 +569,61 @@ export default function Diagnostic() {
             {currentQuestion.description}
           </p>
 
-          {/* Options */}
-
           <div className="mt-8 space-y-3">
-            {currentQuestion.options.map((option) => {
-              const selected = selectedAnswer === option;
+            {currentQuestion.options && currentQuestion.options.length > 0 ? (
+              currentQuestion.options.map((option) => {
+                const selected = selectedAnswer === option;
 
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  disabled={status === "submitting"}
-                  onClick={() => setSelectedAnswer(option)}
-                  className={`group flex w-full items-center gap-4 rounded-2xl border p-4 text-left transition-all duration-200 ${
-                    selected
-                      ? "border-primary/50 bg-primary/[0.08] shadow-[0_0_30px_rgba(206,255,31,0.06)]"
-                      : "border-border bg-card-soft hover:border-primary/30 hover:bg-muted"
-                  }`}
-                >
-                  <span
-                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition ${
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    disabled={status === "submitting"}
+                    onClick={() => setSelectedAnswer(option)}
+                    className={`group flex w-full items-center gap-4 rounded-2xl border p-4 text-left transition-all duration-200 ${
                       selected
-                        ? "border-primary bg-primary text-secondary"
-                        : "border-border text-transparent"
+                        ? "border-primary/50 bg-primary/[0.08] shadow-[0_0_30px_rgba(206,255,31,0.06)]"
+                        : "border-border bg-card-soft hover:border-primary/30 hover:bg-muted"
                     }`}
                   >
-                    {selected && <CheckCircle2 className="h-4 w-4" />}
-                  </span>
+                    <span
+                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition ${
+                        selected
+                          ? "border-primary bg-primary text-secondary"
+                          : "border-border text-transparent"
+                      }`}
+                    >
+                      {selected && <CheckCircle2 className="h-4 w-4" />}
+                    </span>
 
-                  <span className="text-sm font-medium leading-6">
-                    {option}
-                  </span>
-                </button>
-              );
-            })}
+                    <span className="text-sm font-medium leading-6">
+                      {option}
+                    </span>
+                  </button>
+                );
+              })
+            ) : (
+              <div className="flex flex-col gap-4">
+                <div className="flex justify-between items-center bg-card-soft rounded-t-2xl border border-b-0 border-border p-4">
+                   <p className="text-sm font-medium text-foreground">Record your answer, or type it below.</p>
+                   <button
+                     type="button"
+                     onClick={toggleRecording}
+                     className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${isRecording ? 'bg-destructive/10 text-destructive hover:bg-destructive/20' : 'bg-primary/10 text-primary hover:bg-primary/20'}`}
+                   >
+                     {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                     {isRecording ? "Stop Recording" : "Start Recording"}
+                   </button>
+                </div>
+                <textarea
+                  value={selectedAnswer}
+                  onChange={(e) => setSelectedAnswer(e.target.value)}
+                  placeholder="Your answer will appear here..."
+                  disabled={status === "submitting"}
+                  className="min-h-[200px] w-full resize-y rounded-b-2xl rounded-t-none border border-border bg-background p-4 text-sm leading-relaxed focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
+                />
+              </div>
+            )}
           </div>
 
           {/* Error */}
