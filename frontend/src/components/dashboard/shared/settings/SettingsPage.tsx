@@ -1,6 +1,6 @@
 "use client";
 
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
 import { Monitor, User, Mail, Shield, Key } from "lucide-react";
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
@@ -8,7 +8,7 @@ import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import Link from "next/link";
 
 export default function SettingsPage() {
-  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+  const { data: session, isPending: isSessionLoading } = useDashboardSession();
 
   if (isSessionLoading) {
     return <GenericPageSkeleton />;
