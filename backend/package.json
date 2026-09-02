@@ -14,6 +14,8 @@
   "dependencies": {
     "@google/genai": "^2.18.0",
     "@mistralai/mistralai": "^2.6.4",
+    "@neondatabase/serverless": "^1.1.0",
+    "@prisma/adapter-neon": "^7.10.0",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "better-auth": "^1.7.1",
@@ -26,6 +28,7 @@
     "pg": "^8.23.0",
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",
+    "ws": "^8.21.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -33,6 +36,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^26.2.0",
     "@types/pino-http": "^5.8.4",
+    "@types/ws": "^8.18.1",
     "prisma": "^7.9.1",
     "tsx": "^4.23.12",
     "typescript": "^7.0.2"
