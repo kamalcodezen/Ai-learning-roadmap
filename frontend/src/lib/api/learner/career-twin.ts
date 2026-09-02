@@ -9,8 +9,10 @@ export interface CareerTwinData {
     practical: number;
     projects: number;
     evidence: number;
+    communication: number | string;
     interview: number;
   };
+  communicationEvaluation?: Record<string, unknown>;
   strongSkills: string[];
   weakSkills: string[];
   currentFocus: string;

@@ -163,3 +163,80 @@ function formatLearningPathResponse(roadmap: any, targetRole: string) {
     } : null
   };
 }
+
+export const completeMilestone = async (userId: string, milestoneId: string) => {
+  const milestone = await prisma.milestone.findUnique({
+    where: { id: milestoneId },
+    include: { roadmap: true }
+  });
+
+  if (!milestone) throw new Error("Milestone not found");
+  if (milestone.roadmap.userId !== userId) throw new Error("Unauthorized");
+  if (milestone.status === "COMPLETED") throw new Error("Milestone already completed");
+
+  // 1. Mark this milestone as COMPLETED
+  await prisma.milestone.update({
+    where: { id: milestoneId },
+    data: { status: "COMPLETED" }
+  });
+
+  // 2. Find next milestone and make it CURRENT
+  const nextMilestone = await prisma.milestone.findFirst({
+    where: {
+      roadmapId: milestone.roadmapId,
+      order: { gt: milestone.order }
+    },
+    orderBy: { order: "asc" }
+  });
+
+  if (nextMilestone) {
+    await prisma.milestone.update({
+      where: { id: nextMilestone.id },
+      data: { status: "CURRENT" }
+    });
+  }
+
+  // 3. Add knowledge points for covered skills
+  if (milestone.unlocks && milestone.unlocks.length > 0) {
+    for (const skill of milestone.unlocks) {
+      const existingSkill = await prisma.skillState.findUnique({
+        where: { userId_skillName: { userId, skillName: skill } }
+      });
+      if (existingSkill) {
+        await prisma.skillState.update({
+          where: { id: existingSkill.id },
+          data: { knowledgeScore: Math.min(100, existingSkill.knowledgeScore + 15) }
+        });
+      } else {
+        await prisma.skillState.create({
+          data: {
+            userId,
+            skillName: skill,
+            knowledgeScore: 15,
+            practiceScore: 0,
+            projectScore: 0,
+            evidenceScore: 0
+          }
+        });
+      }
+    }
+  }
+
+  // 4. Log activity
+  await prisma.activityLog.create({
+    data: {
+      userId,
+      type: "LEARNING",
+      description: `Completed milestone: ${milestone.title}`
+    }
+  });
+
+  // Fetch updated roadmap to return
+  const updatedRoadmap = await prisma.roadmap.findUnique({
+    where: { id: milestone.roadmapId },
+    include: { milestones: { orderBy: { order: "asc" } } }
+  });
+
+  return formatLearningPathResponse(updatedRoadmap, updatedRoadmap!.targetRole);
+};
+

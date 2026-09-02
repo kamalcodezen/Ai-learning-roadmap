@@ -16,3 +16,16 @@ export const getLearningPath = async (req: Request, res: Response, next: NextFun
     next(error);
   }
 };
+
+export const completeMilestone = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { milestoneId } = req.params;
+    if (!milestoneId) throw new Error("milestoneId is required");
+    
+    const data = await learningPathService.completeMilestone(getUserId(req), milestoneId as string);
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+

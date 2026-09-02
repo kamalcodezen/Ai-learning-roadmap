@@ -1,87 +1,119 @@
 import prisma from "../../../../lib/prisma.js";
+import { CAREER_SKILLS_MAP, FALLBACK_SKILLS } from "./career-skills.map.js";
 
 export const getCareerAlignment = async (userId: string) => {
   // 1. Fetch user's career profile to get the real target role
   const profile = await prisma.careerProfile.findUnique({
     where: { userId },
   });
-  const targetRole = profile?.targetRoleName || profile?.targetRole || "Unknown Role";
 
-  // 2. Fetch user's current skills
+  const targetRole = profile?.targetRoleName || profile?.targetRole;
+
+  if (!targetRole) {
+    return {
+      targetRole: "NO_TARGET_ROLE",
+      matchPercentage: 0,
+      strongSkills: [],
+      developingSkills: [],
+      missingSkills: [],
+      criticalGaps: [],
+      recommendations: ["Complete your onboarding to set a target career."],
+      nextAction: "Complete Onboarding",
+      href: "/onboarding"
+    };
+  }
+
+  // 2. Lookup Required Skills for this role
+  let requiredSkills = CAREER_SKILLS_MAP[targetRole];
+  if (!requiredSkills) {
+    requiredSkills = FALLBACK_SKILLS;
+  }
+
+  // 3. Fetch user's current skills
   const skillStates = await prisma.skillState.findMany({
     where: { userId },
   });
 
-  // 3. Calculate a real fit score based on existing skill knowledge
-  // If the user has no skills yet, we return 0 rather than inventing a fake score.
-  let currentFit = 0;
-  if (skillStates.length > 0) {
-    const totalKnowledge = skillStates.reduce((acc, s) => acc + s.knowledgeScore, 0);
-    currentFit = Math.round(totalKnowledge / skillStates.length);
+  const skillStateMap = new Map(skillStates.map(s => [s.skillName.toLowerCase(), s]));
+
+  // 4. Calculate Match and Categorize Skills
+  const strongSkills: string[] = [];
+  const developingSkills: string[] = [];
+  const missingSkills: string[] = [];
+  const criticalGaps: string[] = [];
+  const requirements: any[] = [];
+
+  let totalScore = 0;
+  let maxPossibleScore = 0;
+
+  requiredSkills.forEach(req => {
+    const weight = req.critical ? 2 : 1;
+    maxPossibleScore += (100 * weight);
+
+    const userSkill = skillStateMap.get(req.skill.toLowerCase());
+    const score = userSkill ? userSkill.knowledgeScore : 0;
+    
+    totalScore += (score * weight);
+
+    let status = "missing";
+    if (score >= 70) {
+      status = "acquired";
+      strongSkills.push(req.skill);
+    } else if (score > 0) {
+      status = "learning";
+      developingSkills.push(req.skill);
+    } else {
+      missingSkills.push(req.skill);
+      if (req.critical) {
+        criticalGaps.push(req.skill);
+      }
+    }
+
+    requirements.push({
+      skill: req.skill,
+      importance: req.critical ? "High" : "Medium",
+      status: status
+    });
+  });
+
+  const matchPercentage = maxPossibleScore > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0;
+
+  // 5. Generate Recommendations and integrate with Roadmap
+  const recommendations: string[] = [];
+  
+  if (criticalGaps.length > 0) {
+    recommendations.push(`Focus immediately on your critical gaps: ${criticalGaps.join(", ")}.`);
+  } else if (developingSkills.length > 0) {
+    recommendations.push(`Keep practicing your developing skills: ${developingSkills.join(", ")}.`);
+  } else if (strongSkills.length > 0) {
+    recommendations.push(`Great job! You have strong alignment with the ${targetRole} role.`);
   }
 
-  // 4. Identify strong skills and priority gaps based on real scores
-  const strongSkills = skillStates
-    .filter(s => s.knowledgeScore >= 70)
-    .sort((a, b) => b.knowledgeScore - a.knowledgeScore)
-    .map(s => s.skillName);
-
-  const priorityGaps = skillStates
-    .filter(s => s.knowledgeScore < 50)
-    .sort((a, b) => a.knowledgeScore - b.knowledgeScore)
-    .map(s => s.skillName);
-
-  // 5. Determine missing skills from Roadmap if it exists
-  // We check the unlocks array on the milestones to find required skills.
   const activeRoadmap = await prisma.roadmap.findFirst({
     where: { userId, status: "ACTIVE" },
     include: { milestones: true },
   });
 
-  const missingSkills: string[] = [];
   if (activeRoadmap) {
-    // Collect all skills the roadmap intends to teach
     const roadmapSkills = new Set<string>();
-    activeRoadmap.milestones.forEach(m => {
-      m.unlocks.forEach(skill => roadmapSkills.add(skill));
-    });
-
-    // Check which ones the user hasn't started learning
-    const knownSkillNames = new Set(skillStates.map(s => s.skillName));
-    roadmapSkills.forEach(skill => {
-      if (!knownSkillNames.has(skill)) {
-        missingSkills.push(skill);
-      }
-    });
+    activeRoadmap.milestones.forEach(m => m.unlocks.forEach(s => roadmapSkills.add(s.toLowerCase())));
+    
+    const missingRoadmapSkills = missingSkills.filter(s => roadmapSkills.has(s.toLowerCase()));
+    if (missingRoadmapSkills.length > 0) {
+      recommendations.push(`Continue your roadmap milestones to acquire: ${missingRoadmapSkills.join(", ")}.`);
+    }
   }
 
-    // 6. Generate requirements array based on actual data
-    const requirements = skillStates.map(s => ({
-      skill: s.skillName,
-      importance: s.knowledgeScore > 70 ? "High" : s.knowledgeScore > 40 ? "Medium" : "Low",
-      status: s.knowledgeScore > 70 ? "acquired" : s.knowledgeScore > 40 ? "learning" : "missing"
-    }));
-    
-    // Fallback if empty
-    if (requirements.length === 0) {
-      requirements.push({
-        skill: "Core Fundamentals",
-        importance: "High",
-        status: "missing"
-      });
-    }
-
-    return {
-      targetRole,
-      matchPercentage: currentFit,
-      strongSkills: strongSkills.length > 0 ? strongSkills : ["No strong skills yet"],
-      missingSkills: priorityGaps.length > 0 ? priorityGaps : ["No critical gaps"],
-      requirements: requirements,
-      recommendations: [
-        "Continue practicing to increase your match percentage.",
-        "Focus on your priority gaps first."
-      ],
-      nextAction: "View Learning Path",
-      href: "/learning-path"
-    };
+  return {
+    targetRole,
+    matchPercentage,
+    strongSkills,
+    developingSkills,
+    missingSkills,
+    criticalGaps,
+    requirements,
+    recommendations: recommendations.length > 0 ? recommendations : ["Continue your learning path."],
+    nextAction: "View Learning Path",
+    href: "/dashboard/learner/learning-path"
   };
+};

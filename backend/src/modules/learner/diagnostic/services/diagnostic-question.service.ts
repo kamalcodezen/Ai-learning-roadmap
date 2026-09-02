@@ -28,7 +28,7 @@ export const getDiagnosticQuestions = async (query: DiagnosticQuestionsQuery) =>
     },
   });
 
-  if (existingAttempt && existingAttempt.questions.length === 5) {
+  if (existingAttempt && existingAttempt.questions.length === 6) {
     // We already have cached personalized questions for this role
     return existingAttempt.questions.map((q) => {
       const { correctAnswer, ...rest } = q;
@@ -49,31 +49,32 @@ export const getDiagnosticQuestions = async (query: DiagnosticQuestionsQuery) =>
       userId,
       targetRole: careerProfile.targetRole,
       status: "IN_PROGRESS",
-      totalQuestions: 5,
+      totalQuestions: 6,
     },
   });
 
   // 5. Save the 5 questions linked to the new attempt
-  const savedQuestions = [];
-  let order = 1;
+  const questionData = aiQuestions.map((q, index) => ({
+    attemptId: attempt.id,
+    question: q.question,
+    description: q.description || "",
+    category: q.category,
+    skill: q.skill,
+    options: q.options,
+    correctAnswer: q.correctAnswer,
+    difficulty: q.difficulty,
+    order: index + 1,
+    isActive: true,
+  }));
 
-  for (const q of aiQuestions) {
-    const saved = await prisma.diagnosticQuestion.create({
-      data: {
-        attemptId: attempt.id,
-        question: q.question,
-        description: q.description || "",
-        category: q.category,
-        skill: q.skill,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
-        difficulty: q.difficulty,
-        order: order++,
-        isActive: true,
-      },
-    });
-    savedQuestions.push(saved);
-  }
+  await prisma.diagnosticQuestion.createMany({
+    data: questionData,
+  });
+
+  const savedQuestions = await prisma.diagnosticQuestion.findMany({
+    where: { attemptId: attempt.id },
+    orderBy: { order: "asc" },
+  });
 
   // Invalidate any other IN_PROGRESS attempts for this user
   await prisma.diagnosticAttempt.updateMany({

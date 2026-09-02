@@ -1,4 +1,4 @@
-import { serverFetch } from "../../core/server";
+import { serverFetch, serverMutation } from "../../core/server";
 
 export interface Milestone {
   id: string;
@@ -28,3 +28,8 @@ export interface LearningPathData {
 export const getLearningPath = async (): Promise<LearningPathData> => {
   return await serverFetch(`/api/learning-path`);
 };
+
+export const completeMilestone = async (milestoneId: string): Promise<LearningPathData> => {
+  return await serverMutation(`/api/learning-path/${milestoneId}/complete`, undefined, "POST");
+};
+

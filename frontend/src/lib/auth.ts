@@ -453,21 +453,34 @@ const globalForPool = globalThis as unknown as {
 // DATABASE_URL থেকে PostgreSQL database-এর connection তৈরি হচ্ছে.
 // ============================================================
 
+// Clean up Neon's default connection string to fix warnings and TLS handshake delays
+const cleanDbUrl = process.env.DATABASE_URL
+  ?.replace("&channel_binding=require", "")
+  ?.replace("?channel_binding=require", "")
+  ?.replace("&sslmode=require", "")
+  ?.replace("?sslmode=require", "") as string;
+
+// ============================================================
+// POSTGRESQL CONNECTION POOL
+// ============================================================
+
 export const pool =
   globalForPool.pool ||
   new Pool({
-    // PostgreSQL connection string
-    connectionString: process.env.DATABASE_URL,
+    connectionString: cleanDbUrl,
+    max: 10,
+    min: 1,
+    idleTimeoutMillis: 10000,
+    connectionTimeoutMillis: 10000,
+    ssl: {
+      rejectUnauthorized: false,
+    },
   });
 
-// ============================================================
-// DEVELOPMENT POOL REUSE
-// ============================================================
-// Production ছাড়া development-এ একই pool reuse করা হচ্ছে.
-//
-// এতে Next.js/server reload-এর সময় unnecessary
-// অনেক database connection তৈরি হয় না.
-// ============================================================
+// Handle idle connection errors to prevent uncaught exceptions from Neon terminating idle connections
+pool.on("error", (err) => {
+  console.error("Unexpected error on idle Better Auth pool client:", err.message);
+});
 
 if (process.env.NODE_ENV !== "production") {
   globalForPool.pool = pool;
@@ -476,16 +489,8 @@ if (process.env.NODE_ENV !== "production") {
 // ============================================================
 // BETTER AUTH MAIN CONFIGURATION
 // ============================================================
-// এখান থেকেই পুরো Better Auth system চালু হচ্ছে.
-// ============================================================
 
 export const auth = betterAuth({
-  // ==========================================================
-  // DATABASE
-  // ==========================================================
-  // Better Auth PostgreSQL database ব্যবহার করবে.
-  // ==========================================================
-
   database: pool,
 
   // ==========================================================

@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { getApplicationReadiness } from "@/src/lib/api/learner/application-readiness";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/src/components/ui/Card";
 import { CheckCircle2, AlertTriangle, XCircle, Briefcase, FileText, Code, MessagesSquare } from "lucide-react";
 
 export default function ApplicationReadinessPage() {
-  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+  const { data: session, isPending: isSessionLoading } = useDashboardSession();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["applicationReadiness", session?.user?.id],

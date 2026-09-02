@@ -1,0 +1,1 @@
+import prisma from './src/lib/prisma.js'; async function main() { const errors = await prisma.errorLog.findMany({ orderBy: { createdAt: 'desc' }, take: 3 }); console.dir(errors, {depth: null}); } main();

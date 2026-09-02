@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode, createContext, useContext } from "react";
 import { useRouter } from "next/navigation";
 
 import { authClient } from "@/src/lib/auth-client";
@@ -11,8 +11,20 @@ interface SessionGuardProps {
 
 const SESSION_GRACE_MS = 3000;
 
+type SessionContextType = ReturnType<typeof authClient.useSession>;
+const DashboardSessionContext = createContext<SessionContextType | null>(null);
+
+export const useDashboardSession = () => {
+  const context = useContext(DashboardSessionContext);
+  if (!context) {
+    throw new Error("useDashboardSession must be used within a SessionGuard");
+  }
+  return context;
+};
+
 export default function SessionGuard({ children }: SessionGuardProps) {
-  const { data: session, isPending } = authClient.useSession();
+  const sessionResult = authClient.useSession();
+  const { data: session, isPending } = sessionResult;
   const router = useRouter();
   const [cachedUser, setCachedUser] = useState(session?.user);
 
@@ -55,8 +67,8 @@ export default function SessionGuard({ children }: SessionGuardProps) {
   }
 
   return (
-    <>
+    <DashboardSessionContext.Provider value={sessionResult}>
       {children}
-    </>
+    </DashboardSessionContext.Provider>
   );
 }

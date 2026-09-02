@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import dashboardBanner from "@/public/images/dashboardBanner.png";
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import type { DashboardData } from "../../shared/types";
 
 interface ProgressStat {
@@ -18,7 +18,7 @@ interface DashboardBannerProps {
 export default function WelcomeStatsSection({
   readiness,
 }: DashboardBannerProps) {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session, isPending } = useDashboardSession();
 
   const firstName =
     session?.user?.name?.trim().split(" ")[0] || "there";

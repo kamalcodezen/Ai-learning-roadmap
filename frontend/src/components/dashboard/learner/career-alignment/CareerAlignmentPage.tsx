@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { getCareerAlignment } from "@/src/lib/api/learner/career-alignment";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
@@ -10,7 +10,7 @@ import { CheckCircle2, Target, AlertTriangle, ArrowRight, Lightbulb, Compass } f
 import Link from "next/link";
 
 export default function CareerAlignmentPage() {
-  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+  const { data: session, isPending: isSessionLoading } = useDashboardSession();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["careerAlignment", session?.user?.id],
@@ -35,6 +35,29 @@ export default function CareerAlignmentPage() {
       <div className="flex flex-col items-center justify-center h-64 space-y-4 text-center">
         <h3 className="text-xl font-bold text-destructive">Error</h3>
         <p className="text-muted-foreground">Failed to load. Please refresh.</p>
+      </div>
+    );
+  }
+
+  if (data.targetRole === "NO_TARGET_ROLE") {
+    return (
+      <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold text-foreground">Career Alignment</h1>
+          <p className="text-muted-foreground">See how your current skills match up against your target role requirements.</p>
+        </div>
+        <Card className="max-w-xl mx-auto mt-10">
+          <CardContent className="flex flex-col items-center justify-center p-12 text-center">
+            <Target className="w-12 h-12 text-muted-foreground mb-4" />
+            <h3 className="text-xl font-bold mb-2">No target career set.</h3>
+            <p className="text-muted-foreground mb-6">
+              Complete your onboarding to set a target career and see your alignment.
+            </p>
+            <Link href={data.href} className="bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-medium hover:brightness-110">
+              {data.nextAction}
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -111,11 +134,28 @@ export default function CareerAlignmentPage() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {data.strongSkills.map((skill, idx) => (
+              {data.strongSkills.length > 0 ? data.strongSkills.map((skill, idx) => (
                 <span key={idx} className="px-3 py-1.5 rounded-lg bg-green-500/10 text-green-500 text-sm font-medium border border-green-500/20">
                   {skill}
                 </span>
-              ))}
+              )) : <span className="text-sm text-muted-foreground">None yet.</span>}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-blue-500" /> Developing
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {data.developingSkills?.length > 0 ? data.developingSkills.map((skill, idx) => (
+                <span key={idx} className="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-500 text-sm font-medium border border-blue-500/20">
+                  {skill}
+                </span>
+              )) : <span className="text-sm text-muted-foreground">None currently developing.</span>}
             </div>
           </CardContent>
         </Card>
@@ -128,11 +168,28 @@ export default function CareerAlignmentPage() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {data.missingSkills.map((skill, idx) => (
+              {data.missingSkills.length > 0 ? data.missingSkills.map((skill, idx) => (
                 <span key={idx} className="px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-500 text-sm font-medium border border-amber-500/20">
                   {skill}
                 </span>
-              ))}
+              )) : <span className="text-sm text-muted-foreground">No missing skills!</span>}
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-destructive" /> Critical Gaps
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {data.criticalGaps?.length > 0 ? data.criticalGaps.map((skill, idx) => (
+                <span key={idx} className="px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive text-sm font-medium border border-destructive/20">
+                  {skill}
+                </span>
+              )) : <span className="text-sm text-muted-foreground">No critical gaps!</span>}
             </div>
           </CardContent>
         </Card>

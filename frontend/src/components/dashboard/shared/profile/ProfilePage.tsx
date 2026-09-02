@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
 import { User, Mail, Shield, Key, Calendar, Clock, Edit2, Check, X, Loader2, Lock } from "lucide-react";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import Link from "next/link";
 
 export default function ProfilePage() {
-  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+  const { data: session, isPending: isSessionLoading } = useDashboardSession();
   
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState("");

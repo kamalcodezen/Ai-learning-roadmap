@@ -22,16 +22,18 @@ export const generateDiagnosticQuestions = async (
 ): Promise<GeneratedDiagnosticQuestion[]> => {
   const prompt = `
 You are an expert technical interviewer and career mentor.
-Generate EXACTLY 5 diagnostic multiple-choice questions for a user with the following profile:
+Generate EXACTLY 6 diagnostic questions for a user with the following profile:
 - Target Role: ${context.targetRole}
 - Experience Level: ${context.experienceLevel}
 
-The questions must progressively test:
+Questions 1 to 5 MUST be multiple-choice questions (MCQ) that progressively test:
 1. Fundamentals
 2. Conceptual understanding
 3. Practical application
 4. Problem solving
 5. Role-specific real-world reasoning
+
+Question 6 MUST be an open-ended communication question. It should ask the user to explain a technical concept clearly in their own words. The question must be relevant to the target role and experience level.
 
 Return the response ONLY as a valid JSON object matching this exact structure:
 {
@@ -39,12 +41,12 @@ Return the response ONLY as a valid JSON object matching this exact structure:
     {
       "question": "The question text",
       "description": "Optional context for the question",
-      "category": "Broad topic (e.g., Frontend, Backend)",
-      "skill": "Specific skill (e.g., React, SQL)",
-      "options": ["Option A", "Option B", "Option C", "Option D"],
-      "correctAnswer": "The exact string of the correct option",
+      "category": "Broad topic (e.g., Frontend, Backend, Communication)",
+      "skill": "Specific skill (e.g., React, SQL, Technical Communication)",
+      "options": ["Option A", "Option B", "Option C", "Option D"], // Use empty array [] for Question 6
+      "correctAnswer": "The exact string of the correct option", // Use empty string "" for Question 6
       "difficulty": "beginner/intermediate/advanced",
-      "explanation": "Why this answer is correct"
+      "explanation": "Why this answer is correct (or what a good explanation entails for Q6)"
     }
   ]
 }
@@ -76,8 +78,8 @@ DO NOT wrap the JSON in markdown code blocks. DO NOT include any conversational 
       console.error("[Diagnostic AI] JSON Parse Error. Cleaned Content:", content);
       throw parseError;
     }
-    if (!parsed.questions || !Array.isArray(parsed.questions) || parsed.questions.length !== 5) {
-       throw new Error("AI did not return exactly 5 questions.");
+    if (!parsed.questions || !Array.isArray(parsed.questions) || parsed.questions.length !== 6) {
+       throw new Error("AI did not return exactly 6 questions.");
     }
 
     return parsed.questions as GeneratedDiagnosticQuestion[];

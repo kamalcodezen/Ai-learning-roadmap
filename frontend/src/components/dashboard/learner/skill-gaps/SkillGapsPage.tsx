@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { getSkillGaps } from "@/src/lib/api/learner/skill-gaps";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
@@ -10,7 +10,7 @@ import { AlertTriangle, TrendingUp, AlertCircle, ArrowRight, Activity } from "lu
 import Link from "next/link";
 
 export default function SkillGapsPage() {
-  const { data: session, isPending: isSessionLoading } = authClient.useSession();
+  const { data: session, isPending: isSessionLoading } = useDashboardSession();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["skillGaps", session?.user?.id],

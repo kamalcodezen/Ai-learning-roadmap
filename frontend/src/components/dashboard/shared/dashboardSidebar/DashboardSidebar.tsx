@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Variants } from "motion/react";
 
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { getBottomNavItems } from "../navigation";
 import BottomNavBar from "../bottomNavBar/BottomNavBar";
 import MobileSidebarToggle from "./MobileSidebarToggle";
@@ -23,7 +23,7 @@ const drawerVariants: Variants = {
 };
 
 export default function DashboardSidebar() {
-  const { data: session } = authClient.useSession();
+  const { data: session } = useDashboardSession();
   const user = session?.user;
   const [drawerOpen, setDrawerOpen] = useState(false);
 
