@@ -22,7 +22,7 @@ export default function BannerHeader({
       >
       </motion.div>
 
-      <div className="mt-7 w-full">
+      <div className="mt-3 sm:mt-7 w-full">
         <TextBody heading={heading} subHeading={subHeading} />
       </div>
     </>
