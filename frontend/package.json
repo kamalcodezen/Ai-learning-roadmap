@@ -13,6 +13,7 @@
     "@better-auth/prisma-adapter": "^1.7.2",
     "@heroui/react": "^3.2.4",
     "@heroui/styles": "^3.2.4",
+    "@neondatabase/serverless": "^1.1.0",
     "@react-pdf/renderer": "^4.9.0",
     "@react-three/fiber": "^9.7.0",
     "@tanstack/react-query": "^5.102.8",
@@ -50,7 +51,8 @@
     "tailwind-merge": "^3.6.0",
     "three": "^0.185.1",
     "tw-animate-css": "^1.4.0",
-    "use-debounce": "^10.1.1"
+    "use-debounce": "^10.1.1",
+    "ws": "^8.21.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -63,6 +65,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.185.4",
+    "@types/ws": "^8.18.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4",
