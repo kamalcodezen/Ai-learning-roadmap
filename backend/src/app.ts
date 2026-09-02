@@ -19,7 +19,9 @@ import assessmentsRoutes from "./modules/learner/assessments/assessments.routes.
 import careeralignmentRoutes from "./modules/learner/career-alignment/career-alignment.routes.js";
 import applicationreadinessRoutes from "./modules/learner/application-readiness/application-readiness.routes.js";
 import portfolioRoutes from "./modules/learner/projects/portfolio.routes.js";
+import jobRealityRoutes from "./modules/learner/job-reality/job-reality.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
+import interviewRoutes from "./modules/learner/interview/interview.routes.js";
 const isProduction = env.NODE_ENV === "production";
 
 const app = express();
@@ -74,6 +76,12 @@ app.use("/api/application-readiness", applicationreadinessRoutes);
 
 // Portfolio Routes
 app.use("/api/portfolio", portfolioRoutes);
+
+// Job Reality Routes
+app.use("/api/job-reality", jobRealityRoutes);
+
+// Interview Routes
+app.use("/api/interview", interviewRoutes);
 
 // Career Profile Routes/ onboarding
 app.use("/api/career-profile", careerProfileRoutes);
