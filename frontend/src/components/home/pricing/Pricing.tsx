@@ -15,7 +15,7 @@ const Pricing = () => {
     billing === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
 
   return (
-    <section className="section-pad lg:px-10 relative w-full overflow-hidden px-4 sm:px-8 md:px-12">
+    <section id="pricing" className="section-pad lg:px-10 relative w-full overflow-hidden px-4 sm:px-8 md:px-12">
       <div className="global-pos relative w-full">
         {/* Header */}
         <Header billing={billing} onBillingChange={setBilling} />
