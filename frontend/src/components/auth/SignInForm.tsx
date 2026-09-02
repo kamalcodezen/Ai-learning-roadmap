@@ -74,6 +74,12 @@ export default function SignInForm({ onSwitch }: SignInFormProps) {
     }
 
     try {
+      const { data: sessionData } = await authClient.getSession();
+      if ((sessionData?.user as { role?: string })?.role === "ADMIN") {
+        router.push("/dashboard/admin/dashboard");
+        return;
+      }
+
       const data = await serverFetch("/api/career-profile/routing-state");
       
       if (data?.success) {
