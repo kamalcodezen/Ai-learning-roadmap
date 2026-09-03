@@ -7,15 +7,15 @@ interface MobileLayoutProps {
 
 export default function MobileLayout({ states }: MobileLayoutProps) {
   return (
-    <div className="mt-12 flex flex-col gap-10 lg:hidden w-full overflow-hidden">
+    <div className="mt-4 sm:mt-6 flex flex-col gap-8 sm:gap-10 lg:hidden w-full overflow-hidden">
       {states.map((state, idx) => (
-        <div key={state.id} className="flex flex-col gap-3.5">
+        <div key={state.id} className="flex flex-col gap-3 sm:gap-3.5">
           <div className="relative h-[320px] overflow-hidden rounded-3xl border-2 border-border bg-card shadow-lg">
             <EvolvingSystemVisual activeState={idx} />
           </div>
 
-          <div className="space-y-1 px-1">
-            <div className="flex items-center gap-2">
+          <div className="mt-5 flex flex-col items-center text-center space-y-1.5 px-2">
+            <div className="flex items-center justify-center gap-2">
               <span className="font-mono text-caption font-bold uppercase tracking-widest text-primary">
                 {state.eyebrow}
               </span>
@@ -25,11 +25,11 @@ export default function MobileLayout({ states }: MobileLayoutProps) {
               </span>
             </div>
 
-            <h3 className="font-poppins text-h3 leading-snug text-foreground text-balance">
+            <h3 className="font-poppins text-h3 font-bold leading-snug text-foreground text-balance text-center">
               {state.title}
             </h3>
 
-            <p className="text-small leading-relaxed text-muted-foreground">
+            <p className="text-small leading-relaxed text-muted-foreground text-center">
               {state.description}
             </p>
           </div>

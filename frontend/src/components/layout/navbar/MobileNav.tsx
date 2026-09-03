@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
 import Logo from './Logo';
 import Button from '../../ui/button';
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 import { authClient } from "@/src/lib/auth-client";
-import { dropdownLinks } from "./profileDropdown";
+import { getDropdownLinks } from "./profileDropdown";
+import { getNavLinks } from "./NavLinks";
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +19,11 @@ export default function MobileNav() {
     name: session?.user?.name || "User",
     email: session?.user?.email || "",
   };
+
+  const userRole = (session?.user as { role?: string })?.role || "learner";
+  const prefix = userRole === "admin" ? "/dashboard/admin" : "/dashboard/learner";
+  const links = getDropdownLinks(userRole, prefix);
+  const navLinks = getNavLinks();
 
   return (
     <div className="w-full flex justify-center relative mt-2">
@@ -60,9 +67,17 @@ export default function MobileNav() {
               style={{ originY: 0 }}
             >
               <div className="flex flex-col items-center gap-6 pt-6 pb-2 px-4">
-                <div className="flex flex-col gap-6 w-full items-center mt-2">
-                  <a href="#" className="text-body text-muted-foreground hover:text-foreground transition-colors">About Us</a>
-                  <a href="#" className="text-body text-muted-foreground hover:text-foreground transition-colors">How it works</a>
+                <div className="flex flex-col gap-1 w-full mt-2">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.label}
+                      href={link.href === "#" ? "#" : link.href}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-poppins text-black transition-colors hover:bg-card-soft dark:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
                 </div>
                 
                 {/* Profile Section (mobile - no background colors) */}
@@ -93,7 +108,7 @@ export default function MobileNav() {
                     </div>
 
                     <div className="flex w-full flex-col items-center gap-1">
-                      {dropdownLinks.map((link) =>
+                      {links.map((link) =>
                         link.variant === "danger" ? (
                           <button
                             key={link.label}
@@ -106,7 +121,7 @@ export default function MobileNav() {
                           <a
                             key={link.label}
                             href="#"
-                            className="w-full rounded-lg py-2 text-center text-sm text-muted-foreground transition-colors hover:text-foreground"
+                            className="w-full rounded-lg py-2 text-center text-sm text-black transition-colors hover:opacity-75 dark:text-white"
                           >
                             {link.label}
                           </a>

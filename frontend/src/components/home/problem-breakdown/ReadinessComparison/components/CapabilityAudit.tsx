@@ -393,7 +393,7 @@ export default function CapabilityAudit() {
   };
 
   return (
-    <div className="mt-16 w-full global-container">
+    <div id="readiness-comparison" className="mt-16 w-full global-container">
       {/* ── SECTION HEADER & NAVIGATION ── */}
       <div className="text-center mb-10 flex flex-col items-center gap-2">
         <span className="section-badge">
@@ -401,7 +401,7 @@ export default function CapabilityAudit() {
           THE 4 PROOF PILLARS
         </span>
         
-        <h4 className="section-title">
+        <h4 className="section-title font-bold">
           Progress Is <span className="text-brand">
               not Proof
               </span>

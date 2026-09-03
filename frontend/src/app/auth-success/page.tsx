@@ -12,13 +12,22 @@ export default function AuthSuccessPage() {
   useEffect(() => {
     if (!isPending) {
       if (session?.user) {
+        // Check role if it exists, otherwise default to learner
+        const userRole = (session.user as { role?: string }).role || "learner";
+
+        if (userRole === "admin") {
+          // Admins bypass the diagnostic/onboarding entirely
+          router.push("/dashboard/admin");
+          return;
+        }
+
         // If the user was created within the last 15 seconds, they are new
         const isNewUser = new Date().getTime() - new Date(session.user.createdAt).getTime() < 15000;
         
         if (isNewUser) {
           router.push("/onboarding");
         } else {
-          router.push("/dashboard");
+          router.push("/dashboard/learner");
         }
       } else {
         // If no session, go back to sign in

@@ -1,0 +1,83 @@
+.sidebar-container {
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  overflow-x: clip;
+}
+
+.sidebar-container nav {
+  scrollbar-width: none;
+}
+
+.sidebar-container nav::-webkit-scrollbar {
+  display: none;
+}
+
+/* Active navigation item — LIGHT THEME
+   Selected tab: bg-background, text-secondary, icon-secondary */
+.sidebar-active-item {
+  position: relative;
+  background-color: rgb(var(--background));
+  color: rgb(var(--secondary)) !important;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  margin-right: -1rem;
+  padding-right: 1.5rem;
+}
+
+/* Top inverted curve (light) */
+.sidebar-active-item::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background-color: transparent;
+  border-bottom-right-radius: 12px;
+  box-shadow: 3px 3px 0 3px rgb(var(--background));
+  pointer-events: none;
+}
+
+/* Bottom inverted curve (light) */
+.sidebar-active-item::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background-color: transparent;
+  border-top-right-radius: 12px;
+  box-shadow: 3px -3px 0 3px rgb(var(--background));
+  pointer-events: none;
+}
+
+/* =========================================
+   DARK THEME — design as given (dark pill
+   bleeding into the #0b0f19 dashboard content)
+   ========================================= */
+.dark .sidebar-active-item {
+  background-color: #0b0f19;
+  color: rgb(var(--foreground)) !important;
+}
+
+.dark .sidebar-active-item::before {
+  box-shadow: 3px 3px 0 3px #0b0f19;
+}
+
+.dark .sidebar-active-item::after {
+  box-shadow: 3px -3px 0 3px #0b0f19;
+}
+
+/* =========================================
+   SIDEBAR BACKGROUND
+   Shares the dashboard wrapper solids:
+   #eae0ff (light) / #5b3491 (dark).
+   ========================================= */
+.sidebar-gradient {
+  background-color: #eae0ff;
+}
+
+.dark .sidebar-gradient {
+  background-color: #5b3491;
+}

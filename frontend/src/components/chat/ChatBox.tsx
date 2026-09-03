@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import brandLogo from "../../../public/brand/logo-p-purple.png"
@@ -10,6 +10,7 @@ import {
   type ChatMessage,
 } from "@/src/lib/api/chat-ai-mentor/chat";
 import { Meteors } from "@/src/components/ui/meteors";
+import { BorderBeam } from "@/src/components/ui/border-beam";
 import Image from "next/image";
 
 export default function ChatBox() {
@@ -17,6 +18,12 @@ export default function ChatBox() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const glowRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when messages or loading state changes
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!glowRef.current) return;
@@ -338,6 +345,8 @@ export default function ChatBox() {
                 </div>
               </div>
             )}
+            
+            <div ref={messagesEndRef} />
           </div>
         )}
       </div>
@@ -346,8 +355,22 @@ export default function ChatBox() {
       <div className="border-t border-border p-4 sm:p-5">
         <form
           onSubmit={handleSubmit}
-          className="mx-auto flex max-w-3xl items-end gap-3 rounded-2xl border border-border bg-card p-2 transition focus-within:border-primary/30"
+          className="relative mx-auto flex max-w-3xl items-end gap-3 rounded-2xl border border-border bg-card p-2 transition focus-within:border-primary/30"
         >
+          <BorderBeam
+            duration={6}
+            size={400}
+            colorFrom="rgba(239,68,68,0)"
+            colorTo="#ef4444"
+          />
+          <BorderBeam
+            duration={6}
+            delay={3}
+            size={400}
+            borderWidth={2}
+            colorFrom="rgba(59,130,246,0)"
+            colorTo="#3b82f6"
+          />
           {/* Message Input */}
           <textarea
             value={input}

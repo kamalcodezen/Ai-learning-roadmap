@@ -66,7 +66,16 @@ export default function SignUpForm({ onSwitch }: SignUpFormProps) {
         password,
       });
 
+      const { data: sessionData } = await authClient.getSession();
+
       setIsPending(false);
+      
+      if ((sessionData?.user as { role?: string })?.role === "ADMIN") {
+        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+        window.location.href = "/dashboard/admin/dashboard";
+        return;
+      }
+      
       // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       window.location.href = "/onboarding";
       return;

@@ -13,8 +13,8 @@ import Image from "next/image";
 
 const mainLinks = [
   { title: "How It Works", href: "/#how-it-works" },
-  { title: "Features", href: "#features" },
-  { title: "About Us", href: "#about" },
+  { title: "Features", href: "/#features" },
+  { title: "About Us", href: "/about" },
   { title: "Login", href: "/signin" },
 ];
 

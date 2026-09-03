@@ -1,5 +1,9 @@
-import { BrainCircuit, ShieldCheck, Sparkles, Target, Zap } from "lucide-react";
+import { BrainCircuit, ShieldCheck, Target, Zap } from "lucide-react";
+
+import { Card } from "@/src/components/ui/Card";
 import type { ExperienceLevel } from "./ExperienceSection";
+import brandLogo from "../../../public/brand/AI-Pather-blue.png"
+import Image from "next/image";
 
 interface CareerOSPreviewProps {
   currentRole: string;
@@ -20,17 +24,11 @@ export function CareerOSPreview({
 }: CareerOSPreviewProps) {
   return (
     <aside className="xl:sticky xl:top-8 xl:self-start">
-      <div
-        className="
-          overflow-hidden
-          rounded-[28px]
-          border
-          border-border
-          bg-card/80
-          shadow-[var(--shadow)]
-          backdrop-blur-xl
-        "
+      <Card
+        mouseGlow
+        className="group relative overflow-hidden rounded-md transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]"
       >
+        <div className="relative z-10">
         <div className="border-b border-border p-5">
           <div className="flex items-center justify-between">
             <div>
@@ -147,7 +145,7 @@ export function CareerOSPreview({
           <div className="mt-5 rounded-2xl border border-primary/10 bg-primary/[0.035] p-4">
             <div className="flex gap-3">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                <Sparkles className="h-4 w-4 text-primary" />
+                <Image src={brandLogo} alt="Brand-logo" className="ml-1 w-4 h-4 md:w-5 md:h-5 brightness-0 dark:invert" height={20} width={20}/>
               </div>
 
               <div>
@@ -181,6 +179,7 @@ export function CareerOSPreview({
           </div>
         </div>
       </div>
+    </Card>
     </aside>
   );
 }

@@ -1,0 +1,1 @@
+import { PrismaClient } from '@prisma/client'; const prisma = new PrismaClient(); async function main() { const errors = await prisma.errorLog.findMany({ orderBy: { createdAt: 'desc' }, take: 3 }); console.dir(errors, {depth: null}); } main();

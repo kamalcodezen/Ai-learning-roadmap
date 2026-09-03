@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 
 import {
   careerTracks,
@@ -13,7 +14,7 @@ import { authClient } from "@/src/lib/auth-client";
 import {
   onboardingCareerProfile,
   type CareerProfilePayload,
-} from "@/src/lib/actions/career-profile";
+} from "@/src/lib/actions/learner/career-profile";
 
 import { OnboardingHeader } from "./OnboardingHeader";
 import { CareerGoalSection } from "./CareerGoalSection";
@@ -174,7 +175,7 @@ export default function OnboardingPage() {
       // Diagnostic
       // --------------------------------------------------------
 
-      router.push("/onboarding/diagnostic");
+      router.push("/diagnostic");
     } catch (error: unknown) {
       console.error("Failed to save career profile:", error);
     } finally {
@@ -198,7 +199,7 @@ export default function OnboardingPage() {
   // ============================================================
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-background text-foreground">
+    <main className="relative h-screen bg-background text-foreground px-10 2xl-px-0">
       {/* ====================================================== */}
       {/* PREMIUM BACKGROUND */}
       {/* ====================================================== */}
@@ -225,8 +226,23 @@ export default function OnboardingPage() {
       {/* PAGE CONTAINER */}
       {/* ====================================================== */}
 
-      <div className="relative z-10 mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <OnboardingHeader />
+      <div className="global-pos relative z-10 flex h-full w-full flex-col items-center justify-center py-4">
+        <motion.div
+          initial={{ opacity: 0, filter: "blur(16px)" }}
+          animate={{ opacity: 1, filter: "blur(0px)" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="flex h-[95vh] flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
+        >
+          <div
+            data-lenis-prevent-wheel
+            className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8"
+          >
+        <OnboardingHeader
+          canContinue={canContinue}
+          selectedTrack={selectedTrack}
+          customGoal={customGoal}
+          experience={experience}
+        />
 
         {/* ==================================================== */}
         {/* MAIN GRID */}
@@ -277,6 +293,8 @@ export default function OnboardingPage() {
         />
 
         <OnboardingFooter />
+          </div>
+        </motion.div>
       </div>
     </main>
   );

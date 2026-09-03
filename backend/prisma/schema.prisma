@@ -66,6 +66,7 @@ model user {
   email            String   @unique
   emailVerified    Boolean
   image            String?
+  role             String   @default("LEARNER") // LEARNER, ADMIN
   createdAt        DateTime @default(now()) @db.Timestamptz(6)
   updatedAt        DateTime @default(now()) @db.Timestamptz(6)
   twoFactorEnabled Boolean?
@@ -76,8 +77,9 @@ model user {
   // CareerOS
   careerProfile CareerProfile?
 
-  // Diagnostic
+  // Diagnostic & Interview
   diagnosticAttempts DiagnosticAttempt[]
+  interviewSessions  InterviewSession[]
 
   // New features
   skillStates         SkillState[]
@@ -86,6 +88,7 @@ model user {
   activityLogs        ActivityLog[]
   skillStateHistories SkillStateHistory[]
   twoFactors          twoFactor[]
+  adminAuditLogs      AdminAuditLog[]
 }
 
 // ============================================================
@@ -108,7 +111,7 @@ model verification {
 // ============================================================
 
 model twoFactor {
-  id          String @id
+  id                      String    @id
   secret                  String
   backupCodes             String
   userId                  String
@@ -214,6 +217,7 @@ model DiagnosticAttempt {
 
   @@index([userId])
   @@index([status])
+  @@index([userId, status, completedAt(sort: Desc)])
 }
 
 // ============================================================
@@ -234,6 +238,8 @@ model DiagnosticAnswer {
   selectedAnswer String
 
   isCorrect Boolean?
+
+  evaluation Json?
 
   createdAt DateTime @default(now()) @db.Timestamptz(6)
 
@@ -283,6 +289,7 @@ model Roadmap {
   milestones Milestone[]
 
   @@index([userId])
+  @@index([userId, status, targetRole])
 }
 
 model Milestone {
@@ -322,13 +329,39 @@ model Project {
   repositoryUrl String?
   liveUrl       String?
 
+  techStack          String[] @default([])
+  explanationQuality Float?
+  isVerified         Boolean  @default(false)
+  aiReview           Json?
+
   score Float @default(0)
 
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @updatedAt
 
+  evidence ProjectEvidence[]
+
   @@index([userId])
 }
+
+model ProjectEvidence {
+  id String @id @default(cuid())
+  
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  userId String
+  
+  skillName String
+  evidenceType String // "GITHUB", "LIVE", "MANUAL"
+  url String?
+  
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  
+  @@unique([projectId, skillName])
+  @@index([userId])
+}
+
 
 // ============================================================
 // ACTIVITY LOG & TRENDS
@@ -350,6 +383,8 @@ model ActivityLog {
   @@index([userId])
   @@index([type])
   @@index([createdAt])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, type, createdAt])
 }
 
 model SkillStateHistory {
@@ -369,4 +404,129 @@ model SkillStateHistory {
 
   @@index([userId])
   @@index([skillName])
+}
+
+// ============================================================
+// ADMIN PANEL
+// ============================================================
+
+model AdminAuditLog {
+  id String @id @default(cuid())
+
+  adminId String
+  admin   user   @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  action   String // e.g., "ROLE_CHANGED", "USER_DELETED"
+  targetId String?
+  details  Json?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([adminId])
+  @@index([action])
+}
+
+model AiUsageLog {
+  id String @id @default(cuid())
+
+  provider     String   // e.g. 'GROQ' or 'OPENROUTER'
+  model        String   // e.g. 'openai/gpt-oss-120b'
+  feature      String   // e.g. 'DIAGNOSTIC', 'CAREER_TWIN'
+  status       String   // e.g. 'SUCCESS', 'FAILURE'
+  durationMs   Int?
+  tokensUsed   Int?
+  errorMessage String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([provider])
+  @@index([status])
+  @@index([feature])
+  @@index([createdAt])
+}
+
+
+model ErrorLog {
+  id          String   @id @default(cuid())
+  errorType   String
+  message     String
+  endpoint    String?
+  method      String?
+  statusCode  Int?
+  userId      String?
+  metadata    Json?
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([createdAt])
+  @@index([errorType])
+}
+
+model AnalyticsSnapshot {
+  id                  String   @id @default(cuid())
+  date                DateTime @unique @db.Date
+  totalUsers          Int      @default(0)
+  totalRoadmaps       Int      @default(0)
+  totalAssessments    Int      @default(0)
+  totalProjects       Int      @default(0)
+  activeUsers         Int      @default(0)
+  careerReadyCount    Int      @default(0)
+  createdAt           DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([date])
+}
+
+// ============================================================
+// INTERVIEW 
+// ============================================================
+
+model InterviewSession {
+  id          String   @id @default(cuid())
+  userId      String
+  user        user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  
+  targetRole  String?
+  status      String   @default("IN_PROGRESS") // IN_PROGRESS, COMPLETED
+  
+  score       Float?
+  
+  startedAt   DateTime @default(now()) @db.Timestamptz(6)
+  completedAt DateTime? @db.Timestamptz(6)
+
+  questions   InterviewQuestion[]
+  answers     InterviewAnswer[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model InterviewQuestion {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  
+  question    String
+  order       Int
+  
+  answers     InterviewAnswer[]
+
+  @@index([sessionId])
+  @@index([order])
+}
+
+model InterviewAnswer {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  
+  questionId  String
+  question    InterviewQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  
+  answerText  String
+  
+  evaluation  Json?
+  
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([sessionId, questionId])
+  @@index([questionId])
 }

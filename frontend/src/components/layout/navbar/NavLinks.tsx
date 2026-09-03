@@ -5,57 +5,49 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { RxCross2 } from "react-icons/rx";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { FiTarget, FiCpu, FiRefreshCw, FiGitBranch, FiShield } from "react-icons/fi";
+import { FiTarget, FiCpu, FiGitBranch, FiShield } from "react-icons/fi";
 
-interface NavLink {
+export interface NavLink {
   label: string;
   href: string;
   children?: { label: string; href: string; icon: React.ReactNode }[];
 }
 
-const navLinks: NavLink[] = [
+export const getNavLinks = (): NavLink[] => [
   {
-    label: "Core Engines",
-    href: "/dashboard",
+    label: "Solutions",
+    href: "/features",
     children: [
       {
-        label: "Career Twin Diagnostic",
-        href: "/career-twin",
-        icon: <FiTarget size={14} />,
+        label: "Career Diagnostic",
+        href: "/#career-twin",
+        icon: <FiTarget size={15} />,
       },
       {
-        label: "Cognitive Independence",
-        href: "/learning-path",
-        icon: <FiCpu size={14} />,
+        label: "Adaptive Learning",
+        href: "/#how-it-works",
+        icon: <FiCpu size={15} />,
       },
       {
-        label: "Anti-Decay Memory",
-        href: "/progress",
-        icon: <FiRefreshCw size={14} />,
+        label: "Skill Verification",
+        href: "/#readiness-comparison",
+        icon: <FiGitBranch size={15} />,
       },
       {
-        label: "Zero-Clone Proof",
-        href: "/proof-graph",
-        icon: <FiGitBranch size={14} />,
-      },
-      {
-        label: "JD Reality Gate",
-        href: "/application-readiness",
-        icon: <FiShield size={14} />,
+        label: "Problem Breakdown",
+        href: "/#problem-breakdown",
+        icon: <FiShield size={15} />,
       },
     ],
   },
-
   {
-    label: "Live Proof Explorer",
-    href: "/portfolio",
-  },
-
-  {
-    label: "Roadmap vs AI Pather",
+    label: "Why AI Pather",
     href: "/#comparison",
   },
-
+  {
+    label: "About Us",
+    href: "/about",
+  },
   {
     label: "Pricing",
     href: "/#pricing",
@@ -66,11 +58,13 @@ export default function NavLinks() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
 
+  const links = getNavLinks();
+
   return (
     <>
       {/* Desktop Navigation */}
       <nav className="hidden items-center gap-1 lg:flex">
-        {navLinks.map((link, index) => {
+        {links.map((link, index) => {
           const hasChildren = link.children && link.children.length > 0;
           const isActive = activeDropdown === index;
 
@@ -98,7 +92,7 @@ export default function NavLinks() {
                   font-poppins relative z-10 flex items-center gap-1.5 rounded-lg px-3 py-1.5
                   text-sm font-normal
                   transition-all duration-300
-                  ${isActive ? "text-foreground bg-muted/50" : "text-muted-foreground hover:text-foreground"}
+                  ${isActive ? "bg-muted/50 text-black dark:bg-muted/50 dark:text-white" : "text-black hover:opacity-75 dark:text-white dark:hover:opacity-75"}
                 `}
               >
                 {link.label}
@@ -138,7 +132,7 @@ export default function NavLinks() {
                         >
                           <Link
                             href={child.href}
-                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-all duration-200 hover:bg-muted/70 hover:text-foreground group"
+                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-black transition-all duration-200 hover:bg-muted/70 dark:text-white group"
                           >
                             <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
                               {child.icon}
@@ -178,12 +172,12 @@ export default function NavLinks() {
             className="absolute left-4 right-4 top-[calc(100%+8px)] rounded-2xl border border-border bg-card p-3 shadow-xl lg:hidden"
           >
             <nav className="flex flex-col">
-              {navLinks.map((link) => (
+              {links.map((link) => (
                 <div key={link.label}>
                   <Link
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="font-poppins flex items-center justify-between rounded-xl px-4 py-3 text-sm text-muted-foreground transition-colors hover:bg-card-soft hover:text-foreground"
+                    className="font-poppins flex items-center justify-between rounded-xl px-4 py-3 text-sm text-black transition-colors hover:bg-card-soft dark:text-white"
                   >
                     <span>{link.label}</span>
                   </Link>
@@ -194,7 +188,7 @@ export default function NavLinks() {
                           key={child.label}
                           href={child.href}
                           onClick={() => setMobileOpen(false)}
-                          className="flex items-center gap-2 rounded-lg px-4 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                          className="flex items-center gap-2 rounded-lg px-4 py-2 text-xs text-black transition-colors hover:opacity-75 dark:text-white"
                         >
                           <span className="text-primary">{child.icon}</span>
                           {child.label}
