@@ -27,9 +27,9 @@ export default function AudienceBanner() {
         overflow-hidden
         pt-20
         pb-8
-        sm:pt-24
+        sm:pt-28
         sm:pb-12
-        sm:min-h-screen
+        h-screen
         bg-[#f4edff]
         dark:bg-background
       "

@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import dashboardBanner from "@/public/images/dashboardBanner.png";
+import dashboardBannerDark from "@/public/images/dashboardBannerDark.png";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import type { DashboardData } from "../../shared/types";
 
@@ -19,6 +21,23 @@ export default function WelcomeStatsSection({
   readiness,
 }: DashboardBannerProps) {
   const { data: session, isPending } = useDashboardSession();
+
+  const [dark, setDark] = useState(() =>
+    typeof window !== "undefined"
+      ? document.documentElement.classList.contains("dark")
+      : false,
+  );
+
+  useEffect(() => {
+    const syncTheme = () =>
+      setDark(document.documentElement.classList.contains("dark"));
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   const firstName =
     session?.user?.name?.trim().split(" ")[0] || "there";
@@ -64,7 +83,7 @@ export default function WelcomeStatsSection({
           No overlay.
       ================================================================= */}
       <Image
-        src={dashboardBanner}
+        src={dark ? dashboardBannerDark : dashboardBanner}
         alt=""
         fill
         priority
@@ -110,7 +129,7 @@ export default function WelcomeStatsSection({
                   font-extrabold
                   leading-tight
                   tracking-tight
-                  text-gray-800
+                  text-foreground
                   sm:text-3xl
                 "
               >
@@ -124,7 +143,7 @@ export default function WelcomeStatsSection({
                   text-sm
                   font-medium
                   leading-relaxed
-                  text-[#374151]
+                  text-foreground
                   sm:text-base
                 "
               >

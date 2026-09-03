@@ -6,6 +6,7 @@ import { getAssessments } from "@/src/lib/api/learner/assessments";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
+import { DashboardCard } from "../dashboard-card";
 import { CheckCircle2, PlayCircle, Clock, Trophy, Target, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -81,7 +82,7 @@ export default function AssessmentsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {data.assessments.map((assessment) => (
-            <Card key={assessment.id} className="flex flex-col h-full transition-all hover:border-primary/30">
+            <DashboardCard key={assessment.id} className="flex flex-col h-full transition-all hover:border-primary/30">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex justify-between items-start mb-4">
                   <div className="space-y-1">
@@ -126,7 +127,7 @@ export default function AssessmentsPage() {
                   )}
                 </div>
               </CardContent>
-            </Card>
+            </DashboardCard>
           ))}
         </div>
       </div>

@@ -6,6 +6,7 @@ import { getProgress } from "@/src/lib/api/learner/progress";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
+import { DashboardCard } from "../dashboard-card";
 import { Clock, Calendar, Flame, TrendingUp, BookOpen, FileCode, CheckSquare } from "lucide-react";
 
 export default function ProgressPage() {
@@ -85,7 +86,7 @@ export default function ProgressPage() {
         </Card>
       </div>
 
-      <Card>
+      <DashboardCard>
         <CardHeader>
           <CardTitle>Recent Activity</CardTitle>
         </CardHeader>
@@ -107,7 +108,7 @@ export default function ProgressPage() {
             ))}
           </div>
         </CardContent>
-      </Card>
+      </DashboardCard>
     </div>
   );
 }

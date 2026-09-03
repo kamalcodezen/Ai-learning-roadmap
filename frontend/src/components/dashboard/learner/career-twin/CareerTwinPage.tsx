@@ -5,7 +5,8 @@ import { authClient } from "@/src/lib/auth-client";
 import { getCareerTwin } from "@/src/lib/api/learner/career-twin";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
+import { CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
+import { DashboardCard } from "../dashboard-card";
 import Link from "next/link";
 import { Bot, Target, Trophy, AlertTriangle, CheckCircle2, ArrowRight } from "lucide-react";
 
@@ -47,7 +48,7 @@ export default function CareerTwinPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="col-span-1 lg:col-span-2 border-primary/20">
+        <DashboardCard className="col-span-1 lg:col-span-2 border-primary/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="w-5 h-5 text-primary" /> Target Profile
@@ -85,10 +86,10 @@ export default function CareerTwinPage() {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </DashboardCard>
 
         <div className="col-span-1 flex flex-col gap-6">
-          <Card className="bg-primary/5 border-primary/20">
+          <DashboardCard className="bg-primary/5 border-primary/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-primary">
                 <Trophy className="w-5 h-5" /> Overall Readiness
@@ -100,9 +101,9 @@ export default function CareerTwinPage() {
               </div>
               <p className="text-sm text-muted-foreground">Based on your assessments, projects, and evidence provided.</p>
             </CardContent>
-          </Card>
+          </DashboardCard>
 
-          <Card>
+          <DashboardCard>
             <CardHeader>
               <CardTitle className="text-lg">Skill Balance</CardTitle>
             </CardHeader>
@@ -128,12 +129,12 @@ export default function CareerTwinPage() {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </DashboardCard>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
+        <DashboardCard>
           <CardHeader>
             <CardTitle className="text-lg">Identified Career Gaps</CardTitle>
           </CardHeader>
@@ -147,9 +148,9 @@ export default function CareerTwinPage() {
               ))}
             </ul>
           </CardContent>
-        </Card>
+        </DashboardCard>
 
-        <Card className="border-primary/30 relative overflow-hidden">
+        <DashboardCard className="border-primary/30 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl -mr-10 -mt-10" />
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-primary">
@@ -169,7 +170,7 @@ export default function CareerTwinPage() {
               <ArrowRight className="w-4 h-4" />
             </Link>
           </CardContent>
-        </Card>
+        </DashboardCard>
       </div>
     </div>
   );

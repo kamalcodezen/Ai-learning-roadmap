@@ -5,6 +5,7 @@ import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGu
 import { getJobReality } from "@/src/lib/api/learner/job-reality";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
+import { DashboardCard } from "../dashboard-card";
 import Button from "@/src/components/ui/button";
 import { Briefcase, AlertCircle, CheckCircle2, TrendingUp, BarChart3, Database } from "lucide-react";
 import Link from "next/link";
@@ -130,7 +131,7 @@ export default function JobRealityContent() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <Card className="h-full">
+          <DashboardCard className="h-full">
             <CardHeader>
               <CardTitle>In-Demand Skills</CardTitle>
               <p className="text-sm text-muted-foreground">
@@ -192,11 +193,11 @@ export default function JobRealityContent() {
                 </table>
               </div>
             </CardContent>
-          </Card>
+          </DashboardCard>
         </div>
 
         <div className="space-y-6">
-          <Card>
+          <DashboardCard>
             <CardHeader>
               <CardTitle>Market-Based Insights</CardTitle>
             </CardHeader>
@@ -214,9 +215,9 @@ export default function JobRealityContent() {
                 ))}
               </ul>
             </CardContent>
-          </Card>
+          </DashboardCard>
 
-          <Card className="border-primary/20 bg-primary/5">
+          <DashboardCard className="border-primary/20 bg-primary/5">
             <CardHeader>
               <CardTitle>Recommended Actions</CardTitle>
             </CardHeader>
@@ -239,7 +240,7 @@ export default function JobRealityContent() {
                 </Link>
               </div>
             </CardContent>
-          </Card>
+          </DashboardCard>
         </div>
       </div>
     </div>

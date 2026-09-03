@@ -5,7 +5,8 @@ import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGu
 import { getCareerAlignment } from "@/src/lib/api/learner/career-alignment";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
+import { CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
+import { DashboardCard } from "../dashboard-card";
 import { CheckCircle2, Target, AlertTriangle, ArrowRight, Lightbulb, Compass } from "lucide-react";
 import Link from "next/link";
 
@@ -46,7 +47,7 @@ export default function CareerAlignmentPage() {
           <h1 className="text-3xl font-bold text-foreground">Career Alignment</h1>
           <p className="text-muted-foreground">See how your current skills match up against your target role requirements.</p>
         </div>
-        <Card className="max-w-xl mx-auto mt-10">
+        <DashboardCard className="max-w-xl mx-auto mt-10">
           <CardContent className="flex flex-col items-center justify-center p-12 text-center">
             <Target className="w-12 h-12 text-muted-foreground mb-4" />
             <h3 className="text-xl font-bold mb-2">No target career set.</h3>
@@ -57,7 +58,7 @@ export default function CareerAlignmentPage() {
               {data.nextAction}
             </Link>
           </CardContent>
-        </Card>
+        </DashboardCard>
       </div>
     );
   }
@@ -70,7 +71,7 @@ export default function CareerAlignmentPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="col-span-1 md:col-span-2 border-primary/20 bg-primary/5">
+        <DashboardCard className="col-span-1 md:col-span-2 border-primary/20 bg-primary/5">
           <CardContent className="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center md:text-left">
               <p className="text-sm text-muted-foreground uppercase tracking-wider font-semibold">Target Role</p>
@@ -102,9 +103,9 @@ export default function CareerAlignmentPage() {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </DashboardCard>
 
-        <Card className="col-span-1 border-primary/30 relative overflow-hidden flex flex-col">
+        <DashboardCard className="col-span-1 border-primary/30 relative overflow-hidden flex flex-col">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl -mr-10 -mt-10" />
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-primary">
@@ -122,11 +123,11 @@ export default function CareerAlignmentPage() {
               {data.nextAction} <ArrowRight className="w-4 h-4" />
             </Link>
           </CardContent>
-        </Card>
+        </DashboardCard>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
+        <DashboardCard>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-green-500" /> Strong Match
@@ -141,9 +142,9 @@ export default function CareerAlignmentPage() {
               )) : <span className="text-sm text-muted-foreground">None yet.</span>}
             </div>
           </CardContent>
-        </Card>
+        </DashboardCard>
 
-        <Card>
+        <DashboardCard>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Lightbulb className="w-5 h-5 text-blue-500" /> Developing
@@ -158,9 +159,9 @@ export default function CareerAlignmentPage() {
               )) : <span className="text-sm text-muted-foreground">None currently developing.</span>}
             </div>
           </CardContent>
-        </Card>
+        </DashboardCard>
 
-        <Card>
+        <DashboardCard>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-amber-500" /> Missing Skills
@@ -175,9 +176,9 @@ export default function CareerAlignmentPage() {
               )) : <span className="text-sm text-muted-foreground">No missing skills!</span>}
             </div>
           </CardContent>
-        </Card>
-        
-        <Card>
+        </DashboardCard>
+
+        <DashboardCard>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-destructive" /> Critical Gaps
@@ -192,10 +193,10 @@ export default function CareerAlignmentPage() {
               )) : <span className="text-sm text-muted-foreground">No critical gaps!</span>}
             </div>
           </CardContent>
-        </Card>
+        </DashboardCard>
       </div>
 
-      <Card>
+      <DashboardCard>
         <CardHeader>
           <CardTitle>Detailed Requirements</CardTitle>
         </CardHeader>
@@ -229,9 +230,9 @@ export default function CareerAlignmentPage() {
             ))}
           </div>
         </CardContent>
-      </Card>
+      </DashboardCard>
 
-      <Card className="border-primary/20 bg-primary/5">
+      <DashboardCard className="border-primary/20 bg-primary/5">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-primary">
             <Lightbulb className="w-5 h-5" /> Strategic Recommendations
@@ -247,7 +248,7 @@ export default function CareerAlignmentPage() {
             ))}
           </ul>
         </CardContent>
-      </Card>
+      </DashboardCard>
     </div>
   );
 }

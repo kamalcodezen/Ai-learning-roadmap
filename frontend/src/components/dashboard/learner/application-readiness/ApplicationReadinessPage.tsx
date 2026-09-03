@@ -5,7 +5,8 @@ import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGu
 import { getApplicationReadiness } from "@/src/lib/api/learner/application-readiness";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
-import { Card, CardContent } from "@/src/components/ui/Card";
+import { CardContent } from "@/src/components/ui/Card";
+import { DashboardCard } from "../dashboard-card";
 import { CheckCircle2, AlertTriangle, XCircle, Briefcase, FileText, Code, MessagesSquare } from "lucide-react";
 
 export default function ApplicationReadinessPage() {
@@ -62,7 +63,7 @@ export default function ApplicationReadinessPage() {
         <p className="text-muted-foreground">Are you ready to apply for jobs? Let&apos;s analyze your entire profile.</p>
       </div>
 
-      <Card className={`border-l-4 ${data.isReady ? 'border-l-green-500 bg-green-500/5' : 'border-l-amber-500 bg-amber-500/5'}`}>
+      <DashboardCard className={`border-l-4 ${data.isReady ? 'border-l-green-500' : 'border-l-amber-500'}`}>
         <CardContent className="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-1 space-y-2 text-center md:text-left">
             <h2 className="text-2xl font-bold text-foreground">
@@ -81,14 +82,14 @@ export default function ApplicationReadinessPage() {
             <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mt-1">Overall Readiness</span>
           </div>
         </CardContent>
-      </Card>
+      </DashboardCard>
 
       <div className="grid grid-cols-1 gap-4">
         {data.categories.map((category) => {
           const status = getStatusDetails(category.status);
 
           return (
-            <Card key={category.id} className="transition-all hover:border-primary/30 group">
+            <DashboardCard key={category.id} className="transition-all hover:border-primary/30 group">
               <CardContent className="p-0">
                 <div className="flex flex-col lg:flex-row">
                   <div className="p-6 lg:w-1/3 border-b lg:border-b-0 lg:border-r border-border bg-card-soft/50 flex flex-col justify-center">
@@ -124,7 +125,7 @@ export default function ApplicationReadinessPage() {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </DashboardCard>
           );
         })}
       </div>
