@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
+import env from "../config/env.js";
 
 declare global {
   namespace Express {
@@ -8,7 +9,7 @@ declare global {
   }
 }
 
-const NEXT_JS_URL = process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000";
+const NEXT_JS_URL = env.FRONTEND_URL;
 
 export const optionalAuth = async (
   req: Request,
