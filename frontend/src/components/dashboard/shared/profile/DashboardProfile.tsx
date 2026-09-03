@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Avatar } from "@heroui/react";
-import { useTheme } from "next-themes";
 import { authClient } from "@/src/lib/auth-client";
 import { showToast } from "@/src/components/ui/toast";
 import AdminGlowCard from "@/src/components/dashboard/admin/AdminGlowCard";
@@ -56,6 +55,7 @@ export interface ProfileChart {
 
 interface DashboardProfileProps {
   coverImage: string;
+  coverImageDark?: string;
   roleLabel: string;
   bio: string;
   metaItems?: ProfileMetaItem[];
@@ -67,6 +67,7 @@ interface DashboardProfileProps {
 
 export default function DashboardProfile({
   coverImage,
+  coverImageDark,
   roleLabel,
   bio,
   metaItems = [],
@@ -78,8 +79,24 @@ export default function DashboardProfile({
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const activeUser = session?.user;
-  const { theme } = useTheme();
-  const dark = theme === "dark";
+
+  const [dark, setDark] = useState(() =>
+    typeof window !== "undefined"
+      ? document.documentElement.classList.contains("dark")
+      : false,
+  );
+
+  useEffect(() => {
+    const syncTheme = () =>
+      setDark(document.documentElement.classList.contains("dark"));
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   const primary = dark ? "#B978FF" : "#9F54F7";
   const gridStroke =
     "color-mix(in srgb, var(--color-foreground) 40%, transparent)";
@@ -187,12 +204,15 @@ export default function DashboardProfile({
   return (
     <div className="w-full font-urbanist text-foreground min-h-screen pb-12">
       {/* ============ COVER & AVATAR ============ */}
-      <div className="dashboard-card relative !p-0 overflow-hidden">
+      <div className="dashboard-card relative !p-0 overflow-hidden max-w-6xl mx-auto">
         <div className="h-48 md:h-64 w-full relative bg-gradient-to-r from-primary/40 via-secondary/20 to-primary/40">
           <Image
-            src={coverImage}
+            src={coverImageDark ? (dark ? coverImageDark : coverImage) : coverImage}
             alt="Profile Cover"
-            className="w-full h-full object-cover opacity-80"
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover opacity-80"
           />
         </div>
 
