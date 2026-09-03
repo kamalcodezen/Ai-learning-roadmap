@@ -6,6 +6,7 @@ import { getProofGraph, ProofGraphNode } from "@/src/lib/api/learner/proof-graph
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
+import { DashboardCard } from "../dashboard-card";
 import { CheckCircle2, Circle, AlertCircle, XCircle, ShieldCheck, FileCode, CheckSquare, BrainCircuit, Activity, Users } from "lucide-react";
 
 export default function ProofGraphPage() {
@@ -152,7 +153,7 @@ export default function ProofGraphPage() {
         <p className="text-muted-foreground">Trace the verifiable evidence backing your skills.</p>
       </div>
 
-      <Card className="bg-primary/5 border-primary/20">
+      <DashboardCard className="bg-primary/5 border-primary/20">
         <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <p className="text-sm text-muted-foreground mb-1">Analyzing Skill Chain</p>
@@ -165,7 +166,7 @@ export default function ProofGraphPage() {
             <div className="text-3xl font-bold text-foreground">{data.overallProofScore}%</div>
           </div>
         </CardContent>
-      </Card>
+      </DashboardCard>
 
       <div className="mx-auto w-full max-w-4xl py-4 flex flex-col gap-8">
         {rootNodes.length === 0 || data.nodes.find(n => n.id === "empty-state-node") ? (

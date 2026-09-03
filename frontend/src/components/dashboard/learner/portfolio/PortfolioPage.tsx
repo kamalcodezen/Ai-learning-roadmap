@@ -7,6 +7,7 @@ import { getPortfolio, createProject, updateProject, deleteProject, generateProj
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
+import { DashboardCard } from "../dashboard-card";
 import { FolderGit2, ExternalLink, GitBranch, CheckCircle2, AlertTriangle, FileCode2, Star, Loader2, Trash2, Edit2, X, Plus, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function PortfolioPage() {
@@ -187,7 +188,7 @@ export default function PortfolioPage() {
         <p className="text-muted-foreground">Manage and analyze your project portfolio evidence.</p>
       </div>
 
-      <Card className="bg-primary/5 border-primary/20">
+      <DashboardCard className="bg-primary/5 border-primary/20">
         <CardContent className="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-1 space-y-2 text-center md:text-left">
             <h2 className="text-2xl font-bold text-foreground flex items-center justify-center md:justify-start gap-2">
@@ -205,7 +206,7 @@ export default function PortfolioPage() {
             <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mt-1">Score</span>
           </div>
         </CardContent>
-      </Card>
+      </DashboardCard>
 
       <div className="flex items-center justify-between mt-4">
         <h2 className="text-xl font-semibold">Your Projects</h2>
@@ -225,7 +226,7 @@ export default function PortfolioPage() {
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {data.projects.map((project) => (
-            <Card key={project.id} className="flex flex-col h-full transition-all hover:border-primary/30 relative group">
+            <DashboardCard key={project.id} className="flex flex-col h-full transition-all hover:border-primary/30 relative group">
               <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                 <button 
                   onClick={() => openEditModal(project)}
@@ -415,7 +416,7 @@ export default function PortfolioPage() {
                   )}
                 </div>
               </CardContent>
-            </Card>
+            </DashboardCard>
           ))}
         </div>
       )}
