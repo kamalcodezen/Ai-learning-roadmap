@@ -501,6 +501,29 @@ export const auth = betterAuth({
 
   baseURL: process.env.BETTER_AUTH_URL,
 
+  trustedOrigins: Array.from(
+    new Set(
+      [
+        process.env.BETTER_AUTH_URL?.trim(),
+        process.env.NEXT_PUBLIC_API_URL?.trim(),
+        "https://aipather.vercel.app",
+        "https://ai-pather-backend.onrender.com",
+        "http://localhost:3000",
+        "http://localhost:5000",
+      ].filter(Boolean) as string[],
+    ),
+  ),
+
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: "lax",
+      secure:
+        process.env.NODE_ENV === "production" &&
+        !process.env.BETTER_AUTH_URL?.includes("localhost"),
+      httpOnly: true,
+    },
+  },
+
   // ==========================================================
   // USER CUSTOM FIELDS
   // ==========================================================

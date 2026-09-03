@@ -1,8 +1,15 @@
 export const baseUrl =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  typeof window === "undefined"
+    ? (
+        process.env.BACKEND_API_URL ||
+        process.env.NEXT_PUBLIC_API_URL ||
+        "http://localhost:5000"
+      ).replace(/\/+$/, "")
+    : "/api/proxy";
 
 const request = async (path: string, options?: RequestInit) => {
-  const response = await fetch(`${baseUrl}${path}`, {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const response = await fetch(`${baseUrl}${normalizedPath}`, {
     ...options,
     credentials: "include",
     headers: {
