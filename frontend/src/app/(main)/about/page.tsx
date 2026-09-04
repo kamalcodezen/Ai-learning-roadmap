@@ -11,9 +11,12 @@ import { HomeFloatingChat } from "@/src/components/chat/HomeFloatingChat";
 import { FloatingSocials } from "@/src/components/socials/FloatingSocials";
 
 export const metadata: Metadata = {
-  title: "About Us | AI Pather — The Adaptive Career Learning System",
+  title: "About Us",
   description:
     "AI Pather exists to help people turn scattered learning into a clear, adaptive path toward real career capability through diagnostic gap isolation and zero-clone proof.",
+  alternates: {
+    canonical: "/about",
+  },
   openGraph: {
     title: "About Us | AI Pather",
     description:

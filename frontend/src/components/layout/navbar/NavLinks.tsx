@@ -89,8 +89,8 @@ export default function NavLinks() {
                   }
                 }}
                 className={`
-                  font-poppins relative z-10 flex items-center gap-1.5 rounded-lg px-3 py-1.5
-                  text-sm font-normal
+                  font-poppins font-medium relative z-10 flex items-center gap-1.5 rounded-lg px-3 py-1.5
+                  text-sm 
                   transition-all duration-300
                   ${isActive ? "bg-muted/50 text-black dark:bg-muted/50 dark:text-white" : "text-black hover:opacity-75 dark:text-white dark:hover:opacity-75"}
                 `}

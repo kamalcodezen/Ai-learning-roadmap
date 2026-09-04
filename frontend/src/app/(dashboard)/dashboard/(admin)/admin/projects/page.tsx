@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import AdminProjectsView from "@/src/components/dashboard/admin/AdminProjectsView";
 
 export const metadata: Metadata = {
-  title: "Projects Overview | Admin | AI Pather",
+  title: "Projects Overview",
 };
 
 export default function Page() {

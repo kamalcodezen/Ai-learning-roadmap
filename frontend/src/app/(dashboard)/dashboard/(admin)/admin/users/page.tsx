@@ -2,7 +2,7 @@ import UserManagement from "@/src/components/dashboard/admin/UserManagement";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "User Management | Admin | AI Pather",
+  title: "User Management",
 };
 
 export default function AdminUsersPage() {

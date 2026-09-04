@@ -33,17 +33,13 @@ function renderHighlighted(text: string): ReactNode[] {
     });
 }
 
-export default function TextBody({
-  heading,
-  subHeading,
-}: TextBodyProps) {
+export default function TextBody({ heading, subHeading }: TextBodyProps) {
   const plainHeading = heading.replace(/\*/g, "");
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col items-center pb-2 text-center sm:pb-14">
-
+    <div className="mx-auto flex w-full max-w-5xl flex-col items-center pb-2 text-center">
       {/* Eyebrow */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
@@ -64,7 +60,7 @@ export default function TextBody({
       >
         <span className="text-sm">✦</span>
         Track Your Journey
-      </motion.div>
+      </motion.div> */}
 
       {/* Heading */}
       <motion.h1
@@ -74,7 +70,7 @@ export default function TextBody({
         transition={{ duration: 0.45, ease: "easeOut" }}
         aria-label={plainHeading}
         className="
-          text-3xl
+          text-[2.5rem]
           font-extrabold
           text-white
           [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]

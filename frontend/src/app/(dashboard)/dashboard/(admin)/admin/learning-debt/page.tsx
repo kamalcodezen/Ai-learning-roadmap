@@ -3,7 +3,7 @@ import AdminLearningDebtView from '@/src/components/dashboard/admin/AdminLearnin
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Learning Debt | Admin | AI Pather",
+  title: "Learning Debt",
 };
 
 export default function Page() {

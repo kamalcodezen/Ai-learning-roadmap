@@ -117,6 +117,7 @@
     color: var(--color-heading-1);
     text-wrap: balance;
   }
+
   h2 {
     font-family: var(--font-family-primary);
     font-size: var(--font-size-h2);
@@ -126,6 +127,7 @@
     color: var(--color-heading-1);
     text-wrap: balance;
   }
+
   h3 {
     font-family: var(--font-family-primary);
     font-size: var(--font-size-h4);
@@ -135,6 +137,7 @@
     color: var(--color-heading-2);
     text-wrap: balance;
   }
+
   h4 {
     font-family: var(--font-family-primary);
     font-size: 24px;
@@ -143,7 +146,9 @@
     color: var(--color-heading-2);
     text-wrap: balance;
   }
-  h5, h6 {
+
+  h5,
+  h6 {
     font-family: var(--font-family-primary);
     font-size: 20px;
     line-height: 1.3;
@@ -151,11 +156,13 @@
     color: var(--color-heading-2);
     text-wrap: balance;
   }
+
   p {
     font-size: var(--font-size-paragraph);
     line-height: 1.6;
     color: var(--color-text-secondary);
   }
+
   small {
     font-size: 14px;
     color: var(--color-text-secondary);
@@ -186,8 +193,8 @@
 
 @media (max-width: 480px) {
   :root {
-    --font-size-h1: 28px;
-    --font-size-h2: 24px;
+    --font-size-h1: 29px;
+    --font-size-h2: 28px;
     --font-size-h4: 20px;
     --font-size-paragraph: 15px;
     --font-size-semi-paragraph: 17px;
@@ -283,6 +290,7 @@ button {
   .text-measure {
     max-width: 65ch;
   }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -352,12 +360,12 @@ button {
   }
 
   /* Same vertical gap between every direct child of a section */
-  .section-gaps > * + * {
+  .section-gaps>*+* {
     margin-top: var(--space-content-xs);
   }
 
   @media (min-width: 768px) {
-    .section-gaps > * + * {
+    .section-gaps>*+* {
       margin-top: var(--space-content-xs);
     }
   }
@@ -516,29 +524,38 @@ button {
 
 @theme inline {
   --animate-blink-cursor: blink-cursor 1.2s step-end infinite;
+
   @keyframes blink-cursor {
-  0%, 49% {
-    opacity: 1;
+
+    0%,
+    49% {
+      opacity: 1;
     }
-  50%, 100% {
-    opacity: 0;
+
+    50%,
+    100% {
+      opacity: 0;
     }
   }
-  --animate-meteor: meteor 5s linear infinite
-;
+
+  --animate-meteor: meteor 5s linear infinite;
+
   @keyframes meteor {
-  0% {
-    transform: rotate(var(--angle)) translateX(0);
-    opacity: 1;
+    0% {
+      transform: rotate(var(--angle)) translateX(0);
+      opacity: 1;
     }
-  70% {
-    opacity: 1;
+
+    70% {
+      opacity: 1;
     }
-  100% {
-    transform: rotate(var(--angle)) translateX(-500px);
-    opacity: 0;
+
+    100% {
+      transform: rotate(var(--angle)) translateX(-500px);
+      opacity: 0;
     }
-  }}
+  }
+}
 
 /* =========================================
    JIMU PRIMARY LOADING ANIMATION
@@ -578,11 +595,15 @@ button {
 }
 
 @-webkit-keyframes loading-keys-app-loading {
-  0%, 80%, 100% {
+
+  0%,
+  80%,
+  100% {
     opacity: .75;
     box-shadow: 0 0 #9F54F7;
     height: 32px;
   }
+
   40% {
     opacity: 1;
     box-shadow: 0 -8px #9F54F7;
@@ -591,11 +612,15 @@ button {
 }
 
 @keyframes loading-keys-app-loading {
-  0%, 80%, 100% {
+
+  0%,
+  80%,
+  100% {
     opacity: .75;
     box-shadow: 0 0 #9F54F7;
     height: 32px;
   }
+
   40% {
     opacity: 1;
     box-shadow: 0 -8px #9F54F7;

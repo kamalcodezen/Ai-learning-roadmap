@@ -1,11 +1,11 @@
-import React from "react";
+
 
 const Header = () => {
   return (
     <section className="w-full rounded-t-[24px] px-4 py-6">
       <div className="mx-auto flex w-full flex-col items-center text-center">
         {/* Main Heading */}
-        <h2 className="section-title font-bold">
+        <h2 className="section-title font-bold mt-3 sm:mt-0">
           The Evolution of{" "}
           <span className="text-primary"> Career Learning</span>
         </h2>

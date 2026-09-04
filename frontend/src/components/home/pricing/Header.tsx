@@ -82,7 +82,7 @@ const Header = ({ billing, onBillingChange }: HeaderProps) => {
 
   return (
     <div className="text-left">
-      <h2 className="section-title font-bold">
+      <h2 className="section-title font-bold mt-7 sm:mt-0">
         Simple Plans, <span className="text-brand">Maximum Learning</span>
       </h2>
 
