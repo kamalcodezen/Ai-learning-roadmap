@@ -2,7 +2,7 @@ import AdminSystemHealthView from "@/src/components/dashboard/admin/AdminSystemH
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "System Health | Admin | AI Pather",
+  title: "System Health",
 };
 
 export default function Page() {
