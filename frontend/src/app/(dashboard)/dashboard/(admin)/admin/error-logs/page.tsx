@@ -2,7 +2,7 @@ import AdminErrorLogsView from "@/src/components/dashboard/admin/AdminErrorLogsV
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Error Logs | Admin | AI Pather",
+  title: "Error Logs",
 };
 
 export default function Page() {
