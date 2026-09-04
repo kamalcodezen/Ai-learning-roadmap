@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import  { useState } from "react";
 import FeatureHeader from "./FeatureHeader";
 import FeatureCard from "./FeatureCard";
 import FeatureTooltipModal from "./FeatureTooltipModal";
