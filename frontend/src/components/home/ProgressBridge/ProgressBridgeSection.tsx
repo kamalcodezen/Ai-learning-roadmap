@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   Sparkles,
   SearchCheck,
@@ -69,7 +68,7 @@ export default function ProgressBridgeSection() {
       {/* Single Continuous Horizontal Marquee */}
       <MarqueeAnimation
         direction="left"
-        baseVelocity={-1.5}
+        baseVelocity={-1}
         pauseOnHover={false}
         className="py-1"
       >
