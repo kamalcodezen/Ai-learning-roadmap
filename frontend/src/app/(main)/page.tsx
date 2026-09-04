@@ -24,7 +24,6 @@ export default function HomePage() {
       <Pricing />
       <TestimonialSection />
       <CTASection />
-
       <HomeFloatingChat />
       <FloatingSocials />
     </>
