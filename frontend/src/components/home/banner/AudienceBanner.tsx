@@ -18,32 +18,48 @@ export default function AudienceBanner() {
   return (
     <section
       className="
-        relative
-        isolate
-        w-full
-        flex
-        items-center
-        justify-center
+        relative isolate flex min-h-[100svh] w-full
+        items-center justify-center
         overflow-hidden
-        pt-20
-        pb-8
-        sm:pt-28
-        sm:pb-12
-        h-screen
-        bg-[#f4edff]
-        dark:bg-background
+        px-4
+        py-20
+        sm:px-6 sm:py-24
+        md:px-8 md:py-20 md:pt-30
+        lg:px-10
+        xl:px-12
       "
     >
+      {/* Background */}
       <BannerBackground image={activeItem.image} title={activeItem.title} />
 
-      <div className="relative z-10 flex w-full max-w-7xl flex-col items-center justify-center px-6">
-        <BannerHeader
-          badge="A smarter way to learn"
-          heading={activeItem.title}
-          subHeading={activeItem.description}
-        />
+      {/* Content */}
+      <div
+        className="
+          relative z-10
+          flex w-full max-w-7xl
+          flex-col items-center justify-center
+          gap-6
+          sm:gap-8
+          md:gap-9
+          lg:gap-10
+        "
+      >
+        {/* Header */}
+        <div className="w-full">
+          <BannerHeader
+            badge="A smarter way to learn"
+            heading={activeItem.title}
+            subHeading={activeItem.description}
+          />
+        </div>
 
-        <div className="hidden w-full sm:block">
+        {/* Desktop / Tablet Coverflow */}
+        <div
+          className="
+            hidden w-full
+            sm:block
+          "
+        >
           <StaticCoverflowRow
             slides={slides}
             onActiveChange={setActiveIndex}
@@ -51,11 +67,20 @@ export default function AudienceBanner() {
           />
         </div>
 
-        <div className="w-full sm:hidden">
+        {/* Mobile Carousel */}
+        <div
+          className="
+            block w-full
+            sm:hidden
+          "
+        >
           <MobileCardCarousel slides={slides} onActiveChange={setActiveIndex} />
         </div>
 
-        <BannerCta text="Get Started" href="/signup" />
+        {/* CTA */}
+        <div className="flex w-full justify-center">
+          <BannerCta text="Get Started" href="/signup" />
+        </div>
       </div>
     </section>
   );
