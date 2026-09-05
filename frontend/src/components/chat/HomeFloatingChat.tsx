@@ -3,13 +3,26 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { Send, Sparkles, X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { authClient } from "@/src/lib/auth-client";
 import { useChatMentor } from "@/src/hooks/useChatMentor";
 import logoSrc from "../../../public/brand/AI-Pather-blue.png";
+import brandLogo from "../../../public/brand/logo-p-purple.png";
 import { PlasmaTriggerButton } from "./PlasmaTriggerButton";
 import { TypingIndicator } from "./TypingIndicator";
+
+function getTimeGreeting(): string {
+  const hours = new Date().getHours();
+  if (hours >= 5 && hours < 12) {
+    return "Good morning";
+  }
+  if (hours >= 12 && hours < 17) {
+    return "Good afternoon";
+  }
+  return "Good evening";
+}
 
 function cn(...classes: (string | boolean | undefined | null)[]) {
   return classes.filter(Boolean).join(" ");
@@ -18,8 +31,22 @@ function cn(...classes: (string | boolean | undefined | null)[]) {
 export function HomeFloatingChat() {
   const [open, setOpen] = useState(false);
   const { messages, input, setInput, isLoading, sendMessage } = useChatMentor();
+  const { data: session } = authClient.useSession();
+  const [timeGreeting, setTimeGreeting] = useState(getTimeGreeting);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setTimeGreeting(getTimeGreeting());
+    const interval = setInterval(() => {
+      setTimeGreeting(getTimeGreeting());
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const rawName = session?.user?.name?.trim();
+  const userName = rawName ? rawName.split(/\s+/)[0] : undefined;
+  const greeting = userName ? `${timeGreeting}, ${userName}` : timeGreeting;
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -103,34 +130,27 @@ export function HomeFloatingChat() {
               className="relative z-10 min-h-0 flex-1 space-y-4 overflow-y-scroll overscroll-contain p-4 outline-none scrollbar-thin scrollbar-thumb-zinc-600/30 dark:scrollbar-thumb-[var(--color-primary)]/40 scrollbar-track-transparent"
             >
               {messages.length === 0 ? (
-                <div className="flex min-h-full flex-col items-center justify-center text-center p-2">
-                  <div className="mb-3.5 flex h-16 w-16 items-center justify-center rounded-3xl border border-black/15 dark:border-[var(--color-primary)]/40 bg-purple-200/60 dark:bg-[var(--color-primary)]/15 text-zinc-950 dark:text-[var(--color-primary)] shadow-[0_0_20px_rgba(159,84,247,0.3)]">
-                    <Sparkles className="size-8" />
+                <div className="flex min-h-full flex-col items-center justify-between text-center p-4 pt-10">
+                  <div className="flex flex-col items-center">
+                    <div className="mb-3 flex items-center justify-center">
+                      <Image
+                        src={brandLogo}
+                        alt="AI Pathar"
+                        width={44}
+                        height={44}
+                        className="h-11 w-11 object-contain"
+                      />
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 dark:text-white tracking-tight">
+                      {greeting}
+                    </h3>
                   </div>
-                  <h4 className="text-xl font-extrabold text-zinc-950 dark:text-white tracking-wide">
-                    {"How can I help you?".split("").map((letter, index) => (
-                      <span
-                        key={index}
-                        className="inline-block animate-loaderLetter text-zinc-950 dark:text-[var(--color-primary)]"
-                        style={{ animationDelay: `${index * 0.05}s` }}
-                      >
-                        {letter === " " ? "\u00A0" : letter}
-                      </span>
-                    ))}
-                  </h4>
-                  <p className="text-sm text-zinc-900 dark:text-zinc-200 font-medium mt-2 mb-5 max-w-[310px] leading-relaxed">
-                    Your AI career copilot for personalized learning, skill
-                    growth, project guidance, and interview prep.
-                  </p>
 
-                  <div className="flex flex-col gap-2.5 w-full">
+                  <div className="flex flex-col gap-2.5 w-full mb-2">
                     {[
                       "Create my personalized learning roadmap",
                       "Analyze my skills and suggest what to learn",
                       "Help me plan a real-world project",
-                      "Prepare me for a technical interview",
-                      "Review my career and skill gaps",
-                      "Help me choose my next career step",
                     ].map((suggestion) => (
                       <button
                         key={suggestion}
@@ -299,7 +319,7 @@ export function HomeFloatingChat() {
 
             {/* Input Footer */}
             <div className="relative z-10 shrink-0 border-t border-black/10 dark:border-[var(--color-primary)]/20 p-3.5 bg-purple-50/80 dark:bg-black/75 backdrop-blur-md">
-              <div className="flex items-center gap-2 rounded-2xl border-2 border-black/20 dark:border-[var(--color-primary)]/40 bg-white dark:bg-[var(--color-surface)] px-4 py-2.5 shadow-sm focus-within:border-[var(--color-primary)] dark:focus-within:border-[var(--color-primary)] transition-all">
+              <div className="flex items-center gap-2 rounded-2xl border-1 border-black/20 dark:border-[var(--color-primary)]/40 bg-white dark:bg-[var(--color-surface)] px-4 py-2 focus-within:border-[var(--color-primary)] dark:focus-within:border-[var(--color-primary)] transition-all">
                 <input
                   type="text"
                   value={input}
@@ -325,7 +345,7 @@ export function HomeFloatingChat() {
                   <Send className="size-4.5" />
                 </motion.button>
               </div>
-              <p className="mt-2 text-center text-xs text-zinc-800 dark:text-zinc-300 font-semibold">
+              <p className="mt-2 text-center text-xs text-zinc-500 dark:text-zinc-300 font-medium">
                 AI Pathar can make mistakes. Verify important information.
               </p>
             </div>

@@ -9,16 +9,42 @@ import {
   sendChatMessage,
   type ChatMessage,
 } from "@/src/lib/api/chat-ai-mentor/chat";
+import { authClient } from "@/src/lib/auth-client";
 import { Meteors } from "@/src/components/ui/meteors";
 import { BorderBeam } from "@/src/components/ui/border-beam";
 import Image from "next/image";
+
+function getTimeGreeting(): string {
+  const hours = new Date().getHours();
+  if (hours >= 5 && hours < 12) {
+    return "Good morning";
+  }
+  if (hours >= 12 && hours < 17) {
+    return "Good afternoon";
+  }
+  return "Good evening";
+}
 
 export default function ChatBox() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { data: session } = authClient.useSession();
+  const [timeGreeting, setTimeGreeting] = useState(getTimeGreeting);
   const glowRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setTimeGreeting(getTimeGreeting());
+    const interval = setInterval(() => {
+      setTimeGreeting(getTimeGreeting());
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const rawName = session?.user?.name?.trim();
+  const userName = rawName ? rawName.split(/\s+/)[0] : undefined;
+  const greeting = userName ? `${timeGreeting}, ${userName}` : timeGreeting;
 
   // Auto-scroll to bottom when messages or loading state changes
   useEffect(() => {
@@ -125,20 +151,14 @@ export default function ChatBox() {
           <div className="flex h-full items-center justify-center">
             <div className="w-full max-w-xl text-center">
               {/* Welcome Icon */}
-              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl border border-primary/20 bg-primary/5 shadow-[0_0_40px_rgba(159,84,247,0.08)]">
-                <Image src={brandLogo} alt="Brand-logo" className="ml-1 w-4 h-4 md:w-5 md:h-5 dark:brightness-0 dark:invert" height={20} width={20}/>
+              <div className="mx-auto mb-4 flex items-center justify-center">
+                <Image src={brandLogo} alt="AI Pathar" className="h-11 w-11 object-contain dark:brightness-0 dark:invert" height={44} width={44}/>
               </div>
 
-              {/* Heading */}
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                How can I help you?
+              {/* Greeting */}
+              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl mb-6">
+                {greeting}
               </h2>
-
-              {/* Description */}
-              <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-                Your AI career copilot for personalized learning, skill growth,
-                project guidance, interview preparation, and career development.
-              </p>
 
               {/* Feature Suggestions */}
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
