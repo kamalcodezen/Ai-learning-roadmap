@@ -24,9 +24,9 @@ export default function AudienceBanner() {
         px-4
         py-20
         sm:px-6 sm:py-24
-        md:px-8 md:py-20 md:pt-30
-        lg:px-10
-        xl:px-12
+        md:min-h-0 md:px-8 md:py-16 md:pt-28
+        lg:min-h-0 lg:px-10 lg:py-20 lg:pt-32
+        xl:min-h-[100svh] xl:px-12 xl:py-20 xl:pt-30
       "
     >
       {/* Background */}
