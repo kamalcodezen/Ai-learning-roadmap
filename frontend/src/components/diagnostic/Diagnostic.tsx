@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, ChevronRight, Loader2, Target, Mic, MicOff, Award } from "lucide-react";
 
+import { BorderBeam } from "@/src/components/ui/border-beam";
+import { glowCardClass } from "@/src/components/dashboard/shared/cards";
+
 import { authClient } from "@/src/lib/auth-client";
 
 import {
@@ -304,7 +307,7 @@ export default function Diagnostic() {
   if (!session?.user?.id) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-background px-4">
-        <section className="w-full max-w-lg rounded-[28px] border border-border bg-card/80 p-8 text-center shadow-[var(--shadow)] backdrop-blur-xl">
+        <section className={`w-full max-w-lg ${glowCardClass} p-8 text-center`}>
           <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
             <Target className="h-6 w-6 text-primary" />
           </div>
@@ -334,7 +337,7 @@ export default function Diagnostic() {
   if (status === "error") {
     return (
       <main className="flex min-h-screen items-center justify-center bg-background px-4">
-        <section className="w-full max-w-lg rounded-[28px] border border-border bg-card/80 p-8 text-center shadow-[var(--shadow)] backdrop-blur-xl">
+        <section className={`w-full max-w-lg ${glowCardClass} p-8 text-center`}>
           <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-destructive/10">
             <Target className="h-6 w-6 text-destructive" />
           </div>
@@ -390,7 +393,7 @@ export default function Diagnostic() {
           <div className="absolute -right-64 bottom-[10%] h-[500px] w-[500px] rounded-full bg-primary/[0.025] blur-[100px]" />
         </div>
 
-        <section className="relative z-10 w-full max-w-2xl rounded-[32px] border border-border bg-card/80 p-8 text-center shadow-[var(--shadow)] backdrop-blur-xl sm:p-12">
+        <section className={`relative z-10 w-full max-w-2xl ${glowCardClass} p-8 text-center sm:p-12`}>
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
             <Target className="h-8 w-8 text-primary" />
           </div>
@@ -434,19 +437,19 @@ export default function Diagnostic() {
           )}
 
           <div className="mx-auto mt-8 grid max-w-md gap-3 text-left sm:grid-cols-3">
-            <div className="rounded-2xl border border-border bg-card-soft p-4">
+            <div className="rounded-xl border border-border bg-card-soft p-4">
               <p className="text-lg font-bold">6</p>
               <p className="mt-1 text-xs text-muted-foreground">Questions</p>
             </div>
 
-            <div className="rounded-2xl border border-border bg-card-soft p-4">
+            <div className="rounded-xl border border-border bg-card-soft p-4">
               <p className="text-lg font-bold">Mixed</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 Question type
               </p>
             </div>
 
-            <div className="rounded-2xl border border-border bg-card-soft p-4">
+            <div className="rounded-xl border border-border bg-card-soft p-4">
               <p className="text-lg font-bold">~2 min</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 Estimated time
@@ -528,7 +531,7 @@ export default function Diagnostic() {
 
         {/* Progress */}
 
-        <div className="mb-6 rounded-2xl border border-border bg-card/70 p-4 backdrop-blur-xl">
+        <div className={`mb-6 ${glowCardClass} p-4`}>
           <div className="flex items-center justify-between text-xs">
             <span className="font-medium">
               Question {currentQuestionIndex + 1} of {questions.length}
@@ -549,7 +552,7 @@ export default function Diagnostic() {
 
         {/* Question */}
 
-        <section className="rounded-[28px] border border-border bg-card/80 p-6 shadow-[var(--shadow)] backdrop-blur-xl sm:p-8">
+        <section className={`${glowCardClass} p-6 sm:p-8`}>
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1 text-xs font-medium text-primary">
               {currentQuestion.category}
@@ -583,16 +586,34 @@ export default function Diagnostic() {
                     type="button"
                     disabled={status === "submitting"}
                     onClick={() => setSelectedAnswer(option)}
-                    className={`group flex w-full items-center gap-4 rounded-2xl border p-4 text-left transition-all duration-200 ${
+                    className={`relative flex w-full items-center gap-4 rounded-xl border p-4 text-left transition-all duration-200 ${
                       selected
-                        ? "border-primary/50 bg-primary/[0.08] shadow-[0_0_30px_rgba(206,255,31,0.06)]"
-                        : "border-border bg-card-soft hover:border-primary/30 hover:bg-muted"
+                        ? "border-2 border-background bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)] overflow-hidden"
+                        : "border border-[#E6E9EE] bg-white dark:border-[rgba(159,84,247,0.15)] dark:bg-[#1a0e2e]"
                     }`}
                   >
+                    {selected && (
+                      <>
+                        <BorderBeam
+                          duration={6}
+                          size={100}
+                          borderWidth={2}
+                          className="from-transparent via-[#9F54F7] to-transparent"
+                        />
+                        <BorderBeam
+                          duration={6}
+                          delay={3}
+                          size={100}
+                          borderWidth={2}
+                          className="from-transparent via-[#c084fc] to-transparent"
+                        />
+                      </>
+                    )}
+
                     <span
                       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition ${
                         selected
-                          ? "border-primary bg-primary text-secondary"
+                          ? "border-brand/500 bg-primary text-white"
                           : "border-border text-transparent"
                       }`}
                     >
@@ -607,7 +628,7 @@ export default function Diagnostic() {
               })
             ) : (
               <div className="flex flex-col gap-4">
-                <div className="flex justify-between items-center bg-card-soft rounded-t-2xl border border-b-0 border-border p-4">
+                <div className="flex justify-between items-center bg-card-soft rounded-t-xl border border-b-0 border-border p-4">
                    <p className="text-sm font-medium text-foreground">Record your answer, or type it below.</p>
                    <button
                      type="button"
@@ -623,7 +644,7 @@ export default function Diagnostic() {
                   onChange={(e) => setSelectedAnswer(e.target.value)}
                   placeholder="Your answer will appear here..."
                   disabled={status === "submitting"}
-                  className="min-h-[200px] w-full resize-y rounded-b-2xl rounded-t-none border border-border bg-background p-4 text-sm leading-relaxed focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
+                  className="min-h-[200px] w-full resize-y rounded-b-xl rounded-t-none border border-border bg-background p-4 text-sm leading-relaxed focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
                 />
               </div>
             )}

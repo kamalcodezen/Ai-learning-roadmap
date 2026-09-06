@@ -19,6 +19,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import type { DiagnosticResultData } from "@/src/lib/api/learner/diagnostic";
+import { glowCardClass } from "@/src/components/dashboard/shared/cards";
 
 interface DiagnosticResultViewProps {
   result: DiagnosticResultData;
@@ -55,7 +56,7 @@ export default function DiagnosticResultView({
         {/* ============================================================ */}
         {/* HEADER & OVERALL SCORE */}
         {/* ============================================================ */}
-        <section className="relative overflow-hidden rounded-[32px] border border-border bg-card/85 p-8 shadow-[var(--shadow)] backdrop-blur-xl sm:p-12 text-center">
+        <section className={`${glowCardClass} p-8 text-center sm:p-12`}>
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 shadow-inner">
             <CheckCircle2 className="h-8 w-8 text-primary" />
           </div>
@@ -74,7 +75,7 @@ export default function DiagnosticResultView({
 
           <div className="mx-auto mt-8 grid max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Overall Technical Score */}
-            <div className="flex flex-col items-center justify-center rounded-3xl border border-primary/25 bg-primary/[0.06] p-6 shadow-sm">
+            <div className="flex flex-col items-center justify-center rounded-xl border border-primary/25 bg-primary/[0.06] p-6">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Technical MCQ Score
               </span>
@@ -87,7 +88,7 @@ export default function DiagnosticResultView({
             </div>
 
             {/* Communication Score / Status */}
-            <div className="flex flex-col items-center justify-center rounded-3xl border border-border bg-card-soft p-6 shadow-sm">
+            <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-card-soft p-6">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Communication Evaluation
               </span>
@@ -117,7 +118,7 @@ export default function DiagnosticResultView({
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/dashboard/learner/skill-gaps"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:opacity-90 active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 active:scale-[0.98]"
             >
               <Target className="h-4 w-4" />
               View Skill Gaps
@@ -144,7 +145,7 @@ export default function DiagnosticResultView({
         {/* ============================================================ */}
         {/* SKILL ANALYSIS (MCQ BREAKDOWN) */}
         {/* ============================================================ */}
-        <section className="mt-10 rounded-[28px] border border-border bg-card/80 p-6 shadow-[var(--shadow)] backdrop-blur-xl sm:p-8">
+        <section className={`mt-10 ${glowCardClass} p-6 sm:p-8`}>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border/60 pb-5">
             <div>
               <div className="flex items-center gap-2">
@@ -185,7 +186,7 @@ export default function DiagnosticResultView({
                 return (
                   <div
                     key={skill.skill}
-                    className="rounded-2xl border border-border/70 bg-card-soft p-4 sm:p-5 transition hover:border-primary/30"
+                    className="rounded-2xl border border-border/70 bg-card-soft p-4 sm:p-5"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div className="flex items-center gap-3">
@@ -231,7 +232,7 @@ export default function DiagnosticResultView({
         {/* ============================================================ */}
         <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* STRENGTHS */}
-          <section className="rounded-[28px] border border-border bg-card/80 p-6 shadow-[var(--shadow)] backdrop-blur-xl sm:p-8 flex flex-col">
+          <section className={`${glowCardClass} p-6 sm:p-8 flex flex-col`}>
             <div className="flex items-center gap-2.5 border-b border-border/60 pb-4">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400">
                 <CheckCircle2 className="h-4 w-4" />
@@ -270,7 +271,7 @@ export default function DiagnosticResultView({
           </section>
 
           {/* SKILL GAPS */}
-          <section className="rounded-[28px] border border-border bg-card/80 p-6 shadow-[var(--shadow)] backdrop-blur-xl sm:p-8 flex flex-col">
+          <section className={`${glowCardClass} p-6 sm:p-8 flex flex-col`}>
             <div className="flex items-center gap-2.5 border-b border-border/60 pb-4">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400">
                 <AlertTriangle className="h-4 w-4" />
@@ -299,7 +300,7 @@ export default function DiagnosticResultView({
                   return (
                     <div
                       key={gap.skill}
-                      className="rounded-2xl border border-border/80 bg-card-soft p-4 transition hover:border-primary/30"
+                      className="rounded-2xl border border-border/80 bg-card-soft p-4"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
@@ -342,7 +343,7 @@ export default function DiagnosticResultView({
         {/* ============================================================ */}
         {/* COMMUNICATION ANALYSIS (QUESTION 6 EVALUATION) */}
         {/* ============================================================ */}
-        <section className="mt-10 rounded-[28px] border border-border bg-card/80 p-6 shadow-[var(--shadow)] backdrop-blur-xl sm:p-8">
+        <section className={`mt-10 ${glowCardClass} p-6 sm:p-8`}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/60 pb-5">
             <div className="flex items-center gap-2.5">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -450,7 +451,7 @@ export default function DiagnosticResultView({
         {/* ============================================================ */}
         {/* RECOMMENDED NEXT STEPS */}
         {/* ============================================================ */}
-        <section className="mt-10 rounded-[28px] border border-border bg-card/80 p-6 shadow-[var(--shadow)] backdrop-blur-xl sm:p-8">
+        <section className={`mt-10 ${glowCardClass} p-6 sm:p-8`}>
           <div className="flex items-center gap-2.5 border-b border-border/60 pb-5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <BookOpen className="h-5 w-5" />
@@ -473,7 +474,7 @@ export default function DiagnosticResultView({
               return (
                 <div
                   key={rec.id}
-                  className="rounded-2xl border border-border/80 bg-card-soft p-5 flex flex-col justify-between transition hover:border-primary/30 shadow-sm"
+                  className="rounded-2xl border border-border/80 bg-card-soft p-5 flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2">
@@ -532,7 +533,7 @@ export default function DiagnosticResultView({
               </Link>
               <Link
                 href="/dashboard/learner"
-                className="rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition shadow-sm"
+                className="rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition"
               >
                 Go to Dashboard
               </Link>
