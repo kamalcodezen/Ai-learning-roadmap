@@ -5,7 +5,7 @@ import "./cardClass.css";
  * Kept as a shared class string so callers can reuse it (e.g. learning-path milestone cards).
  */
 export const plainCardClass =
-  "relative overflow-hidden rounded-xl border border-[#E6E9EE]  backdrop-blur-md transition-all duration-300 bg-white dark:bg-[#1a0e2e] dark:bg-[linear-gradient(to_bottom,#1a0e2e,rgba(159,84,247,0.12))] dark:border-[rgba(159,84,247,0.15)]";
+  "relative overflow-hidden rounded-xl border border-[#E6E9EE]  backdrop-blur-md transition-all duration-300 bg-white dark:bg-[#1a0e2e] dark:bg-[linear-gradient(to_bottom,#1a0e2e,rgba(159,84,247,0.12))] dark:border-[rgba(159,84,247,0.15)] p-6";
 
 /**
  * Shared gradient + corner-hover card style for KPI / compact dashboard cards.

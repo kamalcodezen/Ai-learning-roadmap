@@ -328,7 +328,7 @@ export default function ProofGraphPage() {
 
       {/* Level & Proof Banner */}
       <DashboardCard className="bg-primary/5 border-primary/20">
-        <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+        <CardContent className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center md:text-left">
             <p className="text-sm text-muted-foreground">
               Analyzing Career Target

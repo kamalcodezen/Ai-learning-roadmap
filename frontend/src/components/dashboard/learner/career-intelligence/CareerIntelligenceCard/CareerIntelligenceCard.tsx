@@ -94,7 +94,7 @@ export default function CareerIntelligenceCard() {
 
   if (isDecisionLoading || isVerificationLoading) {
     return (
-      <DashboardCard className="overflow-hidden p-0">
+      <DashboardCard className="overflow-hidden p-0!">
         <div className="border-b border-border px-6 py-5">
           <div className="h-3 w-32 animate-pulse rounded bg-muted" />
           <div className="mt-3 h-7 w-72 animate-pulse rounded bg-muted" />
@@ -287,7 +287,7 @@ export default function CareerIntelligenceCard() {
 
   return (
     <div className="space-y-6">
-      <DashboardCard className="overflow-hidden p-0">
+      <DashboardCard className="overflow-hidden p-0!">
         <div className="relative border-b border-border px-6 py-7 md:px-8">
           <div className="absolute right-0 top-0 h-full w-1/3 pointer-events-none opacity-60">
             <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
@@ -384,7 +384,7 @@ export default function CareerIntelligenceCard() {
         </div>
       </DashboardCard>
 
-      <DashboardCard className="overflow-hidden p-0">
+      <DashboardCard className="overflow-hidden p-0!">
         <div className="grid lg:grid-cols-[1fr_0.75fr]">
           <div className="border-b border-border p-6 lg:border-b-0 lg:border-r lg:p-8">
             <SectionLabel icon={<Zap className="h-3.5 w-3.5" />}>
@@ -502,7 +502,7 @@ export default function CareerIntelligenceCard() {
         </div>
       </DashboardCard>
 
-      <DashboardCard className="overflow-hidden p-0">
+      <DashboardCard className="overflow-hidden p-0!">
         <div className="border-b border-border px-6 py-6 md:px-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
@@ -667,7 +667,7 @@ export default function CareerIntelligenceCard() {
         </div>
       </DashboardCard>
 
-      <DashboardCard className="overflow-hidden p-0">
+      <DashboardCard className="overflow-hidden p-0!">
         <div className="border-b border-border px-6 py-6 md:px-8">
           <SectionLabel icon={<Target className="h-3.5 w-3.5" />}>
             Readiness System

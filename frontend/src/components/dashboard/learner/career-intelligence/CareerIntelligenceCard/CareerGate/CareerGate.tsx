@@ -112,7 +112,7 @@ export default function CareerGate({
   const Icon = config.icon;
 
   return (
-    <DashboardCard className="overflow-hidden p-0">
+    <DashboardCard className="overflow-hidden p-0!">
       <div className={`border-l-4 ${style.border} ${style.soft}`}>
         <div className="flex flex-col gap-8 p-6 md:flex-row md:items-center md:justify-between md:p-8">
           <div className="max-w-3xl">

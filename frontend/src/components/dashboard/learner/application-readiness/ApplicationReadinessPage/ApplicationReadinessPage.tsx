@@ -106,7 +106,7 @@ export default function ApplicationReadinessPage() {
       <DashboardCard
         className={`border-l-4 ${data.isReady ? "border-l-green-500" : "border-l-amber-500"}`}
       >
-        <CardContent className="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        <CardContent className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-1 space-y-2 text-center md:text-left">
             <h2 className="text-2xl font-bold text-foreground">
               {data.isReady
@@ -178,7 +178,7 @@ export default function ApplicationReadinessPage() {
               key={category.id}
               className="transition-all hover:border-primary/30 group"
             >
-              <CardContent className="p-0">
+              <CardContent className="p-0!">
                 <div className="flex flex-col lg:flex-row">
                   <div className="p-6 lg:w-1/3 border-b lg:border-b-0 lg:border-r border-border bg-card-soft/50 flex flex-col justify-center">
                     <div className="flex items-center gap-3 mb-4">
