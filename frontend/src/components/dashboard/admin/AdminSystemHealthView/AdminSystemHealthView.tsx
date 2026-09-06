@@ -5,7 +5,8 @@ import { serverFetch } from "@/src/lib/core/server";
 import { authClient } from "@/src/lib/auth-client";
 import { CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { Skeleton } from "@heroui/react";
-import { Card, CardContent, CardHeader } from "@/src/components/ui/Card";
+import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
+import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
 const services = [
   { key: "database", label: "Database" },
@@ -14,10 +15,21 @@ const services = [
   { key: "ai", label: "AI Providers" },
 ] as const;
 
+type ServiceRow = { key: string; label: string; status: string };
+
 function statusBadge(status: string) {
   const lower = status.toLowerCase();
-  const isOk = lower === "ok" || lower === "online" || lower === "healthy" || lower === "connected";
-  const isErr = lower === "error" || lower === "offline" || lower === "down" || lower === "failed" || lower === "disconnected";
+  const isOk =
+    lower === "ok" ||
+    lower === "online" ||
+    lower === "healthy" ||
+    lower === "connected";
+  const isErr =
+    lower === "error" ||
+    lower === "offline" ||
+    lower === "down" ||
+    lower === "failed" ||
+    lower === "disconnected";
 
   if (isOk) {
     return (
@@ -43,6 +55,16 @@ function statusBadge(status: string) {
   );
 }
 
+const columns: AdminDataTableColumn<ServiceRow>[] = [
+  {
+    header: "Service",
+    render: (svc) => (
+      <span className="font-medium text-foreground">{svc.label}</span>
+    ),
+  },
+  { header: "Status", render: (svc) => statusBadge(svc.status) },
+];
+
 export default function AdminSystemHealthView() {
   const { data: session } = authClient.useSession();
   const userId = session?.user?.id;
@@ -64,37 +86,24 @@ export default function AdminSystemHealthView() {
   if (!data) {
     return (
       <div className="flex h-[400px] items-center justify-center rounded-xl bg-red-500/10 border border-red-500/20">
-        <p className="text-red-500 font-medium">Unable to load system health. Please try again.</p>
+        <p className="text-red-500 font-medium">
+          Unable to load system health. Please try again.
+        </p>
       </div>
     );
   }
 
-  return (
-    <Card className="gap-0 p-0 border-[5px] border-[#eae0ff] dark:border-[#5b3491]">
-      <CardHeader className="border-b border-border gap-0 p-4">
-        <p className="text-sm text-muted-foreground">Current status of all platform services.</p>
-      </CardHeader>
+  const rows: ServiceRow[] = services.map((svc) => ({
+    ...svc,
+    status: data[svc.key],
+  }));
 
-      <CardContent className="p-0">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px] border-collapse">
-            <thead>
-              <tr>
-                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Service</th>
-                <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {services.map((svc) => (
-                <tr key={svc.key} className="border-t border-[var(--color-border)] hover:bg-muted/30 transition-colors">
-                  <td className="p-4 font-medium text-foreground">{svc.label}</td>
-                  <td className="p-4">{statusBadge(data[svc.key])}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </CardContent>
-    </Card>
+  return (
+    <AdminDataTable
+      columns={columns}
+      rows={rows}
+      rowKey={(svc) => svc.key}
+      emptyMessage="No services found."
+    />
   );
 }

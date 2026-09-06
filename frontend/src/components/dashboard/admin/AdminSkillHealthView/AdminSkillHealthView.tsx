@@ -31,31 +31,50 @@ export default function AdminSkillHealthView() {
   if (!data) {
     return (
       <div className="flex h-[400px] items-center justify-center rounded-xl bg-red-500/10 border border-red-500/20">
-        <p className="text-red-500 font-medium">Unable to load skill health data. Please try again.</p>
+        <p className="text-red-500 font-medium">
+          Unable to load skill health data. Please try again.
+        </p>
       </div>
     );
   }
 
-  type Skill = { id: string; name: string; category: string; averageProficiency: number; activeLearners: number; averageScore: number };
+  type Skill = {
+    id: string;
+    name: string;
+    category: string;
+    averageProficiency: number;
+    activeLearners: number;
+    averageScore: number;
+  };
 
-  const renderSkillRows = (skills: Skill[], variant: "strong" | "weak") => (
+  const renderSkillRows = (skills: Skill[], variant: "strong" | "weak") =>
     skills.map((s) => (
-      <div key={s.id} className="flex items-center justify-between border-t border-[var(--color-border)] py-3 px-4 hover:bg-muted/30 transition-colors">
+      <div
+        key={s.id}
+        className="flex items-center justify-between border-t border-[var(--color-border)] py-3 px-4 hover:bg-muted/30 transition-colors"
+      >
         <div className="flex items-center gap-3">
-          <div className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${variant === "strong" ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"}`}>
-            {variant === "strong" ? <Zap className="size-4" /> : <TrendingDown className="size-4" />}
+          <div
+            className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${variant === "strong" ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"}`}
+          >
+            {variant === "strong" ? (
+              <Zap className="size-4" />
+            ) : (
+              <TrendingDown className="size-4" />
+            )}
           </div>
           <div>
             <div className="font-medium text-foreground">{s.name}</div>
             <div className="text-xs text-muted-foreground">{s.category}</div>
           </div>
         </div>
-        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${variant === "strong" ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"}`}>
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${variant === "strong" ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"}`}
+        >
           {s.averageScore}%
         </span>
       </div>
-    ))
-  );
+    ));
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -68,7 +87,9 @@ export default function AdminSkillHealthView() {
         </CardHeader>
         <CardContent className="p-0">
           {data.strongSkills.length === 0 ? (
-            <p className="p-4 text-sm text-muted-foreground">No strong skills found.</p>
+            <p className="p-4 text-sm text-muted-foreground">
+              No strong skills found.
+            </p>
           ) : (
             renderSkillRows(data.strongSkills, "strong")
           )}
@@ -84,7 +105,9 @@ export default function AdminSkillHealthView() {
         </CardHeader>
         <CardContent className="p-0">
           {data.weakSkills.length === 0 ? (
-            <p className="p-4 text-sm text-muted-foreground">No weak skills found.</p>
+            <p className="p-4 text-sm text-muted-foreground">
+              No weak skills found.
+            </p>
           ) : (
             renderSkillRows(data.weakSkills, "weak")
           )}
