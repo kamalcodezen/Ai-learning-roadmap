@@ -110,7 +110,7 @@ export default function ChatBox() {
 
   return (
     <section
-      className="group relative flex h-[90vh] w-full flex-col rounded-md border-2 border-zinc-200 dark:border-zinc-800 hover:border-brand transition-all duration-300 bg-background overflow-clip"
+      className="group relative flex h-[90vh] w-full flex-col rounded-xl border-2 border-[#E6E9EE] dark:border-[rgba(159,84,247,0.15)] hover:border-brand transition-all duration-300 bg-background overflow-clip"
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
     >
@@ -378,14 +378,14 @@ export default function ChatBox() {
         >
           <BorderBeam
             duration={6}
-            size={400}
+            size={100}
             colorFrom="rgba(239,68,68,0)"
             colorTo="#ef4444"
           />
           <BorderBeam
             duration={6}
             delay={3}
-            size={400}
+            size={100}
             borderWidth={2}
             colorFrom="rgba(59,130,246,0)"
             colorTo="#3b82f6"
