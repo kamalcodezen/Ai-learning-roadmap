@@ -23,6 +23,7 @@ export default function DashboardContent() {
     queryKey: ["dashboardData", session?.user?.id],
     queryFn: () => getDashboardOverview(),
     enabled: !!session?.user?.id,
+    staleTime: 1000 * 60 * 2,
   });
 
   if (isSessionLoading) {
@@ -51,7 +52,15 @@ export default function DashboardContent() {
 
   return (
     <div className="flex flex-col gap-5 pb-4 animate-in fade-in duration-500">
-      {d.readiness && <WelcomeStatsSection readiness={d.readiness} />}
+      {d.readiness && (
+        <WelcomeStatsSection
+          readiness={d.readiness}
+          career={d.career}
+          kpis={d.kpis}
+          roadmap={d.roadmap}
+          proof={d.proof}
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="col-auto lg:col-span-1">
