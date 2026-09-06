@@ -165,5 +165,22 @@ export const completeInterviewSession = async (userId: string) => {
     timeout: 20000,
   });
 
+  // Award XP and evaluate achievements
+  try {
+    const { awardXp, evaluateAchievements } = await import(
+      "../../gamification/services/gamification.service.js"
+    );
+    await awardXp(
+      userId,
+      "INTERVIEW_COMPLETION",
+      session.id,
+      150,
+      `Completed mock interview (${finalScore}%)`,
+    );
+    await evaluateAchievements(userId);
+  } catch (err) {
+    console.error("Failed to award gamification XP for interview:", err);
+  }
+
   return { success: true, finalScore };
 };

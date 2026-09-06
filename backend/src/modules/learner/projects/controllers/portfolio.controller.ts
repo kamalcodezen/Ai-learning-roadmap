@@ -107,3 +107,14 @@ export const verifyProject = async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 };
+
+export const generateMilestoneProject = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { milestoneId } = req.params;
+    if (!milestoneId) throw new Error("milestoneId is required");
+    const data = await portfolioService.generateMilestoneProject(getUserId(req), milestoneId as string);
+    res.status(201).json({ success: true, data });
+  } catch (error) {
+    next(error);
+  }
+};

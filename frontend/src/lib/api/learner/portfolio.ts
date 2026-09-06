@@ -73,3 +73,8 @@ export const verifyProjectUrls = async (projectId: string) => {
   const res = await serverMutation(`/api/portfolio/projects/${projectId}/verify`, {}, "POST");
   return res.data;
 };
+
+export const generateMilestoneProject = async (milestoneId: string) => {
+  const res = await serverMutation(`/api/portfolio/milestone-project/${milestoneId}`, {}, "POST");
+  return res.data;
+};

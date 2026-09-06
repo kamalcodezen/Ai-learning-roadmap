@@ -10,8 +10,8 @@ import type { CreateDiagnosticAttemptInput } from "../schemas/diagnostic-attempt
 export const createDiagnosticAttempt = async (
   data: CreateDiagnosticAttemptInput,
 ) => {
-  // Onboarding diagnostic always contains 5 questions.
-  const totalQuestions = 5;
+  // Onboarding diagnostic contains 5 MCQ + 1 Communication = 6 questions total.
+  const totalQuestions = 6;
 
   const attempt = await prisma.diagnosticAttempt.create({
     data: {
@@ -55,20 +55,27 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
   }
 
   let correctCount = 0;
+  let mcqCount = 0; // Only count MCQ questions (order 1-5) for the MCQ score
   const skillScores: Record<string, { total: number; correct: number }> = {};
 
   for (const answer of answers) {
-    if (answer.isCorrect) correctCount++;
-    
-    const skill = answer.question.skill;
-    if (!skillScores[skill]) skillScores[skill] = { total: 0, correct: 0 };
-    skillScores[skill].total++;
-    if (answer.isCorrect) skillScores[skill].correct++;
+    // Q6 is the open-ended communication question — exclude from MCQ score and SkillState
+    const isMcq = answer.question.order !== 6;
+    if (isMcq) {
+      mcqCount++;
+      if (answer.isCorrect) correctCount++;
+
+      const skill = answer.question.skill?.trim() || "General";
+      if (!skillScores[skill]) skillScores[skill] = { total: 0, correct: 0 };
+      skillScores[skill].total++;
+      if (answer.isCorrect) skillScores[skill].correct++;
+    }
   }
 
-  const score = Math.round((correctCount / attempt.totalQuestions) * 100);
+  // Score is based on MCQ questions only (out of 5)
+  const score = mcqCount > 0 ? Math.round((correctCount / mcqCount) * 100) : 0;
 
-  const updatedAttempt = await prisma.diagnosticAttempt.update({
+  await prisma.diagnosticAttempt.update({
     where: { id: attemptId },
     data: {
       status: "COMPLETED",
@@ -80,6 +87,7 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
 
   // Upsert SkillState and Record History if changed
   for (const [skill, counts] of Object.entries(skillScores)) {
+    if (counts.total === 0) continue;
     const knowledgeScore = Math.round((counts.correct / counts.total) * 100);
     
     // Check previous state
@@ -141,15 +149,29 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
     },
   });
 
+  // Award XP and evaluate achievements asynchronously
+  try {
+    const { awardXp, evaluateAchievements } = await import(
+      "../../gamification/services/gamification.service.js"
+    );
+    await awardXp(
+      attempt.userId,
+      "ASSESSMENT_COMPLETION",
+      attempt.id,
+      100,
+      `Completed diagnostic assessment (${score}%)`,
+    );
+    await evaluateAchievements(attempt.userId);
+  } catch (err) {
+    console.error("Failed to award gamification XP for diagnostic:", err);
+  }
+
+  // Fetch and return the rich diagnostic result
+  const { getDiagnosticResult } = await import("./diagnostic-result.service.js");
+  const result = await getDiagnosticResult(attemptId, userId);
+
   return {
-    id: updatedAttempt.id,
-    userId: updatedAttempt.userId,
-    status: updatedAttempt.status,
-    totalQuestions: updatedAttempt.totalQuestions,
-    answeredQuestions: updatedAttempt.answeredQuestions,
-    correctAnswers: correctCount,
-    score: updatedAttempt.score,
-    startedAt: updatedAttempt.startedAt,
-    completedAt: updatedAttempt.completedAt,
+    ...result,
+    score: result.overallScore, // Backward compatibility alias
   };
 };

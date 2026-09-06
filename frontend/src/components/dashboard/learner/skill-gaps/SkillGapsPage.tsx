@@ -81,51 +81,61 @@ export default function SkillGapsPage() {
       <div className="grid grid-cols-1 gap-6">
         <h2 className="text-xl font-semibold mt-4">Prioritized Action Items</h2>
 
-        {data.gaps.map((gap) => (
-          <DashboardCard key={gap.id} className={`border-l-4 ${gap.severity === 'critical' ? 'border-l-destructive' : 'border-l-amber-500'}`}>
-            <CardContent className="p-6">
-              <div className="flex flex-col lg:flex-row gap-6">
-                <div className="flex-1 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-xl font-bold">{gap.skill}</h3>
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${gap.severity === 'critical' ? 'bg-destructive/10 text-destructive' : 'bg-amber-500/10 text-amber-500'}`}>
-                        {gap.severity === 'critical' ? 'Critical Priority' : 'Moderate Priority'}
-                      </span>
+        {data.gaps.length === 0 ? (
+          <div className="bg-card rounded-xl p-8 text-center border border-border">
+            <TrendingUp className="w-10 h-10 text-green-500 mx-auto mb-3" />
+            <h3 className="text-lg font-bold">No Active Skill Gaps</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              All required skills for your target role are currently performing at or above target proficiency.
+            </p>
+          </div>
+        ) : (
+          data.gaps.map((gap) => (
+            <DashboardCard key={gap.id} className={`border-l-4 ${gap.severity === 'critical' ? 'border-l-destructive' : 'border-l-amber-500'}`}>
+              <CardContent className="p-6">
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="flex-1 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-xl font-bold">{gap.skill}</h3>
+                        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${gap.severity === 'critical' ? 'bg-destructive/10 text-destructive' : 'bg-amber-500/10 text-amber-500'}`}>
+                          {gap.severity === 'critical' ? 'Critical Priority' : 'Moderate Priority'}
+                        </span>
+                      </div>
+                      <div className="text-lg font-bold">{gap.score}%</div>
                     </div>
-                    <div className="text-lg font-bold">{gap.score}%</div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div className="space-y-1">
+                        <p className="font-semibold text-muted-foreground">Reason for Gap</p>
+                        <p>{gap.reason}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="font-semibold text-muted-foreground">Evidence Found</p>
+                        <p>{gap.evidence}</p>
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-muted-foreground">
+                      Based on: <span className="font-medium text-foreground">{gap.relatedAssessment}</span>
+                    </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div className="space-y-1">
-                      <p className="font-semibold text-muted-foreground">Reason for Gap</p>
-                      <p>{gap.reason}</p>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="font-semibold text-muted-foreground">Evidence Found</p>
-                      <p>{gap.evidence}</p>
-                    </div>
+                  <div className="lg:w-64 flex flex-col justify-center bg-card-soft rounded-xl p-4 border border-border">
+                    <p className="text-sm font-semibold mb-2">Recommended Action</p>
+                    <p className="text-sm text-muted-foreground mb-4">{gap.recommendedAction}</p>
+                    <Link
+                      href={gap.href}
+                      className="w-full bg-primary text-primary-foreground py-2 rounded-lg text-sm font-medium hover:brightness-110 flex items-center justify-center gap-2 transition-all"
+                    >
+                      Fix Gap <ArrowRight className="w-4 h-4" />
+                    </Link>
                   </div>
-
-                  <p className="text-sm text-muted-foreground">
-                    Based on: <span className="font-medium text-foreground">{gap.relatedAssessment}</span>
-                  </p>
                 </div>
-
-                <div className="lg:w-64 flex flex-col justify-center bg-card-soft rounded-xl p-4 border border-border">
-                  <p className="text-sm font-semibold mb-2">Recommended Action</p>
-                  <p className="text-sm text-muted-foreground mb-4">{gap.recommendedAction}</p>
-                  <Link
-                    href={gap.href}
-                    className="w-full bg-primary text-primary-foreground py-2 rounded-lg text-sm font-medium hover:brightness-110 flex items-center justify-center gap-2 transition-all"
-                  >
-                    Fix Gap <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </DashboardCard>
-        ))}
+              </CardContent>
+            </DashboardCard>
+          ))
+        )}
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ export default function SidebarNav({
   return (
     <nav
       aria-label="Dashboard navigation"
-      className="flex-1 space-y-6 overflow-y-auto pl-4 py-2 pb-6"
+      className="flex-1 space-y-6 overflow-y-auto overscroll-contain pl-4 py-2 pb-6"
     >
       {dashboardNavSections.map((section, idx) => (
         <div key={idx} className="space-y-1.5">

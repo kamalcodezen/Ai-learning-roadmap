@@ -1,5 +1,6 @@
 import prisma from "../../../../lib/prisma.js";
 import { ChatService } from "../../copilot/services/chat.service.js";
+import { getRequiredSkillsForRole } from "../../career-alignment/services/career-skills.map.js";
 import { z } from "zod";
 
 const RoadmapResponseSchema = z.object({
@@ -23,11 +24,13 @@ export const getOrGenerateLearningPath = async (userId: string) => {
     throw new Error("Career profile not found.");
   }
 
+  const targetRole = profile.targetRoleName || profile.targetRole;
+
   const existingRoadmap = await prisma.roadmap.findFirst({
     where: {
       userId,
       status: "ACTIVE",
-      targetRole: profile.targetRole,
+      targetRole: { in: [targetRole, profile.targetRole, profile.targetRoleName].filter(Boolean) as string[] },
     },
     include: {
       milestones: {
@@ -37,48 +40,57 @@ export const getOrGenerateLearningPath = async (userId: string) => {
   });
 
   if (existingRoadmap && existingRoadmap.milestones.length > 0) {
-    return formatLearningPathResponse(existingRoadmap, profile.targetRole);
+    return formatLearningPathResponse(existingRoadmap, targetRole);
   }
 
-  // If no roadmap exists for current role, invalidate older ones
+  // If no roadmap exists for current role, archive older ones
   await prisma.roadmap.updateMany({
     where: { userId, status: "ACTIVE" },
     data: { status: "ARCHIVED" },
   });
 
-  // Fetch context for AI
+  // Fetch skill states and calculate gaps for evidence-based milestone planning
   const skillStates = await prisma.skillState.findMany({
     where: { userId },
   });
 
+  const canonicalSkills = getRequiredSkillsForRole(targetRole);
+  const identifiedGaps = canonicalSkills.filter(req => {
+    const state = skillStates.find(s => s.skillName.toLowerCase() === req.skill.toLowerCase());
+    return !state || state.knowledgeScore < 60;
+  }).map(s => s.skill);
+
   const prompt = `
-You are an expert AI Career Mentor. Generate a strictly JSON personalized learning roadmap for a user.
-- Target Role: ${profile.targetRole}
+You are an expert AI Career Mentor for AI Pather. Generate a strictly JSON personalized learning roadmap for a learner.
+- Target Role: ${targetRole}
 - Experience Level: ${profile.experienceLevel}
-- Weekly Available Hours: ${profile.weeklyAvailableHours} hours/week (Adjust the workload and estimated time realistically based on this availability)
+- Weekly Available Hours: ${profile.weeklyAvailableHours} hours/week (Calibrate estimated milestone times realistically)
+- Known Skill Gaps to Prioritize: ${identifiedGaps.length > 0 ? identifiedGaps.join(", ") : "General " + targetRole + " fundamentals"}
+- Current Assessed Skills: ${skillStates.map((s: any) => `${s.skillName} (${Math.round(s.knowledgeScore)}%)`).join(", ") || "None"}
 
-Current Skills: ${skillStates.map((s: any) => s.skillName).join(", ") || "None"}
-
-Generate 5 progressive milestones.
+Generate exactly 5 progressive, dependency-aware milestones moving from foundational prerequisite skills to production readiness.
 Format ONLY as valid JSON:
 {
-  "roadmapTitle": "Title of the roadmap",
+  "roadmapTitle": "${targetRole} Mastery Roadmap",
   "milestones": [
     {
       "title": "Milestone Title",
       "skillsCovered": ["Skill1", "Skill2"],
       "estimatedTime": "X weeks",
-      "description": "Short description",
-      "whyItMatters": "Why this is important"
+      "description": "Short description of learning objectives and deliverables",
+      "whyItMatters": "Clear rationale connecting this milestone to production job expectations"
     }
   ]
 }`;
 
   const aiResult = await ChatService.processJsonCompletion("You output strictly valid JSON only.", prompt);
-  let content = aiResult.reply;
+  let content = aiResult.reply.trim();
   
-  const jsonMatch = content.match(/\{[\s\S]*\}/);
-  if (jsonMatch) content = jsonMatch[0];
+  const startIdx = content.indexOf('{');
+  const endIdx = content.lastIndexOf('}');
+  if (startIdx !== -1 && endIdx !== -1) {
+    content = content.slice(startIdx, endIdx + 1);
+  }
   
   let parsed;
   try {
@@ -93,7 +105,7 @@ Format ONLY as valid JSON:
   const roadmap = await prisma.roadmap.create({
     data: {
       userId,
-      targetRole: profile.targetRole,
+      targetRole,
       status: "ACTIVE",
     },
   });
@@ -230,6 +242,23 @@ export const completeMilestone = async (userId: string, milestoneId: string) => 
       description: `Completed milestone: ${milestone.title}`
     }
   });
+
+  // 5. Award Milestone Completion XP & Evaluate Achievements
+  try {
+    const { awardXp, evaluateAchievements } = await import(
+      "../../gamification/services/gamification.service.js"
+    );
+    await awardXp(
+      userId,
+      "MILESTONE_COMPLETION",
+      milestone.id,
+      150,
+      `Completed milestone: ${milestone.title}`,
+    );
+    await evaluateAchievements(userId);
+  } catch (err) {
+    console.error("Failed to award gamification XP for milestone:", err);
+  }
 
   // Fetch updated roadmap to return
   const updatedRoadmap = await prisma.roadmap.findUnique({

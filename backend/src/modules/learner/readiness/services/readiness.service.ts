@@ -61,15 +61,15 @@ export const getCareerReadiness = async (
   let evidence: number | "NOT_ASSESSED" = "NOT_ASSESSED";
 
   if (skillStates.length > 0) {
-    knowledge = Math.round(skillStates.reduce((a: number, s: any) => a + s.knowledgeScore, 0) / skillStates.length);
-    practical = Math.round(skillStates.reduce((a: number, s: any) => a + s.practiceScore, 0) / skillStates.length);
-    evidence = Math.round(skillStates.reduce((a: number, s: any) => a + s.evidenceScore, 0) / skillStates.length);
+    knowledge = Math.round(skillStates.reduce((a: number, s: any) => a + (s.knowledgeScore || 0), 0) / skillStates.length);
+    practical = Math.round(skillStates.reduce((a: number, s: any) => a + (s.practiceScore || 0), 0) / skillStates.length);
+    evidence = Math.round(skillStates.reduce((a: number, s: any) => a + (s.evidenceScore || 0), 0) / skillStates.length);
   }
 
   // 2. Projects (from Project records)
   let projectScore: number | "NOT_ASSESSED" = "NOT_ASSESSED";
   if (projects.length > 0) {
-    projectScore = Math.round(projects.reduce((a: number, p: any) => a + p.score, 0) / projects.length);
+    projectScore = Math.round(projects.reduce((a: number, p: any) => a + (p.score || 0), 0) / projects.length);
   }
 
   // 3. Problem Solving & 4. Communication (from Diagnostic Answer)

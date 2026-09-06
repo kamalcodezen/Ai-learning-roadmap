@@ -22,6 +22,8 @@ import portfolioRoutes from "./modules/learner/projects/portfolio.routes.js";
 import jobRealityRoutes from "./modules/learner/job-reality/job-reality.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
 import interviewRoutes from "./modules/learner/interview/interview.routes.js";
+import gamificationRoutes from "./modules/learner/gamification/gamification.routes.js";
+import careerIntelligenceRoutes from "./modules/learner/career-intelligence/career-intelligence.routes.js";
 const isProduction = env.NODE_ENV === "production";
 
 const app = express();
@@ -82,6 +84,12 @@ app.use("/api/job-reality", jobRealityRoutes);
 
 // Interview Routes
 app.use("/api/interview", interviewRoutes);
+
+// Gamification & Skill Tree Routes
+app.use("/api/gamification", gamificationRoutes);
+
+// Career Intelligence Routes (Decision Engine & Evidence Verifier)
+app.use("/api/career-intelligence", careerIntelligenceRoutes);
 
 // Career Profile Routes/ onboarding
 app.use("/api/career-profile", careerProfileRoutes);

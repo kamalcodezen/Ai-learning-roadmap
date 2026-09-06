@@ -91,22 +91,32 @@ export default function ProgressPage() {
           <CardTitle>Recent Activity</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
-            {data.recentActivity.map((activity) => (
-              <div key={activity.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-card shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10">
-                  {getActivityIcon(activity.type)}
-                </div>
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-border bg-card-soft shadow-sm">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-bold text-foreground">{activity.title}</h3>
-                    <time className="text-xs font-medium text-muted-foreground">{activity.date}</time>
+          {data.recentActivity.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
+              <Clock className="w-10 h-10 mb-2 opacity-50 text-muted-foreground" />
+              <p className="font-semibold text-foreground">No Activity Recorded Yet</p>
+              <p className="text-xs max-w-sm mt-1">
+                Complete diagnostic assessments, roadmap milestones, or project submissions to build your learning streak and track weekly hours.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
+              {data.recentActivity.map((activity) => (
+                <div key={activity.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-card shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10">
+                    {getActivityIcon(activity.type)}
                   </div>
-                  <p className="text-sm text-muted-foreground">{activity.description}</p>
+                  <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-border bg-card-soft shadow-sm">
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-bold text-foreground">{activity.title}</h3>
+                      <time className="text-xs font-medium text-muted-foreground">{activity.date}</time>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{activity.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </DashboardCard>
     </div>

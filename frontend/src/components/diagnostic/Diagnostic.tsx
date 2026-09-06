@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, ChevronRight, Loader2, Target, Mic, MicOff } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { CheckCircle2, ChevronRight, Loader2, Target, Mic, MicOff, Award } from "lucide-react";
 
 import { authClient } from "@/src/lib/auth-client";
 
@@ -14,8 +14,10 @@ import {
 } from "@/src/lib/actions/learner/diagnostic";
 import {
   getDiagnosticQuestions,
+  getLatestDiagnosticResult,
   type DiagnosticQuestion,
 } from "@/src/lib/api/learner/diagnostic";
+import DiagnosticResultView from "./DiagnosticResultView";
 
 type DiagnosticStatus =
   | "idle"
@@ -45,6 +47,21 @@ export default function Diagnostic() {
   const [status, setStatus] = useState<DiagnosticStatus>("idle");
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  // TanStack Query: Fetch latest completed diagnostic result if available
+  const { data: latestResultResponse } = useQuery({
+    queryKey: ["latestDiagnosticResult", session?.user?.id],
+    queryFn: async () => {
+      try {
+        const res = await getLatestDiagnosticResult();
+        return res.data;
+      } catch {
+        return null;
+      }
+    },
+    enabled: !!session?.user?.id && status === "idle",
+    staleTime: 1000 * 60 * 5,
+  });
 
   const [isRecording, setIsRecording] = useState(false);
   const recognitionRef = useRef<{ stop: () => void } | null>(null);
@@ -158,9 +175,9 @@ export default function Diagnostic() {
 
       const fetchedQuestions = questionsResponse.data;
 
-      if (fetchedQuestions.length !== 6 && fetchedQuestions.length !== 5) {
+      if (!Array.isArray(fetchedQuestions) || fetchedQuestions.length !== 6) {
         throw new Error(
-          `Expected diagnostic questions, but received ${fetchedQuestions.length}.`,
+          `Expected 6 diagnostic questions, but received ${fetchedQuestions?.length ?? 0}.`,
         );
       }
 
@@ -322,21 +339,18 @@ export default function Diagnostic() {
             <Target className="h-6 w-6 text-destructive" />
           </div>
 
-          <h1 className="text-xl font-semibold">Diagnostic unavailable</h1>
+          <h1 className="text-xl font-semibold">Unable to generate your diagnostic right now.</h1>
 
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            {errorMessage}
+            {errorMessage || "An unexpected issue occurred while preparing your personalized questions. Please retry."}
           </p>
 
           <button
             type="button"
-            onClick={() => {
-              setStatus("idle");
-              setErrorMessage("");
-            }}
-            className="mt-6 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-secondary transition hover:opacity-90"
+            onClick={() => void handleStartDiagnostic()}
+            className="mt-6 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-secondary transition hover:opacity-90 active:scale-[0.98]"
           >
-            Try Again
+            Retry
           </button>
         </section>
       </main>
@@ -349,53 +363,15 @@ export default function Diagnostic() {
 
   if (status === "completed" && result) {
     return (
-      <main className="relative min-h-screen overflow-hidden bg-background text-foreground">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute left-1/2 top-[-250px] h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-primary/[0.07] blur-[120px]" />
-        </div>
-
-        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center px-4 py-10 sm:px-6">
-          <section className="w-full rounded-[32px] border border-border bg-card/80 p-8 text-center shadow-[var(--shadow)] backdrop-blur-xl sm:p-12">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-              <CheckCircle2 className="h-8 w-8 text-primary" />
-            </div>
-
-            <p className="mt-6 text-sm font-medium text-primary">
-              Diagnostic complete
-            </p>
-
-            <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-              Your diagnostic is complete.
-            </h1>
-
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
-              We evaluated your answers and calculated your initial diagnostic
-              score.
-            </p>
-
-            <div className="mx-auto mt-8 flex max-w-sm flex-col items-center rounded-3xl border border-primary/20 bg-primary/[0.05] p-8">
-              <span className="text-sm text-muted-foreground">Your score</span>
-
-              <span className="mt-2 text-6xl font-bold text-primary">
-                {result.score}%
-              </span>
-
-              <span className="mt-3 text-sm text-muted-foreground">
-                {result.correctAnswers} / {result.totalQuestions} correct
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => router.push("/dashboard/learner")}
-              className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3  text-white text-sm font-semibold  transition hover:opacity-90"
-            >
-              Continue to Dashboard
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </section>
-        </div>
-      </main>
+      <DiagnosticResultView
+        result={result}
+        onRetake={() => {
+          setStatus("idle");
+          setResult(null);
+          setCurrentQuestionIndex(0);
+          setSelectedAnswer("");
+        }}
+      />
     );
   }
 
@@ -428,18 +404,43 @@ export default function Diagnostic() {
           </h1>
 
           <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
-            Answer 5 questions based on your current knowledge. Your result will
+            Answer 5 multiple-choice questions and 1 open-ended communication question based on your current knowledge. Your result will
             help AI Pather understand your starting point.
           </p>
 
+          {/* Previous result shortcut if available */}
+          {latestResultResponse && (
+            <div className="mx-auto mt-6 flex max-w-md items-center justify-between rounded-2xl border border-primary/20 bg-primary/[0.05] p-4 text-left">
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                  Previous Assessment
+                </span>
+                <p className="text-sm font-bold text-foreground">
+                  Score: {latestResultResponse.overallScore ?? latestResultResponse.score}% ({latestResultResponse.correctAnswers ?? 0}/{latestResultResponse.mcqCount ?? 5} MCQ correct)
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setResult(latestResultResponse);
+                  setStatus("completed");
+                }}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary px-3.5 py-2 text-xs font-semibold transition"
+              >
+                <Award className="h-3.5 w-3.5" />
+                View Results
+              </button>
+            </div>
+          )}
+
           <div className="mx-auto mt-8 grid max-w-md gap-3 text-left sm:grid-cols-3">
             <div className="rounded-2xl border border-border bg-card-soft p-4">
-              <p className="text-lg font-bold">5</p>
+              <p className="text-lg font-bold">6</p>
               <p className="mt-1 text-xs text-muted-foreground">Questions</p>
             </div>
 
             <div className="rounded-2xl border border-border bg-card-soft p-4">
-              <p className="text-lg font-bold">MCQ</p>
+              <p className="text-lg font-bold">Mixed</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 Question type
               </p>
@@ -453,14 +454,16 @@ export default function Diagnostic() {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => void handleStartDiagnostic()}
-            className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
-          >
-            Start Diagnostic
-            <ChevronRight className="h-4 w-4" />
-          </button>
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => void handleStartDiagnostic()}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-semibold text-white transition hover:opacity-90 active:scale-[0.98] w-full sm:w-auto"
+            >
+              {latestResultResponse ? "Start New Diagnostic" : "Start Diagnostic"}
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </section>
       </main>
     );
@@ -475,7 +478,7 @@ export default function Diagnostic() {
       <main className="flex min-h-screen items-center justify-center bg-background">
         <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <Loader2 className="h-5 w-5 animate-spin" />
-          Preparing your diagnostic...
+          Generating your personalized diagnostic...
         </div>
       </main>
     );
