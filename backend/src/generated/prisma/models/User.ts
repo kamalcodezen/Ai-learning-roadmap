@@ -226,6 +226,9 @@ export type userWhereInput = {
   skillStateHistories?: Prisma.SkillStateHistoryListRelationFilter
   twoFactors?: Prisma.TwoFactorListRelationFilter
   adminAuditLogs?: Prisma.AdminAuditLogListRelationFilter
+  gamification?: Prisma.XOR<Prisma.UserGamificationNullableScalarRelationFilter, Prisma.UserGamificationWhereInput> | null
+  xpTransactions?: Prisma.XPTransactionListRelationFilter
+  achievements?: Prisma.UserAchievementListRelationFilter
 }
 
 export type userOrderByWithRelationInput = {
@@ -250,6 +253,9 @@ export type userOrderByWithRelationInput = {
   skillStateHistories?: Prisma.SkillStateHistoryOrderByRelationAggregateInput
   twoFactors?: Prisma.twoFactorOrderByRelationAggregateInput
   adminAuditLogs?: Prisma.AdminAuditLogOrderByRelationAggregateInput
+  gamification?: Prisma.UserGamificationOrderByWithRelationInput
+  xpTransactions?: Prisma.XPTransactionOrderByRelationAggregateInput
+  achievements?: Prisma.UserAchievementOrderByRelationAggregateInput
 }
 
 export type userWhereUniqueInput = Prisma.AtLeast<{
@@ -277,6 +283,9 @@ export type userWhereUniqueInput = Prisma.AtLeast<{
   skillStateHistories?: Prisma.SkillStateHistoryListRelationFilter
   twoFactors?: Prisma.TwoFactorListRelationFilter
   adminAuditLogs?: Prisma.AdminAuditLogListRelationFilter
+  gamification?: Prisma.XOR<Prisma.UserGamificationNullableScalarRelationFilter, Prisma.UserGamificationWhereInput> | null
+  xpTransactions?: Prisma.XPTransactionListRelationFilter
+  achievements?: Prisma.UserAchievementListRelationFilter
 }, "id" | "email">
 
 export type userOrderByWithAggregationInput = {
@@ -331,6 +340,9 @@ export type userCreateInput = {
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateInput = {
@@ -355,6 +367,9 @@ export type userUncheckedCreateInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userUpdateInput = {
@@ -379,6 +394,9 @@ export type userUpdateInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateInput = {
@@ -403,6 +421,9 @@ export type userUncheckedUpdateInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateManyInput = {
@@ -658,6 +679,48 @@ export type userUpdateOneRequiredWithoutInterviewSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutInterviewSessionsInput, Prisma.userUpdateWithoutInterviewSessionsInput>, Prisma.userUncheckedUpdateWithoutInterviewSessionsInput>
 }
 
+export type userCreateNestedOneWithoutGamificationInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutGamificationInput, Prisma.userUncheckedCreateWithoutGamificationInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutGamificationInput
+  connect?: Prisma.userWhereUniqueInput
+}
+
+export type userUpdateOneRequiredWithoutGamificationNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutGamificationInput, Prisma.userUncheckedCreateWithoutGamificationInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutGamificationInput
+  upsert?: Prisma.userUpsertWithoutGamificationInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutGamificationInput, Prisma.userUpdateWithoutGamificationInput>, Prisma.userUncheckedUpdateWithoutGamificationInput>
+}
+
+export type userCreateNestedOneWithoutXpTransactionsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutXpTransactionsInput, Prisma.userUncheckedCreateWithoutXpTransactionsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutXpTransactionsInput
+  connect?: Prisma.userWhereUniqueInput
+}
+
+export type userUpdateOneRequiredWithoutXpTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutXpTransactionsInput, Prisma.userUncheckedCreateWithoutXpTransactionsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutXpTransactionsInput
+  upsert?: Prisma.userUpsertWithoutXpTransactionsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutXpTransactionsInput, Prisma.userUpdateWithoutXpTransactionsInput>, Prisma.userUncheckedUpdateWithoutXpTransactionsInput>
+}
+
+export type userCreateNestedOneWithoutAchievementsInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutAchievementsInput, Prisma.userUncheckedCreateWithoutAchievementsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutAchievementsInput
+  connect?: Prisma.userWhereUniqueInput
+}
+
+export type userUpdateOneRequiredWithoutAchievementsNestedInput = {
+  create?: Prisma.XOR<Prisma.userCreateWithoutAchievementsInput, Prisma.userUncheckedCreateWithoutAchievementsInput>
+  connectOrCreate?: Prisma.userCreateOrConnectWithoutAchievementsInput
+  upsert?: Prisma.userUpsertWithoutAchievementsInput
+  connect?: Prisma.userWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.userUpdateToOneWithWhereWithoutAchievementsInput, Prisma.userUpdateWithoutAchievementsInput>, Prisma.userUncheckedUpdateWithoutAchievementsInput>
+}
+
 export type userCreateWithoutAccountInput = {
   id: string
   name: string
@@ -679,6 +742,9 @@ export type userCreateWithoutAccountInput = {
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutAccountInput = {
@@ -702,6 +768,9 @@ export type userUncheckedCreateWithoutAccountInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutAccountInput = {
@@ -741,6 +810,9 @@ export type userUpdateWithoutAccountInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutAccountInput = {
@@ -764,6 +836,9 @@ export type userUncheckedUpdateWithoutAccountInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutSessionInput = {
@@ -787,6 +862,9 @@ export type userCreateWithoutSessionInput = {
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSessionInput = {
@@ -810,6 +888,9 @@ export type userUncheckedCreateWithoutSessionInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSessionInput = {
@@ -849,6 +930,9 @@ export type userUpdateWithoutSessionInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSessionInput = {
@@ -872,6 +956,9 @@ export type userUncheckedUpdateWithoutSessionInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutTwoFactorsInput = {
@@ -895,6 +982,9 @@ export type userCreateWithoutTwoFactorsInput = {
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutTwoFactorsInput = {
@@ -918,6 +1008,9 @@ export type userUncheckedCreateWithoutTwoFactorsInput = {
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutTwoFactorsInput = {
@@ -957,6 +1050,9 @@ export type userUpdateWithoutTwoFactorsInput = {
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutTwoFactorsInput = {
@@ -980,6 +1076,9 @@ export type userUncheckedUpdateWithoutTwoFactorsInput = {
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutCareerProfileInput = {
@@ -1003,6 +1102,9 @@ export type userCreateWithoutCareerProfileInput = {
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutCareerProfileInput = {
@@ -1026,6 +1128,9 @@ export type userUncheckedCreateWithoutCareerProfileInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutCareerProfileInput = {
@@ -1065,6 +1170,9 @@ export type userUpdateWithoutCareerProfileInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutCareerProfileInput = {
@@ -1088,6 +1196,9 @@ export type userUncheckedUpdateWithoutCareerProfileInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutDiagnosticAttemptsInput = {
@@ -1111,6 +1222,9 @@ export type userCreateWithoutDiagnosticAttemptsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutDiagnosticAttemptsInput = {
@@ -1134,6 +1248,9 @@ export type userUncheckedCreateWithoutDiagnosticAttemptsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutDiagnosticAttemptsInput = {
@@ -1173,6 +1290,9 @@ export type userUpdateWithoutDiagnosticAttemptsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutDiagnosticAttemptsInput = {
@@ -1196,6 +1316,9 @@ export type userUncheckedUpdateWithoutDiagnosticAttemptsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutSkillStatesInput = {
@@ -1219,6 +1342,9 @@ export type userCreateWithoutSkillStatesInput = {
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSkillStatesInput = {
@@ -1242,6 +1368,9 @@ export type userUncheckedCreateWithoutSkillStatesInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSkillStatesInput = {
@@ -1281,6 +1410,9 @@ export type userUpdateWithoutSkillStatesInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSkillStatesInput = {
@@ -1304,6 +1436,9 @@ export type userUncheckedUpdateWithoutSkillStatesInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutRoadmapsInput = {
@@ -1327,6 +1462,9 @@ export type userCreateWithoutRoadmapsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutRoadmapsInput = {
@@ -1350,6 +1488,9 @@ export type userUncheckedCreateWithoutRoadmapsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutRoadmapsInput = {
@@ -1389,6 +1530,9 @@ export type userUpdateWithoutRoadmapsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutRoadmapsInput = {
@@ -1412,6 +1556,9 @@ export type userUncheckedUpdateWithoutRoadmapsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutProjectsInput = {
@@ -1435,6 +1582,9 @@ export type userCreateWithoutProjectsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutProjectsInput = {
@@ -1458,6 +1608,9 @@ export type userUncheckedCreateWithoutProjectsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutProjectsInput = {
@@ -1497,6 +1650,9 @@ export type userUpdateWithoutProjectsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutProjectsInput = {
@@ -1520,6 +1676,9 @@ export type userUncheckedUpdateWithoutProjectsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutActivityLogsInput = {
@@ -1543,6 +1702,9 @@ export type userCreateWithoutActivityLogsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutActivityLogsInput = {
@@ -1566,6 +1728,9 @@ export type userUncheckedCreateWithoutActivityLogsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutActivityLogsInput = {
@@ -1605,6 +1770,9 @@ export type userUpdateWithoutActivityLogsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutActivityLogsInput = {
@@ -1628,6 +1796,9 @@ export type userUncheckedUpdateWithoutActivityLogsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutSkillStateHistoriesInput = {
@@ -1651,6 +1822,9 @@ export type userCreateWithoutSkillStateHistoriesInput = {
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutSkillStateHistoriesInput = {
@@ -1674,6 +1848,9 @@ export type userUncheckedCreateWithoutSkillStateHistoriesInput = {
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutSkillStateHistoriesInput = {
@@ -1713,6 +1890,9 @@ export type userUpdateWithoutSkillStateHistoriesInput = {
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutSkillStateHistoriesInput = {
@@ -1736,6 +1916,9 @@ export type userUncheckedUpdateWithoutSkillStateHistoriesInput = {
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutAdminAuditLogsInput = {
@@ -1759,6 +1942,9 @@ export type userCreateWithoutAdminAuditLogsInput = {
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutAdminAuditLogsInput = {
@@ -1782,6 +1968,9 @@ export type userUncheckedCreateWithoutAdminAuditLogsInput = {
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutAdminAuditLogsInput = {
@@ -1821,6 +2010,9 @@ export type userUpdateWithoutAdminAuditLogsInput = {
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutAdminAuditLogsInput = {
@@ -1844,6 +2036,9 @@ export type userUncheckedUpdateWithoutAdminAuditLogsInput = {
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type userCreateWithoutInterviewSessionsInput = {
@@ -1867,6 +2062,9 @@ export type userCreateWithoutInterviewSessionsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
 }
 
 export type userUncheckedCreateWithoutInterviewSessionsInput = {
@@ -1890,6 +2088,9 @@ export type userUncheckedCreateWithoutInterviewSessionsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
   twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type userCreateOrConnectWithoutInterviewSessionsInput = {
@@ -1929,6 +2130,9 @@ export type userUpdateWithoutInterviewSessionsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
 }
 
 export type userUncheckedUpdateWithoutInterviewSessionsInput = {
@@ -1952,6 +2156,369 @@ export type userUncheckedUpdateWithoutInterviewSessionsInput = {
   skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
   twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
   adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type userCreateWithoutGamificationInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
+  account?: Prisma.accountCreateNestedManyWithoutUserInput
+  session?: Prisma.sessionCreateNestedManyWithoutUserInput
+  careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
+  roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+}
+
+export type userUncheckedCreateWithoutGamificationInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
+  account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
+  roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type userCreateOrConnectWithoutGamificationInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutGamificationInput, Prisma.userUncheckedCreateWithoutGamificationInput>
+}
+
+export type userUpsertWithoutGamificationInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutGamificationInput, Prisma.userUncheckedUpdateWithoutGamificationInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutGamificationInput, Prisma.userUncheckedCreateWithoutGamificationInput>
+  where?: Prisma.userWhereInput
+}
+
+export type userUpdateToOneWithWhereWithoutGamificationInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutGamificationInput, Prisma.userUncheckedUpdateWithoutGamificationInput>
+}
+
+export type userUpdateWithoutGamificationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  account?: Prisma.accountUpdateManyWithoutUserNestedInput
+  session?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
+  roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+}
+
+export type userUncheckedUpdateWithoutGamificationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
+  roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type userCreateWithoutXpTransactionsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
+  account?: Prisma.accountCreateNestedManyWithoutUserInput
+  session?: Prisma.sessionCreateNestedManyWithoutUserInput
+  careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
+  roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+}
+
+export type userUncheckedCreateWithoutXpTransactionsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
+  account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
+  roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type userCreateOrConnectWithoutXpTransactionsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutXpTransactionsInput, Prisma.userUncheckedCreateWithoutXpTransactionsInput>
+}
+
+export type userUpsertWithoutXpTransactionsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutXpTransactionsInput, Prisma.userUncheckedUpdateWithoutXpTransactionsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutXpTransactionsInput, Prisma.userUncheckedCreateWithoutXpTransactionsInput>
+  where?: Prisma.userWhereInput
+}
+
+export type userUpdateToOneWithWhereWithoutXpTransactionsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutXpTransactionsInput, Prisma.userUncheckedUpdateWithoutXpTransactionsInput>
+}
+
+export type userUpdateWithoutXpTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  account?: Prisma.accountUpdateManyWithoutUserNestedInput
+  session?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
+  roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+}
+
+export type userUncheckedUpdateWithoutXpTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
+  roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type userCreateWithoutAchievementsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
+  account?: Prisma.accountCreateNestedManyWithoutUserInput
+  session?: Prisma.sessionCreateNestedManyWithoutUserInput
+  careerProfile?: Prisma.CareerProfileCreateNestedOneWithoutUserInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionCreateNestedManyWithoutUserInput
+  skillStates?: Prisma.SkillStateCreateNestedManyWithoutUserInput
+  roadmaps?: Prisma.RoadmapCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  skillStateHistories?: Prisma.SkillStateHistoryCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorCreateNestedManyWithoutUserInput
+  adminAuditLogs?: Prisma.AdminAuditLogCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionCreateNestedManyWithoutUserInput
+}
+
+export type userUncheckedCreateWithoutAchievementsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  twoFactorEnabled?: boolean | null
+  account?: Prisma.accountUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.sessionUncheckedCreateNestedManyWithoutUserInput
+  careerProfile?: Prisma.CareerProfileUncheckedCreateNestedOneWithoutUserInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedCreateNestedManyWithoutUserInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedCreateNestedManyWithoutUserInput
+  skillStates?: Prisma.SkillStateUncheckedCreateNestedManyWithoutUserInput
+  roadmaps?: Prisma.RoadmapUncheckedCreateNestedManyWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  skillStateHistories?: Prisma.SkillStateHistoryUncheckedCreateNestedManyWithoutUserInput
+  twoFactors?: Prisma.twoFactorUncheckedCreateNestedManyWithoutUserInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedCreateNestedManyWithoutAdminInput
+  gamification?: Prisma.UserGamificationUncheckedCreateNestedOneWithoutUserInput
+  xpTransactions?: Prisma.XPTransactionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type userCreateOrConnectWithoutAchievementsInput = {
+  where: Prisma.userWhereUniqueInput
+  create: Prisma.XOR<Prisma.userCreateWithoutAchievementsInput, Prisma.userUncheckedCreateWithoutAchievementsInput>
+}
+
+export type userUpsertWithoutAchievementsInput = {
+  update: Prisma.XOR<Prisma.userUpdateWithoutAchievementsInput, Prisma.userUncheckedUpdateWithoutAchievementsInput>
+  create: Prisma.XOR<Prisma.userCreateWithoutAchievementsInput, Prisma.userUncheckedCreateWithoutAchievementsInput>
+  where?: Prisma.userWhereInput
+}
+
+export type userUpdateToOneWithWhereWithoutAchievementsInput = {
+  where?: Prisma.userWhereInput
+  data: Prisma.XOR<Prisma.userUpdateWithoutAchievementsInput, Prisma.userUncheckedUpdateWithoutAchievementsInput>
+}
+
+export type userUpdateWithoutAchievementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  account?: Prisma.accountUpdateManyWithoutUserNestedInput
+  session?: Prisma.sessionUpdateManyWithoutUserNestedInput
+  careerProfile?: Prisma.CareerProfileUpdateOneWithoutUserNestedInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUpdateManyWithoutUserNestedInput
+  skillStates?: Prisma.SkillStateUpdateManyWithoutUserNestedInput
+  roadmaps?: Prisma.RoadmapUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  skillStateHistories?: Prisma.SkillStateHistoryUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUpdateManyWithoutUserNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUpdateManyWithoutUserNestedInput
+}
+
+export type userUncheckedUpdateWithoutAchievementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  twoFactorEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  account?: Prisma.accountUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.sessionUncheckedUpdateManyWithoutUserNestedInput
+  careerProfile?: Prisma.CareerProfileUncheckedUpdateOneWithoutUserNestedInput
+  diagnosticAttempts?: Prisma.DiagnosticAttemptUncheckedUpdateManyWithoutUserNestedInput
+  interviewSessions?: Prisma.InterviewSessionUncheckedUpdateManyWithoutUserNestedInput
+  skillStates?: Prisma.SkillStateUncheckedUpdateManyWithoutUserNestedInput
+  roadmaps?: Prisma.RoadmapUncheckedUpdateManyWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  skillStateHistories?: Prisma.SkillStateHistoryUncheckedUpdateManyWithoutUserNestedInput
+  twoFactors?: Prisma.twoFactorUncheckedUpdateManyWithoutUserNestedInput
+  adminAuditLogs?: Prisma.AdminAuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  gamification?: Prisma.UserGamificationUncheckedUpdateOneWithoutUserNestedInput
+  xpTransactions?: Prisma.XPTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1971,6 +2538,8 @@ export type UserCountOutputType = {
   skillStateHistories: number
   twoFactors: number
   adminAuditLogs: number
+  xpTransactions: number
+  achievements: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1985,6 +2554,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   skillStateHistories?: boolean | UserCountOutputTypeCountSkillStateHistoriesArgs
   twoFactors?: boolean | UserCountOutputTypeCountTwoFactorsArgs
   adminAuditLogs?: boolean | UserCountOutputTypeCountAdminAuditLogsArgs
+  xpTransactions?: boolean | UserCountOutputTypeCountXpTransactionsArgs
+  achievements?: boolean | UserCountOutputTypeCountAchievementsArgs
 }
 
 /**
@@ -2074,6 +2645,20 @@ export type UserCountOutputTypeCountAdminAuditLogsArgs<ExtArgs extends runtime.T
   where?: Prisma.AdminAuditLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountXpTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.XPTransactionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAchievementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserAchievementWhereInput
+}
+
 
 export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2097,6 +2682,9 @@ export type userSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   skillStateHistories?: boolean | Prisma.user$skillStateHistoriesArgs<ExtArgs>
   twoFactors?: boolean | Prisma.user$twoFactorsArgs<ExtArgs>
   adminAuditLogs?: boolean | Prisma.user$adminAuditLogsArgs<ExtArgs>
+  gamification?: boolean | Prisma.user$gamificationArgs<ExtArgs>
+  xpTransactions?: boolean | Prisma.user$xpTransactionsArgs<ExtArgs>
+  achievements?: boolean | Prisma.user$achievementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2150,6 +2738,9 @@ export type userInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   skillStateHistories?: boolean | Prisma.user$skillStateHistoriesArgs<ExtArgs>
   twoFactors?: boolean | Prisma.user$twoFactorsArgs<ExtArgs>
   adminAuditLogs?: boolean | Prisma.user$adminAuditLogsArgs<ExtArgs>
+  gamification?: boolean | Prisma.user$gamificationArgs<ExtArgs>
+  xpTransactions?: boolean | Prisma.user$xpTransactionsArgs<ExtArgs>
+  achievements?: boolean | Prisma.user$achievementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type userIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2170,6 +2761,9 @@ export type $userPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     skillStateHistories: Prisma.$SkillStateHistoryPayload<ExtArgs>[]
     twoFactors: Prisma.$twoFactorPayload<ExtArgs>[]
     adminAuditLogs: Prisma.$AdminAuditLogPayload<ExtArgs>[]
+    gamification: Prisma.$UserGamificationPayload<ExtArgs> | null
+    xpTransactions: Prisma.$XPTransactionPayload<ExtArgs>[]
+    achievements: Prisma.$UserAchievementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2587,6 +3181,9 @@ export interface Prisma__userClient<T, Null = never, ExtArgs extends runtime.Typ
   skillStateHistories<T extends Prisma.user$skillStateHistoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$skillStateHistoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SkillStateHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   twoFactors<T extends Prisma.user$twoFactorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$twoFactorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$twoFactorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   adminAuditLogs<T extends Prisma.user$adminAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$adminAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  gamification<T extends Prisma.user$gamificationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$gamificationArgs<ExtArgs>>): Prisma.Prisma__UserGamificationClient<runtime.Types.Result.GetResult<Prisma.$UserGamificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  xpTransactions<T extends Prisma.user$xpTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$xpTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$XPTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  achievements<T extends Prisma.user$achievementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.user$achievementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAchievementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3298,6 +3895,73 @@ export type user$adminAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.AdminAuditLogScalarFieldEnum | Prisma.AdminAuditLogScalarFieldEnum[]
+}
+
+/**
+ * user.gamification
+ */
+export type user$gamificationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserGamification
+   */
+  select?: Prisma.UserGamificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserGamification
+   */
+  omit?: Prisma.UserGamificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserGamificationInclude<ExtArgs> | null
+  where?: Prisma.UserGamificationWhereInput
+}
+
+/**
+ * user.xpTransactions
+ */
+export type user$xpTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the XPTransaction
+   */
+  select?: Prisma.XPTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the XPTransaction
+   */
+  omit?: Prisma.XPTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.XPTransactionInclude<ExtArgs> | null
+  where?: Prisma.XPTransactionWhereInput
+  orderBy?: Prisma.XPTransactionOrderByWithRelationInput | Prisma.XPTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.XPTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.XPTransactionScalarFieldEnum | Prisma.XPTransactionScalarFieldEnum[]
+}
+
+/**
+ * user.achievements
+ */
+export type user$achievementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserAchievement
+   */
+  select?: Prisma.UserAchievementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserAchievement
+   */
+  omit?: Prisma.UserAchievementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserAchievementInclude<ExtArgs> | null
+  where?: Prisma.UserAchievementWhereInput
+  orderBy?: Prisma.UserAchievementOrderByWithRelationInput | Prisma.UserAchievementOrderByWithRelationInput[]
+  cursor?: Prisma.UserAchievementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserAchievementScalarFieldEnum | Prisma.UserAchievementScalarFieldEnum[]
 }
 
 /**
