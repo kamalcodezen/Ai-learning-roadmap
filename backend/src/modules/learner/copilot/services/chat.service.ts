@@ -98,69 +98,150 @@ import prisma from "../../../../lib/prisma.js";
 export class ChatService {
   static async fetchUserContext(userId: string, message: string): Promise<string | undefined> {
     const normalized = message.toLowerCase();
-    // For personalization, we should ideally always inject context if it exists,
-    // but to save tokens, we only inject when the query might need it.
-    // However, the prompt requires the AI to answer based on this context "whenever the question is career/learning related."
-    // We'll broaden the keyword check slightly, but it was already decent.
-    const needsContext = ["learn", "roadmap", "progress", "skill", "gap", "career", "role", "project", "assessment", "study", "plan", "framework", "tech", "stack", "build", "explain", "next", "milestone"].some(kw => normalized.includes(kw));
-    
+    const needsContext = [
+      "learn",
+      "roadmap",
+      "progress",
+      "skill",
+      "gap",
+      "career",
+      "role",
+      "project",
+      "assessment",
+      "study",
+      "plan",
+      "framework",
+      "tech",
+      "stack",
+      "build",
+      "explain",
+      "next",
+      "milestone",
+      "help",
+      "what",
+      "how",
+      "why",
+      "guidance",
+      "status",
+      "debt",
+      "readiness",
+    ].some((kw) => normalized.includes(kw));
+
     if (!needsContext) return undefined;
 
     try {
-      const [profile, roadmap, allSkillStates] = await Promise.all([
+      const [profile, roadmap, allSkillStates, projects] = await Promise.all([
         prisma.careerProfile.findUnique({ where: { userId } }),
         prisma.roadmap.findFirst({
           where: { userId, status: "ACTIVE" },
-          include: { milestones: { orderBy: { order: "asc" } } }
+          include: { milestones: { orderBy: { order: "asc" } } },
         }),
-        prisma.skillState.findMany({ 
+        prisma.skillState.findMany({
           where: { userId },
-        })
+        }),
+        prisma.project.findMany({
+          where: { userId },
+          take: 3,
+          orderBy: { createdAt: "desc" },
+          select: {
+            title: true,
+            techStack: true,
+            isVerified: true,
+            score: true,
+          },
+        }),
       ]);
-      
+
       if (!profile) {
         return "USER CAREER CONTEXT:\nNo onboarding data found. The user has not set up a career profile, skills, or a roadmap yet. You should politely ask them to complete onboarding to get a personalized experience.";
       }
 
-      const roleName = profile.targetRoleName || profile.targetRole || "Unknown Role";
+      const roleName =
+        profile.targetRoleName || profile.targetRole || "Unknown Role";
       const experience = profile.experienceLevel || "Unknown Experience";
-      const availability = profile.weeklyAvailableHours ? `${profile.weeklyAvailableHours} hours/week` : "Unknown";
-      
-      let contextStr = `USER CAREER CONTEXT:\n\nTarget Role:\n${roleName}\n\nExperience:\n${experience}\n\nStack:\nUnavailable (Not tracked in current onboarding)\n\nAvailability:\n${availability}\n\nGoal:\nUnavailable (Not tracked in current onboarding)\n\nCURRENT SKILLS:\n`;
-      
-      if (allSkillStates.length > 0) {
-        contextStr += allSkillStates.map(s => `- ${s.skillName} (Score: ${Math.round(s.knowledgeScore)}/100)`).join("\n");
-      } else {
-        contextStr += "No skills assessed yet.";
+      const availability = profile.weeklyAvailableHours
+        ? `${profile.weeklyAvailableHours} hours/week`
+        : "Unknown";
+
+      let contextStr = `USER CAREER CONTEXT:\n\nTarget Role:\n${roleName}\n\nExperience:\n${experience}\n\nAvailability:\n${availability}\n\n`;
+
+      if (profile.resumeScore !== null && profile.resumeScore !== undefined) {
+        contextStr += `Resume Readiness Score:\n${Math.round(profile.resumeScore)}%\n\n`;
       }
-      
-      contextStr += `\n\nACTIVE ROADMAP:\n`;
-      if (roadmap) {
+      if (profile.interviewScore !== null && profile.interviewScore !== undefined) {
+        contextStr += `Interview Readiness Score:\n${Math.round(profile.interviewScore)}%\n\n`;
+      }
+
+      // Skills categorization
+      contextStr += `SKILL MASTERY & GAPS:\n`;
+      if (allSkillStates.length > 0) {
+        const strongSkills = allSkillStates.filter(
+          (s) => (s.knowledgeScore + s.practiceScore + s.projectScore) / 3 >= 70,
+        );
+        const gapSkills = allSkillStates.filter(
+          (s) => (s.knowledgeScore + s.practiceScore + s.projectScore) / 3 < 70,
+        );
+
+        if (strongSkills.length > 0) {
+          contextStr += `Strengths:\n` + strongSkills.map((s) => `- ${s.skillName} (Score: ${Math.round(s.knowledgeScore)}%)`).join("\n") + "\n";
+        }
+        if (gapSkills.length > 0) {
+          contextStr += `Active Skill Gaps / Debt:\n` + gapSkills.map((s) => `- ${s.skillName} (Score: ${Math.round(s.knowledgeScore)}%)`).join("\n") + "\n";
+        }
+      } else {
+        contextStr += "No skills assessed yet.\n";
+      }
+
+      // Roadmap context
+      contextStr += `\nACTIVE ROADMAP:\n`;
+      if (roadmap && roadmap.milestones.length > 0) {
         contextStr += `${roadmap.targetRole} Roadmap (Status: ${roadmap.status})\n\n`;
-        
-        const currentMilestone = roadmap.milestones.find(m => m.status === "CURRENT") || roadmap.milestones.find(m => m.status === "UPCOMING") || roadmap.milestones[0];
-        
+
+        const currentMilestone =
+          roadmap.milestones.find((m) => m.status === "CURRENT") ||
+          roadmap.milestones.find((m) => m.status === "UPCOMING") ||
+          roadmap.milestones[0];
+
         contextStr += `CURRENT MILESTONE:\n`;
         if (currentMilestone) {
           contextStr += `Title: ${currentMilestone.title}\n`;
-          if (currentMilestone.description) contextStr += `Description: ${currentMilestone.description}\n`;
-          if (currentMilestone.why) contextStr += `Why: ${currentMilestone.why}\n`;
+          if (currentMilestone.description)
+            contextStr += `Description: ${currentMilestone.description}\n`;
+          if (currentMilestone.why)
+            contextStr += `Strategic Why: ${currentMilestone.why}\n`;
+          if (currentMilestone.estimatedTime)
+            contextStr += `Estimated Time: ${currentMilestone.estimatedTime}\n`;
+          if (currentMilestone.unlocks && currentMilestone.unlocks.length > 0)
+            contextStr += `Unlocks: ${currentMilestone.unlocks.join(", ")}\n`;
         } else {
           contextStr += `None\n`;
         }
-        
-        const completedMilestones = roadmap.milestones.filter(m => m.status === "COMPLETED");
+
+        const completedMilestones = roadmap.milestones.filter(
+          (m) => m.status === "COMPLETED",
+        );
         contextStr += `\nCOMPLETED MILESTONES:\n`;
         if (completedMilestones.length > 0) {
-          contextStr += completedMilestones.map(m => `- ${m.title}`).join("\n");
+          contextStr +=
+            completedMilestones.map((m) => `- ${m.title}`).join("\n") + "\n";
         } else {
-          contextStr += `None`;
+          contextStr += `None\n`;
         }
-        
       } else {
-        contextStr += `No active roadmap found.\n\nCURRENT MILESTONE:\nNone\n\nCOMPLETED MILESTONES:\nNone`;
+        contextStr += `No active roadmap found.\nCURRENT MILESTONE: None\nCOMPLETED MILESTONES: None\n`;
       }
-      
+
+      // Projects context
+      if (projects.length > 0) {
+        contextStr += `\nRECENT PROJECTS & EVIDENCE:\n`;
+        contextStr += projects
+          .map(
+            (p) =>
+              `- ${p.title} (${p.techStack.join(", ") || "No stack specified"}) - ${p.isVerified ? "Verified (Score: " + Math.round(p.score) + "%)" : "In Progress"}`,
+          )
+          .join("\n");
+      }
+
       return contextStr;
     } catch (error) {
       console.error("Error fetching user context for chat:", error);
@@ -323,10 +404,18 @@ export class ChatService {
     }
 
     if (!reply) {
-      reply = `**AI Pathar Telemetry:** Focus on your verifiable **Proof-of-Work** ($SHA-256$ Git commits) and clearing active **Learning Debt**. Calibrate your benchmark inside the **Career Readiness Twin**.`;
+      reply = `**AI Pather Assistant:** I am currently operating in offline mode. Please review your active Roadmap milestones and Skill Gaps dashboard to continue your learning journey.`;
     }
 
-    this.logAiUsage(provider, model, "CHAT", reply.includes("Telemetry") ? "FAILURE" : "SUCCESS", 0, 0, reply.includes("Telemetry") ? "All providers failed" : undefined).catch(console.error);
+    this.logAiUsage(
+      provider,
+      model,
+      "CHAT",
+      reply.includes("offline mode") ? "FAILURE" : "SUCCESS",
+      0,
+      0,
+      reply.includes("offline mode") ? "All providers failed" : undefined,
+    ).catch(console.error);
 
     return { reply, provider, model, complexity };
   }
