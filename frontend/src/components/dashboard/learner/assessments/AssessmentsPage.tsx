@@ -110,7 +110,7 @@ export default function AssessmentsPage() {
 
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="w-4 h-4" /> {assessment.duration}
+                    <Clock className="w-4 h-4" /> {assessment.duration || "4 Stages • ~10m"}
                   </div>
 
                   {assessment.status === 'completed' ? (
