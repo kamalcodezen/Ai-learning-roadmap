@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { DashboardButton } from "@/src/components/dashboard/shared/patterns";
 import { Label, SearchField } from "@heroui/react";
-import { Card, CardContent, CardHeader } from "@/src/components/ui/Card";
+import { CardContent, CardHeader } from "@/src/components/ui/Card";
+import { DashboardCard } from "@/src/components/dashboard/shared/cards";
 
 export interface AdminDataTableColumn<T> {
   header: string;
@@ -50,7 +51,7 @@ export default function AdminDataTable<T>({
   const skip = page !== undefined ? (page - 1) * take : 0;
 
   return (
-    <Card className="gap-0 p-0 border-[5px] border-[#eae0ff] dark:border-[#5b3491]">
+    <DashboardCard className="p-0!">
       <CardHeader className="border-b border-border gap-0 p-4">
         <div className="flex flex-col sm:flex-row items-center gap-4">
           {searchTerm !== undefined && onSearchChange !== undefined && (
@@ -144,6 +145,6 @@ export default function AdminDataTable<T>({
           </div>
         )}
       </CardContent>
-    </Card>
+    </DashboardCard>
   );
 }

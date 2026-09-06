@@ -5,7 +5,7 @@ import { getAdminAnalytics } from "@/src/lib/api/admin/analytics";
 import { authClient } from "@/src/lib/auth-client";
 import { useTheme } from "next-themes";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
-import { GlowCard } from "@/src/components/dashboard/shared/cards";
+import { GlowCard, DashboardCard } from "@/src/components/dashboard/shared/cards";
 import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import {
   AreaChart,
@@ -113,11 +113,8 @@ export default function AdminAnalyticsView() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {charts.map((c, i) => (
-          <GlowCard
-            key={c.title}
-            corner={i % 2 === 0 ? "top-right" : "bottom-left"}
-          >
+        {charts.map((c) => (
+          <DashboardCard key={c.title}>
             <h3 className="font-sans text-xl font-semibold text-foreground tracking-tight mb-4">
               {c.title}
             </h3>
@@ -186,7 +183,7 @@ export default function AdminAnalyticsView() {
                 </ResponsiveContainer>
               </div>
             )}
-          </GlowCard>
+          </DashboardCard>
         ))}
       </div>
     </div>

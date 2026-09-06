@@ -5,7 +5,8 @@ import { getAdminSkillHealth } from "@/src/lib/api/admin/skill-health";
 import { authClient } from "@/src/lib/auth-client";
 import { Zap, TrendingDown } from "lucide-react";
 import { Skeleton } from "@heroui/react";
-import { Card, CardContent, CardHeader } from "@/src/components/ui/Card";
+import { CardContent, CardHeader } from "@/src/components/ui/Card";
+import { DashboardCard } from "@/src/components/dashboard/shared/cards";
 
 export default function AdminSkillHealthView() {
   const { data: session } = authClient.useSession();
@@ -78,7 +79,7 @@ export default function AdminSkillHealthView() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <Card className="gap-0 p-0 border-[5px] border-[#eae0ff] dark:border-[#5b3491]">
+      <DashboardCard className="p-0!">
         <CardHeader className="border-b border-border gap-0 p-4">
           <div className="flex items-center gap-2">
             <Zap className="size-4 text-green-500" />
@@ -94,9 +95,9 @@ export default function AdminSkillHealthView() {
             renderSkillRows(data.strongSkills, "strong")
           )}
         </CardContent>
-      </Card>
+      </DashboardCard>
 
-      <Card className="gap-0 p-0 border-[5px] border-[#eae0ff] dark:border-[#5b3491]">
+      <DashboardCard className="p-0!">
         <CardHeader className="border-b border-border gap-0 p-4">
           <div className="flex items-center gap-2">
             <TrendingDown className="size-4 text-red-500" />
@@ -112,7 +113,7 @@ export default function AdminSkillHealthView() {
             renderSkillRows(data.weakSkills, "weak")
           )}
         </CardContent>
-      </Card>
+      </DashboardCard>
     </div>
   );
 }
