@@ -110,7 +110,7 @@ export default function SkillGapsPage() {
               key={gap.id}
               className={`border-l-4 ${gap.severity === "critical" ? "border-l-destructive" : "border-l-amber-500"}`}
             >
-              <CardContent className="p-6">
+              <CardContent>
                 <div className="flex flex-col lg:flex-row gap-6">
                   <div className="flex-1 space-y-4">
                     <div className="flex items-center justify-between">

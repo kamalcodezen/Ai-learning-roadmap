@@ -120,9 +120,8 @@ export default function DashboardStats() {
         {/* System Health */}
         <section>
           <h2 className="mb-4 text-xl font-bold tracking-tight text-foreground">System Health</h2>
-          <Card mouseGlow className={glowCardClass}>
-            <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
-            <CardContent className="relative z-10 space-y-4">
+          <Card className={glowCardClass}>
+            <CardContent className="space-y-4">
               <HealthRow label="Backend API" status={systemHealth.backend} />
               <HealthRow label="Database" status={systemHealth.database} />
               <HealthRow label="Authentication" status={systemHealth.auth} />
@@ -134,9 +133,8 @@ export default function DashboardStats() {
         {/* Recent Users */}
         <section>
           <h2 className="mb-4 text-xl font-bold tracking-tight text-foreground">Recent Users</h2>
-          <Card mouseGlow className={`${glowCardClass} !p-0`}>
-            <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
-            <CardContent className="relative z-10">
+          <Card className={`${glowCardClass} !p-0`}>
+            <CardContent>
               <div className="divide-y divide-border/50">
                 {recentUsers.length === 0 ? (
                   <div className="p-6 text-center text-muted-foreground">No recent users.</div>
@@ -172,9 +170,8 @@ export default function DashboardStats() {
             View All <ArrowRight className="h-4 w-4" />
           </a>
         </div>
-        <Card mouseGlow className={`${glowCardClass} !p-0`}>
-          <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
-          <CardContent className="relative z-10">
+        <Card className={`${glowCardClass} !p-0`}>
+          <CardContent>
             {recentActivity.length === 0 ? (
               <div className="p-6 text-center text-muted-foreground">No recent activity.</div>
             ) : (

@@ -34,7 +34,7 @@ export default function DashboardScrollProvider({ children }: DashboardScrollPro
       aria-label="Dashboard content"
       className="relative min-h-0 w-full flex-1 overflow-y-auto pl-4 sm:pl-8 md:pl-12 lg:pl-[272px]"
     >
-      <div ref={contentRef} className="global-pos relative w-full ml-0 lg:ml-0 pt-20 lg:pt-5 p-2 lg:pl-2">
+      <div ref={contentRef} className="global-pos relative w-full ml-0 lg:ml-0 py-20 lg:py-5 p-2 lg:pl-2">
         {children}
       </div>
     </section>

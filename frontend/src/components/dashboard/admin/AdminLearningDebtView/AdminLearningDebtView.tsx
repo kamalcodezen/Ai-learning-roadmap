@@ -6,7 +6,8 @@ import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { AlertTriangle, Download, GraduationCap, User } from "lucide-react";
 import { Skeleton } from "@heroui/react";
-import { Card, CardContent, CardHeader } from "@/src/components/ui/Card";
+import { CardContent, CardHeader } from "@/src/components/ui/Card";
+import { DashboardCard } from "@/src/components/dashboard/shared/cards";
 
 export default function AdminLearningDebtView() {
   const { data: session } = authClient.useSession();
@@ -42,7 +43,7 @@ export default function AdminLearningDebtView() {
   const { debtRecords } = data;
 
   return (
-    <Card className="gap-0 p-0 border-[5px] border-[#eae0ff] dark:border-[#5b3491]">
+    <DashboardCard className="p-0!">
       <CardHeader className="border-b border-border gap-0 p-4">
         <div className="flex items-center">
           <p className="flex-1 text-sm text-muted-foreground">
@@ -141,6 +142,6 @@ export default function AdminLearningDebtView() {
           </table>
         </div>
       </CardContent>
-    </Card>
+    </DashboardCard>
   );
 }

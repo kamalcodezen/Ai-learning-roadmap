@@ -353,12 +353,7 @@ export default function DashboardProfile({
               <h3 className="text-lg font-bold font-poppins mb-3">
                 Quick Metrics
               </h3>
-              <div
-                className={`grid gap-2 text-center`}
-                style={{
-                  gridTemplateColumns: `repeat(${quickMetrics.length}, minmax(0, 1fr))`,
-                }}
-              >
+              <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4">
                 {quickMetrics.map((metric, idx) => (
                   <div
                     key={idx}

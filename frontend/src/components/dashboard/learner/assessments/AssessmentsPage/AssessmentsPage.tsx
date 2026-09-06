@@ -116,7 +116,7 @@ export default function AssessmentsPage() {
               key={assessment.id}
               className="flex flex-col h-full transition-all hover:border-primary/30"
             >
-              <CardContent className="p-6 flex flex-col h-full">
+              <CardContent className="flex flex-col h-full">
                 <div className="flex justify-between items-start mb-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 mb-2">

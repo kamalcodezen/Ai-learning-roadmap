@@ -271,7 +271,7 @@ export default function PortfolioPage() {
       />
 
       <DashboardCard className="bg-primary/5 border-primary/20">
-        <CardContent className="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        <CardContent className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-1 space-y-2 text-center md:text-left">
             <h2 className="text-2xl font-bold text-foreground flex items-center justify-center md:justify-start gap-2">
               <Star className="w-6 h-6 text-amber-500 fill-amber-500" />
