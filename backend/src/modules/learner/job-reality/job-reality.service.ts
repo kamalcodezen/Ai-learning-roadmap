@@ -1,5 +1,6 @@
 import prisma from "../../../lib/prisma.js";
-import { CAREER_SKILLS_MAP, FALLBACK_SKILLS } from "../career-alignment/services/career-skills.map.js";
+import { getRequiredSkillsForRole } from "../career-alignment/services/career-skills.map.js";
+import { isMatchingSkill } from "../assessments/services/skill-simulation.service.js";
 
 // Basic in-memory cache to avoid spamming the free API
 interface CacheEntry {
@@ -7,7 +8,19 @@ interface CacheEntry {
   data: any;
 }
 const marketCache = new Map<string, CacheEntry>();
-const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+export const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+
+export const clearMarketCache = () => {
+  marketCache.clear();
+};
+
+export const getMarketCacheEntry = (role: string) => {
+  return marketCache.get(role.toLowerCase());
+};
+
+export const setMarketCacheEntry = (role: string, data: any[], timestamp = Date.now()) => {
+  marketCache.set(role.toLowerCase(), { timestamp, data });
+};
 
 export const getLearnerJobReality = async (userId: string) => {
   // 1. Fetch user's profile and target role
@@ -28,16 +41,18 @@ export const getLearnerJobReality = async (userId: string) => {
 
   const userSkillMap = new Map<string, number>();
   skillStates.forEach((s: any) => {
-    // Total technical capability representation
-    const avgScore = (s.knowledgeScore + s.practiceScore) / 2;
-    userSkillMap.set(s.skillName.toLowerCase(), avgScore);
+    // Total technical capability representation (combines knowledge, practice, and project)
+    const compositeScore = s.projectScore > 0 || s.practiceScore > 0
+      ? Math.round(s.knowledgeScore * 0.4 + s.practiceScore * 0.3 + s.projectScore * 0.3)
+      : Math.round(s.knowledgeScore);
+    userSkillMap.set(s.skillName.toLowerCase(), compositeScore);
   });
 
-  // 3. Determine required skills based on map
-  let requiredSkills = CAREER_SKILLS_MAP[targetRole] || FALLBACK_SKILLS;
+  // 3. Determine required skills based on map using normalized matcher
+  const requiredSkills = getRequiredSkillsForRole(targetRole);
 
   // 4. Fetch market data from Arbeitnow API
-  const cacheKey = targetRole.toLowerCase();
+  const cacheKey = targetRole.toLowerCase().trim();
   const cached = marketCache.get(cacheKey);
   
   let rawJobs: any[] = [];
@@ -51,9 +66,8 @@ export const getLearnerJobReality = async (userId: string) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout
 
-      // Query arbeitnow for jobs. It doesn't support complex querying easily,
-      // so we fetch latest jobs and just analyze them, or search by role text if supported.
-      const url = `https://arbeitnow.com/api/job-board-api?search=${encodeURIComponent(targetRole)}`;
+      const sanitizedQuery = encodeURIComponent(targetRole.trim());
+      const url = `https://arbeitnow.com/api/job-board-api?search=${sanitizedQuery}`;
       
       const res = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
@@ -66,7 +80,7 @@ export const getLearnerJobReality = async (userId: string) => {
         console.warn(`Arbeitnow API returned status ${res.status}`);
       }
     } catch (e) {
-      console.error("Failed to fetch market data:", e);
+      console.warn("Failed to fetch market data from Arbeitnow API (using fallback):", e);
       // Fail gracefully: rawJobs remains empty
     }
   }
@@ -76,7 +90,7 @@ export const getLearnerJobReality = async (userId: string) => {
   
   if (rawJobs.length > 0) {
     rawJobs.forEach((job: any) => {
-      const textToSearch = (job.description + " " + job.title + " " + (job.tags ? job.tags.join(" ") : "")).toLowerCase();
+      const textToSearch = `${job.description || ""} ${job.title || ""} ${(job.tags || []).join(" ")}`.toLowerCase();
       
       requiredSkills.forEach((reqSkill: any) => {
         const kw = reqSkill.skill.toLowerCase();
@@ -99,7 +113,6 @@ export const getLearnerJobReality = async (userId: string) => {
     const frequency = skillFrequencies.get(kw) || 0;
     
     // Normalize demand score (0 to 100) based on frequency relative to total jobs fetched
-    // E.g., if a skill appears in 50% of the returned jobs, demand is 50.
     const rawPercentage = rawJobs.length > 0 ? (frequency / rawJobs.length) * 100 : 0;
     
     // Smooth the demand score
@@ -114,7 +127,13 @@ export const getLearnerJobReality = async (userId: string) => {
        if (reqSkill.critical && demandScore < 40) demandScore = 40; // baseline for critical skills
     }
 
-    const learnerScore = Math.round(userSkillMap.get(kw) || 0);
+    const matchingSkill = skillStates.find((s: any) => isMatchingSkill(s.skillName, reqSkill.skill));
+    const compositeScore = matchingSkill
+      ? (matchingSkill.projectScore > 0 || matchingSkill.practiceScore > 0
+          ? Math.round(matchingSkill.knowledgeScore * 0.4 + matchingSkill.practiceScore * 0.3 + matchingSkill.projectScore * 0.3)
+          : Math.round(matchingSkill.knowledgeScore))
+      : 0;
+    const learnerScore = compositeScore;
     const gap = Math.max(0, demandScore - learnerScore);
 
     if (gap > highestGapValue) {
@@ -181,7 +200,7 @@ export const getLearnerJobReality = async (userId: string) => {
     targetRole,
     market: {
       demandLevel: rawJobs.length > 0 ? demandLevel : "Unknown",
-      jobCount: rawJobs.length > 0 ? rawJobs.length : null, // Not a perfect global count, but represents recent listings
+      jobCount: rawJobs.length > 0 ? rawJobs.length : null,
       trend: rawJobs.length > 0 ? trend : null,
       updatedAt: new Date().toISOString()
     },
@@ -191,7 +210,9 @@ export const getLearnerJobReality = async (userId: string) => {
     source: {
       provider: rawJobs.length > 0 ? "Arbeitnow API" : "Deterministic Fallback",
       fetchedAt: new Date().toISOString(),
-      cached: isFromCache
+      cached: isFromCache,
+      isFallback: rawJobs.length === 0,
+      note: rawJobs.length === 0 ? "Live market listings unavailable; showing baseline requirements." : undefined,
     }
   };
 };
