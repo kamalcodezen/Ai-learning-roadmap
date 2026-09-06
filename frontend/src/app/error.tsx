@@ -6,11 +6,9 @@ import { motion } from "motion/react";
 import {
   LuRefreshCw,
   LuLayoutDashboard,
-  LuTerminal,
   LuCopy,
   LuCheck,
-  LuBug,
-  LuShieldAlert,
+  LuTriangleAlert,
 } from "react-icons/lu";
 
 interface ErrorProps {
@@ -22,141 +20,161 @@ export default function Error({ error, reset }: ErrorProps) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    console.error("Critical Runtime Failure:", error);
+    console.error("Runtime Error:", error);
   }, [error]);
 
-  const handleCopyLog = () => {
-    const errorText = `[CRITICAL_CORE_PANIC]\nDigest: ${error?.digest || "N/A"}\nMessage: ${error?.message || "Unknown Runtime Failure"}\nTimestamp: ${new Date().toISOString()}`;
-    navigator.clipboard.writeText(errorText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyLog = async () => {
+    const errorText = [
+      "AI Pather Runtime Error",
+      `Digest: ${error?.digest || "N/A"}`,
+      `Message: ${error?.message || "Unknown runtime error"}`,
+      `Timestamp: ${new Date().toISOString()}`,
+    ].join("\n");
+
+    try {
+      await navigator.clipboard.writeText(errorText);
+      setCopied(true);
+
+      window.setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (copyError) {
+      console.error("Failed to copy error details:", copyError);
+    }
   };
 
+  const errorMessage =
+    error?.message || "We couldn't load this page right now.";
+
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#0B0F19] px-4 py-16 text-[#FAFAFA] selection:bg-[#CEFF1F] selection:text-black">
-      {/* Background Glow Mesh */}
-      <div className="pointer-events-none absolute -top-32 left-1/2 h-[450px] w-[650px] -translate-x-1/2 rounded-full bg-[#CEFF1F]/10 blur-[150px]" />
-      <div className="pointer-events-none absolute -bottom-32 left-1/2 h-[400px] w-[550px] -translate-x-1/2 rounded-full bg-rose-500/10 blur-[140px]" />
+    <div className="flex min-h-screen w-full items-center justify-center bg-[rgb(var(--background))] px-4 py-12 text-[rgb(var(--foreground))]">
+      <div className="relative w-full max-w-2xl">
+        {/* Subtle Brand Glow */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[rgb(var(--primary))]/8 blur-3xl"
+        />
 
-      {/* Cyber Grid Background Lines */}
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#2A3143_1px,transparent_1px),linear-gradient(to_bottom,#2A3143_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20" />
-
-      <div className="container relative z-10 mx-auto max-w-2xl text-center">
-        {/* Status Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-rose-500/30 bg-rose-500/10 px-4 py-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-rose-400 backdrop-blur-md"
-        >
-          <LuShieldAlert className="size-4 animate-pulse text-rose-400" />
-          <span>Kernel Execution Interrupted</span>
-        </motion.div>
-
-        {/* Error Headline */}
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
-          className="font-poppins text-4xl font-extrabold tracking-tight sm:text-6xl text-white"
-        >
-          State Pipeline{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-rose-300 to-white">
-            Unreachable
-          </span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mx-auto mt-4 max-w-lg text-sm sm:text-base text-[#8B95A5] leading-relaxed"
-        >
-          An unexpected runtime anomaly broke the active thread. The AI Learning
-          OS has locked this sub-routine to preserve your session integrity.
-        </motion.p>
-
-        {/* Terminal Style Error Diagnostics Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-8 overflow-hidden rounded-2xl border border-[#2A3143] bg-[#131824]/90 text-left font-mono text-xs shadow-[0_0_35px_rgba(0,0,0,0.5)] backdrop-blur-xl"
-        >
-          {/* Terminal Header */}
-          <div className="flex items-center justify-between border-b border-[#2A3143] bg-[#1A202F]/80 px-4 py-3">
-            <div className="flex items-center gap-2 text-[#8B95A5]">
-              <span className="h-2.5 w-2.5 rounded-full bg-rose-500/80" />
-              <span className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
-              <span className="h-2.5 w-2.5 rounded-full bg-[#CEFF1F]/80" />
-              <div className="ml-2 flex items-center gap-1.5 text-[11px] text-slate-300 font-semibold">
-                <LuTerminal className="size-3.5 text-[#CEFF1F]" />
-                <span>debug_trace.log</span>
-              </div>
+        <div className="relative">
+          {/* Error Icon */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mb-6 flex justify-center"
+          >
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[rgb(var(--primary))]/20 bg-[rgb(var(--primary))]/10">
+              <LuTriangleAlert
+                className="h-8 w-8 text-[rgb(var(--primary))]"
+                strokeWidth={1.8}
+              />
             </div>
+          </motion.div>
 
-            <div className="flex items-center gap-3">
-              {error?.digest && (
-                <span className="hidden sm:inline-block text-[10px] text-[#8B95A5] bg-[#0B0F19] px-2 py-0.5 rounded border border-[#2A3143]">
-                  DIGEST: {error.digest.slice(0, 10)}
-                </span>
-              )}
+          {/* Heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.05 }}
+            className="text-center"
+          >
+            <p className="mb-3 text-sm font-semibold tracking-wide text-[rgb(var(--primary))]">
+              Something went wrong
+            </p>
+
+            <h1 className="text-3xl font-extrabold tracking-tight text-[rgb(var(--foreground))] sm:text-4xl">
+              We couldn&apos;t load this page
+            </h1>
+
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-[rgb(var(--muted-foreground))] sm:text-base">
+              An unexpected error occurred while loading this page. Please try
+              again or return to your dashboard.
+            </p>
+          </motion.div>
+
+          {/* Error Details */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.12 }}
+            className="dashboard-card mt-8"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold text-[rgb(var(--foreground))]">
+                  Error details
+                </p>
+
+                {error?.digest && (
+                  <p className="mt-1 text-xs text-[rgb(var(--muted-foreground))]">
+                    Reference: {error.digest}
+                  </p>
+                )}
+              </div>
+
               <button
+                type="button"
                 onClick={handleCopyLog}
-                className="flex items-center gap-1 rounded bg-[#131824] px-2 py-1 text-[10px] text-slate-300 hover:text-[#CEFF1F] border border-[#2A3143] hover:border-[#CEFF1F]/40 transition-colors"
-                title="Copy Trace"
+                className="btn-secondary inline-flex shrink-0 items-center gap-2 px-3 py-2 text-xs font-medium"
+                title="Copy error details"
+                aria-label="Copy error details"
               >
                 {copied ? (
                   <>
-                    <LuCheck className="size-3 text-[#CEFF1F]" />
+                    <LuCheck className="h-3.5 w-3.5 text-[rgb(var(--primary))]" />
                     <span>Copied</span>
                   </>
                 ) : (
                   <>
-                    <LuCopy className="size-3" />
+                    <LuCopy className="h-3.5 w-3.5" />
                     <span>Copy</span>
                   </>
                 )}
               </button>
             </div>
-          </div>
 
-          {/* Terminal Code Body */}
-          <div className="p-4 space-y-2 text-rose-300/90 leading-relaxed max-h-36 overflow-y-auto">
-            <div className="flex items-center gap-2 text-[11px] text-[#8B95A5]">
-              <LuBug className="size-3.5 text-rose-400" />
-              <span>[EXCEPTION_ORIGIN]: Client-Side Hydration & State Flow</span>
+            <div className="mt-4 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--muted))] p-4">
+              <p className="break-words text-sm leading-6 text-[rgb(var(--muted-foreground))]">
+                {errorMessage}
+              </p>
             </div>
-            <p className="break-all font-mono text-[11px] bg-[#0B0F19]/60 p-2.5 rounded-lg border border-rose-500/20 text-rose-400">
-              {error?.message || "Critical runtime failure occurred during view execution."}
-            </p>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          {/* Primary Action Button (Neon Style) */}
-          <button
-            onClick={() => reset()}
-            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#CEFF1F] px-7 py-3.5 text-sm font-bold text-[#0B0F19] transition-all duration-200 hover:brightness-110 hover:shadow-[0_0_25px_rgba(206,255,31,0.35)] active:scale-95 cursor-pointer"
+          {/* Actions */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.18 }}
+            className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center"
           >
-            <LuRefreshCw className="size-4" />
-            <span>Re-compile & Retry</span>
-          </button>
+            <button
+              type="button"
+              onClick={reset}
+              className="btn-primary inline-flex w-full items-center justify-center gap-2 sm:w-auto"
+            >
+              <LuRefreshCw className="h-4 w-4" />
+              <span>Try Again</span>
+            </button>
 
-          {/* Secondary Action Button */}
-          <Link
-            href="/dashboard/learner"
-            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#2A3143] bg-[#131824] px-7 py-3.5 text-sm font-semibold text-[#FAFAFA] transition-all duration-200 hover:border-[#CEFF1F]/50 hover:bg-[#1A202F] active:scale-95"
+            <Link
+              href="/dashboard/learner"
+              className="btn-secondary inline-flex w-full items-center justify-center gap-2 sm:w-auto"
+            >
+              <LuLayoutDashboard className="h-4 w-4 text-[rgb(var(--primary))]" />
+              <span>Back to Dashboard</span>
+            </Link>
+          </motion.div>
+
+          {/* Small Footer */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.25 }}
+            className="mt-6 text-center text-xs text-[rgb(var(--muted-foreground))]"
           >
-            <LuLayoutDashboard className="size-4 text-[#CEFF1F]" />
-            <span>Return to Control Center</span>
-          </Link>
-        </motion.div>
+            Your session is safe. You can retry without losing your progress.
+          </motion.p>
+        </div>
       </div>
     </div>
   );
