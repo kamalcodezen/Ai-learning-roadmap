@@ -8,6 +8,7 @@ import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGu
 import GenericPageSkeleton from "@/src/components/dashboard/shared/GenericPageSkeleton";
 import DashboardProfile from "@/src/components/dashboard/shared/profile/DashboardProfile";
 import type { ProfileChart } from "@/src/components/dashboard/shared/profile/DashboardProfile";
+import CareerGoalAnalysis from "@/src/components/profile/CareerGoalAnalysis";
 
 const COVER_IMAGE = "/images/dashboardBanner.png";
 const COVER_IMAGE_DARK = "/images/dashboardBannerDark.png";
@@ -60,35 +61,40 @@ export default function LearnerProfilePage() {
     data?.career?.targetRole || "Learner";
 
   return (
-    <DashboardProfile
-      coverImage={COVER_IMAGE}
-      coverImageDark={COVER_IMAGE_DARK}
-      roleLabel="Learner"
-      bio={`Focused on becoming a ${targetRole}.`}
-      metaItems={[
-        { icon: GraduationCap, label: targetRole },
-        { icon: MapPin, label: "AI Pather" },
-        { icon: Calendar, label: "Joined 2026" },
-      ]}
-      introItems={[
-        {
-          icon: "📧",
-          label: "Email",
-          value: session?.user?.email || "learner@aipather.com",
-        },
-        {
-          icon: "📈",
-          label: "Active Status",
-          value: <span className="text-green-500 font-bold">Verified</span>,
-        },
-        {
-          icon: "🎯",
-          label: "Target Role",
-          value: targetRole,
-        },
-      ]}
-      quickMetrics={quickMetrics}
-      chart={chart}
-    />
+    <div className="pb-10">
+      <DashboardProfile
+        coverImage={COVER_IMAGE}
+        coverImageDark={COVER_IMAGE_DARK}
+        roleLabel="Learner"
+        bio={`Focused on becoming a ${targetRole}.`}
+        metaItems={[
+          { icon: GraduationCap, label: targetRole },
+          { icon: MapPin, label: "AI Pather" },
+          { icon: Calendar, label: "Joined 2026" },
+        ]}
+        introItems={[
+          {
+            icon: "📧",
+            label: "Email",
+            value: session?.user?.email || "learner@aipather.com",
+          },
+          {
+            icon: "📈",
+            label: "Active Status",
+            value: <span className="text-green-500 font-bold">Verified</span>,
+          },
+          {
+            icon: "🎯",
+            label: "Target Role",
+            value: targetRole,
+          },
+        ]}
+        quickMetrics={quickMetrics}
+        chart={chart}
+      />
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        <CareerGoalAnalysis />
+      </div>
+    </div>
   );
 }
