@@ -409,7 +409,7 @@ button {
   }
 
   .dashboard-card {
-    @apply rounded-lg border p-6 backdrop-blur-md transition-all duration-300;
+    @apply rounded-xl border p-6 backdrop-blur-md transition-all duration-300;
     background: #ffffff;
     border-color: #E6E9EE;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
@@ -429,7 +429,7 @@ button {
   }
 
   .soft-card {
-    @apply rounded-lg border p-6;
+    @apply rounded-xl border p-6;
     background: rgb(var(--card-soft));
     border-color: rgb(var(--border));
   }

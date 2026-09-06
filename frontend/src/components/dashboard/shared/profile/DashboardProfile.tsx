@@ -25,7 +25,7 @@ import type { LucideIcon } from "lucide-react";
 import { Avatar } from "@heroui/react";
 import { authClient } from "@/src/lib/auth-client";
 import { showToast } from "@/src/components/ui/toast";
-import AdminGlowCard from "@/src/components/dashboard/admin/AdminGlowCard";
+import { GlowCard } from "@/src/components/dashboard/shared/cards";
 import Image from "next/image";
 
 export interface ProfileMetric {
@@ -336,7 +336,7 @@ export default function DashboardProfile({
       <div className="max-w-6xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {/* left column */}
         <div className="space-y-6">
-          <AdminGlowCard corner="top-left">
+          <GlowCard corner="top-left">
             <h3 className="text-lg font-bold font-poppins mb-3">Intro</h3>
             <div className="space-y-4 text-lg sm:text-base text-foreground/90 font-medium">
               {introItems.map((item, idx) => (
@@ -346,10 +346,10 @@ export default function DashboardProfile({
                 </div>
               ))}
             </div>
-          </AdminGlowCard>
+          </GlowCard>
 
           {quickMetrics.length > 0 && (
-            <AdminGlowCard corner="bottom-left">
+            <GlowCard corner="bottom-left">
               <h3 className="text-lg font-bold font-poppins mb-3">
                 Quick Metrics
               </h3>
@@ -373,14 +373,14 @@ export default function DashboardProfile({
                   </div>
                 ))}
               </div>
-            </AdminGlowCard>
+            </GlowCard>
           )}
         </div>
 
         {/* right column */}
         <div className="lg:col-span-1 space-y-6">
           {chart && chart.data.length > 0 && (
-            <AdminGlowCard corner="bottom-right">
+            <GlowCard corner="bottom-right">
               <div className="pb-4 border-b border-border/50 mb-6">
                 <h3 className="font-sans text-xl font-semibold text-foreground tracking-tight">
                   {chart.title}
@@ -454,7 +454,7 @@ export default function DashboardProfile({
                 <TrendingUp size={14} className="text-primary" />
                 <span>{chart.subtitle}</span>
               </div>
-            </AdminGlowCard>
+            </GlowCard>
           )}
         </div>
       </div>

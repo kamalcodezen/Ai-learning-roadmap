@@ -37,7 +37,6 @@ export function HomeFloatingChat() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setTimeGreeting(getTimeGreeting());
     const interval = setInterval(() => {
       setTimeGreeting(getTimeGreeting());
     }, 60000);

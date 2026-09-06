@@ -35,7 +35,6 @@ export default function ChatBox() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setTimeGreeting(getTimeGreeting());
     const interval = setInterval(() => {
       setTimeGreeting(getTimeGreeting());
     }, 60000);
@@ -111,7 +110,7 @@ export default function ChatBox() {
 
   return (
     <section
-      className="group relative flex h-[calc(100vh-3rem)] w-full flex-col rounded-md border-2 border-zinc-200 dark:border-zinc-800 hover:border-brand transition-all duration-300 bg-background overflow-clip"
+      className="group relative flex h-[90vh] w-full flex-col rounded-md border-2 border-zinc-200 dark:border-zinc-800 hover:border-brand transition-all duration-300 bg-background overflow-clip"
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
     >
