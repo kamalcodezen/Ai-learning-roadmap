@@ -84,6 +84,33 @@ export default function ApplicationReadinessPage() {
         </CardContent>
       </DashboardCard>
 
+      {/* 7 Canonical Readiness Dimensions */}
+      {data.dimensions && (
+        <div className="space-y-3">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+            Canonical Readiness Dimensions
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+            {[
+              { label: "Overall", val: data.dimensions.overallReadiness },
+              { label: "Knowledge", val: data.dimensions.knowledgeProficiency },
+              { label: "Practical", val: data.dimensions.practicalCompetence },
+              { label: "Projects", val: data.dimensions.projectExecution },
+              { label: "Problem Solving", val: data.dimensions.problemSolving },
+              { label: "Communication", val: data.dimensions.communication },
+              { label: "Interview", val: data.dimensions.interviewPreparedness },
+            ].map((d, i) => (
+              <div key={i} className="p-3 rounded-xl border bg-card/60 flex flex-col items-center justify-center text-center">
+                <span className="text-xs text-muted-foreground font-medium truncate">{d.label}</span>
+                <span className="text-base font-bold text-foreground mt-1">
+                  {d.val !== "NOT_ASSESSED" && d.val !== undefined ? `${d.val}%` : "Not Assessed"}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-4">
         {data.categories.map((category) => {
           const status = getStatusDetails(category.status);
