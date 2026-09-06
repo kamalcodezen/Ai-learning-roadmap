@@ -156,3 +156,18 @@ export type InterviewQuestion = Prisma.InterviewQuestionModel
  * 
  */
 export type InterviewAnswer = Prisma.InterviewAnswerModel
+/**
+ * Model UserGamification
+ * 
+ */
+export type UserGamification = Prisma.UserGamificationModel
+/**
+ * Model XPTransaction
+ * 
+ */
+export type XPTransaction = Prisma.XPTransactionModel
+/**
+ * Model UserAchievement
+ * 
+ */
+export type UserAchievement = Prisma.UserAchievementModel
