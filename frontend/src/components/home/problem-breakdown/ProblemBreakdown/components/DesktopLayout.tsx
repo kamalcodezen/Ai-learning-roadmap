@@ -44,7 +44,7 @@ export default function DesktopLayout({ states }: DesktopLayoutProps) {
       className="relative hidden h-[260vh] lg:block"
     >
       {/* হেডার ও কন্টেন্ট একসাথে উপরে স্টিকি হয়ে থাকবে */}
-      <div className="sticky top-20 flex w-full flex-col justify-start pt-2 lg:pt-3 gap-6 mb-12">
+      <div className="sticky top-20 flex w-full flex-col justify-start pt-0 lg:pt-3 xl:pt-1 gap-6 mb-12">
         {/* টপ হেডার যা এই সেকশনের সাথে সবসময় লক থাকবে */}
         <ProblemHeader />
 
