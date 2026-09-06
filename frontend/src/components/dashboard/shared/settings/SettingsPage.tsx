@@ -8,7 +8,7 @@ import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
 import Link from "next/link";
 
 const glowCardClass =
-  "group relative overflow-hidden rounded-md p-6 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]";
+  "group relative overflow-hidden rounded-xl p-6 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]";
 
 export default function SettingsPage() {
   const { data: session, isPending: isSessionLoading } = useDashboardSession();

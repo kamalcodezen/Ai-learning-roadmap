@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -21,8 +19,7 @@ import { getAdminDashboardStats } from "@/src/lib/api/admin/dashboard";
 import { authClient } from "@/src/lib/auth-client";
 import GenericPageSkeleton from "../shared/GenericPageSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
-import dashboardBanner from "@/public/images/dashboardBanner.png";
-import dashboardBannerDark from "@/public/images/dashboardBannerDark.png";
+import DashboardBanner from "@/src/components/dashboard/shared/banner/DashboardBanner/DashboardBanner";
 
 interface Kpi {
   title: string;
@@ -32,27 +29,10 @@ interface Kpi {
 }
 
 const glowCardClass =
-  "group relative overflow-hidden rounded-md p-6 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]";
+  "group relative overflow-hidden rounded-xl p-6 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]";
 
 export default function DashboardStats() {
   const { data: session } = authClient.useSession();
-
-  const [dark, setDark] = useState(() =>
-    typeof window !== "undefined"
-      ? document.documentElement.classList.contains("dark")
-      : false,
-  );
-
-  useEffect(() => {
-    const syncTheme = () =>
-      setDark(document.documentElement.classList.contains("dark"));
-    const observer = new MutationObserver(syncTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-    return () => observer.disconnect();
-  }, []);
 
   const firstName = session?.user?.name?.trim().split(" ")[0] || "Admin";
   const capitalized = firstName.charAt(0).toUpperCase() + firstName.slice(1);
@@ -89,46 +69,25 @@ export default function DashboardStats() {
   ];
 
   const adminBannerStats = [
-    { value: overview.totalUsers, label: "Total Users" },
-    { value: overview.activeLearners, label: "Active Learners" },
-    { value: overview.totalRoadmaps, label: "Roadmaps" },
-    { value: overview.totalAssessments + overview.totalProjects, label: "Assessments + Projects" },
+    { value: overview.totalUsers, label: "Total Users", suffix: "" },
+    { value: overview.activeLearners, label: "Active Learners", suffix: "" },
+    { value: overview.totalRoadmaps, label: "Roadmaps", suffix: "" },
+    { value: overview.totalAssessments + overview.totalProjects, label: "Assessments + Projects", suffix: "" },
   ];
 
   return (
     <div className="flex flex-col gap-6 pb-4 animate-in fade-in duration-500">
       {/* ============================= WELCOME BANNER ============================= */}
-      <section className="relative w-full overflow-hidden rounded-md border border-border min-h-[200px] sm:min-h-[220px] lg:min-h-[250px]">
-        <Image src={dark ? dashboardBannerDark : dashboardBanner} alt="" fill priority className="object-cover object-center" sizes="100vw" />
-        <div className="relative z-10 flex min-h-[200px] flex-col justify-between px-4 py-5 sm:min-h-[220px] sm:px-6 sm:py-6 lg:min-h-[250px] lg:px-8 lg:py-7">
-          <div>
-            <h2 className="text-2xl font-extrabold leading-tight tracking-tight text-foreground sm:text-3xl">
-              Welcome back, <span className="text-secondary">{capitalized}</span>
-            </h2>
-            <p className="mt-1 text-sm font-medium leading-relaxed text-foreground/90 sm:text-base">
-              Here&apos;s your platform overview and system health at a glance.
-            </p>
-          </div>
-
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
-            {adminBannerStats.map((stat) => (
-              <div
-                key={stat.label}
-                className="group relative overflow-hidden rounded-2xl border border-white/70 bg-white/70 px-4 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.05)] transition-all duration-300 hover:border-primary/25 hover:shadow-[0_12px_35px_rgba(159,84,247,0.10)] dark:border-white/10 dark:bg-[#111111]/70 dark:shadow-none dark:hover:border-primary/30 dark:hover:shadow-[0_0_30px_rgba(185,120,255,0.08)] backdrop-blur-xs"
-              >
-                <div className="pointer-events-none absolute -right-8 -top-8 h-20 w-20 rounded-full bg-primary/10 blur-2xl transition-all duration-500 group-hover:bg-primary/20" aria-hidden="true" />
-                <div className="relative z-10">
-                  <div className="text-3xl font-extrabold leading-none tracking-tight text-primary sm:text-4xl">
-                    {stat.value}
-                  </div>
-                  <p className="mt-2 text-xs font-medium text-muted-foreground sm:text-sm">{stat.label}</p>
-                  <div className="mt-4 h-1 w-9 rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-300 group-hover:w-14" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <DashboardBanner
+        title={
+          <>
+            Welcome back,{" "}
+            <span className="text-secondary">{capitalized}</span>
+          </>
+        }
+        subtitle="Here&apos;s your platform overview and system health at a glance."
+        stats={adminBannerStats}
+      />
 
       {/* ============================= KPI GRID ============================= */}
       <section>
@@ -145,7 +104,7 @@ export default function DashboardStats() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-muted-foreground">{kpi.title}</p>
-                    <p className={`mt-1 ${dark ? "text-2xl" : "text-2xl"} font-bold tracking-tight text-foreground`}>
+                    <p className="mt-1 text-2xl font-bold tracking-tight text-foreground">
                       {kpi.value}
                     </p>
                   </div>
