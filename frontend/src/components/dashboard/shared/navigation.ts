@@ -1,5 +1,6 @@
 import {
   BarChart,
+  BrainCircuit,
   ClipboardCheck,
   FolderKanban,
   GitMerge,
@@ -123,6 +124,7 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
     {
       title: "CAREER",
       items: [
+        { href: `${learnerPrefix}/career-intelligence`, label: "Career Intelligence", icon: BrainCircuit },
         { href: `${learnerPrefix}/career-alignment`, label: "Career Alignment", icon: Map },
         { href: `${learnerPrefix}/job-reality`, label: "Job Reality", icon: Target },
         { href: `${learnerPrefix}/application-readiness`, label: "Application Readiness", icon: ClipboardCheck },
