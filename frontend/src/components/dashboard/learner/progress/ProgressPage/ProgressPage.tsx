@@ -1,5 +1,5 @@
 "use client";
-import { PageHeader } from "@/src/components/dashboard/shared/patterns";
+import { PageHeader, DashboardButton } from "@/src/components/dashboard/shared/patterns";
 
 import { redirect } from "next/navigation";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
@@ -26,7 +26,7 @@ import {
 export default function ProgressPage() {
   const { data: session, isPending: isSessionLoading } = useDashboardSession();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["progress", session?.user?.id],
     queryFn: () => getProgress(),
     enabled: !!session?.user?.id,
@@ -48,7 +48,8 @@ export default function ProgressPage() {
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-4 text-center">
         <h3 className="text-xl font-bold text-destructive">Error</h3>
-        <p className="text-muted-foreground">Failed to load. Please refresh.</p>
+        <p className="text-muted-foreground">Failed to load progress. Please refresh.</p>
+        <DashboardButton text="Retry" radius="md" onClick={() => refetch()} />
       </div>
     );
   }
