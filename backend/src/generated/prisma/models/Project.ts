@@ -43,6 +43,7 @@ export type ProjectMinAggregateOutputType = {
   description: string | null
   repositoryUrl: string | null
   liveUrl: string | null
+  projectType: string | null
   explanationQuality: number | null
   isVerified: boolean | null
   score: number | null
@@ -57,6 +58,7 @@ export type ProjectMaxAggregateOutputType = {
   description: string | null
   repositoryUrl: string | null
   liveUrl: string | null
+  projectType: string | null
   explanationQuality: number | null
   isVerified: boolean | null
   score: number | null
@@ -71,6 +73,10 @@ export type ProjectCountAggregateOutputType = {
   description: number
   repositoryUrl: number
   liveUrl: number
+  projectType: number
+  specification: number
+  aiSummary: number
+  plannedVsActual: number
   techStack: number
   explanationQuality: number
   isVerified: number
@@ -99,6 +105,7 @@ export type ProjectMinAggregateInputType = {
   description?: true
   repositoryUrl?: true
   liveUrl?: true
+  projectType?: true
   explanationQuality?: true
   isVerified?: true
   score?: true
@@ -113,6 +120,7 @@ export type ProjectMaxAggregateInputType = {
   description?: true
   repositoryUrl?: true
   liveUrl?: true
+  projectType?: true
   explanationQuality?: true
   isVerified?: true
   score?: true
@@ -127,6 +135,10 @@ export type ProjectCountAggregateInputType = {
   description?: true
   repositoryUrl?: true
   liveUrl?: true
+  projectType?: true
+  specification?: true
+  aiSummary?: true
+  plannedVsActual?: true
   techStack?: true
   explanationQuality?: true
   isVerified?: true
@@ -230,6 +242,10 @@ export type ProjectGroupByOutputType = {
   description: string | null
   repositoryUrl: string | null
   liveUrl: string | null
+  projectType: string
+  specification: runtime.JsonValue | null
+  aiSummary: runtime.JsonValue | null
+  plannedVsActual: runtime.JsonValue | null
   techStack: string[]
   explanationQuality: number | null
   isVerified: boolean
@@ -269,6 +285,10 @@ export type ProjectWhereInput = {
   description?: Prisma.StringNullableFilter<"Project"> | string | null
   repositoryUrl?: Prisma.StringNullableFilter<"Project"> | string | null
   liveUrl?: Prisma.StringNullableFilter<"Project"> | string | null
+  projectType?: Prisma.StringFilter<"Project"> | string
+  specification?: Prisma.JsonNullableFilter<"Project">
+  aiSummary?: Prisma.JsonNullableFilter<"Project">
+  plannedVsActual?: Prisma.JsonNullableFilter<"Project">
   techStack?: Prisma.StringNullableListFilter<"Project">
   explanationQuality?: Prisma.FloatNullableFilter<"Project"> | number | null
   isVerified?: Prisma.BoolFilter<"Project"> | boolean
@@ -287,6 +307,10 @@ export type ProjectOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   repositoryUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   liveUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectType?: Prisma.SortOrder
+  specification?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiSummary?: Prisma.SortOrderInput | Prisma.SortOrder
+  plannedVsActual?: Prisma.SortOrderInput | Prisma.SortOrder
   techStack?: Prisma.SortOrder
   explanationQuality?: Prisma.SortOrderInput | Prisma.SortOrder
   isVerified?: Prisma.SortOrder
@@ -308,6 +332,10 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Project"> | string | null
   repositoryUrl?: Prisma.StringNullableFilter<"Project"> | string | null
   liveUrl?: Prisma.StringNullableFilter<"Project"> | string | null
+  projectType?: Prisma.StringFilter<"Project"> | string
+  specification?: Prisma.JsonNullableFilter<"Project">
+  aiSummary?: Prisma.JsonNullableFilter<"Project">
+  plannedVsActual?: Prisma.JsonNullableFilter<"Project">
   techStack?: Prisma.StringNullableListFilter<"Project">
   explanationQuality?: Prisma.FloatNullableFilter<"Project"> | number | null
   isVerified?: Prisma.BoolFilter<"Project"> | boolean
@@ -326,6 +354,10 @@ export type ProjectOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   repositoryUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   liveUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectType?: Prisma.SortOrder
+  specification?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiSummary?: Prisma.SortOrderInput | Prisma.SortOrder
+  plannedVsActual?: Prisma.SortOrderInput | Prisma.SortOrder
   techStack?: Prisma.SortOrder
   explanationQuality?: Prisma.SortOrderInput | Prisma.SortOrder
   isVerified?: Prisma.SortOrder
@@ -350,6 +382,10 @@ export type ProjectScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
   repositoryUrl?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
   liveUrl?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  projectType?: Prisma.StringWithAggregatesFilter<"Project"> | string
+  specification?: Prisma.JsonNullableWithAggregatesFilter<"Project">
+  aiSummary?: Prisma.JsonNullableWithAggregatesFilter<"Project">
+  plannedVsActual?: Prisma.JsonNullableWithAggregatesFilter<"Project">
   techStack?: Prisma.StringNullableListFilter<"Project">
   explanationQuality?: Prisma.FloatNullableWithAggregatesFilter<"Project"> | number | null
   isVerified?: Prisma.BoolWithAggregatesFilter<"Project"> | boolean
@@ -365,6 +401,10 @@ export type ProjectCreateInput = {
   description?: string | null
   repositoryUrl?: string | null
   liveUrl?: string | null
+  projectType?: string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectCreatetechStackInput | string[]
   explanationQuality?: number | null
   isVerified?: boolean
@@ -383,6 +423,10 @@ export type ProjectUncheckedCreateInput = {
   description?: string | null
   repositoryUrl?: string | null
   liveUrl?: string | null
+  projectType?: string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectCreatetechStackInput | string[]
   explanationQuality?: number | null
   isVerified?: boolean
@@ -399,6 +443,10 @@ export type ProjectUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectType?: Prisma.StringFieldUpdateOperationsInput | string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectUpdatetechStackInput | string[]
   explanationQuality?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -417,6 +465,10 @@ export type ProjectUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectType?: Prisma.StringFieldUpdateOperationsInput | string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectUpdatetechStackInput | string[]
   explanationQuality?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -434,6 +486,10 @@ export type ProjectCreateManyInput = {
   description?: string | null
   repositoryUrl?: string | null
   liveUrl?: string | null
+  projectType?: string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectCreatetechStackInput | string[]
   explanationQuality?: number | null
   isVerified?: boolean
@@ -449,6 +505,10 @@ export type ProjectUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectType?: Prisma.StringFieldUpdateOperationsInput | string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectUpdatetechStackInput | string[]
   explanationQuality?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -465,6 +525,10 @@ export type ProjectUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectType?: Prisma.StringFieldUpdateOperationsInput | string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectUpdatetechStackInput | string[]
   explanationQuality?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -491,6 +555,10 @@ export type ProjectCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   repositoryUrl?: Prisma.SortOrder
   liveUrl?: Prisma.SortOrder
+  projectType?: Prisma.SortOrder
+  specification?: Prisma.SortOrder
+  aiSummary?: Prisma.SortOrder
+  plannedVsActual?: Prisma.SortOrder
   techStack?: Prisma.SortOrder
   explanationQuality?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
@@ -512,6 +580,7 @@ export type ProjectMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   repositoryUrl?: Prisma.SortOrder
   liveUrl?: Prisma.SortOrder
+  projectType?: Prisma.SortOrder
   explanationQuality?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   score?: Prisma.SortOrder
@@ -526,6 +595,7 @@ export type ProjectMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   repositoryUrl?: Prisma.SortOrder
   liveUrl?: Prisma.SortOrder
+  projectType?: Prisma.SortOrder
   explanationQuality?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   score?: Prisma.SortOrder
@@ -614,6 +684,10 @@ export type ProjectCreateWithoutUserInput = {
   description?: string | null
   repositoryUrl?: string | null
   liveUrl?: string | null
+  projectType?: string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectCreatetechStackInput | string[]
   explanationQuality?: number | null
   isVerified?: boolean
@@ -630,6 +704,10 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   description?: string | null
   repositoryUrl?: string | null
   liveUrl?: string | null
+  projectType?: string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectCreatetechStackInput | string[]
   explanationQuality?: number | null
   isVerified?: boolean
@@ -676,6 +754,10 @@ export type ProjectScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"Project"> | string | null
   repositoryUrl?: Prisma.StringNullableFilter<"Project"> | string | null
   liveUrl?: Prisma.StringNullableFilter<"Project"> | string | null
+  projectType?: Prisma.StringFilter<"Project"> | string
+  specification?: Prisma.JsonNullableFilter<"Project">
+  aiSummary?: Prisma.JsonNullableFilter<"Project">
+  plannedVsActual?: Prisma.JsonNullableFilter<"Project">
   techStack?: Prisma.StringNullableListFilter<"Project">
   explanationQuality?: Prisma.FloatNullableFilter<"Project"> | number | null
   isVerified?: Prisma.BoolFilter<"Project"> | boolean
@@ -691,6 +773,10 @@ export type ProjectCreateWithoutEvidenceInput = {
   description?: string | null
   repositoryUrl?: string | null
   liveUrl?: string | null
+  projectType?: string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectCreatetechStackInput | string[]
   explanationQuality?: number | null
   isVerified?: boolean
@@ -708,6 +794,10 @@ export type ProjectUncheckedCreateWithoutEvidenceInput = {
   description?: string | null
   repositoryUrl?: string | null
   liveUrl?: string | null
+  projectType?: string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectCreatetechStackInput | string[]
   explanationQuality?: number | null
   isVerified?: boolean
@@ -739,6 +829,10 @@ export type ProjectUpdateWithoutEvidenceInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectType?: Prisma.StringFieldUpdateOperationsInput | string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectUpdatetechStackInput | string[]
   explanationQuality?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -756,6 +850,10 @@ export type ProjectUncheckedUpdateWithoutEvidenceInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectType?: Prisma.StringFieldUpdateOperationsInput | string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectUpdatetechStackInput | string[]
   explanationQuality?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -771,6 +869,10 @@ export type ProjectCreateManyUserInput = {
   description?: string | null
   repositoryUrl?: string | null
   liveUrl?: string | null
+  projectType?: string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectCreatetechStackInput | string[]
   explanationQuality?: number | null
   isVerified?: boolean
@@ -786,6 +888,10 @@ export type ProjectUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectType?: Prisma.StringFieldUpdateOperationsInput | string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectUpdatetechStackInput | string[]
   explanationQuality?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -802,6 +908,10 @@ export type ProjectUncheckedUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectType?: Prisma.StringFieldUpdateOperationsInput | string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectUpdatetechStackInput | string[]
   explanationQuality?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -818,6 +928,10 @@ export type ProjectUncheckedUpdateManyWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectType?: Prisma.StringFieldUpdateOperationsInput | string
+  specification?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  aiSummary?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  plannedVsActual?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   techStack?: Prisma.ProjectUpdatetechStackInput | string[]
   explanationQuality?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -865,6 +979,10 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   description?: boolean
   repositoryUrl?: boolean
   liveUrl?: boolean
+  projectType?: boolean
+  specification?: boolean
+  aiSummary?: boolean
+  plannedVsActual?: boolean
   techStack?: boolean
   explanationQuality?: boolean
   isVerified?: boolean
@@ -884,6 +1002,10 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   description?: boolean
   repositoryUrl?: boolean
   liveUrl?: boolean
+  projectType?: boolean
+  specification?: boolean
+  aiSummary?: boolean
+  plannedVsActual?: boolean
   techStack?: boolean
   explanationQuality?: boolean
   isVerified?: boolean
@@ -901,6 +1023,10 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   description?: boolean
   repositoryUrl?: boolean
   liveUrl?: boolean
+  projectType?: boolean
+  specification?: boolean
+  aiSummary?: boolean
+  plannedVsActual?: boolean
   techStack?: boolean
   explanationQuality?: boolean
   isVerified?: boolean
@@ -918,6 +1044,10 @@ export type ProjectSelectScalar = {
   description?: boolean
   repositoryUrl?: boolean
   liveUrl?: boolean
+  projectType?: boolean
+  specification?: boolean
+  aiSummary?: boolean
+  plannedVsActual?: boolean
   techStack?: boolean
   explanationQuality?: boolean
   isVerified?: boolean
@@ -927,7 +1057,7 @@ export type ProjectSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "repositoryUrl" | "liveUrl" | "techStack" | "explanationQuality" | "isVerified" | "aiReview" | "score" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "repositoryUrl" | "liveUrl" | "projectType" | "specification" | "aiSummary" | "plannedVsActual" | "techStack" | "explanationQuality" | "isVerified" | "aiReview" | "score" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.userDefaultArgs<ExtArgs>
   evidence?: boolean | Prisma.Project$evidenceArgs<ExtArgs>
@@ -953,6 +1083,10 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     description: string | null
     repositoryUrl: string | null
     liveUrl: string | null
+    projectType: string
+    specification: runtime.JsonValue | null
+    aiSummary: runtime.JsonValue | null
+    plannedVsActual: runtime.JsonValue | null
     techStack: string[]
     explanationQuality: number | null
     isVerified: boolean
@@ -1391,6 +1525,10 @@ export interface ProjectFieldRefs {
   readonly description: Prisma.FieldRef<"Project", 'String'>
   readonly repositoryUrl: Prisma.FieldRef<"Project", 'String'>
   readonly liveUrl: Prisma.FieldRef<"Project", 'String'>
+  readonly projectType: Prisma.FieldRef<"Project", 'String'>
+  readonly specification: Prisma.FieldRef<"Project", 'Json'>
+  readonly aiSummary: Prisma.FieldRef<"Project", 'Json'>
+  readonly plannedVsActual: Prisma.FieldRef<"Project", 'Json'>
   readonly techStack: Prisma.FieldRef<"Project", 'String[]'>
   readonly explanationQuality: Prisma.FieldRef<"Project", 'Float'>
   readonly isVerified: Prisma.FieldRef<"Project", 'Boolean'>
