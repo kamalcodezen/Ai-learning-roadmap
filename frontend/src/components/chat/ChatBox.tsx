@@ -7,6 +7,7 @@ import brandLogo from "../../../public/brand/logo-p-purple.png"
 
 import {
   sendChatMessage,
+  getChatHistory,
   type ChatMessage,
 } from "@/src/lib/api/chat-ai-mentor/chat";
 import { authClient } from "@/src/lib/auth-client";
@@ -40,6 +41,19 @@ export default function ChatBox() {
     }, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  // Fetch persistent conversation history when session is available
+  useEffect(() => {
+    if (session?.user?.id) {
+      getChatHistory()
+        .then((history) => {
+          if (history && history.length > 0) {
+            setMessages(history);
+          }
+        })
+        .catch((err) => console.error("Could not load chat history:", err));
+    }
+  }, [session?.user?.id]);
 
   const rawName = session?.user?.name?.trim();
   const userName = rawName ? rawName.split(/\s+/)[0] : undefined;
