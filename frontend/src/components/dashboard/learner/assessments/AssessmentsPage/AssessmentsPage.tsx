@@ -21,7 +21,7 @@ import Link from "next/link";
 export default function AssessmentsPage() {
   const { data: session, isPending: isSessionLoading } = useDashboardSession();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["assessments", session?.user?.id],
     queryFn: () => getAssessments(),
     enabled: !!session?.user?.id,
@@ -43,7 +43,8 @@ export default function AssessmentsPage() {
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-4 text-center">
         <h3 className="text-xl font-bold text-destructive">Error</h3>
-        <p className="text-muted-foreground">Failed to load. Please refresh.</p>
+        <p className="text-muted-foreground">Failed to load assessments. Please refresh.</p>
+        <DashboardButton text="Retry" radius="md" onClick={() => refetch()} />
       </div>
     );
   }
@@ -110,73 +111,90 @@ export default function AssessmentsPage() {
       <div className="flex flex-col gap-6">
         <h2 className="text-xl font-semibold">Your Evaluations</h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {data.assessments.map((assessment) => (
-            <DashboardCard
-              key={assessment.id}
-              className="flex flex-col h-full transition-all hover:border-primary/30"
-            >
-              <CardContent className="flex flex-col h-full">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      {getStatusBadge(assessment.status)}
-                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        {assessment.type.replace("_", " ")}
-                      </span>
+        {data.assessments.length === 0 ? (
+          <div className="bg-card rounded-2xl p-10 text-center border-2 border-dashed border-border flex flex-col items-center justify-center space-y-4">
+            <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <Target className="w-7 h-7" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground">No Assessments Scheduled</h3>
+            <p className="text-sm text-muted-foreground max-w-md">
+              Complete diagnostic milestones or target specific skills from your roadmap to trigger real-time competency evaluations.
+            </p>
+            <DashboardButton
+              href="/dashboard/learner/learning-path"
+              text="View Learning Roadmap"
+              radius="lg"
+            />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {data.assessments.map((assessment) => (
+              <DashboardCard
+                key={assessment.id}
+                className="flex flex-col h-full transition-all hover:border-primary/30"
+              >
+                <CardContent className="flex flex-col h-full">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        {getStatusBadge(assessment.status)}
+                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          {assessment.type.replace("_", " ")}
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-bold">{assessment.title}</h3>
+                      {assessment.skillAssociated && (
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                          <Target className="w-4 h-4" />{" "}
+                          {assessment.skillAssociated}
+                        </div>
+                      )}
                     </div>
-                    <h3 className="text-lg font-bold">{assessment.title}</h3>
-                    {assessment.skillAssociated && (
-                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                        <Target className="w-4 h-4" />{" "}
-                        {assessment.skillAssociated}
+                    {assessment.score !== undefined && (
+                      <div
+                        className={`text-2xl font-bold ${assessment.score > 70 ? "text-green-500" : "text-amber-500"}`}
+                      >
+                        {assessment.score}%
                       </div>
                     )}
                   </div>
-                  {assessment.score !== undefined && (
-                    <div
-                      className={`text-2xl font-bold ${assessment.score > 70 ? "text-green-500" : "text-amber-500"}`}
-                    >
-                      {assessment.score}%
+
+                  <p className="text-sm text-muted-foreground mb-6 flex-1">
+                    {assessment.description}
+                  </p>
+
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Clock className="w-4 h-4" />{" "}
+                      {assessment.duration || "4 Stages • ~10m"}
                     </div>
-                  )}
-                </div>
 
-                <p className="text-sm text-muted-foreground mb-6 flex-1">
-                  {assessment.description}
-                </p>
-
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="w-4 h-4" />{" "}
-                    {assessment.duration || "4 Stages • ~10m"}
+                    {assessment.status === "completed" ? (
+                      <Link
+                        href={assessment.href}
+                        className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
+                      >
+                        Review Results <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    ) : (
+                      <DashboardButton
+                        href={assessment.href}
+                        text={
+                          <>
+                            {assessment.status === "in_progress"
+                              ? "Continue"
+                              : "Start Now"}{" "}
+                            <PlayCircle className="w-4 h-4" />
+                          </>
+                        }
+                      />
+                    )}
                   </div>
-
-                  {assessment.status === "completed" ? (
-                    <Link
-                      href={assessment.href}
-                      className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
-                    >
-                      Review Results <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  ) : (
-                    <DashboardButton
-                      href={assessment.href}
-                      text={
-                        <>
-                          {assessment.status === "in_progress"
-                            ? "Continue"
-                            : "Start Now"}{" "}
-                          <PlayCircle className="w-4 h-4" />
-                        </>
-                      }
-                    />
-                  )}
-                </div>
-              </CardContent>
-            </DashboardCard>
-          ))}
-        </div>
+                </CardContent>
+              </DashboardCard>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
