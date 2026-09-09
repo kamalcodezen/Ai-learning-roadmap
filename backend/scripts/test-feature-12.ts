@@ -258,7 +258,7 @@ async function runFeature12Tests() {
     const appReadiness = await getApplicationReadiness(userA.id);
     assert.ok(appReadiness.overallScore >= 75, "Overall readiness score must meet or exceed 75%");
     assert.strictEqual(appReadiness.isReady, true, "Learner must be marked application ready (isReady: true)");
-    assert.strictEqual(appReadiness.categories.length, 3, "Must have 3 assessment categories");
+    assert.strictEqual(appReadiness.categories.length, 6, "Must have 6 assessment categories");
     assert.strictEqual(appReadiness.categories[0].status, "strong", "Technical category must be strong");
     console.log(`✓ Test 5 Passed: Application Readiness gate PASSED (Score: ${appReadiness.overallScore}%, isReady: ${appReadiness.isReady})`);
 
