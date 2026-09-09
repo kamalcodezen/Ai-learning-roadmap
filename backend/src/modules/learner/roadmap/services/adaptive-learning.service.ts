@@ -27,20 +27,44 @@ export interface AdaptiveLearningDecision {
   href: string;
 }
 
-export const getAdaptiveLearningDecision = async (userId: string): Promise<AdaptiveLearningDecision> => {
+export interface AdaptiveLearningPrefetchedData {
+  profile?: any;
+  skillStates?: any[];
+  roadmap?: any;
+  latestAttempt?: any;
+  projects?: any[];
+  interviewSessions?: any[];
+}
+
+export const getAdaptiveLearningDecision = async (
+  userId: string,
+  prefetchedData?: AdaptiveLearningPrefetchedData
+): Promise<AdaptiveLearningDecision> => {
   const [profile, skillStates, roadmap, latestAttempt, projects, interviewSessions] = await Promise.all([
-    prisma.careerProfile.findUnique({ where: { userId } }),
-    prisma.skillState.findMany({ where: { userId } }),
-    prisma.roadmap.findFirst({
-      where: { userId, status: "ACTIVE" },
-      include: { milestones: { orderBy: { order: "asc" } } }
-    }),
-    prisma.diagnosticAttempt.findFirst({
-      where: { userId, status: "COMPLETED" },
-      orderBy: { completedAt: "desc" }
-    }),
-    prisma.project.findMany({ where: { userId } }),
-    prisma.interviewSession.findMany({ where: { userId } })
+    prefetchedData?.profile !== undefined
+      ? prefetchedData.profile
+      : prisma.careerProfile.findUnique({ where: { userId } }),
+    prefetchedData?.skillStates !== undefined
+      ? prefetchedData.skillStates
+      : prisma.skillState.findMany({ where: { userId } }),
+    prefetchedData?.roadmap !== undefined
+      ? prefetchedData.roadmap
+      : prisma.roadmap.findFirst({
+          where: { userId, status: "ACTIVE" },
+          include: { milestones: { orderBy: { order: "asc" } } },
+        }),
+    prefetchedData?.latestAttempt !== undefined
+      ? prefetchedData.latestAttempt
+      : prisma.diagnosticAttempt.findFirst({
+          where: { userId, status: "COMPLETED" },
+          orderBy: { completedAt: "desc" },
+        }),
+    prefetchedData?.projects !== undefined
+      ? prefetchedData.projects
+      : prisma.project.findMany({ where: { userId } }),
+    prefetchedData?.interviewSessions !== undefined
+      ? prefetchedData.interviewSessions
+      : prisma.interviewSession.findMany({ where: { userId } }),
   ]);
 
   const targetRole = profile?.targetRoleName || profile?.targetRole || "Software Engineer";
@@ -134,12 +158,12 @@ export const getAdaptiveLearningDecision = async (userId: string): Promise<Adapt
   }
 
   // 6. Acceleration check: If current milestone skills are already all strong (>= 80%) -> Accelerate
-  const currentMilestone = roadmap?.milestones.find(m => m.status === "CURRENT") || roadmap?.milestones[0];
+  const currentMilestone = roadmap?.milestones?.find((m: any) => m.status === "CURRENT") || roadmap?.milestones?.[0];
   if (currentMilestone && currentMilestone.unlocks && currentMilestone.unlocks.length > 0) {
-    const milestoneSkills = skillStates.filter(s => 
-      currentMilestone.unlocks.some(u => u.toLowerCase() === s.skillName.toLowerCase())
+    const milestoneSkills = skillStates.filter((s: any) => 
+      currentMilestone.unlocks.some((u: any) => typeof u === "string" && u.toLowerCase() === s.skillName.toLowerCase())
     );
-    const isAccelerated = milestoneSkills.length > 0 && milestoneSkills.every(s => s.knowledgeScore >= 80);
+    const isAccelerated = milestoneSkills.length > 0 && milestoneSkills.every((s: any) => s.knowledgeScore >= 80);
 
     if (isAccelerated) {
       return {
