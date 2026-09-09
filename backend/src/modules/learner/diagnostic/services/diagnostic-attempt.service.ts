@@ -1,5 +1,6 @@
 import prisma from "../../../../lib/prisma.js";
 import { getOrGenerateLearningPath } from "../../roadmap/services/learning-path.service.js";
+import { isMatchingSkill } from "../../assessments/services/skill-simulation.service.js";
 
 import type { CreateDiagnosticAttemptInput } from "../schemas/diagnostic-attempt.schema.js";
 
@@ -86,21 +87,19 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
   });
 
   // Upsert SkillState and Record History if changed
+  const existingSkillStates = await prisma.skillState.findMany({
+    where: { userId: attempt.userId },
+  });
+
   for (const [skill, counts] of Object.entries(skillScores)) {
     if (counts.total === 0) continue;
     const knowledgeScore = Math.round((counts.correct / counts.total) * 100);
     
-    // Check previous state
-    const previousState = await prisma.skillState.findUnique({
-      where: {
-        userId_skillName: {
-          userId: attempt.userId,
-          skillName: skill,
-        }
-      }
-    });
+    // Check previous state (exact match or matching alias)
+    const previousMatchingStates = existingSkillStates.filter(s => isMatchingSkill(s.skillName, skill));
+    const previousState = previousMatchingStates.find(s => s.skillName === skill) || previousMatchingStates[0];
 
-    // Upsert the new state
+    // Upsert the state under the current diagnostic skill name
     const newState = await prisma.skillState.upsert({
       where: {
         userId_skillName: {
@@ -118,6 +117,19 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
         knowledgeScore,
       },
     });
+
+    // Also update any existing matching alias records to ensure consistency
+    for (const prev of previousMatchingStates) {
+      if (prev.skillName !== skill) {
+        await prisma.skillState.update({
+          where: { id: prev.id },
+          data: {
+            knowledgeScore,
+            lastReviewed: new Date(),
+          },
+        });
+      }
+    }
 
     // Only create history if it's a new skill or the score actually changed
     if (!previousState || previousState.knowledgeScore !== knowledgeScore) {
@@ -164,6 +176,20 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
     await evaluateAchievements(attempt.userId);
   } catch (err) {
     console.error("Failed to award gamification XP for diagnostic:", err);
+  }
+
+  // Create real Notification
+  try {
+    const { createNotification } = await import("../../notifications/services/notification.service.js");
+    await createNotification({
+      userId: attempt.userId,
+      type: "ASSESSMENT",
+      title: "Diagnostic Assessment Completed",
+      message: `You completed your baseline diagnostic assessment with a score of ${score}%.`,
+      metadata: { attemptId, score },
+    });
+  } catch (err) {
+    console.error("Failed to create diagnostic assessment notification:", err);
   }
 
   // Fetch and return the rich diagnostic result
