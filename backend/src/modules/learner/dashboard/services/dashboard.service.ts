@@ -3,6 +3,7 @@ import { getCareerReadiness } from "../../readiness/services/readiness.service.j
 import { getAdaptiveLearningDecision } from "../../roadmap/services/adaptive-learning.service.js";
 import { getOrGenerateLearningPath } from "../../roadmap/services/learning-path.service.js";
 import { getSkillEvidenceVerification } from "../../career-intelligence/services/skill-evidence-verifier.service.js";
+import { isMatchingSkill } from "../../assessments/services/skill-simulation.service.js";
 
 export const getDashboardOverview = async (userId: string) => {
   const oneWeekAgo = new Date();
@@ -16,14 +17,19 @@ export const getDashboardOverview = async (userId: string) => {
     activityLogs,
     diagnosticResult,
     roadmap,
+    interviewSessions,
+    historyStates,
     evidenceVerification,
   ] = await Promise.all([
     prisma.careerProfile.findUnique({ where: { userId } }),
     prisma.skillState.findMany({ 
       where: { userId },
-      select: { skillName: true, knowledgeScore: true, practiceScore: true, projectScore: true, evidenceScore: true }
+      select: { skillName: true, knowledgeScore: true, practiceScore: true, projectScore: true, evidenceScore: true, lastReviewed: true }
     }),
-    prisma.project.findMany({ where: { userId }, select: { score: true } }),
+    prisma.project.findMany({ 
+      where: { userId }, 
+      select: { id: true, score: true, isVerified: true, techStack: true, createdAt: true } 
+    }),
     prisma.activityLog.groupBy({
       by: ['type'],
       where: { userId, createdAt: { gte: oneWeekAgo } },
@@ -35,6 +41,7 @@ export const getDashboardOverview = async (userId: string) => {
       select: { 
         score: true,
         targetRole: true,
+        completedAt: true,
         answers: {
           where: { question: { order: { in: [4, 6] } } },
           include: { question: true }
@@ -44,8 +51,17 @@ export const getDashboardOverview = async (userId: string) => {
     prisma.roadmap.findFirst({
       where: { userId, status: "ACTIVE" },
       include: { 
-        milestones: { orderBy: { order: "asc" }, select: { title: true, description: true, status: true } }
+        milestones: { orderBy: { order: "asc" }, select: { id: true, title: true, description: true, status: true, unlocks: true } }
       }
+    }),
+    prisma.interviewSession.findMany({
+      where: { userId },
+      select: { status: true }
+    }),
+    prisma.skillStateHistory.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: 100,
     }),
     getSkillEvidenceVerification(userId).catch(() => ({
       overallSkillScore: 0,
@@ -74,8 +90,8 @@ export const getDashboardOverview = async (userId: string) => {
     );
   };
 
-  const validDiagnosticResult = isRoleMatch(diagnosticResult?.targetRole) ? diagnosticResult : diagnosticResult;
-  const validRoadmap = isRoleMatch(roadmap?.targetRole) ? roadmap : roadmap;
+  const validDiagnosticResult = isRoleMatch(diagnosticResult?.targetRole) ? diagnosticResult : null;
+  const validRoadmap = isRoleMatch(roadmap?.targetRole) ? roadmap : null;
 
   if (!validRoadmap && profile) {
     // Fire off async canonical roadmap generation without blocking the dashboard load
@@ -91,8 +107,16 @@ export const getDashboardOverview = async (userId: string) => {
   
   const currentMilestone = validRoadmap?.milestones.find((m) => m.status === "CURRENT") || validRoadmap?.milestones[0];
 
-  // Next action logic from Adaptive Learning Engine
-  const adaptiveDecision = await getAdaptiveLearningDecision(userId);
+  // Next action logic from Adaptive Learning Engine — reusing prefetched data
+  const adaptiveDecision = await getAdaptiveLearningDecision(userId, {
+    profile,
+    skillStates,
+    roadmap: validRoadmap,
+    latestAttempt: validDiagnosticResult,
+    projects,
+    interviewSessions,
+  });
+
   const nextAction = {
     title: adaptiveDecision.title,
     description: adaptiveDecision.recommendation,
@@ -122,8 +146,13 @@ export const getDashboardOverview = async (userId: string) => {
     const completedMilestones = validRoadmap.milestones.filter((m) => m.status === "COMPLETED").length;
     const progressPercent = validRoadmap.milestones.length ? Math.round((completedMilestones / validRoadmap.milestones.length) * 100) : 0;
     
+    const blockingPrerequisite = adaptiveDecision.type === "REMEDIATE_GAP" && adaptiveDecision.targetSkill
+      ? adaptiveDecision.targetSkill
+      : null;
+
     roadmapDetails = {
       currentMilestone: currentMilestone?.title || "Not started",
+      blockingPrerequisite,
       progress: progressPercent,
       milestones: validRoadmap.milestones.map((m) => ({
         name: m.title,
@@ -132,46 +161,157 @@ export const getDashboardOverview = async (userId: string) => {
     };
   }
 
-  // 4. Learning Debt
-  const learningDebt = skillStates.reduce((acc: { skill: string; reason: string; severity: string; source: string }[], s) => {
+  // Canonical resolution of SkillStates:
+  // If multiple records represent the same conceptual skill (e.g. "Node.js / Architecture" vs "Architecture"),
+  // sort by most recent lastReviewed and use the authoritative latest evaluation as canonical state.
+  const reconciledSkillStates = (() => {
+    const map = new Map<string, typeof skillStates[0]>();
+    const sorted = [...skillStates].sort((a, b) => {
+      const timeA = a.lastReviewed ? new Date(a.lastReviewed).getTime() : 0;
+      const timeB = b.lastReviewed ? new Date(b.lastReviewed).getTime() : 0;
+      return timeB - timeA;
+    });
+
+    for (const state of sorted) {
+      const existingKey = Array.from(map.keys()).find(k => isMatchingSkill(k, state.skillName));
+      if (!existingKey) {
+        map.set(state.skillName, state);
+      }
+    }
+    return Array.from(map.values());
+  })();
+
+  // 4. Learning Debt (Dynamically derived from canonical SkillState gaps without arbitrary slice)
+  const targetPrereqSkill = adaptiveDecision.type === "REMEDIATE_GAP" ? adaptiveDecision.targetSkill?.toLowerCase() : null;
+
+  const learningDebt = reconciledSkillStates.reduce((acc: { skill: string; reason: string; severity: "HIGH" | "MEDIUM" | "LOW"; source: string; score: number }[], s) => {
     if (s.knowledgeScore < 40) {
-      acc.push({ skill: s.skillName, reason: "Critical knowledge gap", severity: "HIGH", source: "Diagnostic" });
-    } else if (s.practiceScore < 40 && s.knowledgeScore >= 50) {
-      acc.push({ skill: s.skillName, reason: "Lacking practical application", severity: "MEDIUM", source: "Practice" });
-    } else if (s.evidenceScore < 20 && s.practiceScore >= 50) {
-      acc.push({ skill: s.skillName, reason: "Missing project evidence", severity: "LOW", source: "Portfolio" });
+      acc.push({ skill: s.skillName, reason: "Critical knowledge gap", severity: "HIGH", source: "Diagnostic", score: s.knowledgeScore });
     } else if (s.knowledgeScore < 60) {
-      acc.push({ skill: s.skillName, reason: "Needs review", severity: "MEDIUM", source: "Diagnostic" });
+      acc.push({ skill: s.skillName, reason: "Needs review", severity: "MEDIUM", source: "Diagnostic", score: s.knowledgeScore });
+    } else if (s.practiceScore > 0 && s.practiceScore < 40 && s.knowledgeScore >= 60) {
+      acc.push({ skill: s.skillName, reason: "Lacking practical application", severity: "MEDIUM", source: "Practice", score: s.knowledgeScore });
+    } else if (s.evidenceScore > 0 && s.evidenceScore < 20 && s.practiceScore >= 50) {
+      acc.push({ skill: s.skillName, reason: "Missing project evidence", severity: "LOW", source: "Portfolio", score: s.knowledgeScore });
     }
     return acc;
-  }, []).sort((a, b) => (a.severity === "HIGH" ? -1 : b.severity === "HIGH" ? 1 : 0)).slice(0, 3);
+  }, []).sort((a, b) => {
+    // If one is the blocking prerequisite from Next Best Action, prioritize it at the top
+    const aIsPrereq = targetPrereqSkill && isMatchingSkill(a.skill, targetPrereqSkill);
+    const bIsPrereq = targetPrereqSkill && isMatchingSkill(b.skill, targetPrereqSkill);
+    if (aIsPrereq && !bIsPrereq) return -1;
+    if (bIsPrereq && !aIsPrereq) return 1;
 
-  // 5. Trending Skills (Optimized - No history lookup to save heavy query)
-  const trendingSkills = [...skillStates].sort((a, b) => b.knowledgeScore - a.knowledgeScore).map((s) => {
-    return {
-      name: s.skillName,
-      score: Math.round(s.knowledgeScore),
-      trend: "FLAT" as const
-    };
-  }).slice(0, 4);
+    // Severity order: HIGH first, then MEDIUM, then LOW
+    const severityWeight: Record<string, number> = { HIGH: 3, MEDIUM: 2, LOW: 1 };
+    const sevDiff = (severityWeight[b.severity] || 0) - (severityWeight[a.severity] || 0);
+    if (sevDiff !== 0) return sevDiff;
 
-  // 6. Weekly Progress
+    // Lowest score first
+    return a.score - b.score;
+  }).map(({ score: _score, ...rest }) => rest);
+
+  // 5. Trending Skills (Computed from reconciled SkillState & actual SkillStateHistory)
+  const trendingSkills = [...reconciledSkillStates]
+    .sort((a, b) => b.knowledgeScore - a.knowledgeScore)
+    .map((s) => {
+      const records = historyStates.filter(
+        (h) => isMatchingSkill(h.skillName, s.skillName)
+      );
+      // Prefer record from >= 7 days ago if available, otherwise previous record
+      const pastRecord =
+        records.find((h) => h.createdAt <= oneWeekAgo) ||
+        (records.length > 1 ? records[1] : null);
+
+      let trend: "UP" | "DOWN" | "FLAT" | "NEW" = "NEW";
+      if (pastRecord) {
+        const diff = Math.round(s.knowledgeScore - pastRecord.knowledgeScore);
+        if (diff > 2) trend = "UP";
+        else if (diff < -2) trend = "DOWN";
+        else trend = "FLAT";
+      } else if (records.length === 1) {
+        trend = "FLAT";
+      }
+
+      return {
+        name: s.skillName,
+        score: Math.round(s.knowledgeScore),
+        trend,
+      };
+    })
+    .slice(0, 4);
+
+  // 6. Career Readiness Delta (Computed using canonical getCareerReadiness with historical data)
+  let careerReadinessDelta: number | null = null;
+  if (historyStates.length > 0) {
+    const pastSkillMap = new Map<string, { skillName: string; knowledgeScore: number; practiceScore: number; evidenceScore: number }>();
+    for (const h of historyStates) {
+      if (h.createdAt <= oneWeekAgo && !pastSkillMap.has(h.skillName)) {
+        pastSkillMap.set(h.skillName, {
+          skillName: h.skillName,
+          knowledgeScore: h.knowledgeScore,
+          practiceScore: h.practiceScore,
+          evidenceScore: h.evidenceScore,
+        });
+      }
+    }
+
+    // Fallback: If no records are older than 7 days, check if user has multiple historical snapshots
+    if (pastSkillMap.size === 0 && historyStates.length > skillStates.length) {
+      const seenFirst = new Set<string>();
+      for (const h of historyStates) {
+        if (!seenFirst.has(h.skillName)) {
+          seenFirst.add(h.skillName);
+        } else if (!pastSkillMap.has(h.skillName)) {
+          pastSkillMap.set(h.skillName, {
+            skillName: h.skillName,
+            knowledgeScore: h.knowledgeScore,
+            practiceScore: h.practiceScore,
+            evidenceScore: h.evidenceScore,
+          });
+        }
+      }
+    }
+
+    if (pastSkillMap.size > 0) {
+      const pastSkillStates = Array.from(pastSkillMap.values());
+      const pastProjects = projects.filter((p) => p.createdAt <= oneWeekAgo);
+      const pastDiagnostic = validDiagnosticResult && validDiagnosticResult.completedAt && validDiagnosticResult.completedAt <= oneWeekAgo
+        ? validDiagnosticResult
+        : validDiagnosticResult;
+
+      try {
+        const previousReadiness = await getCareerReadiness(userId, {
+          profile,
+          skillStates: pastSkillStates,
+          projects: pastProjects,
+          latestDiagnostic: pastDiagnostic,
+        });
+
+        careerReadinessDelta = readinessResult.score - previousReadiness.score;
+      } catch (err) {
+        console.error("Failed to compute previous career readiness:", err);
+      }
+    }
+  }
+
+  // 7. Weekly Progress
   const weeklyProgress = {
     learning: activityLogs.find(a => a.type === "LEARNING")?._count._all || null,
     assessments: activityLogs.find(a => a.type === "ASSESSMENT")?._count._all || null,
     projects: activityLogs.find(a => a.type === "PROJECT")?._count._all || null,
     practice: activityLogs.find(a => a.type === "PRACTICE")?._count._all || null,
-    careerReadiness: null, // Would need historical overall score comparison
+    careerReadiness: careerReadinessDelta,
   };
 
-  // 7. Assessments (minimal summary)
+  // 8. Assessments (minimal summary)
   const pendingAssessments = (!validDiagnosticResult ? 1 : 0) + (currentMilestone ? 1 : 0);
   const assessmentsSummary = {
     pendingCount: pendingAssessments,
     completedCount: validDiagnosticResult ? 1 : 0,
   };
 
-  // 8. Proof (summary with verified scores)
+  // 9. Proof (summary with verified scores)
   const proofSummary = {
     trackedSkillsCount: skillStates.length,
     overallProofScore: evidenceVerification.overallProofScore,
@@ -179,7 +319,7 @@ export const getDashboardOverview = async (userId: string) => {
     employerConfidenceSignal: evidenceVerification.employerConfidenceSignal,
   };
 
-  // 9. Four Primary KPIs (Career Readiness, Skill Progress, Learning Progress, Proof Strength)
+  // 10. Four Primary KPIs (Career Readiness, Skill Progress, Learning Progress, Proof Strength)
   const kpis = {
     targetRole,
     careerReadiness: readiness.score,
@@ -188,18 +328,18 @@ export const getDashboardOverview = async (userId: string) => {
     proofStrength: evidenceVerification.overallProofScore,
   };
 
-  // 10. Career Alignment (minimal summary)
+  // 11. Career Alignment (minimal summary)
   const careerAlignment = {
     target: targetRole,
     isAvailable: skillStates.length > 0,
   };
 
-  // 11. Application Readiness (minimal summary)
+  // 12. Application Readiness (minimal summary)
   const applicationReadiness = {
     isAvailable: skillStates.length > 0 && projects.length > 0,
   };
 
-  // 12. Portfolio (minimal summary)
+  // 13. Portfolio (minimal summary)
   const portfolioStats = {
     projectCount: projects.length,
   };
@@ -213,6 +353,7 @@ export const getDashboardOverview = async (userId: string) => {
     career: {
       targetRole,
       experienceLevel,
+      weeklyAvailableHours: profile?.weeklyAvailableHours ?? 10,
       status: careerStatus,
     },
     kpis,
@@ -229,7 +370,3 @@ export const getDashboardOverview = async (userId: string) => {
     portfolio: portfolioStats,
   };
 };
-
-
-
-
