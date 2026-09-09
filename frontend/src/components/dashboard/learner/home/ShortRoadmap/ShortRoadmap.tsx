@@ -182,6 +182,13 @@ export default function ShortRoadmap({ data }: Props) {
             </span>
           </div>
 
+          {data.blockingPrerequisite && (
+            <div className="mb-2.5 flex items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 text-xs text-amber-600 dark:text-amber-400">
+              <span className="font-semibold">Prerequisite Required:</span>
+              <span className="font-medium truncate">{data.blockingPrerequisite}</span>
+            </div>
+          )}
+
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
             <div
               className="
