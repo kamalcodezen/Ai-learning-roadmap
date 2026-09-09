@@ -6,6 +6,7 @@ import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGu
 import {
   getProofGraph,
   ProofGraphNode,
+  generateProofGraphShareLink,
 } from "@/src/lib/api/learner/proof-graph";
 import {
   getGamificationProfile,
@@ -35,6 +36,11 @@ import {
   Lock,
   GitMerge,
   Zap,
+  Share2,
+  Copy,
+  Check,
+  Loader2,
+  X,
 } from "lucide-react";
 
 export default function ProofGraphPage() {
@@ -42,6 +48,24 @@ export default function ProofGraphPage() {
   const [activeTab, setActiveTab] = useState<
     "proof-graph" | "skill-tree" | "achievements"
   >("proof-graph");
+
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [isSharing, setIsSharing] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleShareProofGraph = async () => {
+    try {
+      setIsSharing(true);
+      const res = await generateProofGraphShareLink();
+      const url = `${window.location.origin}/verify/proof/${res.shareToken}`;
+      setShareUrl(url);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to generate share link.";
+      alert(msg);
+    } finally {
+      setIsSharing(false);
+    }
+  };
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["proofGraph", session?.user?.id],
@@ -288,8 +312,19 @@ export default function ProofGraphPage() {
           </p>
         </div>
 
-        {/* View Tabs */}
-        <div className="flex items-center gap-2 bg-muted/60 p-1 rounded-lg border">
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={handleShareProofGraph}
+            disabled={isSharing}
+            className="flex items-center gap-2 px-3.5 py-1.5 text-sm font-semibold rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
+          >
+            {isSharing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Share2 className="w-4 h-4" />}
+            {isSharing ? "Generating..." : "Share Proof Graph"}
+          </button>
+
+          {/* View Tabs */}
+          <div className="flex items-center gap-2 bg-muted/60 p-1 rounded-lg border">
           <button
             onClick={() => setActiveTab("proof-graph")}
             className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
@@ -325,6 +360,7 @@ export default function ProofGraphPage() {
           </button>
         </div>
       </div>
+    </div>
 
       {/* Level & Proof Banner */}
       <DashboardCard className="bg-primary/5 border-primary/20">
@@ -591,6 +627,62 @@ export default function ProofGraphPage() {
               </div>
             </>
           )}
+        </div>
+      )}
+
+      {/* SHARE PROOF GRAPH MODAL */}
+      {shareUrl && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-2xl space-y-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-primary" />
+                <h3 className="text-lg font-bold">Public Verified Proof Link</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShareUrl(null)}
+                className="p-1 rounded-lg text-muted-foreground hover:bg-muted"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Share this cryptographic verification link with recruiters, hiring managers, and mentors. This read-only link displays your verified competencies and evidence without exposing private account information or personal details.
+            </p>
+
+            <div className="flex items-center gap-2 p-2 rounded-xl bg-muted/60 border border-border">
+              <input
+                type="text"
+                readOnly
+                value={shareUrl}
+                className="w-full bg-transparent text-xs text-foreground px-2 py-1 outline-none font-mono"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(shareUrl);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:opacity-90 transition-opacity shrink-0"
+              >
+                {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? "Copied!" : "Copy"}
+              </button>
+            </div>
+
+            <div className="flex justify-end pt-2">
+              <button
+                type="button"
+                onClick={() => setShareUrl(null)}
+                className="px-4 py-2 rounded-lg text-xs font-semibold bg-muted hover:bg-muted/80 text-foreground transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
