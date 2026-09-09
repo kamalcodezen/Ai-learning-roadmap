@@ -49,17 +49,7 @@ export type DiagnosticAnswerResponse = {
 // DIAGNOSTIC COMPLETE
 // ============================================================
 
-export type DiagnosticCompleteResult = {
-  id: string;
-  userId: string;
-  status: "COMPLETED";
-  totalQuestions: number;
-  answeredQuestions: number;
-  correctAnswers: number;
-  score: number;
-  startedAt: string;
-  completedAt: string;
-};
+export type DiagnosticCompleteResult = import("../../api/learner/diagnostic").DiagnosticResultData;
 
 export type DiagnosticCompleteResponse = {
   success: boolean;

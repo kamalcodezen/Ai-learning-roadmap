@@ -2,7 +2,7 @@ import AdminRoadmapsView from "@/src/components/dashboard/admin/AdminRoadmapsVie
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Roadmaps | Admin | AI Pather",
+  title: "Roadmaps",
 };
 
 export default function AdminRoadmapsPage() {

@@ -1,4 +1,4 @@
-import { serverMutation } from "../../core/server";
+import { serverFetch, serverMutation } from "../../core/server";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -43,4 +43,9 @@ export const sendChatMessage = async (
   };
 
   return serverMutation("/api/chat", optimizedPayload);
+};
+
+export const getChatHistory = async (): Promise<ChatMessage[]> => {
+  const res = await serverFetch("/api/chat/history");
+  return res.data || [];
 };

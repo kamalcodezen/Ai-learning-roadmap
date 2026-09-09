@@ -6,7 +6,10 @@ import SessionGuard from "@/src/components/dashboard/shared/sessionGuard/Session
 import DashboardScrollProvider from "@/src/components/dashboard/shared/DashboardScrollProvider";
 
 export const metadata: Metadata = {
-  title: "Dashboard | AI Pather",
+  title: {
+    default: "Dashboard",
+    template: "%s | Dashboard | AI Pather",
+  },
   robots: { index: false, follow: false },
 };
 

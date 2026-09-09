@@ -3,7 +3,7 @@
 export default function TextHeader() {
   return (
     <div className="w-full font-bold">
-      <h2 className="section-title">How to Start in <span className="text-brand">
+      <h2 className="section-title mt-5 sm:mt-0">How to Start in <span className="text-brand">
               4 Steps?
               </span>
               </h2>

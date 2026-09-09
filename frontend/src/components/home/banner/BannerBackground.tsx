@@ -26,7 +26,7 @@ export default function BannerBackground({
           style={{ backgroundImage: `url(${image})` }}
         />
 
-        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-[#f4edfff3] dark:from-brand/25 dark:to-[#281c3d]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-[#f4edff31] dark:from-brand/25 dark:to-[#281c3d]" />
       </motion.div>
     </AnimatePresence>
   );

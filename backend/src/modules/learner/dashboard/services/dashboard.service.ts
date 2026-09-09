@@ -1,84 +1,9 @@
 import prisma from "../../../../lib/prisma.js";
-import { ChatService } from "../../copilot/services/chat.service.js";
 import { getCareerReadiness } from "../../readiness/services/readiness.service.js";
-
-async function ensureRoadmapExists(userId: string, targetRole: string, experienceLevel: string, skillStates: { skillName: string; knowledgeScore: number }[]) {
-  let roadmap = await prisma.roadmap.findFirst({
-    where: { userId, status: "ACTIVE", targetRole },
-    include: { milestones: { orderBy: { order: "asc" } } }
-  });
-
-  if (roadmap) return roadmap;
-
-  // Archive any active roadmaps that don't match the current targetRole
-  await prisma.roadmap.updateMany({
-    where: { userId, status: "ACTIVE", targetRole: { not: targetRole } },
-    data: { status: "ARCHIVED" }
-  });
-
-  try {
-    const systemInstruction = `You are an expert career and learning path advisor. 
-You are generating a JSON learning roadmap for a user whose target role is "${targetRole}" and experience level is "${experienceLevel}".
-Current skill state knowledge:
-${skillStates.map((s) => `- ${s.skillName}: ${s.knowledgeScore}/100`).join("\n")}
-
-Respond ONLY with a valid JSON object matching this schema:
-{
-  "milestones": [
-    {
-      "title": "Milestone Name",
-      "description": "Short description",
-      "type": "LEARNING",
-      "estimatedTime": "2 weeks",
-      "why": "Why this matters",
-      "unlocks": ["Skill A", "Skill B"]
-    }
-  ]
-}
-Generate 4 to 6 milestones tailored to their gaps.`;
-
-    const result = await ChatService.processJsonCompletion(systemInstruction, "Generate my roadmap.");
-    const parsed = JSON.parse(result.reply);
-
-    if (parsed && Array.isArray(parsed.milestones) && parsed.milestones.length > 0) {
-      roadmap = await prisma.roadmap.create({
-        data: {
-          userId,
-          targetRole,
-          status: "ACTIVE",
-          milestones: {
-            create: parsed.milestones.map((m: Record<string, any>, idx: number) => ({
-              order: idx + 1,
-              title: m.title || "Untitled Milestone",
-              description: m.description || "",
-              status: idx === 0 ? "CURRENT" : "UPCOMING",
-              type: m.type || "LEARNING",
-              estimatedTime: m.estimatedTime || "1 week",
-              why: m.why || "",
-              unlocks: m.unlocks || [],
-            }))
-          }
-        },
-        include: { milestones: { orderBy: { order: "asc" } } }
-      });
-
-      // Record Activity Log
-      await prisma.activityLog.create({
-        data: {
-          userId,
-          type: "LEARNING",
-          description: `Generated new learning roadmap for ${targetRole}`,
-        },
-      });
-
-      return roadmap;
-    }
-  } catch (error) {
-    console.error("Failed to generate roadmap:", error);
-  }
-  return null;
-}
-
+import { getAdaptiveLearningDecision } from "../../roadmap/services/adaptive-learning.service.js";
+import { getOrGenerateLearningPath } from "../../roadmap/services/learning-path.service.js";
+import { getSkillEvidenceVerification } from "../../career-intelligence/services/skill-evidence-verifier.service.js";
+import { isMatchingSkill } from "../../assessments/services/skill-simulation.service.js";
 
 export const getDashboardOverview = async (userId: string) => {
   const oneWeekAgo = new Date();
@@ -91,14 +16,20 @@ export const getDashboardOverview = async (userId: string) => {
     projects,
     activityLogs,
     diagnosticResult,
-    roadmap
+    roadmap,
+    interviewSessions,
+    historyStates,
+    evidenceVerification,
   ] = await Promise.all([
     prisma.careerProfile.findUnique({ where: { userId } }),
     prisma.skillState.findMany({ 
       where: { userId },
-      select: { skillName: true, knowledgeScore: true, practiceScore: true, evidenceScore: true }
+      select: { skillName: true, knowledgeScore: true, practiceScore: true, projectScore: true, evidenceScore: true, lastReviewed: true }
     }),
-    prisma.project.findMany({ where: { userId }, select: { score: true } }),
+    prisma.project.findMany({ 
+      where: { userId }, 
+      select: { id: true, score: true, isVerified: true, techStack: true, createdAt: true } 
+    }),
     prisma.activityLog.groupBy({
       by: ['type'],
       where: { userId, createdAt: { gte: oneWeekAgo } },
@@ -110,6 +41,7 @@ export const getDashboardOverview = async (userId: string) => {
       select: { 
         score: true,
         targetRole: true,
+        completedAt: true,
         answers: {
           where: { question: { order: { in: [4, 6] } } },
           include: { question: true }
@@ -119,21 +51,51 @@ export const getDashboardOverview = async (userId: string) => {
     prisma.roadmap.findFirst({
       where: { userId, status: "ACTIVE" },
       include: { 
-        milestones: { orderBy: { order: "asc" }, select: { title: true, description: true, status: true } }
+        milestones: { orderBy: { order: "asc" }, select: { id: true, title: true, description: true, status: true, unlocks: true } }
       }
-    })
+    }),
+    prisma.interviewSession.findMany({
+      where: { userId },
+      select: { status: true }
+    }),
+    prisma.skillStateHistory.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    }),
+    getSkillEvidenceVerification(userId).catch(() => ({
+      overallSkillScore: 0,
+      overallProofScore: 0,
+      employerConfidenceSignal: 0,
+      employerConfidenceExplanation: "",
+      strongEvidenceSkillsCount: 0,
+      staleEvidenceSkillsCount: 0,
+      skills: [],
+    })),
   ]);
 
   const targetRole = profile?.targetRoleName || profile?.targetRole || "Unknown Role";
   const experienceLevel = profile?.experienceLevel || "BEGINNER";
   
-  // Ensure the fetched diagnostic and roadmap match the current target role
-  const validDiagnosticResult = (diagnosticResult as any)?.targetRole === targetRole ? diagnosticResult : null;
-  const validRoadmap = (roadmap as any)?.targetRole === targetRole ? roadmap : null;
+  // Flexible normalized role matcher (handles "fullstack" slug vs "Full Stack Developer" name)
+  const roleSlug = (profile?.targetRole || "").toLowerCase().trim();
+  const roleName = (profile?.targetRoleName || "").toLowerCase().trim();
+  const isRoleMatch = (r?: string | null) => {
+    if (!r) return true;
+    const norm = r.toLowerCase().trim();
+    return (
+      norm === roleSlug ||
+      norm === roleName ||
+      norm.replace(/[\s-_]/g, "") === roleSlug.replace(/[\s-_]/g, "")
+    );
+  };
 
-  if (!validRoadmap) {
-    // Fire off async generation without blocking the dashboard load
-    ensureRoadmapExists(userId, targetRole, experienceLevel, skillStates).catch(console.error);
+  const validDiagnosticResult = isRoleMatch(diagnosticResult?.targetRole) ? diagnosticResult : null;
+  const validRoadmap = isRoleMatch(roadmap?.targetRole) ? roadmap : null;
+
+  if (!validRoadmap && profile) {
+    // Fire off async canonical roadmap generation without blocking the dashboard load
+    getOrGenerateLearningPath(userId).catch(console.error);
   }
 
   const readinessResult = await getCareerReadiness(userId, {
@@ -143,66 +105,25 @@ export const getDashboardOverview = async (userId: string) => {
     latestDiagnostic: validDiagnosticResult
   });
   
-  const totalScore = readinessResult.score;
-
-  // Next action logic (Deterministic priority: Diagnostic -> Learning Debt -> Current Milestone)
-  let nextAction = null;
-
-  const criticalGaps = skillStates.filter((s) => s.knowledgeScore < 40);
-  const missingEvidenceSkills = skillStates.filter((s) => s.knowledgeScore >= 70 && s.evidenceScore < 20);
   const currentMilestone = validRoadmap?.milestones.find((m) => m.status === "CURRENT") || validRoadmap?.milestones[0];
 
-  if (!validDiagnosticResult) {
-    nextAction = {
-      title: "Take Initial Diagnostic",
-      description: "Complete your first diagnostic test to establish your baseline.",
-      reason: "Required to generate your personalized learning path.",
-      actionLabel: "Start Diagnostic",
-      href: "/diagnostic"
-    };
-  } else if (criticalGaps.length > 0) {
-    const gap = criticalGaps[0]!;
-    nextAction = {
-      title: `Fix Critical Gap: ${gap.skillName}`,
-      description: `Your knowledge score in ${gap.skillName} is critically low (${Math.round(gap.knowledgeScore)}%).`,
-      reason: "Fixing fundamental gaps prevents compounding learning debt.",
-      actionLabel: "Review Skill",
-      href: "/dashboard/learner/skill-gaps"
-    };
-  } else if (currentMilestone) {
-    nextAction = {
-      title: `Continue ${currentMilestone.title}`,
-      description: currentMilestone.description || "Continue your personalized learning path.",
-      reason: "This is your current active roadmap milestone.",
-      actionLabel: "Continue Path",
-      href: "/dashboard/learner/learning-path"
-    };
-  } else if (missingEvidenceSkills.length > 0) {
-    const skill = missingEvidenceSkills[0]!;
-    nextAction = {
-      title: `Build Project for ${skill.skillName}`,
-      description: `You have strong knowledge in ${skill.skillName} but no portfolio evidence.`,
-      reason: "Practical projects are required for career readiness.",
-      actionLabel: "Add Project",
-      href: "/dashboard/learner/portfolio"
-    };
-  } else if (totalScore < 50) {
-    nextAction = {
-      title: "Improve Career Readiness",
-      description: "Your overall readiness score is below target.",
-      reason: "Focus on closing skill and practice gaps.",
-      actionLabel: "View Details",
-      href: "/dashboard/learner/career-twin"
-    };
-  } else {
-    nextAction = {
-      title: "Start Next Module",
-      description: "You're on track! Continue to your next learning module.",
-      reason: "No critical gaps identified.",
-      actionLabel: "Continue",
-      href: "/dashboard/learner/learning-path"
-    };
-  }
+  // Next action logic from Adaptive Learning Engine — reusing prefetched data
+  const adaptiveDecision = await getAdaptiveLearningDecision(userId, {
+    profile,
+    skillStates,
+    roadmap: validRoadmap,
+    latestAttempt: validDiagnosticResult,
+    projects,
+    interviewSessions,
+  });
+
+  const nextAction = {
+    title: adaptiveDecision.title,
+    description: adaptiveDecision.recommendation,
+    reason: adaptiveDecision.reason,
+    actionLabel: adaptiveDecision.actionLabel,
+    href: adaptiveDecision.href
+  };
 
   // 1. Career Status
   const careerStatus = skillStates.some((s) => s.knowledgeScore < 40) ? "Needs Attention" : "You're on track";
@@ -225,8 +146,13 @@ export const getDashboardOverview = async (userId: string) => {
     const completedMilestones = validRoadmap.milestones.filter((m) => m.status === "COMPLETED").length;
     const progressPercent = validRoadmap.milestones.length ? Math.round((completedMilestones / validRoadmap.milestones.length) * 100) : 0;
     
+    const blockingPrerequisite = adaptiveDecision.type === "REMEDIATE_GAP" && adaptiveDecision.targetSkill
+      ? adaptiveDecision.targetSkill
+      : null;
+
     roadmapDetails = {
       currentMilestone: currentMilestone?.title || "Not started",
+      blockingPrerequisite,
       progress: progressPercent,
       milestones: validRoadmap.milestones.map((m) => ({
         name: m.title,
@@ -235,62 +161,185 @@ export const getDashboardOverview = async (userId: string) => {
     };
   }
 
-  // 4. Learning Debt
-  const learningDebt = skillStates.reduce((acc: { skill: string; reason: string; severity: string; source: string }[], s) => {
+  // Canonical resolution of SkillStates:
+  // If multiple records represent the same conceptual skill (e.g. "Node.js / Architecture" vs "Architecture"),
+  // sort by most recent lastReviewed and use the authoritative latest evaluation as canonical state.
+  const reconciledSkillStates = (() => {
+    const map = new Map<string, typeof skillStates[0]>();
+    const sorted = [...skillStates].sort((a, b) => {
+      const timeA = a.lastReviewed ? new Date(a.lastReviewed).getTime() : 0;
+      const timeB = b.lastReviewed ? new Date(b.lastReviewed).getTime() : 0;
+      return timeB - timeA;
+    });
+
+    for (const state of sorted) {
+      const existingKey = Array.from(map.keys()).find(k => isMatchingSkill(k, state.skillName));
+      if (!existingKey) {
+        map.set(state.skillName, state);
+      }
+    }
+    return Array.from(map.values());
+  })();
+
+  // 4. Learning Debt (Dynamically derived from canonical SkillState gaps without arbitrary slice)
+  const targetPrereqSkill = adaptiveDecision.type === "REMEDIATE_GAP" ? adaptiveDecision.targetSkill?.toLowerCase() : null;
+
+  const learningDebt = reconciledSkillStates.reduce((acc: { skill: string; reason: string; severity: "HIGH" | "MEDIUM" | "LOW"; source: string; score: number }[], s) => {
     if (s.knowledgeScore < 40) {
-      acc.push({ skill: s.skillName, reason: "Critical knowledge gap", severity: "HIGH", source: "Diagnostic" });
-    } else if (s.practiceScore < 40 && s.knowledgeScore >= 50) {
-      acc.push({ skill: s.skillName, reason: "Lacking practical application", severity: "MEDIUM", source: "Practice" });
-    } else if (s.evidenceScore < 20 && s.practiceScore >= 50) {
-      acc.push({ skill: s.skillName, reason: "Missing project evidence", severity: "LOW", source: "Portfolio" });
+      acc.push({ skill: s.skillName, reason: "Critical knowledge gap", severity: "HIGH", source: "Diagnostic", score: s.knowledgeScore });
     } else if (s.knowledgeScore < 60) {
-      acc.push({ skill: s.skillName, reason: "Needs review", severity: "MEDIUM", source: "Diagnostic" });
+      acc.push({ skill: s.skillName, reason: "Needs review", severity: "MEDIUM", source: "Diagnostic", score: s.knowledgeScore });
+    } else if (s.practiceScore > 0 && s.practiceScore < 40 && s.knowledgeScore >= 60) {
+      acc.push({ skill: s.skillName, reason: "Lacking practical application", severity: "MEDIUM", source: "Practice", score: s.knowledgeScore });
+    } else if (s.evidenceScore > 0 && s.evidenceScore < 20 && s.practiceScore >= 50) {
+      acc.push({ skill: s.skillName, reason: "Missing project evidence", severity: "LOW", source: "Portfolio", score: s.knowledgeScore });
     }
     return acc;
-  }, []).sort((a, b) => (a.severity === "HIGH" ? -1 : b.severity === "HIGH" ? 1 : 0)).slice(0, 3);
+  }, []).sort((a, b) => {
+    // If one is the blocking prerequisite from Next Best Action, prioritize it at the top
+    const aIsPrereq = targetPrereqSkill && isMatchingSkill(a.skill, targetPrereqSkill);
+    const bIsPrereq = targetPrereqSkill && isMatchingSkill(b.skill, targetPrereqSkill);
+    if (aIsPrereq && !bIsPrereq) return -1;
+    if (bIsPrereq && !aIsPrereq) return 1;
 
-  // 5. Trending Skills (Optimized - No history lookup to save heavy query)
-  const trendingSkills = [...skillStates].sort((a, b) => b.knowledgeScore - a.knowledgeScore).map((s) => {
-    return {
-      name: s.skillName,
-      score: Math.round(s.knowledgeScore),
-      trend: "FLAT" as const
-    };
-  }).slice(0, 4);
+    // Severity order: HIGH first, then MEDIUM, then LOW
+    const severityWeight: Record<string, number> = { HIGH: 3, MEDIUM: 2, LOW: 1 };
+    const sevDiff = (severityWeight[b.severity] || 0) - (severityWeight[a.severity] || 0);
+    if (sevDiff !== 0) return sevDiff;
 
-  // 6. Weekly Progress
+    // Lowest score first
+    return a.score - b.score;
+  }).map(({ score: _score, ...rest }) => rest);
+
+  // 5. Trending Skills (Computed from reconciled SkillState & actual SkillStateHistory)
+  const trendingSkills = [...reconciledSkillStates]
+    .sort((a, b) => b.knowledgeScore - a.knowledgeScore)
+    .map((s) => {
+      const records = historyStates.filter(
+        (h) => isMatchingSkill(h.skillName, s.skillName)
+      );
+      // Prefer record from >= 7 days ago if available, otherwise previous record
+      const pastRecord =
+        records.find((h) => h.createdAt <= oneWeekAgo) ||
+        (records.length > 1 ? records[1] : null);
+
+      let trend: "UP" | "DOWN" | "FLAT" | "NEW" = "NEW";
+      if (pastRecord) {
+        const diff = Math.round(s.knowledgeScore - pastRecord.knowledgeScore);
+        if (diff > 2) trend = "UP";
+        else if (diff < -2) trend = "DOWN";
+        else trend = "FLAT";
+      } else if (records.length === 1) {
+        trend = "FLAT";
+      }
+
+      return {
+        name: s.skillName,
+        score: Math.round(s.knowledgeScore),
+        trend,
+      };
+    })
+    .slice(0, 4);
+
+  // 6. Career Readiness Delta (Computed using canonical getCareerReadiness with historical data)
+  let careerReadinessDelta: number | null = null;
+  if (historyStates.length > 0) {
+    const pastSkillMap = new Map<string, { skillName: string; knowledgeScore: number; practiceScore: number; evidenceScore: number }>();
+    for (const h of historyStates) {
+      if (h.createdAt <= oneWeekAgo && !pastSkillMap.has(h.skillName)) {
+        pastSkillMap.set(h.skillName, {
+          skillName: h.skillName,
+          knowledgeScore: h.knowledgeScore,
+          practiceScore: h.practiceScore,
+          evidenceScore: h.evidenceScore,
+        });
+      }
+    }
+
+    // Fallback: If no records are older than 7 days, check if user has multiple historical snapshots
+    if (pastSkillMap.size === 0 && historyStates.length > skillStates.length) {
+      const seenFirst = new Set<string>();
+      for (const h of historyStates) {
+        if (!seenFirst.has(h.skillName)) {
+          seenFirst.add(h.skillName);
+        } else if (!pastSkillMap.has(h.skillName)) {
+          pastSkillMap.set(h.skillName, {
+            skillName: h.skillName,
+            knowledgeScore: h.knowledgeScore,
+            practiceScore: h.practiceScore,
+            evidenceScore: h.evidenceScore,
+          });
+        }
+      }
+    }
+
+    if (pastSkillMap.size > 0) {
+      const pastSkillStates = Array.from(pastSkillMap.values());
+      const pastProjects = projects.filter((p) => p.createdAt <= oneWeekAgo);
+      const pastDiagnostic = validDiagnosticResult && validDiagnosticResult.completedAt && validDiagnosticResult.completedAt <= oneWeekAgo
+        ? validDiagnosticResult
+        : validDiagnosticResult;
+
+      try {
+        const previousReadiness = await getCareerReadiness(userId, {
+          profile,
+          skillStates: pastSkillStates,
+          projects: pastProjects,
+          latestDiagnostic: pastDiagnostic,
+        });
+
+        careerReadinessDelta = readinessResult.score - previousReadiness.score;
+      } catch (err) {
+        console.error("Failed to compute previous career readiness:", err);
+      }
+    }
+  }
+
+  // 7. Weekly Progress
   const weeklyProgress = {
     learning: activityLogs.find(a => a.type === "LEARNING")?._count._all || null,
     assessments: activityLogs.find(a => a.type === "ASSESSMENT")?._count._all || null,
     projects: activityLogs.find(a => a.type === "PROJECT")?._count._all || null,
     practice: activityLogs.find(a => a.type === "PRACTICE")?._count._all || null,
-    careerReadiness: null, // Would need historical overall score comparison
+    careerReadiness: careerReadinessDelta,
   };
 
-  // 7. Assessments (minimal summary)
+  // 8. Assessments (minimal summary)
   const pendingAssessments = (!validDiagnosticResult ? 1 : 0) + (currentMilestone ? 1 : 0);
   const assessmentsSummary = {
     pendingCount: pendingAssessments,
     completedCount: validDiagnosticResult ? 1 : 0,
   };
 
-  // 8. Proof (minimal summary)
+  // 9. Proof (summary with verified scores)
   const proofSummary = {
     trackedSkillsCount: skillStates.length,
+    overallProofScore: evidenceVerification.overallProofScore,
+    overallSkillScore: evidenceVerification.overallSkillScore,
+    employerConfidenceSignal: evidenceVerification.employerConfidenceSignal,
   };
 
-  // 9. Career Alignment (minimal summary)
+  // 10. Four Primary KPIs (Career Readiness, Skill Progress, Learning Progress, Proof Strength)
+  const kpis = {
+    targetRole,
+    careerReadiness: readiness.score,
+    skillProgress: evidenceVerification.overallSkillScore,
+    learningProgress: roadmapDetails ? roadmapDetails.progress : 0,
+    proofStrength: evidenceVerification.overallProofScore,
+  };
+
+  // 11. Career Alignment (minimal summary)
   const careerAlignment = {
     target: targetRole,
     isAvailable: skillStates.length > 0,
   };
 
-  // 10. Application Readiness (minimal summary)
+  // 12. Application Readiness (minimal summary)
   const applicationReadiness = {
     isAvailable: skillStates.length > 0 && projects.length > 0,
   };
 
-  // 11. Portfolio (minimal summary)
+  // 13. Portfolio (minimal summary)
   const portfolioStats = {
     projectCount: projects.length,
   };
@@ -304,8 +353,10 @@ export const getDashboardOverview = async (userId: string) => {
     career: {
       targetRole,
       experienceLevel,
+      weeklyAvailableHours: profile?.weeklyAvailableHours ?? 10,
       status: careerStatus,
     },
+    kpis,
     readiness,
     nextAction,
     roadmap: roadmapDetails,
@@ -319,7 +370,3 @@ export const getDashboardOverview = async (userId: string) => {
     portfolio: portfolioStats,
   };
 };
-
-
-
-

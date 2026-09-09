@@ -2,7 +2,7 @@ import AdminSkillHealthView from "@/src/components/dashboard/admin/AdminSkillHea
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Skill Health | Admin | AI Pather",
+  title: "Skill Health",
 };
 
 export default function Page() {

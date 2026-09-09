@@ -2,8 +2,7 @@ import JobRealityContent from "@/src/components/dashboard/learner/job-reality/Jo
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Job Reality | AI Learning Roadmap",
-  description: "View real-time market expectations for your target role",
+  title: "Job Reality",
 };
 
 export default function JobRealityPage() {

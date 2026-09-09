@@ -48,7 +48,7 @@ export default function MobileCardCarousel({
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div className="overflow-hidden rounded-xl bg-card shadow-[var(--shadow)] transition-shadow duration-300">
+            <div className="overflow-hidden rounded-xl bg-card shadow-[var(--shadow)] transition-shadow duration-300 my-10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={slide.src}

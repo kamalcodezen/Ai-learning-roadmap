@@ -2,31 +2,59 @@ import { serverFetch } from "../../core/server";
 
 export interface JobRealitySkill {
   name: string;
-  demandScore: number;
+  normalizedName?: string;
+  jobsMentioning: number;
+  totalJobs: number;
+  demandScore: number; // percentage
   learnerScore: number;
-  importance: "high" | "medium" | "low";
   gap: number;
+  importance: "high" | "medium" | "low";
+  status: "Ready" | "Critical Gap" | "High Gap" | "Moderate Gap";
+  category?: string;
+}
+
+export interface JobRealityRecommendation {
+  text: string;
+  actionType?: "LEARNING_PATH" | "GENERATE_PROJECT" | "SIMULATION" | "GENERAL";
+  targetSkill?: string;
+  href?: string;
 }
 
 export interface JobRealityData {
   targetRole: string;
+  selectedLocation: string;
   market: {
-    demandLevel: string;
-    jobCount: number | null;
-    trend: string | null;
-    updatedAt: string | null;
+    demandLevel: string; // "High" | "Medium" | "Low" | "Insufficient Data"
+    jobCount: number; // Count of relevant listings analysed
+    rawFetchedCount?: number;
+    relevantCount?: number;
+    trend: string | null; // "Growing" | "Stable" | "Declining" | "Insufficient Data"
+    updatedAt: string;
+    sampleStatus?: string;
+    lowSampleSize?: boolean;
   };
   skills: JobRealitySkill[];
+  aiAnalysis?: {
+    available: boolean;
+    roleSummary?: string;
+    recurringExpectations?: string[];
+    commonTools?: string[];
+    experienceExpectations?: string[];
+  } | null;
   insights: string[];
-  recommendations: string[];
+  recommendations: JobRealityRecommendation[];
   source: {
     provider: string;
     fetchedAt: string;
+    location: string;
     cached: boolean;
+    isFallback?: boolean;
+    noData?: boolean;
   };
 }
 
-export const getJobReality = async (): Promise<JobRealityData> => {
-  const response = await serverFetch("/api/job-reality");
+export const getJobReality = async (location?: string): Promise<JobRealityData> => {
+  const query = location && location !== "all" ? `?location=${encodeURIComponent(location)}` : "";
+  const response = await serverFetch(`/api/job-reality${query}`);
   return response.data;
 };

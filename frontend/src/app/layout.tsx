@@ -12,7 +12,23 @@ const hindSiliguri = Hind_Siliguri({
   display: "swap",
 });
 
-export const metadata = { title: "AI Pather" };
+export const metadata: import("next").Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://your-production-domain.com"),
+  title: {
+    default: "AI Pather — AI-Powered Career Learning Platform",
+    template: "%s | AI Pather",
+  },
+  description: "Navigate your tech career with AI-driven skill assessments, learning roadmaps, and interview prep.",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: "AI Pather",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+};
 
 export default function RootLayout({
   children,

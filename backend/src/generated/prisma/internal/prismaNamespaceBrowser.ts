@@ -73,7 +73,11 @@ export const ModelName = {
   AnalyticsSnapshot: 'AnalyticsSnapshot',
   InterviewSession: 'InterviewSession',
   InterviewQuestion: 'InterviewQuestion',
-  InterviewAnswer: 'InterviewAnswer'
+  InterviewAnswer: 'InterviewAnswer',
+  UserGamification: 'UserGamification',
+  XPTransaction: 'XPTransaction',
+  UserAchievement: 'UserAchievement',
+  Notification: 'Notification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -176,6 +180,7 @@ export const CareerProfileScalarFieldEnum = {
   onboardingCompleted: 'onboardingCompleted',
   resumeScore: 'resumeScore',
   interviewScore: 'interviewScore',
+  aiAnalysis: 'aiAnalysis',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -279,6 +284,10 @@ export const ProjectScalarFieldEnum = {
   description: 'description',
   repositoryUrl: 'repositoryUrl',
   liveUrl: 'liveUrl',
+  projectType: 'projectType',
+  specification: 'specification',
+  aiSummary: 'aiSummary',
+  plannedVsActual: 'plannedVsActual',
   techStack: 'techStack',
   explanationQuality: 'explanationQuality',
   isVerified: 'isVerified',
@@ -422,6 +431,61 @@ export const InterviewAnswerScalarFieldEnum = {
 export type InterviewAnswerScalarFieldEnum = (typeof InterviewAnswerScalarFieldEnum)[keyof typeof InterviewAnswerScalarFieldEnum]
 
 
+export const UserGamificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  totalXp: 'totalXp',
+  currentLevel: 'currentLevel',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserGamificationScalarFieldEnum = (typeof UserGamificationScalarFieldEnum)[keyof typeof UserGamificationScalarFieldEnum]
+
+
+export const XPTransactionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  amount: 'amount',
+  actionType: 'actionType',
+  referenceId: 'referenceId',
+  description: 'description',
+  createdAt: 'createdAt'
+} as const
+
+export type XPTransactionScalarFieldEnum = (typeof XPTransactionScalarFieldEnum)[keyof typeof XPTransactionScalarFieldEnum]
+
+
+export const UserAchievementScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  achievementCode: 'achievementCode',
+  title: 'title',
+  description: 'description',
+  badgeIcon: 'badgeIcon',
+  category: 'category',
+  xpReward: 'xpReward',
+  unlockedAt: 'unlockedAt',
+  metadata: 'metadata'
+} as const
+
+export type UserAchievementScalarFieldEnum = (typeof UserAchievementScalarFieldEnum)[keyof typeof UserAchievementScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  isRead: 'isRead',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -430,19 +494,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

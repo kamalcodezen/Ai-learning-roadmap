@@ -32,7 +32,7 @@ export default function MobileNav() {
         initial={false}
         animate={{ borderRadius: isOpen ? 32 : 50 }}
         transition={isOpen ? { duration: 0.3, ease: "easeOut" } : { type: "spring", stiffness: 260, damping: 20 }}
-        className="bg-card/80 backdrop-blur-[5px] border border-border py-1 px-1 w-[95%] max-w-sm mx-auto overflow-hidden flex flex-col z-50"
+        className="bg-card/70 dark:bg-[#2b1e42] backdrop-blur-[5px] border border-border py-1 px-1 w-[95%] max-w-sm mx-auto overflow-hidden flex flex-col z-50"
         style={{
           zIndex: isOpen ? 999 : 50
         }}

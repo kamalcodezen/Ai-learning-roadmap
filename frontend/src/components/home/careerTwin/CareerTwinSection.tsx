@@ -3,13 +3,28 @@
 import { Fragment, useEffect, useRef, useState, forwardRef } from "react";
 import { FiChevronDown, FiUser, FiCheck } from "react-icons/fi";
 import { IoRocketOutline } from "react-icons/io5";
-import { HiOutlineBookOpen, HiOutlineCode, HiOutlineFolder, HiOutlinePuzzle, HiOutlineChat, HiOutlineUserGroup, HiOutlineBadgeCheck } from "react-icons/hi";
-import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiNodedotjs, SiPostgresql, SiMongodb, SiFirebase } from "react-icons/si";
+import {
+  HiOutlineBookOpen,
+  HiOutlineCode,
+  HiOutlineFolder,
+  HiOutlinePuzzle,
+  HiOutlineChat,
+  HiOutlineUserGroup,
+  HiOutlineBadgeCheck,
+} from "react-icons/hi";
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+  SiNodedotjs,
+  SiPostgresql,
+  SiMongodb,
+  SiFirebase,
+} from "react-icons/si";
 import { ContainerScroll } from "@/src/components/ui/container-scroll-animation";
 import { AnimatedBeam } from "@/src/components/ui/animated-beam";
 import { motion, AnimatePresence } from "framer-motion";
-
-
 
 /* ------------------------------ data ------------------------------ */
 
@@ -52,29 +67,29 @@ export const ROLES: Role[] = [
     metrics: [82, 68, 76, 71, 64, 59, 81],
   },
   {
-    id: "web3-dev",
-    label: "Web3 Developer",
+    id: "frontend",
+    label: "Frontend Developer",
     score: 86,
     stage: 4, // CAN IMPACT
     metrics: [91, 85, 93, 88, 72, 64, 90],
   },
   {
-    id: "sc-auditor",
-    label: "Smart Contract Auditor",
+    id: "software-engineer",
+    label: "Software Engineer",
     score: 63,
     stage: 1, // GAIN
     metrics: [89, 72, 60, 92, 51, 45, 68],
   },
   {
-    id: "ml-researcher",
-    label: "ML Researcher",
+    id: "mobile",
+    label: "Mobile App Developer",
     score: 91,
     stage: 3, // CAN BUILD
     metrics: [96, 88, 92, 94, 85, 78, 89],
   },
   {
-    id: "blockchain-analyst",
-    label: "Blockchain Analyst",
+    id: "data-analyst",
+    label: "Data Analyst",
     score: 48,
     stage: 0, // KNOW
     metrics: [65, 42, 38, 55, 48, 30, 41],
@@ -85,7 +100,9 @@ export const ROLES: Role[] = [
 
 export function useReducedMotion(): boolean {
   const [reduced, setReduced] = useState<boolean>(
-    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
 
   useEffect(() => {
@@ -98,7 +115,12 @@ export function useReducedMotion(): boolean {
   return reduced;
 }
 
-export function useAnimatedNumber(target: number, duration = 1000, animate = true, delayMs = 0): number {
+export function useAnimatedNumber(
+  target: number,
+  duration = 1000,
+  animate = true,
+  delayMs = 0,
+): number {
   const [value, setValue] = useState(target);
   const currentValRef = useRef(target);
   // eslint-disable-next-line react-hooks/refs
@@ -203,15 +225,28 @@ function Gauge({ value }: { value: number }) {
               y1={t.y1}
               x2={t.x2}
               y2={t.y2}
-              className={isFilled ? "stroke-[var(--color-primary)]" : (t.major ? "stroke-gray-300 dark:stroke-zinc-700" : "stroke-gray-100 dark:stroke-zinc-800")}
+              className={
+                isFilled
+                  ? "stroke-[var(--color-primary)]"
+                  : t.major
+                    ? "stroke-gray-300 dark:stroke-zinc-700"
+                    : "stroke-gray-100 dark:stroke-zinc-800"
+              }
               strokeWidth={t.major ? 2 : 1.5}
               strokeLinecap="round"
             />
-          )
+          );
         })}
 
         {/* track */}
-        <circle cx={C} cy={C} r={R} fill="none" className="stroke-gray-100 dark:stroke-zinc-800" strokeWidth={10} />
+        <circle
+          cx={C}
+          cy={C}
+          r={R}
+          fill="none"
+          className="stroke-gray-100 dark:stroke-zinc-800"
+          strokeWidth={10}
+        />
 
         {/* progress arc */}
         <circle
@@ -230,14 +265,20 @@ function Gauge({ value }: { value: number }) {
 
       {/* center readout */}
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pt-2">
-        <span className="text-caption font-semibold tracking-widest text-muted-foreground">OVERALL SCORE</span>
+        <span className="text-caption font-semibold tracking-widest text-muted-foreground">
+          OVERALL SCORE
+        </span>
         <div className="mt-2 flex items-baseline gap-1">
           <span className="text-6xl font-bold tracking-tight text-[var(--color-primary)] tabular-nums">
             {Math.round(v)}
           </span>
-          <span className="text-body-large font-medium text-muted-foreground">/100</span>
+          <span className="text-body-large font-medium text-muted-foreground">
+            /100
+          </span>
         </div>
-        <span className="mt-1 text-small font-medium text-muted-foreground">Keep Going!</span>
+        <span className="mt-1 text-small font-medium text-muted-foreground">
+          Keep Going!
+        </span>
       </div>
     </div>
   );
@@ -245,7 +286,13 @@ function Gauge({ value }: { value: number }) {
 
 /* ------------------------------ MetricsPanel ------------------------------ */
 
-function AnimatedMetricNumber({ value, delayMs }: { value: number; delayMs: number }) {
+function AnimatedMetricNumber({
+  value,
+  delayMs,
+}: {
+  value: number;
+  delayMs: number;
+}) {
   const reduced = useReducedMotion();
   const animatedValue = useAnimatedNumber(value, 800, !reduced, delayMs);
   return <>{Math.round(animatedValue)}</>;
@@ -259,10 +306,15 @@ function MetricsPanel({ values }: { values: number[] }) {
         const Icon = metric.icon;
         const delayMs = i * 75;
         return (
-          <div key={metric.name} className="group relative flex items-center gap-4">
+          <div
+            key={metric.name}
+            className="group relative flex items-center gap-4"
+          >
             <div className="flex w-32 shrink-0 items-center gap-3">
               <Icon className="h-5 w-5 text-[var(--color-primary)]" />
-              <span className="text-sm font-medium text-gray-700 dark:text-zinc-300">{metric.name}</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-zinc-300">
+                {metric.name}
+              </span>
             </div>
 
             <div className="relative h-2 flex-1 rounded-full bg-gray-100 dark:bg-zinc-800 overflow-hidden">
@@ -270,7 +322,11 @@ function MetricsPanel({ values }: { values: number[] }) {
                 className="h-full rounded-full bg-[var(--color-primary)]"
                 initial={{ width: 0 }}
                 animate={{ width: `${val}%` }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: delayMs / 1000 }}
+                transition={{
+                  duration: 0.8,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: delayMs / 1000,
+                }}
               />
             </div>
 
@@ -278,7 +334,9 @@ function MetricsPanel({ values }: { values: number[] }) {
               <strong className="text-[var(--color-primary)]">
                 <AnimatedMetricNumber value={val} delayMs={delayMs} />
               </strong>
-              <span className="text-gray-400 dark:text-zinc-500 text-xs">/100</span>
+              <span className="text-gray-400 dark:text-zinc-500 text-xs">
+                /100
+              </span>
             </span>
           </div>
         );
@@ -289,7 +347,13 @@ function MetricsPanel({ values }: { values: number[] }) {
 
 /* ------------------------------ Pipeline ------------------------------ */
 
-function StageIcon({ name, className }: { name: StageIconName; className?: string }) {
+function StageIcon({
+  name,
+  className,
+}: {
+  name: StageIconName;
+  className?: string;
+}) {
   const common = {
     viewBox: "0 0 24 24",
     fill: "none",
@@ -352,23 +416,32 @@ function Pipeline({ stage }: { stage: number }) {
               <motion.div
                 initial={false}
                 animate={{ scale: active ? [1, 1.15, 1] : 1 }}
-                transition={{ duration: 0.5, ease: "easeInOut", delay: i * 0.05 }}
-                className={`relative flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-full border-2 transition-colors duration-500 bg-white dark:bg-zinc-950 z-10 ${cleared
+                transition={{
+                  duration: 0.5,
+                  ease: "easeInOut",
+                  delay: i * 0.05,
+                }}
+                className={`relative flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-full border-2 transition-colors duration-500 bg-white dark:bg-zinc-950 z-10 ${
+                  cleared
                     ? "border-[var(--color-primary)] text-[var(--color-primary)]"
                     : "border-gray-200 dark:border-zinc-800 text-gray-400 dark:text-zinc-600"
-                  }`}
+                }`}
               >
                 <StageIcon name={s.icon} className="h-4 w-4 md:h-6 md:w-6" />
               </motion.div>
 
-              <span className={`mt-2 md:mt-3 text-caption md:text-small font-bold tracking-wide transition-colors duration-500 w-12 md:w-auto text-center ${cleared ? "text-foreground" : "text-muted-foreground"}`}>
+              <span
+                className={`mt-2 md:mt-3 text-caption md:text-small font-bold tracking-wide transition-colors duration-500 w-12 md:w-auto text-center ${cleared ? "text-foreground" : "text-muted-foreground"}`}
+              >
                 {s.label}
               </span>
             </div>
 
             {i < STAGES.length - 1 && (
               <div className="flex-1 px-1 md:px-2 mt-5 md:mt-7 z-0">
-                <div className={`h-1 md:h-1.5 w-full rounded-full transition-colors duration-500 ${connectorDone ? "bg-[var(--color-primary)]" : "bg-muted"}`} />
+                <div
+                  className={`h-1 md:h-1.5 w-full rounded-full transition-colors duration-500 ${connectorDone ? "bg-[var(--color-primary)]" : "bg-muted"}`}
+                />
               </div>
             )}
           </Fragment>
@@ -378,24 +451,32 @@ function Pipeline({ stage }: { stage: number }) {
   );
 }
 
-
-const FloatingIcon = forwardRef<HTMLDivElement, { icon: React.ComponentType<{ className?: string }>, className: string, delay: number, duration: number, colorClassName?: string }>(
-  ({ icon: Icon, className, delay, duration, colorClassName }, ref) => {
-    const reducedMotion = useReducedMotion();
-
-    return (
-      <motion.div
-        ref={ref}
-        initial={{ y: 0 }}
-        animate={reducedMotion ? {} : { y: [-10, 10, -10] }}
-        transition={{ duration, repeat: Infinity, ease: "easeInOut", delay }}
-        className={`absolute hidden lg:flex items-center justify-center w-[72px] h-[72px] rounded-[24px] bg-white dark:bg-zinc-900 shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] border border-gray-100 dark:border-zinc-800 z-10 ${className}`}
-      >
-        <Icon className={`w-10 h-10 ${colorClassName || 'text-gray-400 dark:text-zinc-600'}`} />
-      </motion.div>
-    );
+const FloatingIcon = forwardRef<
+  HTMLDivElement,
+  {
+    icon: React.ComponentType<{ className?: string }>;
+    className: string;
+    delay: number;
+    duration: number;
+    colorClassName?: string;
   }
-);
+>(({ icon: Icon, className, delay, duration, colorClassName }, ref) => {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ y: 0 }}
+      animate={reducedMotion ? {} : { y: [-10, 10, -10] }}
+      transition={{ duration, repeat: Infinity, ease: "easeInOut", delay }}
+      className={`absolute hidden lg:flex items-center justify-center w-[72px] h-[72px] rounded-[24px] bg-white dark:bg-zinc-900 shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] border border-gray-100 dark:border-zinc-800 z-10 ${className}`}
+    >
+      <Icon
+        className={`w-10 h-10 ${colorClassName || "text-gray-400 dark:text-zinc-600"}`}
+      />
+    </motion.div>
+  );
+});
 FloatingIcon.displayName = "FloatingIcon";
 
 export default function CareerTwinSection() {
@@ -419,7 +500,10 @@ export default function CareerTwinSection() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -437,41 +521,194 @@ export default function CareerTwinSection() {
   return (
     <section id="career-twin" className="relative overflow-hidden">
       {/* Orbit Ring Background & Icons */}
-      <div ref={orbitContainerRef} className="absolute top-[50%] left-1/2 w-[140vw] max-w-[1300px] h-[1100px] -translate-x-1/2 -translate-y-1/2 rounded-[100%] hidden lg:block z-0 pointer-events-none">
-
+      <div
+        ref={orbitContainerRef}
+        className="absolute top-[50%] left-1/2 w-[140vw] max-w-[1300px] h-[1100px] -translate-x-1/2 -translate-y-1/2 rounded-[100%] hidden lg:block z-0 pointer-events-none"
+      >
         {/* Top: Next.js */}
-        <FloatingIcon ref={nextjsRef} icon={SiNextdotjs} delay={0} duration={4.5} className="top-0 left-1/2 -translate-x-1/2 -translate-y-1/2" colorClassName="text-black dark:text-white" />
+        <FloatingIcon
+          ref={nextjsRef}
+          icon={SiNextdotjs}
+          delay={0}
+          duration={4.5}
+          className="top-0 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          colorClassName="text-black dark:text-white"
+        />
 
         {/* Top Right: Node.js */}
-        <FloatingIcon ref={nodejsRef} icon={SiNodedotjs} delay={1.5} duration={5} className="top-[14.6%] right-[14.6%] translate-x-1/2 -translate-y-1/2" colorClassName="text-[#339933]" />
+        <FloatingIcon
+          ref={nodejsRef}
+          icon={SiNodedotjs}
+          delay={1.5}
+          duration={5}
+          className="top-[14.6%] right-[14.6%] translate-x-1/2 -translate-y-1/2"
+          colorClassName="text-[#339933]"
+        />
 
         {/* Right: MongoDB */}
-        <FloatingIcon ref={mongodbRef} icon={SiMongodb} delay={0.5} duration={4.8} className="top-1/2 right-0 translate-x-1/2 -translate-y-1/2" colorClassName="text-[#47A248]" />
+        <FloatingIcon
+          ref={mongodbRef}
+          icon={SiMongodb}
+          delay={0.5}
+          duration={4.8}
+          className="top-1/2 right-0 translate-x-1/2 -translate-y-1/2"
+          colorClassName="text-[#47A248]"
+        />
 
         {/* Bottom Right: PostgreSQL */}
-        <FloatingIcon ref={postgresqlRef} icon={SiPostgresql} delay={2.2} duration={5.5} className="bottom-[14.6%] right-[14.6%] translate-x-1/2 translate-y-1/2" colorClassName="text-[#4169E1]" />
+        <FloatingIcon
+          ref={postgresqlRef}
+          icon={SiPostgresql}
+          delay={2.2}
+          duration={5.5}
+          className="bottom-[14.6%] right-[14.6%] translate-x-1/2 translate-y-1/2"
+          colorClassName="text-[#4169E1]"
+        />
 
         {/* Bottom: Firebase */}
-        <FloatingIcon ref={firebaseRef} icon={SiFirebase} delay={1.8} duration={4.2} className="bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2" colorClassName="text-[#FFCA28]" />
+        <FloatingIcon
+          ref={firebaseRef}
+          icon={SiFirebase}
+          delay={1.8}
+          duration={4.2}
+          className="bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
+          colorClassName="text-[#FFCA28]"
+        />
 
         {/* Bottom Left: Tailwind */}
-        <FloatingIcon ref={tailwindRef} icon={SiTailwindcss} delay={2.5} duration={5.2} className="bottom-[14.6%] left-[14.6%] -translate-x-1/2 translate-y-1/2" colorClassName="text-[#06B6D4]" />
+        <FloatingIcon
+          ref={tailwindRef}
+          icon={SiTailwindcss}
+          delay={2.5}
+          duration={5.2}
+          className="bottom-[14.6%] left-[14.6%] -translate-x-1/2 translate-y-1/2"
+          colorClassName="text-[#06B6D4]"
+        />
 
         {/* Left: TypeScript */}
-        <FloatingIcon ref={typescriptRef} icon={SiTypescript} delay={1.0} duration={4.6} className="top-1/2 left-0 -translate-x-1/2 -translate-y-1/2" colorClassName="text-[#3178C6]" />
+        <FloatingIcon
+          ref={typescriptRef}
+          icon={SiTypescript}
+          delay={1.0}
+          duration={4.6}
+          className="top-1/2 left-0 -translate-x-1/2 -translate-y-1/2"
+          colorClassName="text-[#3178C6]"
+        />
 
         {/* Top Left: React */}
-        <FloatingIcon ref={reactRef} icon={SiReact} delay={0.8} duration={5.1} className="top-[14.6%] left-[14.6%] -translate-x-1/2 -translate-y-1/2" colorClassName="text-[#61DAFB]" />
+        <FloatingIcon
+          ref={reactRef}
+          icon={SiReact}
+          delay={0.8}
+          duration={5.1}
+          className="top-[14.6%] left-[14.6%] -translate-x-1/2 -translate-y-1/2"
+          colorClassName="text-[#61DAFB]"
+        />
 
         {/* Animated Beams connecting icons */}
-        <AnimatedBeam containerRef={orbitContainerRef} fromRef={nextjsRef} toRef={nodejsRef} curvature={-20} duration={4} pathColor="#9F54F7" pathWidth={2} pathOpacity={0.4} gradientStartColor="#9F54F7" gradientStopColor="#B978FF" />
-        <AnimatedBeam containerRef={orbitContainerRef} fromRef={nodejsRef} toRef={mongodbRef} curvature={-20} duration={4} delay={0.5} pathColor="#9F54F7" pathWidth={2} pathOpacity={0.4} gradientStartColor="#9F54F7" gradientStopColor="#B978FF" />
-        <AnimatedBeam containerRef={orbitContainerRef} fromRef={mongodbRef} toRef={postgresqlRef} curvature={-20} duration={4} delay={1} pathColor="#9F54F7" pathWidth={2} pathOpacity={0.4} gradientStartColor="#9F54F7" gradientStopColor="#B978FF" />
-        <AnimatedBeam containerRef={orbitContainerRef} fromRef={postgresqlRef} toRef={firebaseRef} curvature={-20} duration={4} delay={1.5} pathColor="#9F54F7" pathWidth={2} pathOpacity={0.4} gradientStartColor="#9F54F7" gradientStopColor="#B978FF" />
-        <AnimatedBeam containerRef={orbitContainerRef} fromRef={firebaseRef} toRef={tailwindRef} curvature={-20} duration={4} delay={2} pathColor="#9F54F7" pathWidth={2} pathOpacity={0.4} gradientStartColor="#9F54F7" gradientStopColor="#B978FF" />
-        <AnimatedBeam containerRef={orbitContainerRef} fromRef={tailwindRef} toRef={typescriptRef} curvature={-20} duration={4} delay={2.5} pathColor="#9F54F7" pathWidth={2} pathOpacity={0.4} gradientStartColor="#9F54F7" gradientStopColor="#B978FF" />
-        <AnimatedBeam containerRef={orbitContainerRef} fromRef={typescriptRef} toRef={reactRef} curvature={-20} duration={4} delay={3} pathColor="#9F54F7" pathWidth={2} pathOpacity={0.4} gradientStartColor="#9F54F7" gradientStopColor="#B978FF" />
-        <AnimatedBeam containerRef={orbitContainerRef} fromRef={reactRef} toRef={nextjsRef} curvature={-20} duration={4} delay={3.5} pathColor="#9F54F7" pathWidth={2} pathOpacity={0.4} gradientStartColor="#9F54F7" gradientStopColor="#B978FF" />
+        <AnimatedBeam
+          containerRef={orbitContainerRef}
+          fromRef={nextjsRef}
+          toRef={nodejsRef}
+          curvature={-20}
+          duration={4}
+          pathColor="#9F54F7"
+          pathWidth={2}
+          pathOpacity={0.4}
+          gradientStartColor="#9F54F7"
+          gradientStopColor="#B978FF"
+        />
+        <AnimatedBeam
+          containerRef={orbitContainerRef}
+          fromRef={nodejsRef}
+          toRef={mongodbRef}
+          curvature={-20}
+          duration={4}
+          delay={0.5}
+          pathColor="#9F54F7"
+          pathWidth={2}
+          pathOpacity={0.4}
+          gradientStartColor="#9F54F7"
+          gradientStopColor="#B978FF"
+        />
+        <AnimatedBeam
+          containerRef={orbitContainerRef}
+          fromRef={mongodbRef}
+          toRef={postgresqlRef}
+          curvature={-20}
+          duration={4}
+          delay={1}
+          pathColor="#9F54F7"
+          pathWidth={2}
+          pathOpacity={0.4}
+          gradientStartColor="#9F54F7"
+          gradientStopColor="#B978FF"
+        />
+        <AnimatedBeam
+          containerRef={orbitContainerRef}
+          fromRef={postgresqlRef}
+          toRef={firebaseRef}
+          curvature={-20}
+          duration={4}
+          delay={1.5}
+          pathColor="#9F54F7"
+          pathWidth={2}
+          pathOpacity={0.4}
+          gradientStartColor="#9F54F7"
+          gradientStopColor="#B978FF"
+        />
+        <AnimatedBeam
+          containerRef={orbitContainerRef}
+          fromRef={firebaseRef}
+          toRef={tailwindRef}
+          curvature={-20}
+          duration={4}
+          delay={2}
+          pathColor="#9F54F7"
+          pathWidth={2}
+          pathOpacity={0.4}
+          gradientStartColor="#9F54F7"
+          gradientStopColor="#B978FF"
+        />
+        <AnimatedBeam
+          containerRef={orbitContainerRef}
+          fromRef={tailwindRef}
+          toRef={typescriptRef}
+          curvature={-20}
+          duration={4}
+          delay={2.5}
+          pathColor="#9F54F7"
+          pathWidth={2}
+          pathOpacity={0.4}
+          gradientStartColor="#9F54F7"
+          gradientStopColor="#B978FF"
+        />
+        <AnimatedBeam
+          containerRef={orbitContainerRef}
+          fromRef={typescriptRef}
+          toRef={reactRef}
+          curvature={-20}
+          duration={4}
+          delay={3}
+          pathColor="#9F54F7"
+          pathWidth={2}
+          pathOpacity={0.4}
+          gradientStartColor="#9F54F7"
+          gradientStopColor="#B978FF"
+        />
+        <AnimatedBeam
+          containerRef={orbitContainerRef}
+          fromRef={reactRef}
+          toRef={nextjsRef}
+          curvature={-20}
+          duration={4}
+          delay={3.5}
+          pathColor="#9F54F7"
+          pathWidth={2}
+          pathOpacity={0.4}
+          gradientStartColor="#9F54F7"
+          gradientStopColor="#B978FF"
+        />
 
         {/* Decorative Dotted Accents */}
         <div className="absolute top-[14.6%] right-[14.6%] w-2 h-2 bg-[var(--color-primary)] rounded-full shadow-[0_0_10px_var(--color-primary)] translate-x-1/2 -translate-y-1/2" />
@@ -482,10 +719,8 @@ export default function CareerTwinSection() {
       <ContainerScroll
         titleComponent={
           <>
-            <h2 className="section-title font-bold">
-              Career <span className="text-brand">
-              twin
-              </span>
+            <h2 className="section-title font-bold mt-4 sm:mt-0">
+              Career <span className="text-brand">twin</span>
             </h2>
             <p className="section-subtitle mt-1">
               Track your progress and match your skills to real-world roles.
@@ -496,7 +731,9 @@ export default function CareerTwinSection() {
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 h-full items-center bg-white dark:bg-zinc-950 sm:bg-transparent dark:sm:bg-transparent">
           {/* ============ LEFT PANEL — PROFILE ============ */}
           <div className="h-fit rounded-md border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 md:p-6 shadow-sm lg:col-span-4 flex flex-col">
-            <h3 className="text-sm tracking-widest text-gray-800 dark:text-zinc-200 mb-4 uppercase">YOUR PROFILE</h3>
+            <h3 className="text-sm tracking-widest text-gray-800 dark:text-zinc-200 mb-4 uppercase">
+              YOUR PROFILE
+            </h3>
 
             <div className="relative mb-5" ref={dropdownRef}>
               <div
@@ -508,8 +745,12 @@ export default function CareerTwinSection() {
                     <FiUser className="h-5 w-5" />
                   </div>
                   <div className="flex flex-col items-start">
-                    <div className="font-bold text-gray-900 dark:text-zinc-100 leading-tight">{role.label}</div>
-                    <div className="text-xs text-gray-500 dark:text-zinc-400">Role</div>
+                    <div className="font-bold text-gray-900 dark:text-zinc-100 leading-tight">
+                      {role.label}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-zinc-400">
+                      Role
+                    </div>
                   </div>
                 </div>
                 <motion.div animate={{ rotate: isDropdownOpen ? 180 : 0 }}>
@@ -533,14 +774,23 @@ export default function CareerTwinSection() {
                           setSelectedRoleIndex(idx);
                           setIsDropdownOpen(false);
                         }}
-                        className={`flex items-center justify-between rounded-lg p-2.5 text-left transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800 ${idx === selectedRoleIndex ? "bg-gray-50 dark:bg-zinc-800" : ""
-                          }`}
+                        className={`flex items-center justify-between rounded-lg p-2.5 text-left transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800 ${
+                          idx === selectedRoleIndex
+                            ? "bg-gray-50 dark:bg-zinc-800"
+                            : ""
+                        }`}
                       >
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-gray-900 dark:text-zinc-100">{r.label}</span>
-                          <span className="text-xs text-gray-500 dark:text-zinc-400">Score: {r.score}</span>
+                          <span className="text-sm font-bold text-gray-900 dark:text-zinc-100">
+                            {r.label}
+                          </span>
+                          <span className="text-xs text-gray-500 dark:text-zinc-400">
+                            Score: {r.score}
+                          </span>
                         </div>
-                        {idx === selectedRoleIndex && <FiCheck className="text-[var(--color-primary)] h-4 w-4" />}
+                        {idx === selectedRoleIndex && (
+                          <FiCheck className="text-[var(--color-primary)] h-4 w-4" />
+                        )}
                       </button>
                     ))}
                   </motion.div>
@@ -563,7 +813,11 @@ export default function CareerTwinSection() {
                 <>
                   <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 1,
+                      ease: "linear",
+                    }}
                     className="h-4 w-4 rounded-full border-2 border-gray-900 border-t-transparent"
                   />
                   Redirecting...
@@ -579,7 +833,6 @@ export default function CareerTwinSection() {
 
           {/* ============ RIGHT PANEL — METRICS & PIPELINE ============ */}
           <div className="flex flex-col gap-4 lg:col-span-8 z-0 relative">
-
             {/* SKILL METRICS — bars only, no heading */}
             <div className="rounded-md border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 shadow-sm">
               <MetricsPanel values={role.metrics} />
@@ -589,7 +842,6 @@ export default function CareerTwinSection() {
             <div>
               <Pipeline stage={role.stage} />
             </div>
-
           </div>
         </div>
       </ContainerScroll>

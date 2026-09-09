@@ -97,7 +97,7 @@ export default function SignInForm({ onSwitch }: SignInFormProps) {
       console.warn("Routing state API error. Falling back to dashboard.", error);
     }
 
-    // Default fallback for existing users
+    // Default: fully onboarded learner → go to dashboard
     router.push("/");
   };
 

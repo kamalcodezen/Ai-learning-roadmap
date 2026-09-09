@@ -1,5 +1,6 @@
 import prisma from "../../../../lib/prisma.js";
-import { CAREER_SKILLS_MAP, FALLBACK_SKILLS } from "./career-skills.map.js";
+import { getRequiredSkillsForRole } from "./career-skills.map.js";
+import { isMatchingSkill } from "../../assessments/services/skill-simulation.service.js";
 
 export const getCareerAlignment = async (userId: string) => {
   // 1. Fetch user's career profile to get the real target role
@@ -23,18 +24,13 @@ export const getCareerAlignment = async (userId: string) => {
     };
   }
 
-  // 2. Lookup Required Skills for this role
-  let requiredSkills = CAREER_SKILLS_MAP[targetRole];
-  if (!requiredSkills) {
-    requiredSkills = FALLBACK_SKILLS;
-  }
+  // 2. Lookup Required Skills for this role using normalized matcher
+  const requiredSkills = getRequiredSkillsForRole(targetRole);
 
   // 3. Fetch user's current skills
   const skillStates = await prisma.skillState.findMany({
     where: { userId },
   });
-
-  const skillStateMap = new Map(skillStates.map(s => [s.skillName.toLowerCase(), s]));
 
   // 4. Calculate Match and Categorize Skills
   const strongSkills: string[] = [];
@@ -50,8 +46,14 @@ export const getCareerAlignment = async (userId: string) => {
     const weight = req.critical ? 2 : 1;
     maxPossibleScore += (100 * weight);
 
-    const userSkill = skillStateMap.get(req.skill.toLowerCase());
-    const score = userSkill ? userSkill.knowledgeScore : 0;
+    const userSkill = skillStates.find(s => isMatchingSkill(s.skillName, req.skill));
+    const score = userSkill 
+      ? Math.round(
+          userSkill.projectScore > 0 || userSkill.practiceScore > 0
+            ? (userSkill.knowledgeScore * 0.4 + userSkill.practiceScore * 0.3 + userSkill.projectScore * 0.3)
+            : userSkill.knowledgeScore
+        )
+      : 0;
     
     totalScore += (score * weight);
 
