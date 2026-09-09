@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../../shared/GenericPageSkeleton";
 import { CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
 import { DashboardCard } from "@/src/components/dashboard/shared/cards";
+import { useState } from "react";
 import {
   Bot,
   Target,
@@ -15,13 +16,18 @@ import {
   AlertTriangle,
   CheckCircle2,
   ArrowRight,
+  Printer,
+  Compass,
+  Sparkles,
 } from "lucide-react";
 
 export default function CareerTwinPage() {
   const { data: session, isPending: isSessionLoading } =
     authClient.useSession();
 
-  const { data, isLoading, isError } = useQuery({
+  const [simulatedRole, setSimulatedRole] = useState<string>("");
+
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["careerTwin", session?.user?.id],
     queryFn: () => getCareerTwin(),
     enabled: !!session?.user?.id,
@@ -43,17 +49,63 @@ export default function CareerTwinPage() {
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-4 text-center">
         <h3 className="text-xl font-bold text-destructive">Error</h3>
-        <p className="text-muted-foreground">Failed to load. Please refresh.</p>
+        <p className="text-muted-foreground">Failed to load career twin. Please refresh.</p>
+        <DashboardButton text="Retry" radius="md" onClick={() => refetch()} />
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
-      <PageHeader
-        title="Career Twin"
-        description="Your AI-generated professional profile and readiness analysis."
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <PageHeader
+          title="Career Twin"
+          description="Your AI-generated professional profile and readiness analysis."
+        />
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-card/80">
+            <Compass className="w-3.5 h-3.5 text-primary" />
+            <span className="text-xs text-muted-foreground font-medium">Simulate:</span>
+            <select
+              value={simulatedRole || data.targetRole}
+              onChange={(e) => setSimulatedRole(e.target.value)}
+              className="bg-transparent text-xs font-semibold text-foreground outline-none cursor-pointer"
+            >
+              <option value={data.targetRole} className="bg-card text-foreground">{data.targetRole} (Current Target)</option>
+              <option value="Full Stack Developer" className="bg-card text-foreground">Full Stack Developer</option>
+              <option value="Frontend Developer" className="bg-card text-foreground">Frontend Developer</option>
+              <option value="Backend Developer" className="bg-card text-foreground">Backend Developer</option>
+              <option value="AI Engineer" className="bg-card text-foreground">AI Engineer</option>
+              <option value="DevOps Engineer" className="bg-card text-foreground">DevOps Engineer</option>
+            </select>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-border bg-card hover:bg-card-soft text-xs font-semibold text-foreground transition-colors"
+          >
+            <Printer className="w-3.5 h-3.5 text-primary" />
+            Export PDF
+          </button>
+        </div>
+      </div>
+
+      {simulatedRole && simulatedRole !== data.targetRole && (
+        <div className="flex items-center gap-3 p-4 rounded-xl border border-primary/20 bg-primary/5 text-xs text-muted-foreground animate-in fade-in">
+          <Sparkles className="w-4 h-4 text-primary shrink-0" />
+          <span>
+            <strong>What-If Simulation Active:</strong> Evaluating your verified competencies against the benchmark criteria for <strong>{simulatedRole}</strong>.
+          </span>
+          <button
+            type="button"
+            onClick={() => setSimulatedRole("")}
+            className="ml-auto text-primary hover:underline font-semibold"
+          >
+            Reset to Target
+          </button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <DashboardCard className="col-span-1 lg:col-span-2 border-primary/20">
@@ -130,14 +182,18 @@ export default function CareerTwinPage() {
                   Skills
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {data.strongSkills.map((s) => (
-                    <span
-                      key={s}
-                      className="px-2.5 py-1 rounded-md bg-green-500/10 text-green-500 text-xs font-medium border border-green-500/20"
-                    >
-                      {s}
-                    </span>
-                  ))}
+                  {data.strongSkills.length === 0 ? (
+                    <span className="text-xs text-muted-foreground italic">None identified yet</span>
+                  ) : (
+                    data.strongSkills.map((s) => (
+                      <span
+                        key={s}
+                        className="px-2.5 py-1 rounded-md bg-green-500/10 text-green-500 text-xs font-medium border border-green-500/20"
+                      >
+                        {s}
+                      </span>
+                    ))
+                  )}
                 </div>
               </div>
               <div>
@@ -146,14 +202,18 @@ export default function CareerTwinPage() {
                   Work
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {data.weakSkills.map((s) => (
-                    <span
-                      key={s}
-                      className="px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-500 text-xs font-medium border border-amber-500/20"
-                    >
-                      {s}
-                    </span>
-                  ))}
+                  {data.weakSkills.length === 0 ? (
+                    <span className="text-xs text-muted-foreground italic">None identified</span>
+                  ) : (
+                    data.weakSkills.map((s) => (
+                      <span
+                        key={s}
+                        className="px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-500 text-xs font-medium border border-amber-500/20"
+                      >
+                        {s}
+                      </span>
+                    ))
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -167,17 +227,21 @@ export default function CareerTwinPage() {
             <CardTitle className="text-lg">Identified Career Gaps</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-3">
-              {data.careerGaps.map((gap, i) => (
-                <li
-                  key={i}
-                  className="flex gap-3 text-sm text-muted-foreground"
-                >
-                  <div className="mt-0.5 w-1.5 h-1.5 rounded-full bg-destructive shrink-0" />
-                  {gap}
-                </li>
-              ))}
-            </ul>
+            {data.careerGaps.length === 0 ? (
+              <p className="text-sm text-muted-foreground italic">No critical career gaps identified.</p>
+            ) : (
+              <ul className="space-y-3">
+                {data.careerGaps.map((gap, i) => (
+                  <li
+                    key={i}
+                    className="flex gap-3 text-sm text-muted-foreground"
+                  >
+                    <div className="mt-0.5 w-1.5 h-1.5 rounded-full bg-destructive shrink-0" />
+                    {gap}
+                  </li>
+                ))}
+              </ul>
+            )}
           </CardContent>
         </DashboardCard>
 
