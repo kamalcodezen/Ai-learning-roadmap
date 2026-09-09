@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { redirect } from "next/navigation";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { getCareerAlignment } from "@/src/lib/api/learner/career-alignment";
@@ -85,8 +86,9 @@ const skillSections = (
 
 export default function CareerAlignmentPage() {
   const { data: session, isPending: isSessionLoading } = useDashboardSession();
+  const [seniority, setSeniority] = useState<"junior" | "mid" | "senior">("mid");
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["careerAlignment", session?.user?.id],
     queryFn: () => getCareerAlignment(),
     enabled: !!session?.user?.id,
@@ -111,6 +113,7 @@ export default function CareerAlignmentPage() {
         <p className="text-muted-foreground">
           Failed to load career alignment. Please refresh.
         </p>
+        <DashboardButton text="Retry" radius="md" onClick={() => refetch()} />
       </div>
     );
   }
@@ -137,7 +140,13 @@ export default function CareerAlignmentPage() {
     );
   }
 
-  const meta = alignmentMeta(data.matchPercentage);
+  const matchScore = seniority === "junior"
+    ? Math.min(100, Math.round(data.matchPercentage * 1.15))
+    : seniority === "senior"
+      ? Math.round(data.matchPercentage * 0.85)
+      : data.matchPercentage;
+
+  const meta = alignmentMeta(matchScore);
   const totalRequired = data.requirements.length;
 
   return (
@@ -168,9 +177,44 @@ export default function CareerAlignmentPage() {
                 developing
               </StatusBadge>
             </div>
+
+            {/* Seniority Selector */}
+            <div className="flex flex-wrap items-center gap-2 pt-1 justify-center lg:justify-start">
+              <span className="text-xs text-muted-foreground font-medium">Benchmark Level:</span>
+              <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-card border border-border">
+                <button
+                  type="button"
+                  onClick={() => setSeniority("junior")}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                    seniority === "junior" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Junior
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSeniority("mid")}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                    seniority === "mid" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Mid-Level
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSeniority("senior")}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                    seniority === "senior" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Senior
+                </button>
+              </div>
+            </div>
+
             <p className="text-sm text-muted-foreground max-w-md">
               Baseline computed against {totalRequired} required skill
-              {totalRequired === 1 ? "" : "s"} for this role.
+              {totalRequired === 1 ? "" : "s"} calibrated for {seniority} level expectations.
             </p>
             <DashboardButton
               href={data.href}
@@ -201,7 +245,7 @@ export default function CareerAlignmentPage() {
                 />
                 <path
                   stroke="url(#alignment-ring)"
-                  strokeDasharray={`${data.matchPercentage}, 100`}
+                  strokeDasharray={`${matchScore}, 100`}
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
                   strokeWidth="4"
@@ -211,7 +255,7 @@ export default function CareerAlignmentPage() {
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-4xl font-extrabold text-foreground">
-                  {data.matchPercentage}%
+                  {matchScore}%
                 </span>
                 <span className="text-xs font-semibold text-muted-foreground mt-0.5">
                   Match
