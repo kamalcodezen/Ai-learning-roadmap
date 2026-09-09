@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import prisma from "../../../../lib/prisma.js";
 
 export const getProofGraph = async (userId: string) => {
@@ -203,5 +204,65 @@ export const getProofGraph = async (userId: string) => {
     overallProofScore: Math.round(totalScore),
     nodes,
     edges,
+  };
+};
+
+const SHARE_SECRET = process.env.AUTH_SECRET || "careeros-proof-graph-share-token-secret";
+
+export const generateProofGraphShareToken = (userId: string): string => {
+  const payload = Buffer.from(JSON.stringify({ u: userId, t: Date.now() })).toString("base64url");
+  const signature = crypto.createHmac("sha256", SHARE_SECRET).update(payload).digest("base64url");
+  return `${payload}.${signature}`;
+};
+
+export const verifyProofGraphShareToken = (token: string): string | null => {
+  try {
+    const [payload, signature] = token.split(".");
+    if (!payload || !signature) return null;
+    const expectedSig = crypto.createHmac("sha256", SHARE_SECRET).update(payload).digest("base64url");
+    if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSig))) {
+      return null;
+    }
+    const decoded = JSON.parse(Buffer.from(payload, "base64url").toString("utf-8"));
+    return decoded.u || null;
+  } catch {
+    return null;
+  }
+};
+
+export const getPublicProofGraphByToken = async (token: string) => {
+  const userId = verifyProofGraphShareToken(token);
+  if (!userId) {
+    throw new Error("Invalid or expired proof verification token.");
+  }
+
+  const rawGraph = await getProofGraph(userId);
+  const profile = await prisma.careerProfile.findUnique({
+    where: { userId },
+    select: {
+      targetRole: true,
+      targetRoleName: true,
+      experienceLevel: true,
+      createdAt: true,
+    },
+  });
+
+  return {
+    verifiedCandidate: {
+      targetRole: profile?.targetRoleName || profile?.targetRole || "Software Professional",
+      experienceLevel: profile?.experienceLevel || "BEGINNER",
+      verifiedSince: profile?.createdAt,
+    },
+    primarySkill: rawGraph.primarySkill,
+    overallProofScore: rawGraph.overallProofScore,
+    nodes: rawGraph.nodes.map((n) => ({
+      id: n.id,
+      type: n.type,
+      title: n.title,
+      status: n.status,
+      description: n.description,
+      score: n.score,
+    })),
+    edges: rawGraph.edges,
   };
 };
