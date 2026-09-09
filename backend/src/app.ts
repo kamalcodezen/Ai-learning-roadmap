@@ -24,6 +24,8 @@ import adminRoutes from "./modules/admin/admin.routes.js";
 import interviewRoutes from "./modules/learner/interview/interview.routes.js";
 import gamificationRoutes from "./modules/learner/gamification/gamification.routes.js";
 import careerIntelligenceRoutes from "./modules/learner/career-intelligence/career-intelligence.routes.js";
+import notificationRoutes from "./modules/learner/notifications/notification.routes.js";
+import settingsRoutes from "./modules/learner/settings/settings.routes.js";
 const isProduction = env.NODE_ENV === "production";
 
 const app = express();
@@ -93,6 +95,12 @@ app.use("/api/career-intelligence", careerIntelligenceRoutes);
 
 // Career Profile Routes/ onboarding
 app.use("/api/career-profile", careerProfileRoutes);
+
+// Notification Routes
+app.use("/api/notifications", notificationRoutes);
+
+// Settings & Account Routes
+app.use("/api/settings", settingsRoutes);
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);
