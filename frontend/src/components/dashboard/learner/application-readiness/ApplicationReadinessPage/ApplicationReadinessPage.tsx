@@ -1,5 +1,6 @@
 "use client";
-import { PageHeader } from "@/src/components/dashboard/shared/patterns";
+import { useState } from "react";
+import { PageHeader, DashboardButton } from "@/src/components/dashboard/shared/patterns";
 
 import { redirect } from "next/navigation";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
@@ -13,15 +14,20 @@ import {
   AlertTriangle,
   XCircle,
   Briefcase,
-  FileText,
   Code,
   MessagesSquare,
+  Wrench,
+  Brain,
+  Download,
+  Share2,
+  Check,
 } from "lucide-react";
 
 export default function ApplicationReadinessPage() {
   const { data: session, isPending: isSessionLoading } = useDashboardSession();
+  const [copied, setCopied] = useState(false);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["applicationReadiness", session?.user?.id],
     queryFn: () => getApplicationReadiness(),
     enabled: !!session?.user?.id,
@@ -43,7 +49,8 @@ export default function ApplicationReadinessPage() {
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-4 text-center">
         <h3 className="text-xl font-bold text-destructive">Error</h3>
-        <p className="text-muted-foreground">Failed to load. Please refresh.</p>
+        <p className="text-muted-foreground">Failed to load application readiness. Please refresh.</p>
+        <DashboardButton text="Retry" radius="md" onClick={() => refetch()} />
       </div>
     );
   }
@@ -76,7 +83,7 @@ export default function ApplicationReadinessPage() {
           icon: <AlertTriangle className="w-5 h-5 text-muted-foreground" />,
           color: "text-muted-foreground",
           bg: "bg-muted border-border",
-          label: "Missing Data",
+          label: "Not Assessed",
         };
       default:
         return {
@@ -89,19 +96,69 @@ export default function ApplicationReadinessPage() {
   };
 
   const getCategoryIcon = (name: string) => {
-    if (name.includes("Technical")) return <Code className="w-5 h-5" />;
-    if (name.includes("Resume")) return <FileText className="w-5 h-5" />;
-    if (name.includes("Interview") || name.includes("Communication"))
-      return <MessagesSquare className="w-5 h-5" />;
+    if (name.includes("Technical") || name.includes("Knowledge")) return <Code className="w-5 h-5" />;
+    if (name.includes("Practical")) return <Wrench className="w-5 h-5" />;
+    if (name.includes("Portfolio") || name.includes("Project")) return <Briefcase className="w-5 h-5" />;
+    if (name.includes("Problem")) return <Brain className="w-5 h-5" />;
+    if (name.includes("Communication")) return <MessagesSquare className="w-5 h-5" />;
+    if (name.includes("Interview")) return <MessagesSquare className="w-5 h-5" />;
     return <Briefcase className="w-5 h-5" />;
+  };
+
+  const handleCopySummary = () => {
+    const formatDim = (val: number | string | undefined) =>
+      val !== undefined && val !== "NOT_ASSESSED" && val !== null ? `${val}%` : "Not Assessed";
+
+    const summary =
+      `Career Readiness Audit: ${data.overallScore}% (${data.isReady ? "Ready to Apply" : "In Progress"})\n` +
+      `• Knowledge Proficiency: ${formatDim(data.dimensions?.knowledgeProficiency)}\n` +
+      `• Practical Competence: ${formatDim(data.dimensions?.practicalCompetence)}\n` +
+      `• Project Execution: ${formatDim(data.dimensions?.projectExecution)}\n` +
+      `• Problem Solving: ${formatDim(data.dimensions?.problemSolving)}\n` +
+      `• Communication Skills: ${formatDim(data.dimensions?.communication)}\n` +
+      `• Interview Preparedness: ${formatDim(data.dimensions?.interviewPreparedness)}\n` +
+      `Verified via AI Learning Roadmap Canonical Readiness Engine.`;
+
+    navigator.clipboard.writeText(summary);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
   };
 
   return (
     <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
-      <PageHeader
-        title="Application Readiness"
-        description="Are you ready to apply for jobs? Let's analyze your entire profile."
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <PageHeader
+          title="Application Readiness"
+          description="Are you ready to apply for jobs? Let's analyze your entire profile."
+        />
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={handleCopySummary}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl border border-border bg-card hover:bg-muted text-foreground transition-all cursor-pointer shadow-sm"
+          >
+            {copied ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-green-500" />
+                <span>Copied!</span>
+              </>
+            ) : (
+              <>
+                <Share2 className="w-3.5 h-3.5 text-muted-foreground" />
+                <span>Share Summary</span>
+              </>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl border border-border bg-card hover:bg-muted text-foreground transition-all cursor-pointer shadow-sm"
+          >
+            <Download className="w-3.5 h-3.5 text-muted-foreground" />
+            <span>Export Audit (PDF)</span>
+          </button>
+        </div>
+      </div>
 
       <DashboardCard
         className={`border-l-4 ${data.isReady ? "border-l-green-500" : "border-l-amber-500"}`}
@@ -159,7 +216,7 @@ export default function ApplicationReadinessPage() {
                   {d.label}
                 </span>
                 <span className="text-base font-bold text-foreground mt-1">
-                  {d.val !== "NOT_ASSESSED" && d.val !== undefined
+                  {d.val !== "NOT_ASSESSED" && d.val !== undefined && d.val !== null
                     ? `${d.val}%`
                     : "Not Assessed"}
                 </span>
