@@ -182,5 +182,74 @@ export const completeInterviewSession = async (userId: string) => {
     console.error("Failed to award gamification XP for interview:", err);
   }
 
+  // Record Activity Log
+  try {
+    await prisma.activityLog.create({
+      data: {
+        userId,
+        type: "PRACTICE",
+        description: `Completed mock interview with score ${finalScore}%`,
+        metadata: { sessionId: session.id, finalScore },
+      },
+    });
+  } catch (err) {
+    console.error("Failed to create interview activity log:", err);
+  }
+
+  // Create real Notification
+  try {
+    const { createNotification } = await import("../../notifications/services/notification.service.js");
+    await createNotification({
+      userId,
+      type: "INTERVIEW",
+      title: "Mock Interview Completed",
+      message: `You completed your mock interview with a score of ${finalScore}%.`,
+      metadata: { sessionId: session.id, score: finalScore },
+    });
+  } catch (err) {
+    console.error("Failed to create interview notification:", err);
+  }
+
   return { success: true, finalScore };
+};
+
+export const getInterviewHistory = async (userId: string) => {
+  const sessions = await prisma.interviewSession.findMany({
+    where: { userId, status: "COMPLETED" },
+    orderBy: { completedAt: "desc" },
+    include: {
+      questions: { select: { id: true, question: true, order: true } },
+      answers: { select: { id: true, questionId: true, answerText: true, evaluation: true } },
+    },
+    take: 20,
+  });
+
+  return sessions.map((s) => ({
+    id: s.id,
+    targetRole: s.targetRole,
+    status: s.status,
+    score: s.score,
+    startedAt: s.startedAt,
+    completedAt: s.completedAt,
+    questionsCount: s.questions.length,
+    answersCount: s.answers.length,
+    questions: s.questions,
+    answers: s.answers,
+  }));
+};
+
+export const getInterviewSessionDetails = async (userId: string, sessionId: string) => {
+  const session = await prisma.interviewSession.findUnique({
+    where: { id: sessionId },
+    include: {
+      questions: { orderBy: { order: "asc" } },
+      answers: true,
+    },
+  });
+
+  if (!session || session.userId !== userId) {
+    throw new Error("Interview session not found or unauthorized.");
+  }
+
+  return session;
 };

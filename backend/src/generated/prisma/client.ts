@@ -171,3 +171,8 @@ export type XPTransaction = Prisma.XPTransactionModel
  * 
  */
 export type UserAchievement = Prisma.UserAchievementModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel

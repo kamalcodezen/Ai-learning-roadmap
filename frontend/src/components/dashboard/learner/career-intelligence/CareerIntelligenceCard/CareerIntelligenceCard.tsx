@@ -56,6 +56,7 @@ export default function CareerIntelligenceCard() {
     data: decisionData,
     isLoading: isDecisionLoading,
     isError: isDecisionError,
+    refetch: refetchDecision,
   } = useQuery({
     queryKey: ["careerDecision", session?.user?.id],
     queryFn: () => getCareerDecision(),
@@ -67,6 +68,7 @@ export default function CareerIntelligenceCard() {
     data: verificationData,
     isLoading: isVerificationLoading,
     isError: isVerificationError,
+    refetch: refetchVerification,
   } = useQuery({
     queryKey: ["evidenceVerification", session?.user?.id],
     queryFn: () => getEvidenceVerification(),
@@ -98,23 +100,14 @@ export default function CareerIntelligenceCard() {
         <div className="border-b border-border px-6 py-5">
           <div className="h-3 w-32 animate-pulse rounded bg-muted" />
           <div className="mt-3 h-7 w-72 animate-pulse rounded bg-muted" />
-          <div className="mt-2 h-3 w-96 max-w-full animate-pulse rounded bg-muted" />
+          <div className="mt-2 h-4 w-96 animate-pulse rounded bg-muted" />
         </div>
-
-        <div className="grid grid-cols-1 gap-px bg-border md:grid-cols-3">
-          {[1, 2, 3].map((item) => (
-            <div key={item} className="bg-card p-6">
-              <div className="h-3 w-24 animate-pulse rounded bg-muted" />
-              <div className="mt-4 h-8 w-20 animate-pulse rounded bg-muted" />
-              <div className="mt-2 h-3 w-full animate-pulse rounded bg-muted" />
-            </div>
-          ))}
-        </div>
-
-        <div className="space-y-4 p-6">
-          <div className="h-4 w-40 animate-pulse rounded bg-muted" />
-          <div className="h-20 animate-pulse rounded-xl bg-muted/50" />
-          <div className="h-20 animate-pulse rounded-xl bg-muted/50" />
+        <div className="p-6 space-y-6">
+          <div className="h-24 animate-pulse rounded-xl bg-muted" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="h-32 animate-pulse rounded-xl bg-muted" />
+            <div className="h-32 animate-pulse rounded-xl bg-muted" />
+          </div>
         </div>
       </DashboardCard>
     );
@@ -144,6 +137,16 @@ export default function CareerIntelligenceCard() {
             Unable to generate decision analytics at this moment. Ensure your
             profile and diagnostic are completed.
           </p>
+
+          <DashboardButton
+            text="Retry Analytics"
+            radius="md"
+            size="sm"
+            onClick={() => {
+              refetchDecision();
+              refetchVerification();
+            }}
+          />
         </div>
       </DashboardCard>
     );

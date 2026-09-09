@@ -8,7 +8,8 @@ export const getLearnerJobReality = async (req: Request, res: Response) => {
       return res.status(401).json({ success: false, error: "Unauthorized" });
     }
 
-    const data = await jobRealityService.getLearnerJobReality(userId);
+    const location = req.query.location as string | undefined;
+    const data = await jobRealityService.getLearnerJobReality(userId, location);
 
     return res.status(200).json({
       success: true,

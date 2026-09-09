@@ -24,38 +24,102 @@ import {
   Sparkles,
   ChevronDown,
   ChevronUp,
+  X,
+  Loader2,
+  AlertTriangle,
 } from "lucide-react";
 import Link from "next/link";
 import { DashboardButton } from "@/src/components/dashboard/shared/patterns";
+
+function isMatchingSkillFrontend(aRaw: string, bRaw: string): boolean {
+  if (!aRaw || !bRaw) return false;
+  const a = aRaw.toLowerCase().trim();
+  const b = bRaw.toLowerCase().trim();
+  if (a === b) return true;
+  if ((a === "react" && b === "react native") || (b === "react" && a === "react native")) return false;
+  const aClean = a.replace(/[^a-z0-9]/g, "");
+  const bClean = b.replace(/[^a-z0-9]/g, "");
+  if (aClean && bClean && aClean === bClean) return true;
+  if (a.startsWith("node.js") && (b === "node.js" || b === "node")) return true;
+  if (b.startsWith("node.js") && (a === "node.js" || a === "node")) return true;
+  if (a.startsWith("html") && (b === "html" || b === "html5")) return true;
+  if (b.startsWith("html") && (a === "html" || a === "html5")) return true;
+  if (a.startsWith("css") && (b === "css" || b === "css3")) return true;
+  if (b.startsWith("css") && (a === "css" || a === "css3")) return true;
+  if (a.length >= 3 && b.length >= 3 && (a.includes(b) || b.includes(a))) return true;
+
+  const aParts = a.split(/[/,]/).map((p) => p.trim()).filter(Boolean);
+  const bParts = b.split(/[/,]/).map((p) => p.trim()).filter(Boolean);
+  if (aParts.length > 1 || bParts.length > 1) {
+    for (const pA of aParts) {
+      for (const pB of bParts) {
+        if (pA === pB) return true;
+        const pAClean = pA.replace(/[^a-z0-9]/g, "");
+        const pBClean = pB.replace(/[^a-z0-9]/g, "");
+        if (pAClean && pBClean && pAClean === pBClean) return true;
+        if (pA.length >= 3 && pB.length >= 3 && (pA.includes(pB) || pB.includes(pA))) return true;
+      }
+    }
+  }
+  return false;
+}
 
 export default function LearningPathContent() {
   const { data: session, isPending: isSessionLoading } = useDashboardSession();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
 
+  const [generatedProject, setGeneratedProject] = useState<{
+    id: string;
+    title: string;
+    description: string;
+    techStack: string[];
+    duplicate?: boolean;
+  } | null>(null);
+  const [projectError, setProjectError] = useState<string | null>(null);
+
   const skillParam = searchParams?.get("skill")?.trim() || null;
   const milestoneParam = searchParams?.get("milestone")?.trim() || null;
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["learningPath", session?.user?.id],
     queryFn: () => getLearningPath(),
     enabled: !!session?.user?.id,
   });
 
-  // Validate and locate target milestone from query params safely
-  const targetMilestone = data?.milestones?.find((m) => {
-    if (milestoneParam && m.id === milestoneParam) return true;
-    if (
-      skillParam &&
-      m.skillsCovered.some(
-        (s) =>
-          s.toLowerCase() === skillParam.toLowerCase() ||
-          skillParam.toLowerCase().includes(s.toLowerCase()),
-      )
-    )
-      return true;
-    return false;
-  });
+  // Validate and locate target milestone from query params safely using canonical skill matching
+  const targetMilestone = (() => {
+    if (!data?.milestones || data.milestones.length === 0) return null;
+
+    if (skillParam) {
+      // 1. If milestoneParam is also supplied, verify if that exact milestone covers skillParam
+      if (milestoneParam) {
+        const exactMatch = data.milestones.find(
+          (m) =>
+            m.id === milestoneParam &&
+            m.skillsCovered.some((s) => isMatchingSkillFrontend(s, skillParam))
+        );
+        if (exactMatch) return exactMatch;
+      }
+
+      // 2. Find the first milestone in the roadmap explicitly covering skillParam via canonical matching
+      const skillMatch = data.milestones.find((m) =>
+        m.skillsCovered.some((s) => isMatchingSkillFrontend(s, skillParam))
+      );
+      if (skillMatch) return skillMatch;
+
+      // Do NOT attach target badge to an unrelated milestone if no milestone covers skillParam
+      return null;
+    }
+
+    // 3. Fallback: if no skillParam is provided, match by milestoneParam if valid
+    if (milestoneParam) {
+      const milestoneMatch = data.milestones.find((m) => m.id === milestoneParam);
+      if (milestoneMatch) return milestoneMatch;
+    }
+
+    return null;
+  })();
   const targetMilestoneId = targetMilestone?.id || null;
 
   // Contextual auto-scroll into view when target milestone is resolved
@@ -86,14 +150,30 @@ export default function LearningPathContent() {
   });
 
   const generateProjectMutation = useMutation({
-    mutationFn: (milestoneId: string) => generateMilestoneProject(milestoneId),
-    onSuccess: () => {
+    mutationFn: (opts: { milestoneId?: string; skill?: string }) =>
+      generateMilestoneProject(opts.milestoneId, opts.skill),
+    onSuccess: (resData) => {
+      setProjectError(null);
+      const proj = (resData?.project || resData?.data || resData) as unknown as Record<string, unknown>;
+      const titleVal = typeof proj?.title === "string" ? proj.title : (typeof proj?.name === "string" ? proj.name : "Milestone Project");
+      const descVal = typeof proj?.description === "string" ? proj.description : "Project specification generated.";
+      const techVal = Array.isArray(proj?.techStack) ? (proj.techStack as string[]) : [];
+      setGeneratedProject({
+        id: typeof proj?.id === "string" ? proj.id : "",
+        title: titleVal,
+        description: descVal,
+        techStack: techVal,
+        duplicate: !!resData?.duplicate,
+      });
       queryClient.invalidateQueries({
         queryKey: ["portfolio", session?.user?.id],
       });
       queryClient.invalidateQueries({
         queryKey: ["dashboardData", session?.user?.id],
       });
+    },
+    onError: (err: Error) => {
+      setProjectError(err.message || "Failed to generate project. Please try again.");
     },
   });
 
@@ -109,13 +189,35 @@ export default function LearningPathContent() {
     return <LearningPathSkeleton />;
   }
 
-  if (isError || !data) {
+  if (isError) {
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-4 text-center">
         <h3 className="text-xl font-bold text-destructive">Roadmap Error</h3>
         <p className="text-muted-foreground">
           Failed to load your roadmap. Please try refreshing the page.
         </p>
+        <DashboardButton text="Retry" radius="md" onClick={() => refetch()} />
+      </div>
+    );
+  }
+
+  if (!data || !data.milestones || data.milestones.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4 text-center max-w-lg mx-auto p-8 rounded-2xl border-2 border-dashed border-border bg-card/40">
+        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
+          <BookOpen className="w-8 h-8" />
+        </div>
+        <h3 className="text-2xl font-bold text-foreground">No Roadmap Milestones Yet</h3>
+        <p className="text-sm text-muted-foreground">
+          Your learning roadmap is personalized based on your career goals and assessment results. Take the diagnostic to generate your custom milestones.
+        </p>
+        <DashboardButton
+          href="/diagnostic"
+          text="Take Diagnostic Assessment"
+          size="lg"
+          radius="xl"
+          icon={<ArrowRight className="w-4 h-4" />}
+        />
       </div>
     );
   }
@@ -149,6 +251,15 @@ export default function LearningPathContent() {
           </div>
         </div>
       </div>
+
+      {skillParam && !targetMilestone && (
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-center gap-3 text-amber-700 dark:text-amber-300 text-sm">
+          <Target className="w-5 h-5 shrink-0 text-amber-500" />
+          <span>
+            Target Skill Gap: <strong>{skillParam}</strong> is preserved, but no directly linked milestone covers this skill in your current active roadmap.
+          </span>
+        </div>
+      )}
 
       <div className="flex flex-col relative">
         <div className="absolute left-[27px] top-4 bottom-12 w-0.5 bg-border z-0 hidden md:block" />
@@ -302,16 +413,26 @@ export default function LearningPathContent() {
                             />
                             <button
                               onClick={() =>
-                                generateProjectMutation.mutate(milestone.id)
+                                generateProjectMutation.mutate({
+                                  milestoneId: milestone.id,
+                                  skill: skillParam || undefined,
+                                })
                               }
                               disabled={generateProjectMutation.isPending}
                               className="w-full bg-muted text-foreground hover:bg-card-soft py-2 rounded-lg text-xs font-medium border border-border flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                             >
-                              <FolderKanban className="w-3.5 h-3.5 text-primary" />
                               {generateProjectMutation.isPending &&
-                              generateProjectMutation.variables === milestone.id
-                                ? "Generating..."
-                                : "Generate Project"}
+                              generateProjectMutation.variables?.milestoneId === milestone.id ? (
+                                <>
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
+                                  Generating...
+                                </>
+                              ) : (
+                                <>
+                                  <FolderKanban className="w-3.5 h-3.5 text-primary" />
+                                  Generate Project
+                                </>
+                              )}
                             </button>
                           </div>
                         ) : milestone.status === "upcoming" ? (
@@ -346,6 +467,109 @@ export default function LearningPathContent() {
             );
           })}
         </div>
+
+        {projectError && (
+          <div className="p-4 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive text-sm flex items-center justify-between animate-in fade-in">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>{projectError}</span>
+            </div>
+            <button
+              onClick={() => setProjectError(null)}
+              className="p-1 hover:bg-destructive/20 rounded-md transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        {generatedProject && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 overflow-y-auto">
+            <div className="w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6 animate-in zoom-in-95 my-8">
+              <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
+                <div className="flex items-center gap-2">
+                  <div className={`p-2 rounded-lg ${generatedProject.duplicate ? "bg-amber-500/10 text-amber-400" : "bg-primary/10 text-primary"}`}>
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-foreground">
+                      {generatedProject.duplicate
+                        ? "You already have an AI project for this learning context."
+                        : "Milestone Project Generated"}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      {generatedProject.duplicate
+                        ? "AI Pather reused your existing project instead of creating another duplicate."
+                        : "Added to your portfolio evidence graph"}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setGeneratedProject(null)}
+                  className="p-1 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-base font-bold text-foreground">
+                    {generatedProject.title}
+                  </h4>
+                  <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                    {generatedProject.description}
+                  </p>
+                </div>
+
+                {generatedProject.duplicate && (
+                  <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs space-y-1 text-amber-300">
+                    <p className="font-bold flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-amber-400" /> Existing Project Reused:
+                    </p>
+                    <p className="text-muted-foreground">
+                      This context already has a project, so AI Pather reused the existing project instead of creating another one.
+                    </p>
+                  </div>
+                )}
+
+                {generatedProject.techStack && generatedProject.techStack.length > 0 && (
+                  <div>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
+                      Technologies / Skills Covered
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {generatedProject.techStack.map((tech: string, idx: number) => (
+                        <span
+                          key={idx}
+                          className="px-2.5 py-1 text-xs font-semibold rounded-md bg-primary/10 text-primary border border-primary/20"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="pt-4 border-t border-border flex items-center justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setGeneratedProject(null)}
+                    className="px-4 py-2 text-xs font-semibold rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                  >
+                    Close
+                  </button>
+                  <Link
+                    href="/dashboard/learner/portfolio"
+                    className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity flex items-center gap-1.5"
+                  >
+                    {generatedProject.duplicate ? "View Existing Project" : "View in Portfolio"} <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -47,8 +47,11 @@ export const getSkillGaps = async (userId: string) => {
   const allAnalysisSkills = [...analysisCoreSkills, ...analysisSupportingSkills];
 
   // Find mapped skills
+  // If multiple skillStates match a required skill, pick the most recently reviewed one
   const mappedSkillStates = requiredSkills.map(reqSkill => {
-    const state = skillStates.find(s => isMatchingSkill(s.skillName, reqSkill.skill));
+    const matchingStates = skillStates.filter(s => isMatchingSkill(s.skillName, reqSkill.skill));
+    matchingStates.sort((a, b) => new Date(b.lastReviewed).getTime() - new Date(a.lastReviewed).getTime());
+    const state = matchingStates[0];
     const score = state ? state.knowledgeScore : 0;
     const aiSkillMatch = allAnalysisSkills.find(
       as => isMatchingSkill(as.name, reqSkill.skill)
@@ -63,6 +66,32 @@ export const getSkillGaps = async (userId: string) => {
       aiReason: aiSkillMatch?.reason || null
     };
   });
+
+  // Include any assessed learner skills from skillStates not already covered by requiredSkills
+  const unmappedStates = skillStates.filter(
+    s => !requiredSkills.some(req => isMatchingSkill(s.skillName, req.skill))
+  );
+
+  // Deduplicate unmapped states if any aliases exist, keeping most recent
+  const seenUnmapped = new Set<string>();
+  for (const extraState of unmappedStates) {
+    const isAlreadyCovered = Array.from(seenUnmapped).some(seen => isMatchingSkill(seen, extraState.skillName));
+    if (isAlreadyCovered) continue;
+    seenUnmapped.add(extraState.skillName);
+
+    const aiSkillMatch = allAnalysisSkills.find(
+      as => isMatchingSkill(as.name, extraState.skillName)
+    );
+
+    mappedSkillStates.push({
+      skillName: extraState.skillName,
+      isCritical: extraState.knowledgeScore < 40,
+      knowledgeScore: extraState.knowledgeScore,
+      id: extraState.id,
+      isMissing: false,
+      aiReason: aiSkillMatch?.reason || null
+    });
+  }
 
   const criticalGaps = mappedSkillStates.filter(s => s.knowledgeScore < 40 && s.isCritical).length;
   const moderateGaps = mappedSkillStates.filter(s => s.knowledgeScore >= 40 && s.knowledgeScore < 70).length;
@@ -88,22 +117,14 @@ export const getSkillGaps = async (userId: string) => {
       ? "No assessment or project evidence recorded." 
       : `Current verified proficiency: ${Math.round(s.knowledgeScore)}%`;
 
-    // Match skill against active roadmap milestone unlocks (flexible normalized matcher)
-    const normSkill = s.skillName.toLowerCase().trim();
+    // Match skill against active roadmap milestone unlocks using canonical skill matcher
     const matchingMilestone = activeRoadmap?.milestones.find((m) =>
-      (m.unlocks || []).some((u: string) => {
-        const normU = u.toLowerCase().trim();
-        return (
-          normU === normSkill ||
-          normSkill.includes(normU) ||
-          normU.includes(normSkill)
-        );
-      })
+      (m.unlocks || []).some((u: string) => isMatchingSkill(u, s.skillName))
     );
 
     const href = matchingMilestone
       ? `/dashboard/learner/learning-path?skill=${encodeURIComponent(s.skillName)}&milestone=${encodeURIComponent(matchingMilestone.id)}`
-      : "/dashboard/learner/learning-path";
+      : `/dashboard/learner/learning-path?skill=${encodeURIComponent(s.skillName)}`;
 
     return {
       id: s.id || `missing-${idx}`,

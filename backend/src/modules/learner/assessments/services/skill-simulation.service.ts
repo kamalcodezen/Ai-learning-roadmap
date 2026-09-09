@@ -533,6 +533,20 @@ export async function submitSkillSimulation(
     console.warn(`[Gamification XP award skipped]: ${err.message}`);
   }
 
+  // 10. Trigger Notification
+  try {
+    const { createNotification } = await import("../../notifications/services/notification.service.js");
+    await createNotification({
+      userId,
+      type: "ASSESSMENT",
+      title: "Assessment Completed",
+      message: `Completed Skill Simulation for ${normSkill} with score ${overallScore}%.`,
+      metadata: { skill: normSkill, score: overallScore },
+    });
+  } catch (err) {
+    console.error("Failed to create skill simulation notification:", err);
+  }
+
   return {
     skill: normSkill,
     targetRole,
@@ -564,6 +578,11 @@ export function isMatchingSkill(metaSkillRaw: unknown, targetSkillRaw: string): 
   const b = targetSkillRaw.toLowerCase().trim();
   if (a === b) return true;
 
+  // Distinct skills that should never match
+  if ((a === "react" && b === "react native") || (b === "react" && a === "react native")) {
+    return false;
+  }
+
   // Normalized alphanumeric match (e.g. "nodejs" vs "node.js", "html5" vs "html")
   const aClean = a.replace(/[^a-z0-9]/g, "");
   const bClean = b.replace(/[^a-z0-9]/g, "");
@@ -576,6 +595,28 @@ export function isMatchingSkill(metaSkillRaw: unknown, targetSkillRaw: string): 
   if (b.startsWith("html") && (a === "html" || a === "html5")) return true;
   if (a.startsWith("css") && (b === "css" || b === "css3")) return true;
   if (b.startsWith("css") && (a === "css" || a === "css3")) return true;
+
+  // Substring / containment matching for skill names (e.g. "Architecture" vs "System Architecture", "AWS / Cloud" vs "AWS")
+  if (a.length >= 3 && b.length >= 3 && (a.includes(b) || b.includes(a))) {
+    return true;
+  }
+
+  // Compound skills separated by "/" or "," (e.g., "Node.js / Architecture" or "Docker, PostgreSQL")
+  // Only match if a distinct component matches or contains the target skill
+  const aParts = a.split(/[/,]/).map((p) => p.trim()).filter(Boolean);
+  const bParts = b.split(/[/,]/).map((p) => p.trim()).filter(Boolean);
+
+  if (aParts.length > 1 || bParts.length > 1) {
+    for (const pA of aParts) {
+      for (const pB of bParts) {
+        if (pA === pB) return true;
+        const pAClean = pA.replace(/[^a-z0-9]/g, "");
+        const pBClean = pB.replace(/[^a-z0-9]/g, "");
+        if (pAClean && pBClean && pAClean === pBClean) return true;
+        if (pA.length >= 3 && pB.length >= 3 && (pA.includes(pB) || pB.includes(pA))) return true;
+      }
+    }
+  }
 
   return false;
 }

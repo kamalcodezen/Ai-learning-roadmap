@@ -6,6 +6,7 @@ export interface DashboardData {
   career: {
     targetRole: string;
     experienceLevel: string;
+    weeklyAvailableHours?: number;
     status?: string;
   };
   kpis?: {
@@ -34,6 +35,7 @@ export interface DashboardData {
   } | null;
   roadmap: {
     currentMilestone: string;
+    blockingPrerequisite?: string | null;
     progress: number;
     milestones: {
       name: string;

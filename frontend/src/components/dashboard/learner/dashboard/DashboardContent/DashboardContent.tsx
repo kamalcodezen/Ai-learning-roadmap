@@ -18,6 +18,8 @@ const ChatBox = dynamic(() => import("@/src/components/chat/ChatBox"), {
 import WelcomeStatsSection from "../../home/WelcomeStatsSection";
 import OverallProgress from "../../home/OverallProgress";
 import ShortRoadmap from "../../home/ShortRoadmap";
+import { DashboardButton } from "@/src/components/dashboard/shared/patterns";
+import { Sparkles, ArrowRight } from "lucide-react";
 
 export default function DashboardContent() {
   const { data: session, isPending: isSessionLoading } = useDashboardSession();
@@ -26,6 +28,7 @@ export default function DashboardContent() {
     data,
     isPending: isDashboardPending,
     isError,
+    refetch,
   } = useQuery({
     queryKey: ["dashboardData", session?.user?.id],
     queryFn: () => getDashboardOverview(),
@@ -52,6 +55,7 @@ export default function DashboardContent() {
         <p className="text-muted-foreground">
           Failed to load dashboard overview. Please try refreshing.
         </p>
+        <DashboardButton text="Retry" radius="md" onClick={() => refetch()} />
       </div>
     );
   }
@@ -59,8 +63,38 @@ export default function DashboardContent() {
   // Use optional chaining with fallback for smooth background refetches and safety
   const d = data || ({} as NonNullable<typeof data>);
 
+  const hasAnyData = Boolean(
+    d.readiness || d.roadmap || d.nextAction || d.skills?.length || d.learningDebt?.length
+  );
+
   return (
     <div className="flex flex-col gap-5 pb-4 animate-in fade-in duration-500">
+      {!hasAnyData && (
+        <div className="rounded-2xl border border-primary/30 bg-primary/5 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Get Started</span>
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">
+              Welcome to your AI Career Dashboard
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-xl">
+              Complete your personalized diagnostic assessment to generate your tailored AI learning roadmap, uncover skill gaps, and activate your career twin.
+            </p>
+          </div>
+          <DashboardButton
+            href="/diagnostic"
+            text={
+              <span className="flex items-center gap-2">
+                Take Diagnostic Test <ArrowRight className="w-4 h-4" />
+              </span>
+            }
+            size="lg"
+            radius="xl"
+          />
+        </div>
+      )}
       {d.readiness && (
         <WelcomeStatsSection
           readiness={d.readiness}

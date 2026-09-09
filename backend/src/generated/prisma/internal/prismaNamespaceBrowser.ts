@@ -76,7 +76,8 @@ export const ModelName = {
   InterviewAnswer: 'InterviewAnswer',
   UserGamification: 'UserGamification',
   XPTransaction: 'XPTransaction',
-  UserAchievement: 'UserAchievement'
+  UserAchievement: 'UserAchievement',
+  Notification: 'Notification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -283,6 +284,10 @@ export const ProjectScalarFieldEnum = {
   description: 'description',
   repositoryUrl: 'repositoryUrl',
   liveUrl: 'liveUrl',
+  projectType: 'projectType',
+  specification: 'specification',
+  aiSummary: 'aiSummary',
+  plannedVsActual: 'plannedVsActual',
   techStack: 'techStack',
   explanationQuality: 'explanationQuality',
   isVerified: 'isVerified',
@@ -465,6 +470,20 @@ export const UserAchievementScalarFieldEnum = {
 } as const
 
 export type UserAchievementScalarFieldEnum = (typeof UserAchievementScalarFieldEnum)[keyof typeof UserAchievementScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  isRead: 'isRead',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
 export const SortOrder = {
