@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 
 import type { NavLink } from "../navigation";
 import { cn } from "@/src/utils/cn";
+import { BorderBeam } from "@/src/components/ui/border-beam";
 import brandLogo from "@/public/brand/AI-Pather-blue.png";
 
 interface BottomNavBarProps {
@@ -25,12 +26,25 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
       className="fixed bottom-4 left-1/2 z-40 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 lg:hidden"
     >
       <div
-        className="flex items-center gap-1 rounded-full border px-2 py-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.45)]"
+        className="relative flex items-center gap-1 rounded-full border px-2 py-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.45)]"
         style={{
           backgroundColor: "#111621",
           borderColor: "rgba(255,255,255,0.08)",
         }}
       >
+        <BorderBeam
+          duration={6}
+          size={100}
+          borderWidth={2}
+          className="from-transparent via-[#9F54F7] to-transparent"
+        />
+        <BorderBeam
+          duration={6}
+          delay={3}
+          size={100}
+          borderWidth={2}
+          className="from-transparent via-[#c084fc] to-transparent"
+        />
         {/* Left brand icon */}
         <Link
           href="/"
@@ -62,7 +76,7 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
                 className={cn(
                   "group relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl py-1.5 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
                   active
-                    ? "bg-background text-secondary dark:bg-transparent dark:text-white"
+                    ? "text-white"
                     : "text-white/60 hover:text-white",
                 )}
               >
@@ -88,7 +102,7 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
                   <motion.span
                     layoutId="bottom-nav-dot"
                     aria-hidden="true"
-                    className="absolute -bottom-0.5 size-1 rounded-full bg-primary hidden dark:block"
+                    className="absolute -bottom-0.5 size-1 rounded-full bg-primary"
                     transition={{ type: "spring", damping: 20, stiffness: 220 }}
                   />
                 ) : (
