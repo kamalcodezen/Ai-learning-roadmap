@@ -299,7 +299,7 @@ export default function LearningPathContent() {
 
                 <Card
                   mouseGlow
-                  className={`group relative overflow-hidden flex-1 transition-all duration-300 rounded-xl border-2 shadow-none proof-card ${
+                  className={`group relative overflow-hidden flex-1 transition-all duration-300 rounded-xl border-2 shadow-none dashboard-card ${
                     milestone.status === "current"
                       ? "border-brand"
                       : isTarget
@@ -307,9 +307,6 @@ export default function LearningPathContent() {
                         : "border-background"
                   }`}
                 >
-                  {/* Corner shape */}
-                  <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
-
                   <CardContent>
                     <div className="flex flex-col lg:flex-row justify-between gap-6">
                       <div className="flex-1 space-y-4">

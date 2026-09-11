@@ -324,12 +324,12 @@ export default function ProofGraphPage() {
           </button>
 
           {/* View Tabs */}
-          <div className="flex items-center gap-2 bg-muted/60 p-1 rounded-lg border">
+          <div className="flex items-center gap-2 bg-muted/60 p-1 rounded-lg border-brand border">
           <button
             onClick={() => setActiveTab("proof-graph")}
             className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
               activeTab === "proof-graph"
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-brand text-white shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -340,7 +340,7 @@ export default function ProofGraphPage() {
             onClick={() => setActiveTab("skill-tree")}
             className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
               activeTab === "skill-tree"
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-brand text-white shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -351,7 +351,7 @@ export default function ProofGraphPage() {
             onClick={() => setActiveTab("achievements")}
             className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
               activeTab === "achievements"
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-brand text-white shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >

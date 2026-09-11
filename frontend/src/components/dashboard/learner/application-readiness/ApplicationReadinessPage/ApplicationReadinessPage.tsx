@@ -210,7 +210,7 @@ export default function ApplicationReadinessPage() {
             ].map((d, i) => (
               <div
                 key={i}
-                className="p-3 rounded-xl border bg-card/60 flex flex-col items-center justify-center text-center"
+                className="p-3 rounded-xl border-brand/20 border bg-card/60 flex flex-col items-center justify-center text-center"
               >
                 <span className="text-xs text-muted-foreground font-medium truncate">
                   {d.label}
@@ -237,9 +237,9 @@ export default function ApplicationReadinessPage() {
             >
               <CardContent className="p-0!">
                 <div className="flex flex-col lg:flex-row">
-                  <div className="p-6 lg:w-1/3 border-b lg:border-b-0 lg:border-r border-border bg-card-soft/50 flex flex-col justify-center">
+                  <div className="pb-6 lg:w-1/3 border-b lg:border-b-0 lg:border-r border-border flex flex-col justify-center">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-background rounded-lg border border-border shadow-sm">
+                      <div className="p-2 bg-background rounded-lg border-brand text-brand shadow-sm">
                         {getCategoryIcon(category.name)}
                       </div>
                       <h3 className="font-bold text-lg">{category.name}</h3>
@@ -247,7 +247,7 @@ export default function ApplicationReadinessPage() {
 
                     <div className="flex items-center justify-between">
                       <span
-                        className={`text-xs font-semibold px-2.5 py-1 rounded-md border ${status.bg} ${status.color}`}
+                        className={`text-xs font-semibold px-2.5 py-1 rounded-md border-brand border text-brand ${status.bg} ${status.color}`}
                       >
                         {status.label}
                       </span>
@@ -259,7 +259,7 @@ export default function ApplicationReadinessPage() {
                     </div>
                   </div>
 
-                  <div className="p-6 lg:w-2/3 flex flex-col justify-center gap-4">
+                  <div className="pt-6 lg:w-2/3 flex flex-col justify-center gap-4">
                     <div className="space-y-1">
                       <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                         {status.icon} Current Status
@@ -269,7 +269,7 @@ export default function ApplicationReadinessPage() {
                       </p>
                     </div>
 
-                    <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 space-y-1">
+                    <div className="bg-background/50 p-4 rounded-xl border border-primary/20 space-y-1">
                       <h4 className="text-sm font-semibold text-primary">
                         Recommendation
                       </h4>

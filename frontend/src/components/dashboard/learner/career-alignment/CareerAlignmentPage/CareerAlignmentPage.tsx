@@ -313,12 +313,12 @@ export default function CareerAlignmentPage() {
             {data.requirements.map((req, idx) => (
               <div
                 key={req.skill + idx}
-                className="flex items-center justify-between gap-4 p-4 bg-card-soft first:rounded-t-xl last:rounded-b-xl"
+                className="flex items-center flex-wrap justify-between gap-4 p-4 bg-card-soft first:rounded-t-xl last:rounded-b-xl"
               >
                 <span className="font-semibold text-sm text-foreground">
                   {req.skill}
                 </span>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
                   <StatusBadge tone={importanceTone[req.importance]}>
                     {req.importance} Priority
                   </StatusBadge>

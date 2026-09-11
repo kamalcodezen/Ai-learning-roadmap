@@ -105,7 +105,7 @@ export default function DashboardContent() {
         />
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 dashboard-card-gap">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 dashboard-card-gap w-full">
         <div className="col-auto lg:col-span-1">
           <div className="flex flex-col dashboard-card-gap h-full">
             {d.readiness && d.career && (

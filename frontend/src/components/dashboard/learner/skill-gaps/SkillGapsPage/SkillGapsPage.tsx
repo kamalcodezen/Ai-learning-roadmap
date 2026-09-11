@@ -6,7 +6,7 @@ import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGu
 import { getSkillGaps } from "@/src/lib/api/learner/skill-gaps";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../../shared/GenericPageSkeleton";
-import { Card, CardContent } from "@/src/components/ui/Card";
+import { CardContent } from "@/src/components/ui/Card";
 import { DashboardCard } from "@/src/components/dashboard/shared/cards";
 import {
   AlertTriangle,
@@ -55,7 +55,7 @@ export default function SkillGapsPage() {
       />
 
       <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
-        <Card>
+        <div className="dashboard-card-secondary">
           <CardContent className="p-6 flex flex-col gap-2">
             <Activity className="w-5 h-5 text-primary" />
             <span className="text-2xl font-bold">{data.overallHealth}%</span>
@@ -63,8 +63,8 @@ export default function SkillGapsPage() {
               Overall Health
             </span>
           </CardContent>
-        </Card>
-        <Card className="border-destructive/30 bg-destructive/5 bg-none">
+        </div>
+        <div className="border-destructive/30 bg-destructive/5 bg-none dashboard-card-secondary">
           <CardContent className="p-6 flex flex-col gap-2">
             <AlertTriangle className="w-5 h-5 text-destructive" />
             <span className="text-2xl font-bold text-destructive">
@@ -72,8 +72,8 @@ export default function SkillGapsPage() {
             </span>
             <span className="text-sm text-destructive/80">Critical Gaps</span>
           </CardContent>
-        </Card>
-        <Card className="border-amber-500/30 bg-amber-500/5 bg-none">
+        </div>
+        <div className="dashboard-card-secondary border-amber-500/30 bg-amber-500/5 bg-none">
           <CardContent className="p-6 flex flex-col gap-2">
             <AlertCircle className="w-5 h-5 text-amber-500" />
             <span className="text-2xl font-bold text-amber-500">
@@ -81,8 +81,8 @@ export default function SkillGapsPage() {
             </span>
             <span className="text-sm text-amber-500/80">Moderate Gaps</span>
           </CardContent>
-        </Card>
-        <Card className="border-green-500/30 bg-green-500/5 bg-none">
+        </div>
+        <div className="dashboard-card-secondary border-green-500/30 bg-green-500/5 bg-none">
           <CardContent className="p-6 flex flex-col gap-2">
             <TrendingUp className="w-5 h-5 text-green-500" />
             <span className="text-2xl font-bold text-green-500">
@@ -90,7 +90,7 @@ export default function SkillGapsPage() {
             </span>
             <span className="text-sm text-green-500/80">Strong Skills</span>
           </CardContent>
-        </Card>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 dashboard-card-gap">
@@ -109,7 +109,7 @@ export default function SkillGapsPage() {
           data.gaps.map((gap) => (
             <DashboardCard
               key={gap.id}
-              className={`border-l-4 ${gap.severity === "critical" ? "border-l-destructive" : "border-l-amber-500"}`}
+              className={`border-l-4 dashboard-card ${gap.severity === "critical" ? "border-l-destructive" : "border-l-amber-500"}`}
             >
               <CardContent>
                 <div className="flex flex-col lg:flex-row gap-6">
