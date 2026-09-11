@@ -125,6 +125,7 @@ export default function ChatBox() {
   return (
     <section
       className="group relative flex h-[90vh] w-full flex-col rounded-xl border-2 border-[#E6E9EE] dark:border-[rgba(159,84,247,0.15)] hover:border-brand transition-all duration-300 bg-background overflow-clip"
+      id="dashboard-chatbot"
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
     >
