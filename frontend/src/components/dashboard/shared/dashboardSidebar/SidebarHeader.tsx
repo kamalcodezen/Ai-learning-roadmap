@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
+import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
+import NotificationBell from "../notifications/NotificationBell";
 
 import brandLogo from "@/public/brand/AI-Pather-blue.png";
 
@@ -35,6 +37,11 @@ export default function SidebarHeader({ onClose }: SidebarHeaderProps) {
           AI Pather
         </span>
       </Link>
+
+      <div className="hidden lg:flex items-center gap-1">
+        <NotificationBell />
+        <AnimatedThemeToggler className="hover:bg-foreground/10" />
+      </div>
 
       {onClose && (
         <button
