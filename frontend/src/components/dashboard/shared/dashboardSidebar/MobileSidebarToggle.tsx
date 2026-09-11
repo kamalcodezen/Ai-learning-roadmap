@@ -1,6 +1,9 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import Link from "next/link";
+import { Menu, Sparkles } from "lucide-react";
+import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
+import NotificationBell from "../notifications/NotificationBell";
 
 interface MobileSidebarToggleProps {
   onOpen: () => void;
@@ -18,6 +21,20 @@ export default function MobileSidebarToggle({ onOpen }: MobileSidebarToggleProps
       >
         <Menu className="size-5" aria-hidden="true" />
       </button>
+
+      <div className="flex items-center gap-1">
+        <Link
+          href="/dashboard/learner/#dashboard-chatbot"
+          className="flex items-center gap-2 font-semibold text-primary hover:underline transition-all"
+        >
+          <Sparkles className="size-4.5 -mt-0.5" aria-hidden="true" />
+          Ai Mentor
+        </Link>
+
+        <NotificationBell />
+
+        <AnimatedThemeToggler className="hover:bg-foreground/10" />
+      </div>
     </div>
   );
 }
