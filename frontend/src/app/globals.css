@@ -414,18 +414,87 @@ button {
   }
 
   .dashboard-card {
-    @apply rounded-xl border p-6 backdrop-blur-md transition-all duration-300;
-    background: var(--gradient-proof-card);
-    border-color: #E6E9EE;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-  }
+  @apply relative overflow-hidden rounded-md border p-6 backdrop-blur-md
+    transition-all duration-300;
+
+  background: linear-gradient(
+    165deg,
+    #eadcfc 0%,
+    #ffffff 55%,
+    #e4d4fd 100%
+  );
+
+  border-color: rgb(159 84 247 / 0.15);
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+/* Top-right shape */
+.dashboard-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 5rem;
+  height: 5rem;
+
+  border-radius: 0 0 0 100%;
+
+  background: linear-gradient(
+    135deg,
+    rgb(159 84 247 / 0.2),
+    rgb(59 130 246 / 0.1)
+  );
+
+  pointer-events: none;
+}
+
+/* Bottom-left shape */
+.dashboard-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  width: 5rem;
+  height: 5rem;
+
+  border-radius: 0 100% 0 0;
+
+  background: linear-gradient(
+    315deg,
+    rgb(159 84 247 / 0.2),
+    rgb(59 130 246 / 0.1)
+  );
+
+  pointer-events: none;
+}
+
+/* Dark mode */
+.dark .dashboard-card {
+  background: linear-gradient(
+    165deg,
+    #240349 0%,
+    #0d0715 55%,
+    #1a0e2e 100%
+  );
+
+  border-color: rgb(159 84 247 / 0.2);
+}
+
+.dashboard-card-secondary { 
+  @apply rounded-xl border p-6 backdrop-blur-md transition-all duration-300; 
+  background: var(--gradient-proof-card); 
+  border-color: #E6E9EE; 
+}
 
   .proof-card {
     background: var(--gradient-proof-card);
     border-radius: 0.5rem;
   }
 
-  .dark .dashboard-card {
+  .dark .dashboard-card-secondary {
     background: var(--gradient-proof-card);
     border-color: rgba(159, 84, 247, 0.15);
   }
@@ -485,6 +554,11 @@ button {
   /* Dashboard card gap — single source of truth for all dashboard card grids */
   .dashboard-card-gap {
     gap: var(--dashboard-card-gap);
+  }
+
+  .skeleton-card {
+    @apply rounded-xl border flex flex-col overflow-hidden;
+    border-color: rgb(159 84 247 / 0.1);
   }
 }
 
