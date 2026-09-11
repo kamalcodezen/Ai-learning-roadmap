@@ -31,7 +31,7 @@ export default function SkillSimulationResultView({ result, onRetake }: Props) {
       : "text-rose-500 border-rose-500/30 bg-rose-500/10";
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500 max-w-4xl mx-auto">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500 max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/60 pb-6">
         <div className="space-y-1">
@@ -136,7 +136,7 @@ export default function SkillSimulationResultView({ result, onRetake }: Props) {
           Stage
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 dashboard-card-gap">
           {/* Stage 1 */}
           <Card className="border border-border/70">
             <CardContent className="p-5 space-y-3">
@@ -236,7 +236,7 @@ export default function SkillSimulationResultView({ result, onRetake }: Props) {
       </div>
 
       {/* Strong Areas & Needs Practice */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
         {result.strongAreas.length > 0 && (
           <Card className="border border-green-500/20 bg-green-500/5">
             <CardContent className="p-5 space-y-2.5">

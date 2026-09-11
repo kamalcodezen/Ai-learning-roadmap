@@ -68,7 +68,7 @@ export default function DashboardContent() {
   );
 
   return (
-    <div className="flex flex-col gap-5 pb-4 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-4 animate-in fade-in duration-500">
       {!hasAnyData && (
         <div className="rounded-2xl border border-primary/30 bg-primary/5 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
@@ -105,9 +105,9 @@ export default function DashboardContent() {
         />
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 dashboard-card-gap w-full">
         <div className="col-auto lg:col-span-1">
-          <div className="flex flex-col gap-6 h-full">
+          <div className="flex flex-col dashboard-card-gap h-full">
             {d.readiness && d.career && (
               <OverallProgress
                 value={d.readiness.score}
@@ -128,14 +128,14 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 dashboard-card-gap">
         {d.learningDebt && <LearningDebtCard data={d.learningDebt} />}
         {d.skills && <SkillHealthCard data={d.skills} />}
         {d.weeklyProgress && <WeeklyProgressCard data={d.weeklyProgress} />}
         {d.assessments && <AssessmentProgressCard data={d.assessments} />}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 mt-4">
+      <div className="grid grid-cols-1 dashboard-card-gap mt-4">
         <ChatBox />
       </div>
     </div>

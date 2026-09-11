@@ -120,7 +120,7 @@ export default function CareerAlignmentPage() {
 
   if (data.targetRole === "NO_TARGET_ROLE") {
     return (
-      <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+<div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
         <PageHeader
           title="Career Alignment"
           description="See how your current skills match up against your target role requirements."
@@ -150,14 +150,14 @@ export default function CareerAlignmentPage() {
   const totalRequired = data.requirements.length;
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <PageHeader
         title="Career Alignment"
         description="See how your current skills match up against your target role requirements."
       />
 
       {/* Hero: match ring + target role + next action */}
-      <DashboardCard className="border-primary/20 bg-primary/5">
+      <DashboardCard className="border-primary/20">
         <CardContent className="flex flex-col lg:flex-row items-center gap-8">
           <div className="flex-1 space-y-5 text-center lg:text-left">
             <div className="space-y-2">
@@ -267,7 +267,7 @@ export default function CareerAlignmentPage() {
       </DashboardCard>
 
       {/* Skill breakdown */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
         {skillSections(data).map((section) => (
           <DashboardCard key={section.title}>
             <CardHeader>
@@ -313,12 +313,12 @@ export default function CareerAlignmentPage() {
             {data.requirements.map((req, idx) => (
               <div
                 key={req.skill + idx}
-                className="flex items-center justify-between gap-4 p-4 bg-card-soft first:rounded-t-xl last:rounded-b-xl"
+                className="flex items-center flex-wrap justify-between gap-4 p-4 bg-card-soft first:rounded-t-xl last:rounded-b-xl"
               >
                 <span className="font-semibold text-sm text-foreground">
                   {req.skill}
                 </span>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
                   <StatusBadge tone={importanceTone[req.importance]}>
                     {req.importance} Priority
                   </StatusBadge>
@@ -344,7 +344,7 @@ export default function CareerAlignmentPage() {
       </DashboardCard>
 
       {/* Recommendations */}
-      <DashboardCard className="border-primary/20 bg-primary/5">
+      <DashboardCard className="border-primary/20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-primary">
             <Lightbulb className="w-5 h-5" /> Strategic Recommendations

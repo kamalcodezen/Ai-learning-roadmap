@@ -503,13 +503,13 @@ export default function PortfolioPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <PageHeader
         title="Portfolio & Career Proof"
         description="Turn real implementation and GitHub evidence into verifiable career proof."
       />
 
-      <DashboardCard className="bg-primary/5 border-primary/20">
+      <DashboardCard className="border-primary/20">
         <CardContent className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-1 space-y-2 text-center md:text-left">
             <h2 className="text-2xl font-bold text-foreground flex items-center justify-center md:justify-start gap-2">
@@ -539,7 +539,7 @@ export default function PortfolioPage() {
         <h2 className="text-lg font-bold uppercase tracking-wider text-muted-foreground">
           PROJECT CREATION & IMPORT
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
           {/* FLOW A ENTRY CARD */}
           <Card className="border border-purple-500/30 bg-purple-500/5 hover:border-purple-500/50 transition-all flex flex-col justify-between p-6">
             <div className="space-y-3">
@@ -657,12 +657,12 @@ export default function PortfolioPage() {
           </div>
 
           {/* Filter Pills */}
-          <div className="flex items-center gap-1.5 p-1 bg-muted rounded-xl border border-border">
+          <div className="flex flex-co md:flex-row items-center gap-1.5 p-1 bg-muted rounded-xl border border-brand">
             <button
               onClick={() => setActiveFilter("ALL")}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 activeFilter === "ALL"
-                  ? "bg-background text-foreground shadow-sm"
+                  ? "bg-brand text-white shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -672,7 +672,7 @@ export default function PortfolioPage() {
               onClick={() => setActiveFilter("GENERATED")}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center gap-1 ${
                 activeFilter === "GENERATED"
-                  ? "bg-purple-500/20 text-purple-400 shadow-sm border border-purple-500/30"
+                  ? "bg-brand text-white shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -683,7 +683,7 @@ export default function PortfolioPage() {
               onClick={() => setActiveFilter("IMPORTED")}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center gap-1 ${
                 activeFilter === "IMPORTED"
-                  ? "bg-blue-500/20 text-blue-400 shadow-sm border border-blue-500/30"
+                  ? "bg-brand text-white shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -700,7 +700,7 @@ export default function PortfolioPage() {
             </p>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 dashboard-card-gap">
             {filteredProjects.map((project) => {
               const statusPill = getLifecycleStatusPill(project);
               const isGenerated =
@@ -719,7 +719,7 @@ export default function PortfolioPage() {
                         : "border-l-4 border-l-blue-500"
                     }`}
                   >
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <div className="absolute top-0 right-0 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       <button
                         onClick={() => openEditModal(project)}
                         className="p-1.5 bg-background border border-border rounded-md hover:text-primary transition-colors"
@@ -740,7 +740,7 @@ export default function PortfolioPage() {
                       </button>
                     </div>
 
-                    <CardHeader className="border-b border-border bg-card-soft/50 p-6 pt-10">
+                    <CardHeader className="border-b border-border pb-6">
                       <div className="flex flex-wrap items-center gap-2 mb-3">
                         {isGenerated ? (
                           <span className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">
@@ -823,8 +823,8 @@ export default function PortfolioPage() {
                       </div>
                     </CardHeader>
 
-                    <CardContent className="p-6 flex flex-col gap-4">
-                      <div className="grid grid-cols-2 gap-4">
+                    <CardContent className="py-6 flex flex-col gap-4">
+                      <div className="grid grid-cols-2 dashboard-card-gap">
                         <div className="space-y-1.5">
                           <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">
@@ -882,7 +882,7 @@ export default function PortfolioPage() {
                               Verify
                             </span>
                           ) : (
-                            <span className="flex items-center gap-1.5 text-sm font-semibold text-destructive bg-destructive/10 px-3 py-1 rounded-full border border-destructive/20">
+                            <span className="flex items-center gap-1.5 text-sm font-semibold text-destructive bg-destructive/10 px-1 sm:px-3 py-1 rounded-full border border-destructive/20">
                               <AlertTriangle className="w-4 h-4" /> Missing Code
                               Evidence
                             </span>
@@ -986,7 +986,7 @@ export default function PortfolioPage() {
                         </div>
 
                         {project.aiReview && expandedReviews[project.id] && (
-                          <div className="mt-4 p-4 bg-muted/50 rounded-lg border border-border text-sm space-y-4 animate-in slide-in-from-top-2">
+                          <div className="mt-4 rounded-lg text-sm space-y-4 animate-in slide-in-from-top-2">
                             {/* Review Source Identifier Banner */}
                             <div className="flex items-center gap-2 p-2.5 rounded-md bg-card border border-border/80 text-xs text-muted-foreground">
                               <Info className="w-4 h-4 shrink-0 text-primary" />

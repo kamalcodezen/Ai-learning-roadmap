@@ -223,7 +223,7 @@ export default function LearningPathContent() {
   }
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-primary font-medium text-sm">
@@ -264,7 +264,7 @@ export default function LearningPathContent() {
       <div className="flex flex-col relative">
         <div className="absolute left-[27px] top-4 bottom-12 w-0.5 bg-border z-0 hidden md:block" />
 
-        <div className="flex flex-col gap-6 relative z-10">
+        <div className="flex flex-col dashboard-card-gap relative z-10">
           {data.milestones.map((milestone, idx) => {
             const isTarget = milestone.id === targetMilestoneId;
 
@@ -299,21 +299,14 @@ export default function LearningPathContent() {
 
                 <Card
                   mouseGlow
-                  className={`group relative overflow-hidden flex-1 transition-all duration-300 rounded-xl border-2 shadow-none ${
-                    isTarget
-                      ? "border-primary ring-2 ring-primary/40 shadow-lg shadow-primary/10"
-                      : "border-background hover:border-brand"
-                  } ${
+                  className={`group relative overflow-hidden flex-1 transition-all duration-300 rounded-xl border-2 shadow-none dashboard-card ${
                     milestone.status === "current"
-                      ? "bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]"
-                      : milestone.status === "upcoming"
-                        ? "bg-background dark:!bg-[#0b0f1a]"
-                        : "bg-background"
+                      ? "border-brand"
+                      : isTarget
+                        ? "border-primary ring-2 ring-primary/40 shadow-lg shadow-primary/10"
+                        : "border-background"
                   }`}
                 >
-                  {/* Corner shape */}
-                  <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
-
                   <CardContent>
                     <div className="flex flex-col lg:flex-row justify-between gap-6">
                       <div className="flex-1 space-y-4">

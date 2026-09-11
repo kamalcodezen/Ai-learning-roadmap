@@ -68,13 +68,13 @@ export default function ProgressPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <PageHeader
         title="Progress Tracking"
         description="Monitor your learning hours, streaks, and recent activities."
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
         <Card>
           <CardContent className="p-6 flex flex-col gap-2">
             <Clock className="w-5 h-5 text-primary" />

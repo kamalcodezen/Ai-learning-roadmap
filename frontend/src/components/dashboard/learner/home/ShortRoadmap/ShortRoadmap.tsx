@@ -19,7 +19,7 @@ export default function ShortRoadmap({ data }: Props) {
   if (!data) {
     return (
       <Card
-        className="rounded-xl p-6 border-2 border-background shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]"
+        className="rounded-xl p-6 border-2 border-background shadow-none proof-card"
       >
         <CardHeader className="relative z-10 pb-2">
           <CardTitle>Your Roadmap</CardTitle>
@@ -36,7 +36,7 @@ export default function ShortRoadmap({ data }: Props) {
 
   return (
     <Card
-      className="rounded-xl p-6 border-2 border-background shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]"
+      className="rounded-xl p-6 border-2 border-background shadow-none proof-card"
     >
       {/* ================================================================
           HEADER

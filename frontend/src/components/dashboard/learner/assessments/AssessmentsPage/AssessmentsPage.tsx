@@ -75,14 +75,14 @@ export default function AssessmentsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <PageHeader
         title="Assessments"
         description="Manage your evaluations, diagnostics, and skill tests."
       />
 
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="bg-primary/5 border-primary/20">
+      <div className="grid grid-cols-2 dashboard-card-gap">
+        <Card className="border-primary/20">
           <CardContent className="p-6 flex items-center justify-between">
             <div className="flex flex-col gap-1">
               <span className="text-3xl font-bold text-primary">
@@ -108,7 +108,7 @@ export default function AssessmentsPage() {
         </Card>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col dashboard-card-gap">
         <h2 className="text-xl font-semibold">Your Evaluations</h2>
 
         {data.assessments.length === 0 ? (
@@ -127,7 +127,7 @@ export default function AssessmentsPage() {
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 dashboard-card-gap">
             {data.assessments.map((assessment) => (
               <DashboardCard
                 key={assessment.id}

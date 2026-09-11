@@ -101,7 +101,7 @@ export default function AdminAnalyticsView() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
         {stats.map((s) => (
           <GlowCard key={s.label} href={s.href}>
             <p className="text-sm text-muted-foreground">{s.label}</p>
@@ -112,7 +112,7 @@ export default function AdminAnalyticsView() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
         {charts.map((c) => (
           <DashboardCard key={c.title}>
             <h3 className="font-sans text-xl font-semibold text-foreground tracking-tight mb-4">
