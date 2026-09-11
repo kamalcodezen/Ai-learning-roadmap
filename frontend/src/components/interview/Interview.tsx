@@ -7,7 +7,14 @@ import { CheckCircle2, ChevronRight, Loader2, Target, Mic, MicOff, History, Cale
 import { startInterview, submitInterviewAnswer, completeInterview, getInterviewHistory } from "@/src/lib/actions/learner/interview";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 
+// generate loader effect related
+import { Sparkles, Brain, Wand2, Compass } from "lucide-react";
+
 type InterviewStatus = "idle" | "loading" | "ready" | "submitting" | "completed" | "error";
+
+
+
+
 
 export default function Interview() {
   const router = useRouter();
@@ -42,6 +49,25 @@ export default function Interview() {
       };
     }>;
   } | null>(null);
+
+  const PLAYFUL_MESSAGES = [
+  { text: "Reading your mind...", icon: Brain },
+  { text: "Mixing pure magic...", icon: Wand2 },
+  { text: "Curating your special questions...", icon: Sparkles },
+  { text: "Plotting the ultimate challenge...", icon: Compass },
+];
+
+// Generating Questions Effect loader
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % PLAYFUL_MESSAGES.length);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, [PLAYFUL_MESSAGES.length]);
+
+  const ActiveIcon = PLAYFUL_MESSAGES[index].icon;
 
   const { data: historyData } = useQuery({
     queryKey: ["interviewHistory", session?.user?.id],
@@ -233,7 +259,7 @@ export default function Interview() {
 
   if (isSessionLoading) {
     return (
-      <main className="flex min-h-[70vh] items-center justify-center">
+      <main className="flex   min-h-screen items-center justify-center">
         <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <Loader2 className="h-5 w-5 animate-spin" />
           Loading your mock interview...
@@ -244,8 +270,8 @@ export default function Interview() {
 
   if (!session?.user?.id) {
     return (
-      <main className="flex min-h-[70vh] items-center justify-center px-4">
-        <section className="w-full max-w-lg rounded-[28px] border border-border bg-card/80 p-8 text-center shadow-[var(--shadow)] backdrop-blur-xl">
+      <main className="flex   min-h-screen items-center justify-center px-4">
+        <section className="w-full max-w-lg rounded-xl border border-border bg-card/80 p-8 text-center dashboard-card">
           <h1 className="text-xl font-semibold">Sign in required</h1>
           <button type="button" onClick={() => router.push("/signin")} className="mt-6 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-secondary transition hover:opacity-90">Go to Sign In</button>
         </section>
@@ -255,8 +281,8 @@ export default function Interview() {
 
   if (status === "error") {
     return (
-      <main className="flex min-h-[70vh] items-center justify-center px-4">
-        <section className="w-full max-w-lg rounded-[28px] border border-border bg-card/80 p-8 text-center shadow-[var(--shadow)] backdrop-blur-xl">
+      <main className="flex   min-h-screen items-center justify-center px-4">
+        <section className="w-full max-w-lg rounded-xl border border-border bg-card/80 p-8 text-center dashboard-card">
           <h1 className="text-xl font-semibold">Interview unavailable</h1>
           <p className="mt-3 text-sm text-muted-foreground">{errorMessage}</p>
           <button type="button" onClick={() => { setStatus("idle"); setErrorMessage(""); }} className="mt-6 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-secondary transition hover:opacity-90">Try Again</button>
@@ -267,8 +293,8 @@ export default function Interview() {
 
   if (status === "completed" && result) {
     return (
-      <main className="relative flex min-h-[70vh] items-center justify-center px-4">
-        <section className="w-full max-w-2xl rounded-[32px] border border-border bg-card/80 p-8 text-center shadow-[var(--shadow)] backdrop-blur-xl sm:p-12">
+      <main className="relative flex   min-h-screen items-center justify-center px-4">
+        <section className="w-full max-w-2xl rounded-xl border border-border bg-card/80 p-8 text-center dashboard-card sm:p-12">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <CheckCircle2 className="h-8 w-8 text-primary" />
           </div>
@@ -290,7 +316,7 @@ export default function Interview() {
   if (status === "idle") {
     return (
       <main className="relative flex flex-col items-center justify-center px-4 py-8 max-w-4xl mx-auto space-y-8">
-        <section className="relative z-10 w-full max-w-2xl rounded-[32px] border border-border bg-card/80 p-8 text-center shadow-[var(--shadow)] backdrop-blur-xl sm:p-12">
+        <section className="relative z-10 w-full max-w-2xl rounded-xl border border-border bg-card/80 p-8 text-center dashboard-card sm:p-12">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
             <Target className="h-8 w-8 text-primary" />
           </div>
@@ -307,8 +333,8 @@ export default function Interview() {
 
         {/* PAST INTERVIEWS HISTORY */}
         {historyData && historyData.length > 0 && (
-          <section className="w-full max-w-3xl rounded-2xl border border-border bg-card/60 p-6 shadow-sm">
-            <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border">
+          <section className="w-full max-w-3xl rounded-xl dashboard-card">
+            <div className="flex flex-wrap items-center gap-2 mb-4 pb-3 border-b border-border">
               <History className="w-5 h-5 text-primary" />
               <h2 className="text-lg font-bold">Past Interview History</h2>
               <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary ml-auto">
@@ -454,35 +480,60 @@ export default function Interview() {
     );
   }
 
+  
+
   if (status === "loading" || !currentQuestion) {
     return (
-      <main className="flex min-h-[70vh] items-center justify-center">
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          Generating personalized questions...
+      <main className="flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="flex flex-col items-center gap-6 max-w-sm text-center">
+        {/* Animated Icon Badge */}
+        <div className="relative flex items-center justify-center">
+          {/* Outer glowing pulsing ring */}
+          <div className="absolute h-16 w-16 rounded-full bg-primary/20 animate-ping" />
+          
+          {/* Inner badge with bounce effect */}
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-sm border border-primary/20 transition-all duration-500 ease-out">
+            <ActiveIcon className="h-8 w-8 animate-bounce transition-transform duration-300" />
+          </div>
         </div>
-      </main>
+
+        {/* Dynamic Playful Text */}
+        <div className="space-y-1">
+          <p className="text-base font-semibold text-foreground transition-opacity duration-300 animate-pulse">
+            {PLAYFUL_MESSAGES[index].text}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Just a few seconds left
+          </p>
+        </div>
+
+        {/* Shimmering Progress Bar */}
+        <div className="h-1.5 w-48 overflow-hidden rounded-full bg-muted">
+          <div className="h-full w-full bg-gradient-to-r from-primary via-purple-500 to-primary animate-[shimmer_2s_infinite] bg-[length:200%_100%]" />
+        </div>
+      </div>
+    </main>
     );
   }
 
   return (
-    <main className="relative min-h-[70vh] w-full max-w-4xl mx-auto px-4 py-8">
+    <main className="relative   min-h-screen w-full max-w-4xl mx-auto px-4 py-8">
       <header className="mb-8">
         <h1 className="text-2xl font-bold">Mock Interview</h1>
         <p className="mt-2 text-sm text-muted-foreground">Answer carefully. Your responses will be evaluated on multiple dimensions.</p>
       </header>
 
-      <div className="mb-6 rounded-2xl border border-border bg-card/70 p-4">
+      <div className="mb-6 rounded-xl border border-border proof-card p-4">
         <div className="flex items-center justify-between text-xs">
           <span className="font-medium">Question {currentQuestionIndex + 1} of {questions.length}</span>
           <span className="text-muted-foreground">{progress}%</span>
         </div>
-        <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
+        <div className="mt-3 h-2   rounded-full bg-muted">
           <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${progress}%` }} />
         </div>
       </div>
 
-      <section className="rounded-[28px] border border-border bg-card/80 p-6 shadow-[var(--shadow)] sm:p-8">
+      <section className="rounded-xl border border-border bg-card/80 p-6 dashboard-card sm:p-8">
         <h2 className="text-xl font-semibold leading-8 sm:text-2xl">{currentQuestion.question}</h2>
         
         <div className="mt-8 flex flex-col gap-4">
@@ -507,7 +558,7 @@ export default function Interview() {
         </div>
 
         {errorMessage && (
-          <p className="mt-4 rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+          <p className="mt-4 rounded-xl border border-destructive/20 dashboard-card px-4 py-3 text-sm text-destructive">
             {errorMessage}
           </p>
         )}

@@ -6,7 +6,7 @@ export const metadata = {
 
 const InterviewPage = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-[94vh] justify-center">
       <Interview />
     </div>
   );
