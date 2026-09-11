@@ -23,7 +23,7 @@ export interface GlowCardProps {
 }
 
 /**
- * Shared glow card — gradient background, hover corner shape, background glow and
+ * Shared glow card — gradient background, corner shape, background glow and
  * animated border beam. Used for KPI/stat tiles across both dashboards.
  */
 export function GlowCard({
@@ -42,7 +42,7 @@ export function GlowCard({
       {corner && (
         <div
           className={cn(
-            "pointer-events-none absolute w-28 h-28 opacity-0 transition-opacity duration-500 group-hover:opacity-100",
+            "pointer-events-none absolute w-28 h-28",
             cornerClasses[corner],
           )}
         />
