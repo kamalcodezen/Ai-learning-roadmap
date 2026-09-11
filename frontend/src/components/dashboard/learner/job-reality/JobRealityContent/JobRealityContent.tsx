@@ -103,7 +103,7 @@ export default function JobRealityContent() {
   const source = jobData.source || { provider: "Arbeitnow API", fetchedAt: new Date().toISOString() };
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       {/* Top Header & Filters */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
@@ -168,7 +168,7 @@ export default function JobRealityContent() {
       )}
 
       {/* Market Snapshot Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 dashboard-card-gap">
         <Card className="hover:border-primary/40 transition-colors">
           <CardContent className="p-6">
             <div className="flex justify-between items-start mb-4">
@@ -238,7 +238,7 @@ export default function JobRealityContent() {
       </div>
 
       {/* Main Grid: Skills Table & AI Market Insights */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 dashboard-card-gap">
         {/* Left Col (2 cols wide): Dynamic Skills Table */}
         <div className="lg:col-span-2 space-y-6">
           <DashboardCard className="h-full">
@@ -351,7 +351,7 @@ export default function JobRealityContent() {
         <div className="space-y-6">
           {/* Role Summary Callout */}
           {aiAnalysis.roleSummary && (
-            <DashboardCard className="border-primary/20 bg-primary/5">
+            <DashboardCard className="border-primary/20">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-semibold flex items-center gap-1.5 text-primary">
                   <Sparkles className="w-4 h-4" /> AI Market Summary

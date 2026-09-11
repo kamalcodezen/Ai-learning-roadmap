@@ -56,7 +56,7 @@ export default function CareerTwinPage() {
   }
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <PageHeader
           title="Career Twin"
@@ -107,7 +107,7 @@ export default function CareerTwinPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 dashboard-card-gap">
         <DashboardCard className="col-span-1 lg:col-span-2 border-primary/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -115,7 +115,7 @@ export default function CareerTwinPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 dashboard-card-gap">
               <div className="bg-card-soft p-4 rounded-xl border border-border">
                 <p className="text-sm text-muted-foreground mb-1">
                   Target Role
@@ -152,8 +152,8 @@ export default function CareerTwinPage() {
           </CardContent>
         </DashboardCard>
 
-        <div className="col-span-1 flex flex-col gap-6">
-          <DashboardCard className="bg-primary/5 border-primary/20">
+        <div className="col-span-1 flex flex-col dashboard-card-gap">
+          <DashboardCard className="border-primary/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-primary">
                 <Trophy className="w-5 h-5" /> Overall Readiness
@@ -221,7 +221,7 @@ export default function CareerTwinPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
         <DashboardCard>
           <CardHeader>
             <CardTitle className="text-lg">Identified Career Gaps</CardTitle>

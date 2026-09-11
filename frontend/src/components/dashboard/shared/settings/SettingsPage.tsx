@@ -29,7 +29,7 @@ import {
 } from "@/src/lib/api/learner/settings";
 
 const glowCardClass =
-  "group relative overflow-hidden rounded-xl p-6 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]";
+  "group relative overflow-hidden rounded-xl p-6 transition-all duration-300 border-2 border-background shadow-none proof-card";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -147,7 +147,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col pb-12 animate-in fade-in duration-500 dashboard-card-gap">
       <div>
         <h1 className="section-title text-left">
           Account <span className="text-brand">Settings</span>
@@ -157,7 +157,7 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 items-start dashboard-card-gap">
         {/* PERSONAL INFO CARD */}
         <Card mouseGlow className={glowCardClass}>
           <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
@@ -306,7 +306,7 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 dashboard-card-gap">
                 <div>
                   <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                     New Password

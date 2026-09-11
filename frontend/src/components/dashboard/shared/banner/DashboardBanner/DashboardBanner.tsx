@@ -68,11 +68,11 @@ export default function DashboardBanner({
           </p>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+        <div className="mt-5 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4 dashboard-card-gap">
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="group relative overflow-hidden rounded-2xl border border-white/70 bg-white/70 px-4 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.05)] transition-all duration-300 hover:border-primary/25 hover:shadow-[0_12px_35px_rgba(159,84,247,0.10)] dark:border-white/10 dark:bg-[#111111]/70 dark:shadow-none dark:hover:border-primary/30 dark:hover:shadow-[0_0_30px_rgba(185,120,255,0.08)] backdrop-blur-xs"
+              className="group relative overflow-hidden rounded-2xl border border-white/70 bg-white/70 px-4 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.05)] transition-all duration-300 dark:border-white/10 dark:bg-[#111111]/70 dark:shadow-none backdrop-blur-xs"
             >
               <div
                 className="pointer-events-none absolute -right-8 -top-8 h-20 w-20 rounded-full bg-primary/10 blur-2xl transition-all duration-500 group-hover:bg-primary/20"

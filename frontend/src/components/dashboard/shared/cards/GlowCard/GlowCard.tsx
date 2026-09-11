@@ -61,7 +61,7 @@ export function GlowCard({
   );
 
   const baseClass =
-    "glow-card group relative flex flex-col justify-between overflow-hidden rounded-lg border border-border p-5 sm:p-6 transition-all hover:border-brand";
+    "glow-card group relative flex flex-col justify-between overflow-hidden rounded-lg border border-border p-5 sm:p-6 transition-all";
 
   if (href) {
     return (

@@ -21,6 +21,7 @@
   --color-muted-foreground: #6B6B6B;
   --gradient-primary: linear-gradient(135deg, #9F54F7 0%, #8523F5 100%);
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --gradient-proof-card: linear-gradient(165deg, #faf5ff 0%, #ffffff 55%, #fcfaff 100%);
 
   /* ── Global Section Spacing Tokens ── */
   --space-section-desktop: 120px;
@@ -85,6 +86,7 @@
   --color-muted-foreground: #8B8B8B;
   --gradient-primary: linear-gradient(135deg, #B978FF 0%, #A855F7 100%);
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --gradient-proof-card: linear-gradient(165deg, #1c0e2e 0%, #0d0715 55%, #160b26 100%);
 
   --background: 0 0 0;
   --foreground: 247 247 247;
@@ -413,22 +415,19 @@ button {
 
   .dashboard-card {
     @apply rounded-xl border p-6 backdrop-blur-md transition-all duration-300;
-    background: #ffffff;
+    background: var(--gradient-proof-card);
     border-color: #E6E9EE;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
   }
 
+  .proof-card {
+    background: var(--gradient-proof-card);
+    border-radius: 0.5rem;
+  }
+
   .dark .dashboard-card {
-    background: linear-gradient(to bottom, #1a0e2e, rgba(159, 84, 247, 0.12));
+    background: var(--gradient-proof-card);
     border-color: rgba(159, 84, 247, 0.15);
-  }
-
-  .dashboard-card:hover {
-    border-color: rgba(159, 84, 247, 0.3);
-  }
-
-  .dark .dashboard-card:hover {
-    border-color: rgba(159, 84, 247, 0.4);
   }
 
   .soft-card {

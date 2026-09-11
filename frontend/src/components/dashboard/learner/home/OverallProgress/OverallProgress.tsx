@@ -27,7 +27,7 @@ export default function OverallProgress({ value, role }: OverallProgressProps) {
 
   return (
     <Card
-      className="rounded-xl p-6 border-2 border-background shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]"
+      className="rounded-xl p-6 border-2 border-background shadow-none proof-card"
     >
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>Overall Progress</CardTitle>

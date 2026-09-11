@@ -503,13 +503,13 @@ export default function PortfolioPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <PageHeader
         title="Portfolio & Career Proof"
         description="Turn real implementation and GitHub evidence into verifiable career proof."
       />
 
-      <DashboardCard className="bg-primary/5 border-primary/20">
+      <DashboardCard className="border-primary/20">
         <CardContent className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-1 space-y-2 text-center md:text-left">
             <h2 className="text-2xl font-bold text-foreground flex items-center justify-center md:justify-start gap-2">
@@ -539,7 +539,7 @@ export default function PortfolioPage() {
         <h2 className="text-lg font-bold uppercase tracking-wider text-muted-foreground">
           PROJECT CREATION & IMPORT
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
           {/* FLOW A ENTRY CARD */}
           <Card className="border border-purple-500/30 bg-purple-500/5 hover:border-purple-500/50 transition-all flex flex-col justify-between p-6">
             <div className="space-y-3">
@@ -700,7 +700,7 @@ export default function PortfolioPage() {
             </p>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 dashboard-card-gap">
             {filteredProjects.map((project) => {
               const statusPill = getLifecycleStatusPill(project);
               const isGenerated =
@@ -824,7 +824,7 @@ export default function PortfolioPage() {
                     </CardHeader>
 
                     <CardContent className="p-6 flex flex-col gap-4">
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 dashboard-card-gap">
                         <div className="space-y-1.5">
                           <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">

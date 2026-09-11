@@ -48,13 +48,13 @@ export default function SkillGapsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <PageHeader
         title="Skill Gaps Analysis"
         description="Identify and fix the weaknesses holding back your career."
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
         <Card>
           <CardContent className="p-6 flex flex-col gap-2">
             <Activity className="w-5 h-5 text-primary" />
@@ -64,7 +64,7 @@ export default function SkillGapsPage() {
             </span>
           </CardContent>
         </Card>
-        <Card className="border-destructive/30 bg-destructive/5">
+        <Card className="border-destructive/30 bg-destructive/5 bg-none">
           <CardContent className="p-6 flex flex-col gap-2">
             <AlertTriangle className="w-5 h-5 text-destructive" />
             <span className="text-2xl font-bold text-destructive">
@@ -73,7 +73,7 @@ export default function SkillGapsPage() {
             <span className="text-sm text-destructive/80">Critical Gaps</span>
           </CardContent>
         </Card>
-        <Card className="border-amber-500/30 bg-amber-500/5">
+        <Card className="border-amber-500/30 bg-amber-500/5 bg-none">
           <CardContent className="p-6 flex flex-col gap-2">
             <AlertCircle className="w-5 h-5 text-amber-500" />
             <span className="text-2xl font-bold text-amber-500">
@@ -82,7 +82,7 @@ export default function SkillGapsPage() {
             <span className="text-sm text-amber-500/80">Moderate Gaps</span>
           </CardContent>
         </Card>
-        <Card className="border-green-500/30 bg-green-500/5">
+        <Card className="border-green-500/30 bg-green-500/5 bg-none">
           <CardContent className="p-6 flex flex-col gap-2">
             <TrendingUp className="w-5 h-5 text-green-500" />
             <span className="text-2xl font-bold text-green-500">
@@ -93,7 +93,7 @@ export default function SkillGapsPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 dashboard-card-gap">
         <h2 className="text-xl font-semibold mt-4">Prioritized Action Items</h2>
 
         {data.gaps.length === 0 ? (

@@ -29,7 +29,7 @@ interface Kpi {
 }
 
 const glowCardClass =
-  "group relative overflow-hidden rounded-xl p-6 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]";
+  "group relative overflow-hidden rounded-xl p-6 transition-all duration-300 border-2 border-background shadow-none proof-card";
 
 export default function DashboardStats() {
   const { data: session } = authClient.useSession();
@@ -76,7 +76,7 @@ export default function DashboardStats() {
   ];
 
   return (
-    <div className="flex flex-col gap-6 pb-4 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-4 animate-in fade-in duration-500">
       {/* ============================= WELCOME BANNER ============================= */}
       <DashboardBanner
         title={
@@ -92,7 +92,7 @@ export default function DashboardStats() {
       {/* ============================= KPI GRID ============================= */}
       <section>
         <h2 className="mb-4 text-xl font-bold tracking-tight text-foreground">Platform Overview</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 dashboard-card-gap sm:grid-cols-2 lg:grid-cols-3">
           {kpis.map((kpi) => {
             const Icon = kpi.icon;
             return (
@@ -116,7 +116,7 @@ export default function DashboardStats() {
       </section>
 
       {/* ============================= HEALTH + RECENT USERS ============================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 dashboard-card-gap">
         {/* System Health */}
         <section>
           <h2 className="mb-4 text-xl font-bold tracking-tight text-foreground">System Health</h2>
