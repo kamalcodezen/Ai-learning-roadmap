@@ -117,7 +117,7 @@ export default function AdminAssessmentsView() {
   if (isLoading && !data) {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
           {[0, 1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-28 w-full rounded-xl" />
           ))}
@@ -149,7 +149,7 @@ export default function AdminAssessmentsView() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
         {stats.map((s) => (
           <GlowCard key={s.label}>
             <p className="text-sm text-muted-foreground">{s.label}</p>

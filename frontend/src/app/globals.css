@@ -35,6 +35,9 @@
   --space-text-md: 20px;
   --space-text-sm: 16px;
 
+  /* ── Dashboard Layout Tokens ── */
+  --dashboard-card-gap: 12px;
+
   /* ── Typography Tokens ── */
   --font-family-primary: var(--font-hind-siliguri), 'Hind Siliguri', sans-serif;
   --font-size-h1: 60px;
@@ -478,6 +481,11 @@ button {
 
   .global-pos {
     @apply max-w-460 mx-auto;
+  }
+
+  /* Dashboard card gap — single source of truth for all dashboard card grids */
+  .dashboard-card-gap {
+    gap: var(--dashboard-card-gap);
   }
 }
 

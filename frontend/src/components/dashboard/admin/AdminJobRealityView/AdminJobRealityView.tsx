@@ -71,7 +71,7 @@ export default function AdminJobRealityView() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
         <GlowCard>
           <p className="text-sm text-muted-foreground">Total Job Checks</p>
           <p className="mt-2 text-3xl font-bold text-[var(--color-secondary)]">

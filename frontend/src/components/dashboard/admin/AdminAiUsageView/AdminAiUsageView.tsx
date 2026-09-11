@@ -71,7 +71,7 @@ export default function AdminAiUsageView() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
           {[0, 1, 2].map((i) => (
             <Skeleton key={i} className="h-28 w-full rounded-xl" />
           ))}
@@ -95,7 +95,7 @@ export default function AdminAiUsageView() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 dashboard-card-gap">
         <GlowCard>
           <p className="text-sm text-muted-foreground">Total AI Calls</p>
           <p className="mt-2 text-3xl font-bold text-[var(--color-secondary)]">
@@ -116,7 +116,7 @@ export default function AdminAiUsageView() {
         </GlowCard>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
         {data.providerStats.map(
           (p: {
             provider: string;

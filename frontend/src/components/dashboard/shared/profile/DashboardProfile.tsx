@@ -333,7 +333,7 @@ export default function DashboardProfile({
       </div>
 
       {/* ============ TIMELINE LAYOUT ============ */}
-      <div className="max-w-6xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="max-w-6xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-2 items-start dashboard-card-gap">
         {/* left column */}
         <div className="space-y-6">
           <GlowCard corner="top-left">

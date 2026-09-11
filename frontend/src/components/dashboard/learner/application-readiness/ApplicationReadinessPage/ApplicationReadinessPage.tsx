@@ -125,7 +125,7 @@ export default function ApplicationReadinessPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <PageHeader
           title="Application Readiness"
@@ -195,7 +195,7 @@ export default function ApplicationReadinessPage() {
           <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
             Canonical Readiness Dimensions
           </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 dashboard-card-gap">
             {[
               { label: "Overall", val: data.dimensions.overallReadiness },
               { label: "Knowledge", val: data.dimensions.knowledgeProficiency },
@@ -226,7 +226,7 @@ export default function ApplicationReadinessPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 dashboard-card-gap">
         {data.categories.map((category) => {
           const status = getStatusDetails(category.status);
 
