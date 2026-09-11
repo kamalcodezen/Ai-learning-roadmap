@@ -97,7 +97,6 @@ export default function DashboardStats() {
             const Icon = kpi.icon;
             return (
               <Card key={kpi.title} mouseGlow className={glowCardClass}>
-                <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
                 <CardContent className="relative z-10 flex items-start gap-4">
                   <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${kpi.color}`}>
                     <Icon className="h-6 w-6" />

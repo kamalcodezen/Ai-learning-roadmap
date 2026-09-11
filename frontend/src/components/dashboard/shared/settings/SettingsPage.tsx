@@ -160,7 +160,6 @@ export default function SettingsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 items-start dashboard-card-gap">
         {/* PERSONAL INFO CARD */}
         <Card mouseGlow className={glowCardClass}>
-          <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
           <CardHeader className="relative z-10">
             <CardTitle className="flex items-center gap-2">
               <User className="w-5 h-5 text-primary" /> Personal Information
@@ -186,7 +185,6 @@ export default function SettingsPage() {
 
         {/* APPEARANCE CARD */}
         <Card mouseGlow className={glowCardClass}>
-          <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
           <CardHeader className="relative z-10">
             <CardTitle className="flex items-center gap-2">
               <Monitor className="w-5 h-5 text-primary" /> Appearance
@@ -208,7 +206,6 @@ export default function SettingsPage() {
 
         {/* NOTIFICATION PREFERENCES CARD */}
         <Card mouseGlow className={`${glowCardClass} md:col-span-2`}>
-          <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
           <CardHeader className="relative z-10">
             <CardTitle className="flex items-center gap-2">
               <Bell className="w-5 h-5 text-primary" /> Notification Preferences
@@ -280,7 +277,6 @@ export default function SettingsPage() {
 
         {/* SECURITY & INLINE PASSWORD CHANGE CARD */}
         <Card mouseGlow className={`${glowCardClass} md:col-span-2`}>
-          <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
           <CardHeader className="relative z-10">
             <CardTitle className="flex items-center gap-2">
               <Key className="w-5 h-5 text-primary" /> Security & Password
@@ -377,7 +373,7 @@ export default function SettingsPage() {
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-destructive/30 bg-destructive/10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border-red-500 border bg-background">
               <div>
                 <p className="text-sm font-semibold text-foreground">Delete Account</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
@@ -390,7 +386,7 @@ export default function SettingsPage() {
                   setDeleteConfirmationInput("");
                   setShowDeleteModal(true);
                 }}
-                className="self-start sm:self-auto px-4 py-2 text-xs font-semibold rounded-xl bg-destructive text-destructive-foreground hover:opacity-90 transition cursor-pointer shadow-sm flex items-center gap-1.5 shrink-0"
+                className="self-start sm:self-auto px-4 py-2 text-xs font-semibold rounded-xl bg-red-500 text-white hover:opacity-90 transition cursor-pointer shadow-sm flex items-center gap-1.5 shrink-0"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete Account</span>
@@ -403,11 +399,11 @@ export default function SettingsPage() {
       {/* Account Deletion Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-card border border-destructive/40 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-5">
+          <div className="bg-background border border-red-500 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-destructive">
-                <AlertTriangle className="w-5 h-5" />
-                <h3 className="text-lg font-bold">Delete Account Permanently</h3>
+                <AlertTriangle className="w-5 h-5 text-red-500" />
+                <h3 className="text-lg font-bold text-red-500">Delete Account Permanently</h3>
               </div>
               <button
                 type="button"
