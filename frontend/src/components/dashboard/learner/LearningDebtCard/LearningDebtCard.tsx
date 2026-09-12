@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import Lenis from "lenis";
 import {
   Card,
   CardContent,
@@ -13,9 +17,29 @@ interface Props {
 }
 
 export default function LearningDebtCard({ data }: Props) {
+  const debtScrollRef = useRef<HTMLDivElement>(null);
+  const debtContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    if (!debtScrollRef.current || !debtContentRef.current) return;
+
+    const lenis = new Lenis({
+      wrapper: debtScrollRef.current,
+      content: debtContentRef.current,
+      autoRaf: true,
+    });
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   if (!data || data.length === 0) {
     return (
-      <Card>
+      <Card className="h-[310px]">
         <CardHeader>
           <CardTitle>Learning Debt</CardTitle>
         </CardHeader>
@@ -29,8 +53,8 @@ export default function LearningDebtCard({ data }: Props) {
   }
 
   return (
-    <Card mouseGlow>
-      <CardHeader>
+    <Card mouseGlow className="h-[310px]">
+      <CardHeader className="shrink-0">
         <CardTitle className="flex justify-between items-center">
           <span>Learning Debt</span>
           <span className="text-sm font-normal text-muted-foreground">
@@ -38,8 +62,9 @@ export default function LearningDebtCard({ data }: Props) {
           </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col h-full">
-        <div className="space-y-4 mb-6">
+      <CardContent className="flex flex-col h-full min-h-0">
+        <div ref={debtScrollRef} className="min-h-0 flex-1 mb-6 overflow-y-scroll">
+          <div ref={debtContentRef} className="min-h-full space-y-4">
           {data.map((debt, index) => (
             <div key={index} className="flex gap-3">
               <AlertTriangle
@@ -55,6 +80,7 @@ export default function LearningDebtCard({ data }: Props) {
               </div>
             </div>
           ))}
+          </div>
         </div>
         <Link
           href="/dashboard/learner/skill-gaps"
