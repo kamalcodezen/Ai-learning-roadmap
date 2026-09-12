@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import Lenis from "lenis";
 
 import {
   Card,
@@ -16,12 +18,32 @@ interface Props {
 }
 
 export default function ShortRoadmap({ data }: Props) {
+  const milestonesScrollRef = useRef<HTMLDivElement>(null);
+  const milestonesContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    if (!milestonesScrollRef.current || !milestonesContentRef.current) return;
+
+    const lenis = new Lenis({
+      wrapper: milestonesScrollRef.current,
+      content: milestonesContentRef.current,
+      autoRaf: true,
+    });
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   if (!data) {
     return (
       <Card
-        className="rounded-xl p-6 border-2 border-background shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]"
+        className="rounded-xl p-6 border-2 border-background shadow-none proof-card h-[365px]"
       >
-        <CardHeader className="relative z-10 pb-2">
+        <CardHeader className="relative z-10 pb-2 shrink-0">
           <CardTitle>Your Roadmap</CardTitle>
         </CardHeader>
 
@@ -36,12 +58,12 @@ export default function ShortRoadmap({ data }: Props) {
 
   return (
     <Card
-      className="rounded-xl p-6 border-2 border-background shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)]"
+      className="rounded-xl p-6 border-2 border-background shadow-none dashboard-card h-[365px]"
     >
       {/* ================================================================
           HEADER
       ================================================================= */}
-      <CardHeader className="relative z-10 pb-2">
+      <CardHeader className="relative z-10 pb-2 shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle
             className="
@@ -74,8 +96,9 @@ export default function ShortRoadmap({ data }: Props) {
       {/* ================================================================
           CONTENT
       ================================================================= */}
-      <CardContent className="relative z-10">
-        <div className="space-y-1">
+      <CardContent className="relative z-10 flex min-h-0 flex-col">
+        <div ref={milestonesScrollRef} className="min-h-0 flex-1 overflow-y-scroll">
+        <div ref={milestonesContentRef} className="min-h-full space-y-1">
           {data.milestones.slice(0, 6).map((milestone, index) => {
             const isCompleted = milestone.status === "COMPLETED";
             const isCurrent = milestone.status === "IN_PROGRESS";
@@ -164,11 +187,12 @@ export default function ShortRoadmap({ data }: Props) {
             );
           })}
         </div>
+        </div>
 
         {/* ================================================================
             PROGRESS
         ================================================================= */}
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <div className="mb-2 flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">
               Current:{" "}
@@ -206,45 +230,16 @@ export default function ShortRoadmap({ data }: Props) {
               }}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* ================================================================
             BUTTON
         ================================================================= */}
         <Link
           href="/dashboard/learner/learning-path"
-          className="
-            mt-5
-            flex
-            w-full
-            items-center
-            justify-center
-            gap-2
-            rounded-xl
-            bg-primary/10
-            px-4
-            py-3
-            text-sm
-            font-semibold
-            text-primary
-            transition-all
-            duration-200
-            hover:bg-primary/15
-            hover:text-secondary
-            dark:bg-primary/10
-            dark:hover:bg-primary/15
-          "
+          className="btn-primary px-3 w-full mt-4 shrink-0 flex items-center justify-center gap-2"
         >
-          View Full Roadmap
-          <ArrowRight
-            className="
-              h-4
-              w-4
-              transition-transform
-              duration-200
-              group-hover:translate-x-0.5
-            "
-          />
+          View Full Roadmap <ArrowRight className="w-4 h-4" />
         </Link>
       </CardContent>
     </Card>

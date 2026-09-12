@@ -162,7 +162,7 @@ export default function LearnerProfilePage() {
           <button
             type="button"
             onClick={handleOpenEdit}
-            className="self-start sm:self-auto px-4 py-2 text-xs font-semibold rounded-xl bg-primary text-primary-foreground hover:opacity-95 transition cursor-pointer shadow-sm flex items-center gap-1.5"
+            className="self-start sm:self-auto px-4 py-2 text-xs font-semibold rounded-xl bg-primary text-white hover:opacity-95 transition cursor-pointer shadow-sm flex items-center gap-1.5"
           >
             <Sliders className="w-3.5 h-3.5" />
             <span>Edit Target & Pace</span>

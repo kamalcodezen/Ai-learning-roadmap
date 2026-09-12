@@ -21,7 +21,7 @@ export default function AudienceBanner() {
         relative isolate flex min-h-[100svh] w-full
         items-center justify-center
         overflow-hidden
-        px-4
+        px-0
         py-20
         sm:px-6 sm:py-24
         md:min-h-0 md:px-8 md:py-16 md:pt-28

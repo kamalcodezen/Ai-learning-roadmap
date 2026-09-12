@@ -1,8 +1,8 @@
 /* Shared gradient backgrounds used by KPI/glow cards across both dashboards. */
 .kpi-card-gradient {
-  background: linear-gradient(to bottom, #faf5ff 0%, #f3edff 45%, #ede5ff 100%);
+  background: var(--gradient-proof-card);
 }
 
 .dark .kpi-card-gradient {
-  background: linear-gradient(to bottom, #1a0e2e 0%, rgba(159, 84, 247, 0.15) 100%);
+  background: var(--gradient-proof-card);
 }

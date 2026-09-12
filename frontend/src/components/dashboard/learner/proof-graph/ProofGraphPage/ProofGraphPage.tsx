@@ -300,7 +300,7 @@ export default function ProofGraphPage() {
   );
 
   return (
-    <div className="flex flex-col gap-8 pb-12 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground">
@@ -324,12 +324,12 @@ export default function ProofGraphPage() {
           </button>
 
           {/* View Tabs */}
-          <div className="flex items-center gap-2 bg-muted/60 p-1 rounded-lg border">
+          <div className="flex items-center gap-2 bg-muted/60 p-1 rounded-lg border-brand border">
           <button
             onClick={() => setActiveTab("proof-graph")}
             className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
               activeTab === "proof-graph"
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-brand text-white shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -340,7 +340,7 @@ export default function ProofGraphPage() {
             onClick={() => setActiveTab("skill-tree")}
             className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
               activeTab === "skill-tree"
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-brand text-white shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -351,7 +351,7 @@ export default function ProofGraphPage() {
             onClick={() => setActiveTab("achievements")}
             className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
               activeTab === "achievements"
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-brand text-white shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -363,7 +363,7 @@ export default function ProofGraphPage() {
     </div>
 
       {/* Level & Proof Banner */}
-      <DashboardCard className="bg-primary/5 border-primary/20">
+      <DashboardCard className="border-primary/20">
         <CardContent className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center md:text-left">
             <p className="text-sm text-muted-foreground">
@@ -418,7 +418,7 @@ export default function ProofGraphPage() {
 
       {/* TAB 1: PROOF GRAPH */}
       {activeTab === "proof-graph" && (
-        <div className="mx-auto w-full max-w-4xl py-4 flex flex-col gap-8">
+        <div className="mx-auto w-full max-w-4xl py-4 flex flex-col dashboard-card-gap">
           {rootNodes.length === 0 ||
           data.nodes.find((n) => n.id === "empty-state-node") ? (
             <div className="flex flex-col items-center justify-center p-12 text-center border-2 border-dashed border-border rounded-xl">
@@ -444,7 +444,7 @@ export default function ProofGraphPage() {
         <div className="w-full space-y-6">
           {skillTreeData && (
             <>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 dashboard-card-gap">
                 <Card className="p-4 border-green-500/20 bg-green-500/5">
                   <p className="text-xs text-muted-foreground font-semibold">
                     MASTERED
@@ -479,7 +479,7 @@ export default function ProofGraphPage() {
                 </Card>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 dashboard-card-gap">
                 {skillTreeData.nodes.map((node) => (
                   <Card
                     key={node.id}
@@ -582,14 +582,14 @@ export default function ProofGraphPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 dashboard-card-gap">
                 {(gamificationData.achievements || []).map((ach) => (
                   <Card
                     key={ach.code}
                     className={`transition-all ${
                       ach.isUnlocked
-                        ? "border-primary/40 bg-primary/5 shadow-sm"
-                        : "border-border opacity-50 bg-card/40"
+                        ? "border-primary/40 shadow-sm"
+                        : "border-border opacity-50"
                     }`}
                   >
                     <CardContent className="p-5 flex flex-col items-center text-center space-y-3">

@@ -171,7 +171,6 @@ export function CareerGoalSection({
       className="group relative overflow-hidden rounded-md p-5 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)] sm:p-7"
     >
       {/* Corner shape */}
-      <div className="absolute top-0 right-0 w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full bg-gradient-to-br from-primary/20 to-blue-500/10 pointer-events-none" />
 
       <div className="relative z-10">
       <div className="mb-6 flex items-start gap-4">

@@ -728,7 +728,7 @@ export default function CareerTwinSection() {
           </>
         }
       >
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 h-full items-center bg-white dark:bg-zinc-950 sm:bg-transparent dark:sm:bg-transparent">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 h-full items-center bg-white dark:bg-background/90 w-full sm:bg-transparent dark:sm:bg-transparent">
           {/* ============ LEFT PANEL — PROFILE ============ */}
           <div className="h-fit rounded-md border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 md:p-6 shadow-sm lg:col-span-4 flex flex-col">
             <h3 className="text-sm tracking-widest text-gray-800 dark:text-zinc-200 mb-4 uppercase">

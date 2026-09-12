@@ -104,7 +104,7 @@ export default function CareerIntelligenceCard() {
         </div>
         <div className="p-6 space-y-6">
           <div className="h-24 animate-pulse rounded-xl bg-muted" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
             <div className="h-32 animate-pulse rounded-xl bg-muted" />
             <div className="h-32 animate-pulse rounded-xl bg-muted" />
           </div>
@@ -570,7 +570,7 @@ export default function CareerIntelligenceCard() {
             </p>
           </div>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-5 grid dashboard-card-gap sm:grid-cols-2 lg:grid-cols-3">
             {visibleSkills.map((item) => {
               const qualityStyle =
                 toneStyles[getQualityMeta(item.quality).tone];
@@ -588,7 +588,7 @@ export default function CareerIntelligenceCard() {
                     <QualityBadge quality={item.quality} />
                   </div>
 
-                  <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div className="mt-4 grid grid-cols-2 dashboard-card-gap">
                     <div>
                       <p className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
                         Knowledge

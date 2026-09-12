@@ -249,7 +249,7 @@ export default function DashboardProfile({
           </div>
 
           {/* name & bio */}
-          <div className="flex-1 text-center md:text-left md:pt-10 mt-12">
+          <div className="flex-1 text-center md:text-left md:pt-10 mt-0 md:mt-12">
             <div className="flex items-center justify-center md:justify-start gap-3 h-10">
               {isEditingName ? (
                 <div className="flex items-center gap-2 bg-card border border-border px-2 py-1 rounded-xl shadow-sm max-w-xs w-full">
@@ -333,7 +333,7 @@ export default function DashboardProfile({
       </div>
 
       {/* ============ TIMELINE LAYOUT ============ */}
-      <div className="max-w-6xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="max-w-6xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-2 items-start dashboard-card-gap">
         {/* left column */}
         <div className="space-y-6">
           <GlowCard corner="top-left">

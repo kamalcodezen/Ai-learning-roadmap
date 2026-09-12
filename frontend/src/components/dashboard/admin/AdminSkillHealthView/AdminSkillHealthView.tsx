@@ -21,7 +21,7 @@ export default function AdminSkillHealthView() {
   if (isLoading && !data) {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
           <Skeleton className="h-[300px] w-full rounded-xl" />
           <Skeleton className="h-[300px] w-full rounded-xl" />
         </div>
@@ -78,7 +78,7 @@ export default function AdminSkillHealthView() {
     ));
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
       <DashboardCard className="p-0!">
         <CardHeader className="border-b border-border gap-0 p-4">
           <div className="flex items-center gap-2">

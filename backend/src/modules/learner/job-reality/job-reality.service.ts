@@ -371,8 +371,8 @@ export const getLearnerJobReality = async (userId: string, locationFilter?: stri
     relevantJobs = cached?.relevantJobs || rawJobs;
   } else {
     try {
-      // Prepare batch of up to 25 job listings for AI classification and extraction
-      const batchListings = rawJobs.slice(0, 25).map((job: any) => ({
+      // Prepare batch of up to 12 job listings for AI classification and extraction
+      const batchListings = rawJobs.slice(0, 12).map((job: any) => ({
         id: job.id,
         index: job.numericIndex,
         title: job.title || "Job Listing",
@@ -416,8 +416,14 @@ Return ONLY valid JSON matching this exact schema:
 Job Listings Batch (${batchListings.length} listings):
 ${JSON.stringify(batchListings, null, 2)}`;
 
-      const aiRes = await ChatService.processJsonCompletion(systemInstruction, userPrompt);
-      const parsedAi = JSON.parse(aiRes.reply);
+      const aiRes = await ChatService.processJsonCompletion(systemInstruction, userPrompt, 12000);
+      let rawJson = (aiRes.reply || "").trim();
+      const firstBrace = rawJson.indexOf("{");
+      const lastBrace = rawJson.lastIndexOf("}");
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        rawJson = rawJson.slice(firstBrace, lastBrace + 1);
+      }
+      const parsedAi = JSON.parse(rawJson);
 
       if (parsedAi && Array.isArray(parsedAi.classifiedListings)) {
         parsedAi.classifiedListings.forEach((item: any) => {
