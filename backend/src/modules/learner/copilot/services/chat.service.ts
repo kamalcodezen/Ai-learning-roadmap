@@ -93,6 +93,45 @@ const getRecentHistory = (history: any[] = []): MessageItem[] => {
     }));
 };
 
+/**
+ * Sanitizes and extracts clean, parseable JSON text from raw AI model outputs,
+ * stripping markdown fences (```json ... ```) or conversational prefix/suffix text.
+ */
+export const extractValidJsonString = (raw: string): string => {
+  if (!raw || typeof raw !== "string") return "";
+  let cleaned = raw.trim();
+
+  // Strip leading and trailing markdown code block wrappers
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  } else if (cleaned.includes("```")) {
+    const fenceMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+    if (fenceMatch && fenceMatch[1]) {
+      cleaned = fenceMatch[1].trim();
+    }
+  }
+
+  // Find outermost JSON structure (object or array)
+  const firstBrace = cleaned.indexOf("{");
+  const firstBracket = cleaned.indexOf("[");
+  let startIdx = -1;
+  let endIdx = -1;
+
+  if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+    startIdx = firstBrace;
+    endIdx = cleaned.lastIndexOf("}");
+  } else if (firstBracket !== -1) {
+    startIdx = firstBracket;
+    endIdx = cleaned.lastIndexOf("]");
+  }
+
+  if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+    cleaned = cleaned.slice(startIdx, endIdx + 1);
+  }
+
+  return cleaned.trim();
+};
+
 import prisma from "../../../../lib/prisma.js";
 
 export class ChatService {
@@ -426,7 +465,8 @@ export class ChatService {
    */
   static async processJsonCompletion(
     systemInstruction: string,
-    userPrompt: string
+    userPrompt: string,
+    timeoutMs: number = 12000
   ): Promise<{ reply: string; provider: string; model: string }> {
     const maxTokens = 2500; // Allow enough space for complex JSON arrays
     const messages = [
@@ -452,10 +492,11 @@ export class ChatService {
             temperature: 0.1,
             response_format: { type: "json_object" },
           }),
+          timeoutMs
         );
         const content = (response as any).choices[0]?.message?.content?.trim();
         if (content) {
-          reply = content;
+          reply = extractValidJsonString(content);
           provider = "Groq";
           model = GROQ_COMPLEX_MODEL;
         }
@@ -483,12 +524,13 @@ export class ChatService {
               response_format: { type: "json_object" },
             }),
           },
+          timeoutMs
         );
         if (response.ok) {
           const data = (await response.json()) as any;
           const content = data.choices?.[0]?.message?.content?.trim();
           if (content) {
-            reply = content;
+            reply = extractValidJsonString(content);
             provider = "OpenRouter";
             model = OPENROUTER_MODEL;
           }
@@ -512,10 +554,11 @@ export class ChatService {
               responseMimeType: "application/json",
             },
           }),
+          timeoutMs
         );
         const content = response.text?.trim();
         if (content) {
-          reply = content;
+          reply = extractValidJsonString(content);
           provider = "Gemini";
           model = GEMINI_MODEL;
         }
@@ -535,10 +578,11 @@ export class ChatService {
             temperature: 0.1,
             responseFormat: { type: "json_object" },
           }),
+          timeoutMs
         );
         const content = (response as any).choices?.[0]?.message?.content;
         if (typeof content === "string" && content.trim()) {
-          reply = content.trim();
+          reply = extractValidJsonString(content.trim());
           provider = "Mistral";
           model = MISTRAL_MODEL;
         }
@@ -552,6 +596,7 @@ export class ChatService {
       throw new Error("All AI providers failed to generate JSON completion");
     }
 
+    reply = extractValidJsonString(reply);
     this.logAiUsage(provider, model, "JSON_COMPLETION", "SUCCESS").catch(console.error);
 
     return { reply, provider, model };
