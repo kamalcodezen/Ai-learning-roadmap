@@ -23,7 +23,7 @@ export const ContainerScroll = ({
             <div className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
             <div className="h-3 w-3 rounded-full bg-[#27c93f]" />
           </div>
-          <div className="flex-1 w-full flex items-center justify-center overflow-hidden overflow-y-auto rounded-xl border border-transparent dark:border-brand/20 bg-gray-100 dark:bg-zinc-900 md:rounded-b-2xl md:rounded-t-none md:p-4 p-2">
+          <div className="flex-1 w-full flex items-center justify-center overflow-hidden overflow-y-auto rounded-xl border border-transparent dark:border-brand/20 bg-gray-100 dark:bg-background/90 md:rounded-b-2xl md:rounded-t-none md:p-8 p-4">
             {children}
           </div>
         </div>
