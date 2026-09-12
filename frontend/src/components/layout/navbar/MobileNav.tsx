@@ -40,9 +40,7 @@ export default function MobileNav() {
 
   const userRole = (session?.user as { role?: string })?.role?.toUpperCase() || "LEARNER";
   const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
-  const profileLinks = getDropdownLinks(userRole, prefix).filter(
-    (link) => link.label !== "Profile" && link.label !== "Settings"
-  );
+  const profileLinks = getDropdownLinks(userRole, prefix);
   const navLinks = getNavLinks();
 
   const handleSignOut = async () => {

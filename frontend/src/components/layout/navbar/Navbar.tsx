@@ -57,7 +57,7 @@ export default function Navbar() {
             transition-all duration-900 ease-out
             ${
               scrolled
-                ? "w-full max-w-3xl 2xl:max-w-5xl rounded-full bg-[#f4edff]/95 dark:bg-[#2b1e42ec] px-2.5 py-2.5 2xl:py-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl border-none"
+                ? "w-full max-w-3xl lg:max-w-4xl 2xl:max-w-5xl rounded-full bg-[#f4edff]/95 dark:bg-[#2b1e42ec] px-2.5 py-2.5 2xl:py-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl border-none"
                 : "w-full global-pos rounded-none py-3.5 2xl:py-4.5 px-6 border-none"
             }
           `}
@@ -72,21 +72,21 @@ export default function Navbar() {
             <Logo />
           </div>
 
-          {/* Desktop Navigation (2xl+) */}
-          <div className="hidden 2xl:flex items-center justify-center">
+          {/* Desktop Navigation (lg+) */}
+          <div className="hidden lg:flex items-center justify-center">
             <NavLinks />
           </div>
 
-          {/* Right Actions: Auth, Theme & Tablet Hamburger (< 2xl: iPad Mini, iPad Air, iPad Pro, Android tablets) */}
+          {/* Right Actions: Auth, Theme & Tablet Hamburger (< lg: iPad Mini, iPad Air, Android tablets) */}
           <div className="flex items-center justify-end gap-3">
-            <div className="hidden 2xl:block">
+            <div className="hidden lg:block">
               <AuthCheck />
             </div>
-            <div className="hidden 2xl:block">
+            <div className="hidden lg:block">
               <AnimatedThemeToggler />
             </div>
-            {/* Tablet / iPad Hamburger (< 2xl) */}
-            <div className="block 2xl:hidden">
+            {/* Tablet / iPad Hamburger (< lg) */}
+            <div className="block lg:hidden">
               <NavLinks onlyHamburger />
             </div>
           </div>

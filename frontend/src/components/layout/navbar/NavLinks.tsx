@@ -5,10 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
-  FiTarget,
-  FiCpu,
-  FiGitBranch,
-  FiShield,
   FiChevronDown,
   FiUser,
   FiLogOut,
@@ -33,7 +29,7 @@ export interface NavLink {
 }
 
 export const getNavLinks = (): NavLink[] => [
-  {
+  /* {
     label: "Solutions",
     href: "/features",
     children: [
@@ -58,7 +54,7 @@ export const getNavLinks = (): NavLink[] => [
         icon: <FiShield size={15} />,
       },
     ],
-  },
+  }, */
   {
     label: "Why AI Pather",
     href: "/#comparison",
@@ -93,9 +89,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   };
   const userRole = (session?.user as { role?: string })?.role?.toUpperCase() || "LEARNER";
   const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
-  const profileLinks = getDropdownLinks(userRole, prefix).filter(
-    (link) => link.label !== "Profile" && link.label !== "Settings"
-  );
+  const profileLinks = getDropdownLinks(userRole, prefix);
 
   const links = getNavLinks();
 
@@ -163,7 +157,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   // If only rendering the desktop nav links
   if (!onlyHamburger) {
     return (
-      <nav className="hidden items-center gap-1 xl:flex">
+      <nav className="flex items-center gap-1 md:gap-2 lg:gap-4">
         {links.map((link, index) => {
           const hasChildren = link.children && link.children.length > 0;
           const isActive = activeDropdown === index;
