@@ -68,7 +68,7 @@ export default function DashboardContent() {
   );
 
   return (
-    <div className="flex flex-col dashboard-card-gap pb-4 animate-in fade-in duration-500">
+    <div className="flex flex-col dashboard-card-gap lg:pb-4 animate-in fade-in duration-500">
       {!hasAnyData && (
         <div className="rounded-2xl border border-primary/30 bg-primary/5 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">

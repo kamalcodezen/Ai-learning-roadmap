@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Menu, Sparkles } from "lucide-react";
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
+import { BorderBeam } from "@/src/components/ui/border-beam";
 import NotificationBell from "../notifications/NotificationBell";
 
 interface MobileSidebarToggleProps {
@@ -25,10 +26,26 @@ export default function MobileSidebarToggle({ onOpen }: MobileSidebarToggleProps
       <div className="flex items-center gap-1">
         <Link
           href="/dashboard/learner/#dashboard-chatbot"
-          className="flex items-center gap-2 font-semibold text-primary hover:underline transition-all"
+          className="relative flex items-center gap-2 rounded-lg border border-foreground/20 px-2 py-1 font-semibold text-primary transition-colors hover:bg-brand hover:text-white"
         >
-          <Sparkles className="size-4.5 -mt-0.5" aria-hidden="true" />
+          <BorderBeam
+            size={60}
+            duration={6}
+            colorFrom="rgba(239,68,68,0)"
+            colorTo="#ef4444"
+          />
+          <BorderBeam
+            size={60}
+            duration={6}
+            delay={3}
+            borderWidth={2}
+            colorFrom="rgba(59,130,246,0)"
+            colorTo="#3b82f6"
+          />
+          <Sparkles className="size-4.5" aria-hidden="true" />
+          <div className="mt-0.5">
           Ai Mentor
+          </div>
         </Link>
 
         <NotificationBell />

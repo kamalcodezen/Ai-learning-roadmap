@@ -33,8 +33,15 @@ export default function MobileCardCarousel({
         grabCursor
         centeredSlides
         loop
-        slidesPerView={1.9}
+        slidesPerView={1.5}
         spaceBetween={16}
+        // Homepage banner mobile device card height controller
+        breakpoints={{
+          350: { slidesPerView: 1.7 },
+          450: { slidesPerView: 2 },
+          500: { slidesPerView: 2.7 },
+          600: { slidesPerView: 3 },
+        }}
         initialSlide={0}
         coverflowEffect={{
           rotate: 24,

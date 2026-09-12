@@ -13,6 +13,7 @@ import {
 import { authClient } from "@/src/lib/auth-client";
 import { Meteors } from "@/src/components/ui/meteors";
 import { BorderBeam } from "@/src/components/ui/border-beam";
+import Lenis from "lenis";
 import Image from "next/image";
 
 function getTimeGreeting(): string {
@@ -33,7 +34,10 @@ export default function ChatBox() {
   const { data: session } = authClient.useSession();
   const [timeGreeting, setTimeGreeting] = useState(getTimeGreeting);
   const glowRef = useRef<HTMLDivElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatScrollRef = useRef<HTMLDivElement>(null);
+  const chatContentRef = useRef<HTMLDivElement>(null);
+  const chatLenisRef = useRef<Lenis | null>(null);
+  const hasHydratedRef = useRef(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,7 +55,10 @@ export default function ChatBox() {
             setMessages(history);
           }
         })
-        .catch((err) => console.error("Could not load chat history:", err));
+        .catch((err) => console.error("Could not load chat history:", err))
+        .finally(() => {
+          hasHydratedRef.current = true;
+        });
     }
   }, [session?.user?.id]);
 
@@ -59,10 +66,37 @@ export default function ChatBox() {
   const userName = rawName ? rawName.split(/\s+/)[0] : undefined;
   const greeting = userName ? `${timeGreeting}, ${userName}` : timeGreeting;
 
-  // Auto-scroll to bottom when messages or loading state changes
+  // Auto-scroll the inner chat area after hydration, only when messages/loading change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!hasHydratedRef.current) return;
+
+    if (chatLenisRef.current) {
+      chatLenisRef.current.scrollTo("bottom");
+    } else if (chatScrollRef.current) {
+      chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+    }
   }, [messages, isLoading]);
+
+  // Lenis smooth scrolling for the inner chat scroll area
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    if (!chatScrollRef.current || !chatContentRef.current) return;
+
+    const lenis = new Lenis({
+      wrapper: chatScrollRef.current,
+      content: chatContentRef.current,
+      autoRaf: true,
+    });
+
+    chatLenisRef.current = lenis;
+
+    return () => {
+      chatLenisRef.current = null;
+      lenis.destroy();
+    };
+  }, []);
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!glowRef.current) return;
@@ -124,7 +158,7 @@ export default function ChatBox() {
 
   return (
     <section
-      className="group relative flex h-[90vh] w-full flex-col rounded-xl border-2 border-[#E6E9EE] dark:border-[rgba(159,84,247,0.15)] transition-all duration-300 bg-background overflow-clip"
+      className="group relative flex h-[75vh] lg:h-[85vh] w-full flex-col rounded-xl border-2 border-[#E6E9EE] dark:border-[rgba(159,84,247,0.15)] transition-all duration-300 bg-background overflow-clip"
       id="dashboard-chatbot"
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
@@ -133,9 +167,9 @@ export default function ChatBox() {
         ref={glowRef}
         className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300"
       />
-      <Meteors number={15} className="bg-primary/60" />
+      <Meteors number={8} className="bg-primary/30" />
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-6">
+      <header className="flex items-center justify-between border-b border-border px-5 py-2 sm:px-6">
         <div className="flex items-center gap-3">
           {/* AI Pathar Icon */}
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
@@ -159,7 +193,8 @@ export default function ChatBox() {
       </header>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 bg-background">
+      <div ref={chatScrollRef} className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 proof-card">
+        <div ref={chatContentRef} className="min-h-full">
         {messages.length === 0 ? (
           /* Welcome Screen */
           <div className="flex h-full items-center justify-center">
@@ -379,17 +414,16 @@ export default function ChatBox() {
                 </div>
               </div>
             )}
-            
-            <div ref={messagesEndRef} />
           </div>
         )}
+        </div>
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-border p-4 sm:p-5">
+      <div className="border-t border-border px-4 py-2 md:p-3">
         <form
           onSubmit={handleSubmit}
-          className="relative mx-auto flex max-w-3xl items-end gap-3 rounded-2xl border border-border bg-card p-2 transition focus-within:border-primary/30"
+          className="relative mx-auto flex max-w-3xl items-end gap-3 rounded-2xl border border-border bg-card py-0 px-2 md:py-2 transition focus-within:border-primary/30"
         >
           <BorderBeam
             duration={6}
@@ -426,16 +460,16 @@ export default function ChatBox() {
             type="submit"
             disabled={!input.trim() || isLoading}
             aria-label="Send message"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-semibold text-white transition hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-30"
+            className="flex h-10 w-9 mb-0.5 -mr-1 md:h-11 md:w-11 md:m-0 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-semibold text-white transition hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-30"
           >
             ↑
           </button>
         </form>
 
         {/* Disclaimer */}
-        <p className="mt-2 text-center text-[11px] text-muted-foreground">
+        {/* <p className="mt-2 text-center text-[11px] text-muted-foreground">
           AI Pathar can make mistakes. Verify important information.
-        </p>
+        </p> */}
       </div>
     </section>
   );
