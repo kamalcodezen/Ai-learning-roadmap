@@ -19,8 +19,7 @@ function renderHighlighted(text: string): ReactNode[] {
           <span
             key={index}
             className="
-              font-extrabold
-              text-[#9F54F7]
+              text-white
               [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
             "
           >
