@@ -23,7 +23,7 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
   return (
     <nav
       aria-label="Mobile bottom navigation"
-      className="fixed bottom-4 left-1/2 z-40 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 lg:hidden"
+      className="fixed bottom-4 left-1/2 -ml-1 z-40 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 lg:hidden"
     >
       <div
         className="relative flex items-center gap-1 rounded-full border px-2 py-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.45)]"
