@@ -4,7 +4,23 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { FiTarget, FiCpu, FiGitBranch, FiShield, FiChevronDown, FiUser, FiLogOut, FiLayout, FiSettings } from "react-icons/fi";
+import {
+  FiTarget,
+  FiCpu,
+  FiGitBranch,
+  FiShield,
+  FiChevronDown,
+  FiUser,
+  FiLogOut,
+  FiLayout,
+  FiSettings,
+  FiLayers,
+  FiCompass,
+  FiInfo,
+  FiCreditCard,
+  FiLogIn,
+  FiMoon,
+} from "react-icons/fi";
 import { authClient } from "@/src/lib/auth-client";
 import { getDropdownLinks } from "./profileDropdown";
 import Button from "../../ui/button";
@@ -65,6 +81,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const [expandedSolutions, setExpandedSolutions] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -76,9 +93,37 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   };
   const userRole = (session?.user as { role?: string })?.role?.toUpperCase() || "LEARNER";
   const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
-  const profileLinks = getDropdownLinks(userRole, prefix);
+  const profileLinks = getDropdownLinks(userRole, prefix).filter(
+    (link) => link.label !== "Profile" && link.label !== "Settings"
+  );
 
   const links = getNavLinks();
+
+  const getNavLinkIcon = (label: string) => {
+    switch (label) {
+      case "Solutions":
+        return <FiLayers className="size-4 text-primary" />;
+      case "Why AI Pather":
+        return <FiCompass className="size-4 text-primary" />;
+      case "About Us":
+        return <FiInfo className="size-4 text-primary" />;
+      case "Pricing":
+        return <FiCreditCard className="size-4 text-primary" />;
+      default:
+        return null;
+    }
+  };
+
+  const getProfileIcon = (label: string) => {
+    switch (label) {
+      case "Dashboard":
+        return <FiLayout className="size-4 text-primary" />;
+      case "Settings":
+        return <FiSettings className="size-4 text-primary" />;
+      default:
+        return <FiUser className="size-4 text-primary" />;
+    }
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -96,11 +141,19 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   }, [mobileOpen]);
 
   const handleSignOut = async () => {
+    setIsSigningOut(true);
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
           setMobileOpen(false);
-          router.push("/signin");
+          setIsSigningOut(false);
+          router.replace("/");
+          router.refresh();
+        },
+        onError: () => {
+          setMobileOpen(false);
+          setIsSigningOut(false);
+          router.replace("/");
           router.refresh();
         },
       },
@@ -205,7 +258,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
       <button
         type="button"
         onClick={() => setMobileOpen((prev) => !prev)}
-        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-all hover:bg-foreground/80 focus:outline-none"
+        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-all hover:bg-foreground/80 focus:outline-none relative"
         aria-label="Toggle navigation menu"
         aria-expanded={mobileOpen}
       >
@@ -236,11 +289,37 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] max-w-sm sm:max-w-md rounded-3xl border border-border bg-card/95 p-5 shadow-2xl backdrop-blur-2xl"
+            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] max-w-sm sm:max-w-md rounded-3xl border border-border/80 dark:border-primary/25 bg-card/95 dark:bg-[#191029]/95 p-4 sm:p-5 shadow-2xl backdrop-blur-2xl"
           >
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 max-h-[76vh] overflow-y-auto pr-1">
+              {/* User Profile Card (when authenticated) */}
+              {isAuthenticated && (
+                <div className="flex items-center justify-between rounded-2xl bg-muted/60 dark:bg-white/5 border border-border/60 dark:border-white/10 p-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-secondary text-white font-semibold text-sm shadow-sm">
+                      {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                    </div>
+                    <div className="min-w-0 text-left">
+                      <p className="truncate text-sm font-semibold text-foreground">
+                        {user.name}
+                      </p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="shrink-0 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
+                    {userRole}
+                  </span>
+                </div>
+              )}
+
               {/* Navigation Links */}
-              <nav className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1">
+                <span className="px-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                  Navigation
+                </span>
+
                 {links.map((link) => {
                   const hasChildren = link.children && link.children.length > 0;
 
@@ -250,12 +329,17 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                         <button
                           type="button"
                           onClick={() => setExpandedSolutions((prev) => !prev)}
-                          className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-poppins font-medium text-foreground transition-colors hover:bg-card-soft"
+                          className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
                         >
-                          <span>{link.label}</span>
+                          <div className="flex items-center gap-2.5">
+                            <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                              {getNavLinkIcon(link.label)}
+                            </span>
+                            <span>{link.label}</span>
+                          </div>
                           <FiChevronDown
-                            className={`size-4 transition-transform duration-200 ${
-                              expandedSolutions ? "rotate-180 text-primary" : "text-muted-foreground"
+                            className={`size-4 text-muted-foreground transition-transform duration-200 ${
+                              expandedSolutions ? "rotate-180 text-primary" : ""
                             }`}
                           />
                         </button>
@@ -267,20 +351,20 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                               animate={{ height: "auto", opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="overflow-hidden pl-3"
+                              className="overflow-hidden pl-2"
                             >
-                              <div className="flex flex-col gap-1 border-l-2 border-primary/20 my-1 pl-3">
+                              <div className="flex flex-col gap-1 border-l-2 border-primary/25 my-1 pl-2.5">
                                 {link.children!.map((child) => (
                                   <Link
                                     key={child.label}
                                     href={child.href}
                                     onClick={() => setMobileOpen(false)}
-                                    className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-foreground/85 transition-colors hover:bg-card-soft hover:text-primary"
+                                    className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-foreground/85 transition-colors hover:bg-card-soft dark:hover:bg-white/5 hover:text-primary"
                                   >
-                                    <span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                    <span className="flex size-5 items-center justify-center rounded-md bg-primary/10 text-primary shrink-0">
                                       {child.icon}
                                     </span>
-                                    <span>{child.label}</span>
+                                    <span className="truncate">{child.label}</span>
                                   </Link>
                                 ))}
                               </div>
@@ -296,75 +380,81 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                       key={link.label}
                       href={link.href}
                       onClick={() => setMobileOpen(false)}
-                      className="font-poppins font-medium flex items-center justify-between rounded-xl px-4 py-3 text-sm text-foreground transition-colors hover:bg-card-soft"
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
                     >
+                      <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        {getNavLinkIcon(link.label)}
+                      </span>
                       <span>{link.label}</span>
                     </Link>
                   );
                 })}
-              </nav>
 
-              {/* Authenticated User Profile Section */}
-              {isAuthenticated ? (
-                <div className="border-t border-border/60 pt-4 flex flex-col gap-3">
-                  <div className="flex items-center justify-between px-2">
-                    <div className="flex items-center gap-3">
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <FiUser className="size-5" />
-                      </span>
-                      <div className="min-w-0 text-left">
-                        <p className="truncate text-sm font-semibold text-foreground">
-                          {user.name}
-                        </p>
-                        <p className="truncate text-xs text-muted-foreground">
-                          {user.email}
-                        </p>
-                      </div>
-                    </div>
+                {/* Appearance / Theme Toggle Row under Navigation */}
+                <div className="flex items-center justify-between rounded-xl px-3 py-1.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <FiMoon className="size-4" />
+                    </span>
+                    <span>Appearance</span>
+                  </div>
+                  <div className="scale-90">
                     <AnimatedThemeToggler />
                   </div>
+                </div>
+              </div>
 
-                  <div className="flex flex-col gap-1 mt-1">
-                    {profileLinks.map((link) =>
-                      link.variant === "danger" ? (
-                        <button
-                          key={link.label}
-                          type="button"
-                          onClick={handleSignOut}
-                          className="flex items-center gap-2.5 w-full rounded-xl px-4 py-2.5 text-sm font-medium text-red-500 transition-colors hover:bg-red-500/10"
-                        >
-                          <FiLogOut className="size-4" />
-                          <span>{link.label}</span>
-                        </button>
-                      ) : (
-                        <Link
-                          key={link.label}
-                          href={link.href}
-                          onClick={() => setMobileOpen(false)}
-                          className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-card-soft"
-                        >
-                          {link.label === "Dashboard" ? (
-                            <FiLayout className="size-4 text-primary" />
-                          ) : link.label === "Settings" ? (
-                            <FiSettings className="size-4 text-primary" />
-                          ) : (
-                            <FiUser className="size-4 text-primary" />
-                          )}
-                          <span>{link.label}</span>
-                        </Link>
-                      )
-                    )}
-                  </div>
+              {/* Authenticated User Account Section */}
+              {isAuthenticated ? (
+                <div className="flex flex-col gap-1 border-t border-border/60 dark:border-white/10 pt-3">
+                  <span className="px-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                    Account
+                  </span>
+
+                  {profileLinks.map((link) =>
+                    link.variant === "danger" ? (
+                      <button
+                        key={link.label}
+                        type="button"
+                        onClick={handleSignOut}
+                        disabled={isSigningOut}
+                        className="flex items-center gap-2.5 w-full rounded-xl px-3 py-2.5 mt-1 text-sm font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all disabled:opacity-50"
+                      >
+                        <FiLogOut className="size-4 shrink-0" />
+                        <span>{isSigningOut ? "Signing out..." : link.label}</span>
+                      </button>
+                    ) : (
+                      <Link
+                        key={link.label}
+                        href={link.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
+                      >
+                        <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                          {getProfileIcon(link.label)}
+                        </span>
+                        <span>{link.label}</span>
+                      </Link>
+                    )
+                  )}
                 </div>
               ) : (
-                <div className="border-t border-border/60 pt-4 flex items-center justify-between gap-3 w-full">
+                /* Guest User Actions (when not authenticated) */
+                <div className="flex flex-col gap-2 border-t border-border/60 dark:border-white/10 pt-3 mt-1">
                   <Button
                     text="Start for Free"
                     href="/signup"
                     onClick={() => setMobileOpen(false)}
-                    className="flex-1 justify-center"
+                    className="w-full justify-center"
                   />
-                  <AnimatedThemeToggler />
+                  <Link
+                    href="/signin"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-xl py-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors hover:bg-card-soft dark:hover:bg-white/5"
+                  >
+                    <FiLogIn className="size-4" />
+                    <span>Sign In</span>
+                  </Link>
                 </div>
               )}
             </div>
