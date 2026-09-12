@@ -27,7 +27,7 @@ export default function OverallProgress({ value, role }: OverallProgressProps) {
 
   return (
     <Card
-      className="rounded-xl p-6 border-2 border-background shadow-none dashboard-card"
+      className="rounded-xl p-6 border-2 border-background shadow-none dashboard-card h-full"
     >
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>Overall Progress</CardTitle>
@@ -110,7 +110,7 @@ export default function OverallProgress({ value, role }: OverallProgressProps) {
 
         {/* Motivation */}
         <p className="text-center text-sm leading-6 text-muted-foreground">
-          Keep going — Push through today and watch your progress take shape.
+          Keep going — Work hard today and watch your progress grow.
         </p>
       </CardContent>
     </Card>
