@@ -35,9 +35,9 @@ export default function Navbar() {
         stiffness: 100,
         damping: 20,
       }}
-      className={`font-poppins fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`font-poppins fixed inset-x-0 top-0 z-50 transition-all duration-900 ${
         scrolled
-          ? "pt-2 sm:pt-3 px-3 sm:px-4 md:px-6"
+          ? "pt-0 sm:pt-2 px-2 sm:px-4 md:px-6"
           : "pt-0 px-4 md:px-0 md:bg-[#e0d1f1] md:dark:bg-[#2b1e42ec]"
       } `}
     >
@@ -54,17 +54,17 @@ export default function Navbar() {
         }}
         className={`
             hidden md:flex relative mx-auto items-center
-            transition-all duration-700 ease-out
+            transition-all duration-900 ease-out
             ${
               scrolled
-                ? "w-full max-w-3xl xl:max-w-5xl rounded-full bg-[#f4edff]/95 dark:bg-[#2b1e42ec] px-4 sm:px-6 py-2 md:py-2.5 xl:py-3 shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-2xl border border-border/40"
-                : "w-full max-w-[1500px] rounded-none py-2.5 md:py-3.5 xl:py-4.5 px-6"
+                ? "w-full max-w-3xl 2xl:max-w-5xl rounded-full bg-[#f4edff]/95 dark:bg-[#2b1e42ec] px-2.5 py-2.5 2xl:py-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl border-none"
+                : "w-full global-pos rounded-none py-3.5 2xl:py-4.5 px-6 border-none"
             }
           `}
       >
         <div
           className={`
-              flex w-full items-center justify-between gap-5 sm:gap-7
+              flex w-full items-center justify-between gap-6
             `}
         >
           {/* Logo */}
@@ -72,21 +72,21 @@ export default function Navbar() {
             <Logo />
           </div>
 
-          {/* Desktop Navigation (xl+) */}
-          <div className="hidden xl:flex items-center justify-center">
+          {/* Desktop Navigation (2xl+) */}
+          <div className="hidden 2xl:flex items-center justify-center">
             <NavLinks />
           </div>
 
-          {/* Right Actions: Auth, Theme & Tablet Hamburger (< xl: iPad Mini, iPad Air, iPad Pro) */}
-          <div className="flex items-center justify-end gap-2.5 sm:gap-3.5">
-            <div className="hidden xl:block">
+          {/* Right Actions: Auth, Theme & Tablet Hamburger (< 2xl: iPad Mini, iPad Air, iPad Pro, Android tablets) */}
+          <div className="flex items-center justify-end gap-3">
+            <div className="hidden 2xl:block">
               <AuthCheck />
             </div>
-            <div className="hidden xl:block">
+            <div className="hidden 2xl:block">
               <AnimatedThemeToggler />
             </div>
-            {/* Tablet / iPad Hamburger (< xl) */}
-            <div className="block xl:hidden">
+            {/* Tablet / iPad Hamburger (< 2xl) */}
+            <div className="block 2xl:hidden">
               <NavLinks onlyHamburger />
             </div>
           </div>
