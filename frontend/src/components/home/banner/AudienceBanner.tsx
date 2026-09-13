@@ -79,7 +79,7 @@ export default function AudienceBanner() {
 
         {/* CTA */}
         <div className="flex w-full justify-center">
-          <BannerCta text="Get Started" href="/signup" />
+          <BannerCta text="Get Started" href="/dashboard/learner" />
         </div>
       </div>
     </section>
