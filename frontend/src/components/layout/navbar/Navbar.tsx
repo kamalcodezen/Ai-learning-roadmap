@@ -72,21 +72,21 @@ export default function Navbar() {
             <Logo />
           </div>
 
-          {/* Desktop Navigation (lg+) */}
-          <div className="hidden lg:flex items-center justify-center">
+          {/* Desktop Navigation (xl+) */}
+          <div className="hidden xl:flex items-center justify-center">
             <NavLinks />
           </div>
 
-          {/* Right Actions: Auth, Theme & Tablet Hamburger (< lg: iPad Mini, iPad Air, Android tablets) */}
+          {/* Right Actions: Auth, Theme & Tablet/iPad Hamburger (< xl: iPad Pro 1024px, iPad Air, tablets) */}
           <div className="flex items-center justify-end gap-3">
-            <div className="hidden lg:block">
+            <div className="hidden xl:block">
               <AuthCheck />
             </div>
-            <div className="hidden lg:block">
+            <div className="hidden xl:block">
               <AnimatedThemeToggler />
             </div>
-            {/* Tablet / iPad Hamburger (< lg) */}
-            <div className="block lg:hidden">
+            {/* Tablet & iPad Pro Hamburger (< xl) */}
+            <div className="block xl:hidden">
               <NavLinks onlyHamburger />
             </div>
           </div>

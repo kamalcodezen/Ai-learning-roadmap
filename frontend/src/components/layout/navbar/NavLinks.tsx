@@ -14,8 +14,9 @@ import {
   FiCompass,
   FiInfo,
   FiCreditCard,
-  FiLogIn,
   FiMoon,
+  FiMenu,
+  FiX,
 } from "react-icons/fi";
 import { authClient } from "@/src/lib/auth-client";
 import { getDropdownLinks } from "./profileDropdown";
@@ -245,34 +246,26 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
     );
   }
 
-  // Tablet Hamburger Menu & Dropdown Content
+  // Tablet & iPad Pro Hamburger Menu & Dropdown Content
   return (
     <div ref={menuRef} className="relative">
       {/* Sleek Hamburger Toggle Button */}
       <button
         type="button"
         onClick={() => setMobileOpen((prev) => !prev)}
-        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-all hover:bg-foreground/80 focus:outline-none relative"
+        className="flex size-10 md:size-11 shrink-0 items-center justify-center rounded-full bg-[#1e1e1e] dark:bg-white text-white dark:text-[#1e1e1e] shadow-md transition-all hover:opacity-90 active:scale-95 focus:outline-none relative"
         aria-label="Toggle navigation menu"
         aria-expanded={mobileOpen}
       >
-        <div className="relative flex size-4 flex-col items-center justify-center gap-1">
-          <span
-            className={`h-0.5 w-3.5 bg-background rounded-full transition-transform duration-300 ${
-              mobileOpen ? "translate-y-1.5 rotate-45" : ""
-            }`}
-          />
-          <span
-            className={`h-0.5 w-3.5 bg-background rounded-full transition-opacity duration-300 ${
-              mobileOpen ? "opacity-0" : "opacity-100"
-            }`}
-          />
-          <span
-            className={`h-0.5 w-3.5 bg-background rounded-full transition-transform duration-300 ${
-              mobileOpen ? "-translate-y-1.5 -rotate-45" : ""
-            }`}
-          />
-        </div>
+        {mobileOpen ? (
+          <FiX className="size-5 stroke-[2.5]" />
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-1">
+            <span className="h-0.5 w-4 bg-current rounded-full" />
+            <span className="h-0.5 w-4 bg-current rounded-full" />
+            <span className="h-0.5 w-4 bg-current rounded-full" />
+          </div>
+        )}
       </button>
 
       {/* Dropdown Menu Content */}
@@ -282,8 +275,8 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
             initial={{ opacity: 0, y: -10, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.96 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] max-w-sm sm:max-w-md rounded-3xl border border-border/80 dark:border-primary/25 bg-card/95 dark:bg-[#191029]/95 p-4 sm:p-5 shadow-2xl backdrop-blur-2xl"
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] max-w-[360px] rounded-[28px] border border-border/70 dark:border-white/10 bg-white/95 dark:bg-[#1a1128]/95 p-5 shadow-2xl backdrop-blur-2xl"
           >
             <div className="flex flex-col gap-4 max-h-[76vh] overflow-y-auto pr-1">
               {/* User Profile Card (when authenticated) */}
@@ -310,7 +303,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
 
               {/* Navigation Links */}
               <div className="flex flex-col gap-1">
-                <span className="px-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                <span className="px-2 text-[11px] font-mono font-semibold tracking-[0.16em] text-muted-foreground uppercase">
                   Navigation
                 </span>
 
@@ -323,13 +316,13 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                         <button
                           type="button"
                           onClick={() => setExpandedSolutions((prev) => !prev)}
-                          className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
+                          className="flex items-center justify-between rounded-2xl px-2.5 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
                         >
-                          <div className="flex items-center gap-2.5">
-                            <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                          <div className="flex items-center gap-3.5">
+                            <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
                               {getNavLinkIcon(link.label)}
                             </span>
-                            <span>{link.label}</span>
+                            <span className="text-[14px] font-medium">{link.label}</span>
                           </div>
                           <FiChevronDown
                             className={`size-4 text-muted-foreground transition-transform duration-200 ${
@@ -374,25 +367,25 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                       key={link.label}
                       href={link.href}
                       onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
+                      className="flex items-center gap-3.5 rounded-2xl px-2.5 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
                     >
-                      <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
                         {getNavLinkIcon(link.label)}
                       </span>
-                      <span>{link.label}</span>
+                      <span className="text-[14px] font-medium">{link.label}</span>
                     </Link>
                   );
                 })}
 
                 {/* Appearance / Theme Toggle Row under Navigation */}
-                <div className="flex items-center justify-between rounded-xl px-3 py-1.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <div className="flex items-center justify-between rounded-2xl px-2.5 py-2 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5">
+                  <div className="flex items-center gap-3.5">
+                    <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
                       <FiMoon className="size-4" />
                     </span>
-                    <span>Appearance</span>
+                    <span className="text-[14px] font-medium">Appearance</span>
                   </div>
-                  <div className="scale-90">
+                  <div className="scale-90 pr-1">
                     <AnimatedThemeToggler />
                   </div>
                 </div>
@@ -434,21 +427,13 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                 </div>
               ) : (
                 /* Guest User Actions (when not authenticated) */
-                <div className="flex flex-col gap-2 border-t border-border/60 dark:border-white/10 pt-3 mt-1">
+                <div className="pt-2 border-t border-border/60 dark:border-white/10 mt-1">
                   <Button
                     text="Start for Free"
                     href="/dashboard/learner"
                     onClick={() => setMobileOpen(false)}
-                    className="w-full justify-center"
+                    className="w-full justify-between"
                   />
-                  <Link
-                    href="/signin"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center justify-center gap-2 rounded-xl py-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors hover:bg-card-soft dark:hover:bg-white/5"
-                  >
-                    <FiLogIn className="size-4" />
-                    <span>Sign In</span>
-                  </Link>
                 </div>
               )}
             </div>
