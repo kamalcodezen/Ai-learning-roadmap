@@ -77,7 +77,8 @@ export const ModelName = {
   UserGamification: 'UserGamification',
   XPTransaction: 'XPTransaction',
   UserAchievement: 'UserAchievement',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  Resume: 'Resume'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -484,6 +485,32 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const ResumeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  targetRole: 'targetRole',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  location: 'location',
+  website: 'website',
+  github: 'github',
+  linkedin: 'linkedin',
+  summary: 'summary',
+  skills: 'skills',
+  experience: 'experience',
+  projects: 'projects',
+  education: 'education',
+  certifications: 'certifications',
+  atsScore: 'atsScore',
+  atsFeedback: 'atsFeedback',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ResumeScalarFieldEnum = (typeof ResumeScalarFieldEnum)[keyof typeof ResumeScalarFieldEnum]
 
 
 export const SortOrder = {
