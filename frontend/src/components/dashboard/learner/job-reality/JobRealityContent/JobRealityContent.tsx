@@ -462,7 +462,7 @@ export default function JobRealityContent() {
                   className="w-full"
                 >
                   <Button
-                    text="Generate Project for Gap Skill"
+                    text="Generate Project Gap Skill"
                     variant="soft"
                     className="w-full flex items-center justify-center gap-1.5"
                   />
