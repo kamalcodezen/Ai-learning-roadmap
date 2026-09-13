@@ -14,7 +14,6 @@ import {
   FiCompass,
   FiInfo,
   FiCreditCard,
-  FiLogIn,
   FiMoon,
 } from "react-icons/fi";
 import Logo from "./Logo";
@@ -245,25 +244,25 @@ export default function MobileNav() {
                         key={link.label}
                         href={link.href}
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
+                        className="flex items-center gap-3.5 rounded-2xl px-2.5 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
                       >
-                        <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
                           {getNavLinkIcon(link.label)}
                         </span>
-                        <span>{link.label}</span>
+                        <span className="text-[14px] font-medium">{link.label}</span>
                       </Link>
                     );
                   })}
 
                   {/* Appearance / Theme Toggle Row under Navigation */}
-                  <div className="flex items-center justify-between rounded-xl px-3 py-1.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5">
-                    <div className="flex items-center gap-2.5">
-                      <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="flex items-center justify-between rounded-2xl px-2.5 py-2 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5">
+                    <div className="flex items-center gap-3.5">
+                      <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
                         <FiMoon className="size-4" />
                       </span>
-                      <span>Appearance</span>
+                      <span className="text-[14px] font-medium">Appearance</span>
                     </div>
-                    <div className="scale-90">
+                    <div className="scale-90 pr-1">
                       <AnimatedThemeToggler />
                     </div>
                   </div>
@@ -305,21 +304,13 @@ export default function MobileNav() {
                   </div>
                 ) : (
                   /* Guest User Actions (when not authenticated) */
-                  <div className="flex flex-col gap-2 border-t border-border/60 dark:border-white/10 pt-3 mt-1">
+                  <div className="pt-2 border-t border-border/60 dark:border-white/10 mt-1">
                     <Button
                       text="Start for Free"
                       href="/signup"
                       onClick={() => setIsOpen(false)}
-                      className="w-full justify-center"
+                      className="w-full justify-between"
                     />
-                    <Link
-                      href="/signin"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center justify-center gap-2 rounded-xl py-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors hover:bg-card-soft dark:hover:bg-white/5"
-                    >
-                      <FiLogIn className="size-4" />
-                      <span>Sign In</span>
-                    </Link>
                   </div>
                 )}
               </div>
