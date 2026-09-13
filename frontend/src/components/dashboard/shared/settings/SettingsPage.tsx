@@ -336,16 +336,16 @@ export default function SettingsPage() {
                 <button
                   type="submit"
                   disabled={isChangingPassword}
-                  className="px-4 py-2 text-xs font-semibold text-primary-foreground bg-primary hover:opacity-95 rounded-xl transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-sm"
+                  className="px-4 py-2 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-xl transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-sm"
                 >
                   {isChangingPassword ? (
                     <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
                       <span>Updating Password...</span>
                     </>
                   ) : (
                     <>
-                      <Key className="w-3.5 h-3.5" />
+                      <Key className="w-3.5 h-3.5 text-white" />
                       <span>Update Password</span>
                     </>
                   )}
@@ -353,7 +353,7 @@ export default function SettingsPage() {
 
                 <Link
                   href="/forgot-password"
-                  className="text-xs text-muted-foreground hover:text-primary transition"
+                  className="px-4 py-2 text-xs font-semibold text-white bg-primary hover:bg-primary/90 rounded-xl transition inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
                 >
                   Forgot password?
                 </Link>

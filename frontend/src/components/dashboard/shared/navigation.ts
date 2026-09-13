@@ -16,6 +16,8 @@ import {
   ShieldCheck,
   FileText,
   Mic,
+  TrendingUp,
+  Briefcase,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -96,12 +98,14 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
     ];
   }
 
-  // Learner routes
+  // Learner routes - Structured in logical Step-by-Step Learner Workflow
   const learnerPrefix = "/dashboard/learner";
   return [
     {
       title: "OVERVIEW",
-      items: [{ href: `${learnerPrefix}`, label: "Dashboard", icon: LayoutDashboard }],
+      items: [
+        { href: `${learnerPrefix}`, label: "Dashboard", icon: LayoutDashboard },
+      ],
     },
     {
       title: "LEARN",
@@ -109,24 +113,25 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
         { href: `${learnerPrefix}/learning-path`, label: "My Roadmap", icon: Route },
         { href: `${learnerPrefix}/skill-gaps`, label: "Skill Gaps", icon: Target },
         { href: `${learnerPrefix}/assessments`, label: "Assessments", icon: ClipboardCheck },
-        { href: `${learnerPrefix}/interview`, label: "Mock Interview", icon: Mic },
         { href: `${learnerPrefix}/portfolio`, label: "Projects", icon: FolderKanban },
+        { href: `${learnerPrefix}/interview`, label: "Mock Interview", icon: Mic },
       ],
     },
     {
       title: "PROVE",
       items: [
-        { href: `${learnerPrefix}/career-twin`, label: "Career Twin", icon: UserCheck },
         { href: `${learnerPrefix}/proof-graph`, label: "Proof Graph", icon: GitMerge },
-        { href: `${learnerPrefix}/progress`, label: "Progress", icon: BarChart },
+        { href: `${learnerPrefix}/career-twin`, label: "Career Twin", icon: UserCheck },
+        { href: `${learnerPrefix}/progress`, label: "Progress", icon: TrendingUp },
       ],
     },
     {
       title: "CAREER",
       items: [
-        { href: `${learnerPrefix}/career-intelligence`, label: "Career Intelligence", icon: BrainCircuit },
+        { href: `${learnerPrefix}/resume`, label: "AI Resume & ATS", icon: FileText },
+        { href: `${learnerPrefix}/job-reality`, label: "Job Reality", icon: Briefcase },
         { href: `${learnerPrefix}/career-alignment`, label: "Career Alignment", icon: Map },
-        { href: `${learnerPrefix}/job-reality`, label: "Job Reality", icon: Target },
+        { href: `${learnerPrefix}/career-intelligence`, label: "Career Intelligence", icon: BrainCircuit },
         { href: `${learnerPrefix}/application-readiness`, label: "Application Readiness", icon: ClipboardCheck },
       ],
     },
@@ -155,7 +160,7 @@ export const getBottomNavItems = (prefix: string): NavLink[] => {
   const learnerPrefix = "/dashboard/learner";
   return [
     { href: `${learnerPrefix}`, label: "Home", icon: LayoutDashboard },
-    { href: `${learnerPrefix}/learning-path`, label: "Paths", icon: Route },
+    { href: `${learnerPrefix}/learning-path`, label: "Roadmap", icon: Route },
     { href: `${learnerPrefix}/portfolio`, label: "Projects", icon: FolderKanban },
     { href: `${learnerPrefix}/career-twin`, label: "Twin", icon: UserCheck },
     { href: `${learnerPrefix}/profile`, label: "Profile", icon: User },
