@@ -22,6 +22,7 @@ import portfolioRoutes from "./modules/learner/projects/portfolio.routes.js";
 import jobRealityRoutes from "./modules/learner/job-reality/job-reality.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
 import interviewRoutes from "./modules/learner/interview/interview.routes.js";
+import resumeRoutes from "./modules/learner/resume/resume.routes.js";
 import gamificationRoutes from "./modules/learner/gamification/gamification.routes.js";
 import careerIntelligenceRoutes from "./modules/learner/career-intelligence/career-intelligence.routes.js";
 import notificationRoutes from "./modules/learner/notifications/notification.routes.js";
@@ -54,8 +55,9 @@ app.use(
   }),
 );
 
-// Parse JSON request bodies
-app.use(express.json());
+// Parse JSON request bodies with generous limit for PDF/Resume uploads
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ extended: true, limit: "25mb" }));
 
 // API Chat Routes
 app.use("/api/chat", chatRoutes);
@@ -86,6 +88,9 @@ app.use("/api/job-reality", jobRealityRoutes);
 
 // Interview Routes
 app.use("/api/interview", interviewRoutes);
+
+// AI Resume & ATS Routes
+app.use("/api/resume", resumeRoutes);
 
 // Gamification & Skill Tree Routes
 app.use("/api/gamification", gamificationRoutes);

@@ -27,16 +27,23 @@ import {
   X,
   Loader2,
   AlertTriangle,
+  Network,
+  List,
 } from "lucide-react";
 import Link from "next/link";
 import { DashboardButton } from "@/src/components/dashboard/shared/patterns";
+import { RoadmapGraphCanvas } from "../RoadmapGraph/RoadmapGraphCanvas";
 
 function isMatchingSkillFrontend(aRaw: string, bRaw: string): boolean {
   if (!aRaw || !bRaw) return false;
   const a = aRaw.toLowerCase().trim();
   const b = bRaw.toLowerCase().trim();
   if (a === b) return true;
-  if ((a === "react" && b === "react native") || (b === "react" && a === "react native")) return false;
+  if (
+    (a === "react" && b === "react native") ||
+    (b === "react" && a === "react native")
+  )
+    return false;
   const aClean = a.replace(/[^a-z0-9]/g, "");
   const bClean = b.replace(/[^a-z0-9]/g, "");
   if (aClean && bClean && aClean === bClean) return true;
@@ -46,10 +53,17 @@ function isMatchingSkillFrontend(aRaw: string, bRaw: string): boolean {
   if (b.startsWith("html") && (a === "html" || a === "html5")) return true;
   if (a.startsWith("css") && (b === "css" || b === "css3")) return true;
   if (b.startsWith("css") && (a === "css" || a === "css3")) return true;
-  if (a.length >= 3 && b.length >= 3 && (a.includes(b) || b.includes(a))) return true;
+  if (a.length >= 3 && b.length >= 3 && (a.includes(b) || b.includes(a)))
+    return true;
 
-  const aParts = a.split(/[/,]/).map((p) => p.trim()).filter(Boolean);
-  const bParts = b.split(/[/,]/).map((p) => p.trim()).filter(Boolean);
+  const aParts = a
+    .split(/[/,]/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  const bParts = b
+    .split(/[/,]/)
+    .map((p) => p.trim())
+    .filter(Boolean);
   if (aParts.length > 1 || bParts.length > 1) {
     for (const pA of aParts) {
       for (const pB of bParts) {
@@ -57,7 +71,12 @@ function isMatchingSkillFrontend(aRaw: string, bRaw: string): boolean {
         const pAClean = pA.replace(/[^a-z0-9]/g, "");
         const pBClean = pB.replace(/[^a-z0-9]/g, "");
         if (pAClean && pBClean && pAClean === pBClean) return true;
-        if (pA.length >= 3 && pB.length >= 3 && (pA.includes(pB) || pB.includes(pA))) return true;
+        if (
+          pA.length >= 3 &&
+          pB.length >= 3 &&
+          (pA.includes(pB) || pB.includes(pA))
+        )
+          return true;
       }
     }
   }
@@ -69,6 +88,7 @@ export default function LearningPathContent() {
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
 
+  const [viewMode, setViewMode] = useState<"graph" | "list">("graph");
   const [generatedProject, setGeneratedProject] = useState<{
     id: string;
     title: string;
@@ -97,14 +117,14 @@ export default function LearningPathContent() {
         const exactMatch = data.milestones.find(
           (m) =>
             m.id === milestoneParam &&
-            m.skillsCovered.some((s) => isMatchingSkillFrontend(s, skillParam))
+            m.skillsCovered.some((s) => isMatchingSkillFrontend(s, skillParam)),
         );
         if (exactMatch) return exactMatch;
       }
 
       // 2. Find the first milestone in the roadmap explicitly covering skillParam via canonical matching
       const skillMatch = data.milestones.find((m) =>
-        m.skillsCovered.some((s) => isMatchingSkillFrontend(s, skillParam))
+        m.skillsCovered.some((s) => isMatchingSkillFrontend(s, skillParam)),
       );
       if (skillMatch) return skillMatch;
 
@@ -114,7 +134,9 @@ export default function LearningPathContent() {
 
     // 3. Fallback: if no skillParam is provided, match by milestoneParam if valid
     if (milestoneParam) {
-      const milestoneMatch = data.milestones.find((m) => m.id === milestoneParam);
+      const milestoneMatch = data.milestones.find(
+        (m) => m.id === milestoneParam,
+      );
       if (milestoneMatch) return milestoneMatch;
     }
 
@@ -154,10 +176,22 @@ export default function LearningPathContent() {
       generateMilestoneProject(opts.milestoneId, opts.skill),
     onSuccess: (resData) => {
       setProjectError(null);
-      const proj = (resData?.project || resData?.data || resData) as unknown as Record<string, unknown>;
-      const titleVal = typeof proj?.title === "string" ? proj.title : (typeof proj?.name === "string" ? proj.name : "Milestone Project");
-      const descVal = typeof proj?.description === "string" ? proj.description : "Project specification generated.";
-      const techVal = Array.isArray(proj?.techStack) ? (proj.techStack as string[]) : [];
+      const proj = (resData?.project ||
+        resData?.data ||
+        resData) as unknown as Record<string, unknown>;
+      const titleVal =
+        typeof proj?.title === "string"
+          ? proj.title
+          : typeof proj?.name === "string"
+            ? proj.name
+            : "Milestone Project";
+      const descVal =
+        typeof proj?.description === "string"
+          ? proj.description
+          : "Project specification generated.";
+      const techVal = Array.isArray(proj?.techStack)
+        ? (proj.techStack as string[])
+        : [];
       setGeneratedProject({
         id: typeof proj?.id === "string" ? proj.id : "",
         title: titleVal,
@@ -173,7 +207,9 @@ export default function LearningPathContent() {
       });
     },
     onError: (err: Error) => {
-      setProjectError(err.message || "Failed to generate project. Please try again.");
+      setProjectError(
+        err.message || "Failed to generate project. Please try again.",
+      );
     },
   });
 
@@ -207,9 +243,13 @@ export default function LearningPathContent() {
         <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
           <BookOpen className="w-8 h-8" />
         </div>
-        <h3 className="text-2xl font-bold text-foreground">No Roadmap Milestones Yet</h3>
+        <h3 className="text-2xl font-bold text-foreground">
+          No Roadmap Milestones Yet
+        </h3>
         <p className="text-sm text-muted-foreground">
-          Your learning roadmap is personalized based on your career goals and assessment results. Take the diagnostic to generate your custom milestones.
+          Your learning roadmap is personalized based on your career goals and
+          assessment results. Take the diagnostic to generate your custom
+          milestones.
         </p>
         <DashboardButton
           href="/diagnostic"
@@ -236,18 +276,51 @@ export default function LearningPathContent() {
             Your AI-generated personalized curriculum.
           </p>
         </div>
-        <div className="bg-card p-4 rounded-xl border border-border shrink-0 min-w-[200px]">
-          <p className="text-sm text-muted-foreground mb-2">Overall Progress</p>
-          <div className="flex items-end justify-between mb-2">
-            <span className="text-2xl font-bold text-foreground">
-              {data.overallProgress}%
-            </span>
+
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {/* View Mode Switcher */}
+          <div className="flex items-center gap-1 p-1 bg-card rounded-xl border border-border shrink-0">
+            <button
+              type="button"
+              onClick={() => setViewMode("graph")}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
+                viewMode === "graph"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              <Network className="w-3.5 h-3.5" />
+              Graph View
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("list")}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
+                viewMode === "list"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              <List className="w-3.5 h-3.5" />
+              List View
+            </button>
           </div>
-          <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary rounded-full transition-all duration-1000"
-              style={{ width: `${data.overallProgress}%` }}
-            />
+
+          <div className="bg-card p-3.5 rounded-xl border border-border shrink-0 min-w-[180px]">
+            <p className="text-xs text-muted-foreground mb-1.5">
+              Overall Progress
+            </p>
+            <div className="flex items-end justify-between mb-1.5">
+              <span className="text-xl font-bold text-foreground">
+                {data.overallProgress}%
+              </span>
+            </div>
+            <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary rounded-full transition-all duration-1000"
+                style={{ width: `${data.overallProgress}%` }}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -256,314 +329,347 @@ export default function LearningPathContent() {
         <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-center gap-3 text-amber-700 dark:text-amber-300 text-sm">
           <Target className="w-5 h-5 shrink-0 text-amber-500" />
           <span>
-            Target Skill Gap: <strong>{skillParam}</strong> is preserved, but no directly linked milestone covers this skill in your current active roadmap.
+            Target Skill Gap: <strong>{skillParam}</strong> is preserved, but no
+            directly linked milestone covers this skill in your current active
+            roadmap.
           </span>
         </div>
       )}
 
-      <div className="flex flex-col relative">
-        <div className="absolute left-[27px] top-4 bottom-12 w-0.5 bg-border z-0 hidden md:block" />
+      {viewMode === "graph" ? (
+        <RoadmapGraphCanvas
+          roadmapTitle={data.roadmapTitle}
+          targetRole={data.targetRole}
+          overallProgress={data.overallProgress}
+          milestones={data.milestones}
+          targetMilestoneId={targetMilestoneId}
+          onCompleteMilestone={(id) => completeMutation.mutate(id)}
+          isCompleting={completeMutation.isPending}
+          onGenerateProject={(opts) =>
+            generateProjectMutation.mutate({
+              milestoneId: opts.milestoneId,
+              skill: opts.skill || skillParam || undefined,
+            })
+          }
+          isGeneratingProject={generateProjectMutation.isPending}
+          onToggleView={() => setViewMode("list")}
+        />
+      ) : (
+        <div className="flex flex-col relative">
+          <div className="absolute left-[27px] top-4 bottom-12 w-0.5 bg-border z-0 hidden md:block" />
 
-        <div className="flex flex-col dashboard-card-gap relative z-10">
-          {data.milestones.map((milestone, idx) => {
-            const isTarget = milestone.id === targetMilestoneId;
+          <div className="flex flex-col dashboard-card-gap relative z-10">
+            {data.milestones.map((milestone, idx) => {
+              const isTarget = milestone.id === targetMilestoneId;
 
-            return (
-              <div
-                key={milestone.id}
-                id={`milestone-${milestone.id}`}
-                data-target-milestone={isTarget ? "true" : undefined}
-                className="flex flex-col md:flex-row gap-4 md:gap-8 scroll-mt-24"
-              >
-                <div className="hidden md:flex flex-col items-center p-0 md:pt-5">
-                  <div
-                    className={`w-14 h-14 rounded-full flex items-center justify-center border-4 border-background ${
-                      milestone.status === "completed"
-                        ? "bg-green-500 text-white"
-                        : milestone.status === "current"
-                          ? "bg-primary text-white"
-                          : isTarget
-                            ? "bg-primary/20 border-primary text-primary font-bold"
-                            : "bg-muted border-border text-muted-foreground"
+              return (
+                <div
+                  key={milestone.id}
+                  id={`milestone-${milestone.id}`}
+                  data-target-milestone={isTarget ? "true" : undefined}
+                  className="flex flex-col md:flex-row gap-4 md:gap-8 scroll-mt-24"
+                >
+                  <div className="hidden md:flex flex-col items-center p-0 md:pt-5">
+                    <div
+                      className={`w-14 h-14 rounded-full flex items-center justify-center border-4 border-background ${
+                        milestone.status === "completed"
+                          ? "bg-green-500 text-white"
+                          : milestone.status === "current"
+                            ? "bg-primary text-white"
+                            : isTarget
+                              ? "bg-primary/20 border-primary text-primary font-bold"
+                              : "bg-muted border-border text-muted-foreground"
+                      }`}
+                    >
+                      {milestone.status === "completed" ? (
+                        <CheckCircle2 className="w-6 h-6" />
+                      ) : milestone.status === "current" ? (
+                        <span className="font-bold">{idx + 1}</span>
+                      ) : (
+                        <span>{idx + 1}</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <Card
+                    mouseGlow
+                    className={`group relative overflow-hidden flex-1 transition-all duration-300 rounded-xl border-2 shadow-none dashboard-card ${
+                      milestone.status === "current"
+                        ? "border-brand"
+                        : isTarget
+                          ? "border-primary ring-2 ring-primary/40 shadow-lg shadow-primary/10"
+                          : "border-background"
                     }`}
                   >
-                    {milestone.status === "completed" ? (
-                      <CheckCircle2 className="w-6 h-6" />
-                    ) : milestone.status === "current" ? (
-                      <span className="font-bold">{idx + 1}</span>
-                    ) : (
-                      <span>{idx + 1}</span>
-                    )}
-                  </div>
-                </div>
-
-                <Card
-                  mouseGlow
-                  className={`group relative overflow-hidden flex-1 transition-all duration-300 rounded-xl border-2 shadow-none dashboard-card ${
-                    milestone.status === "current"
-                      ? "border-brand"
-                      : isTarget
-                        ? "border-primary ring-2 ring-primary/40 shadow-lg shadow-primary/10"
-                        : "border-background"
-                  }`}
-                >
-                  <CardContent>
-                    <div className="flex flex-col lg:flex-row justify-between gap-6">
-                      <div className="flex-1 space-y-4">
-                        <div>
-                          <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                            {milestone.status === "completed" && (
-                              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-500/10 text-green-500">
-                                Completed
-                              </span>
-                            )}
-                            {milestone.status === "current" && (
-                              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                                In Progress
-                              </span>
-                            )}
-                            {milestone.status === "upcoming" && (
-                              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                                Upcoming
-                              </span>
-                            )}
-                            {isTarget && (
-                              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/30 flex items-center gap-1 animate-pulse">
-                                🎯 Target Skill Gap:{" "}
-                                {skillParam || milestone.skillsCovered[0]}
-                              </span>
-                            )}
-                          </div>
-                          <h3 className="text-xl font-bold">
-                            {milestone.title}
-                          </h3>
-                        </div>
-
-                        <p className="text-sm text-muted-foreground">
-                          {milestone.description}
-                        </p>
-
-                        <div className="bg-muted/50 p-3 rounded-lg border border-border/50 text-sm">
-                          <span className="font-semibold mr-1">
-                            Why it matters:
-                          </span>{" "}
-                          {milestone.whyItMatters}
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1.5">
-                            <Clock className="w-4 h-4" />{" "}
-                            {milestone.estimatedTime}
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <BookOpen className="w-4 h-4" />{" "}
-                            {milestone.skillsCovered.join(", ")}
-                          </div>
-                        </div>
-                        <MilestoneResourcesAccordion
-                          milestoneId={milestone.id}
-                          skills={milestone.skillsCovered}
-                          defaultOpen={isTarget}
-                        />
-                      </div>
-
-                      <div className="lg:w-48 flex flex-col justify-center gap-4 lg:border-l lg:border-border lg:pl-6 shrink-0">
-                        {milestone.status === "current" &&
-                          milestone.progress !== undefined && (
-                            <div className="space-y-2">
-                              <div className="flex justify-between text-sm">
-                                <span>Progress</span>
-                                <span className="font-bold">
-                                  {milestone.progress}%
+                    <CardContent>
+                      <div className="flex flex-col lg:flex-row justify-between gap-6">
+                        <div className="flex-1 space-y-4">
+                          <div>
+                            <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                              {milestone.status === "completed" && (
+                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-500/10 text-green-500">
+                                  Completed
                                 </span>
-                              </div>
-                              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                                <div
-                                  className="h-full bg-primary rounded-full"
-                                  style={{ width: `${milestone.progress}%` }}
-                                />
-                              </div>
-                            </div>
-                          )}
-
-                        {milestone.status === "current" ? (
-                          <div className="flex flex-col gap-2">
-                            <DashboardButton
-                              fullWidth
-                              text={
-                                <>
-                                  {completeMutation.isPending &&
-                                  completeMutation.variables === milestone.id
-                                    ? "Completing..."
-                                    : "Complete"}{" "}
-                                  <ArrowRight className="w-4 h-4" />
-                                </>
-                              }
-                              onClick={() =>
-                                completeMutation.mutate(milestone.id)
-                              }
-                              disabled={completeMutation.isPending}
-                            />
-                            <button
-                              onClick={() =>
-                                generateProjectMutation.mutate({
-                                  milestoneId: milestone.id,
-                                  skill: skillParam || undefined,
-                                })
-                              }
-                              disabled={generateProjectMutation.isPending}
-                              className="w-full bg-muted text-foreground hover:bg-card-soft py-2 rounded-lg text-xs font-medium border border-border flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-                            >
-                              {generateProjectMutation.isPending &&
-                              generateProjectMutation.variables?.milestoneId === milestone.id ? (
-                                <>
-                                  <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
-                                  Generating...
-                                </>
-                              ) : (
-                                <>
-                                  <FolderKanban className="w-3.5 h-3.5 text-primary" />
-                                  Generate Project
-                                </>
                               )}
-                            </button>
+                              {milestone.status === "current" && (
+                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                                  In Progress
+                                </span>
+                              )}
+                              {milestone.status === "upcoming" && (
+                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                                  Upcoming
+                                </span>
+                              )}
+                              {isTarget && (
+                                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/30 flex items-center gap-1 animate-pulse">
+                                  🎯 Target Skill Gap:{" "}
+                                  {skillParam || milestone.skillsCovered[0]}
+                                </span>
+                              )}
+                            </div>
+                            <h3 className="text-xl font-bold">
+                              {milestone.title}
+                            </h3>
                           </div>
-                        ) : milestone.status === "upcoming" ? (
-                          <div className="flex flex-col gap-2">
-                            <button
-                              className="w-full bg-muted text-muted-foreground py-2.5 rounded-lg text-sm font-medium border border-border cursor-not-allowed"
-                              disabled
-                            >
-                              Locked
-                            </button>
-                            {isTarget && (
-                              <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
-                                Milestone completion is locked until
-                                prerequisite milestones are completed. You can
-                                still study the curated resources below.
-                              </p>
+
+                          <p className="text-sm text-muted-foreground">
+                            {milestone.description}
+                          </p>
+
+                          <div className="bg-muted/50 p-3 rounded-lg border border-border/50 text-sm">
+                            <span className="font-semibold mr-1">
+                              Why it matters:
+                            </span>{" "}
+                            {milestone.whyItMatters}
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1.5">
+                              <Clock className="w-4 h-4" />{" "}
+                              {milestone.estimatedTime}
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <BookOpen className="w-4 h-4" />{" "}
+                              {milestone.skillsCovered.join(", ")}
+                            </div>
+                          </div>
+                          <MilestoneResourcesAccordion
+                            milestoneId={milestone.id}
+                            skills={milestone.skillsCovered}
+                            defaultOpen={isTarget}
+                          />
+                        </div>
+
+                        <div className="lg:w-48 flex flex-col justify-center gap-4 lg:border-l lg:border-border lg:pl-6 shrink-0">
+                          {milestone.status === "current" &&
+                            milestone.progress !== undefined && (
+                              <div className="space-y-2">
+                                <div className="flex justify-between text-sm">
+                                  <span>Progress</span>
+                                  <span className="font-bold">
+                                    {milestone.progress}%
+                                  </span>
+                                </div>
+                                <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                                  <div
+                                    className="h-full bg-primary rounded-full"
+                                    style={{ width: `${milestone.progress}%` }}
+                                  />
+                                </div>
+                              </div>
                             )}
-                          </div>
-                        ) : (
-                          <Link
-                            href="/dashboard/learner/portfolio"
-                            className="w-full bg-card text-foreground py-2.5 rounded-lg text-sm font-medium border border-border hover:bg-card-soft transition-all text-center block"
-                          >
-                            View Projects
-                          </Link>
-                        )}
+
+                          {milestone.status === "current" ? (
+                            <div className="flex flex-col gap-2">
+                              <DashboardButton
+                                fullWidth
+                                text={
+                                  <>
+                                    {completeMutation.isPending &&
+                                    completeMutation.variables === milestone.id
+                                      ? "Completing..."
+                                      : "Complete"}{" "}
+                                    <ArrowRight className="w-4 h-4" />
+                                  </>
+                                }
+                                onClick={() =>
+                                  completeMutation.mutate(milestone.id)
+                                }
+                                disabled={completeMutation.isPending}
+                              />
+                              <button
+                                onClick={() =>
+                                  generateProjectMutation.mutate({
+                                    milestoneId: milestone.id,
+                                    skill: skillParam || undefined,
+                                  })
+                                }
+                                disabled={generateProjectMutation.isPending}
+                                className="w-full bg-muted text-foreground hover:bg-card-soft py-2 rounded-lg text-xs font-medium border border-border flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                              >
+                                {generateProjectMutation.isPending &&
+                                generateProjectMutation.variables
+                                  ?.milestoneId === milestone.id ? (
+                                  <>
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
+                                    Generating...
+                                  </>
+                                ) : (
+                                  <>
+                                    <FolderKanban className="w-3.5 h-3.5 text-primary" />
+                                    Generate Project
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          ) : milestone.status === "upcoming" ? (
+                            <div className="flex flex-col gap-2">
+                              <button
+                                className="w-full bg-muted text-muted-foreground py-2.5 rounded-lg text-sm font-medium border border-border cursor-not-allowed"
+                                disabled
+                              >
+                                Locked
+                              </button>
+                              {isTarget && (
+                                <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+                                  Milestone completion is locked until
+                                  prerequisite milestones are completed. You can
+                                  still study the curated resources below.
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <Link
+                              href="/dashboard/learner/portfolio"
+                              className="w-full bg-card text-foreground py-2.5 rounded-lg text-sm font-medium border border-border hover:bg-card-soft transition-all text-center block"
+                            >
+                              View Projects
+                            </Link>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            );
-          })}
-        </div>
-
-        {projectError && (
-          <div className="p-4 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive text-sm flex items-center justify-between animate-in fade-in">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0" />
-              <span>{projectError}</span>
-            </div>
-            <button
-              onClick={() => setProjectError(null)}
-              className="p-1 hover:bg-destructive/20 rounded-md transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-
-        {generatedProject && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 overflow-y-auto">
-            <div className="w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6 animate-in zoom-in-95 my-8">
-              <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
-                <div className="flex items-center gap-2">
-                  <div className={`p-2 rounded-lg ${generatedProject.duplicate ? "bg-amber-500/10 text-amber-400" : "bg-primary/10 text-primary"}`}>
-                    <Sparkles className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-foreground">
-                      {generatedProject.duplicate
-                        ? "You already have an AI project for this learning context."
-                        : "Milestone Project Generated"}
-                    </h3>
-                    <p className="text-xs text-muted-foreground">
-                      {generatedProject.duplicate
-                        ? "AI Pather reused your existing project instead of creating another duplicate."
-                        : "Added to your portfolio evidence graph"}
-                    </p>
-                  </div>
+                    </CardContent>
+                  </Card>
                 </div>
-                <button
-                  onClick={() => setGeneratedProject(null)}
-                  className="p-1 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
-              <div className="space-y-4">
+      {projectError && (
+        <div className="p-4 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive text-sm flex items-center justify-between animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 shrink-0" />
+            <span>{projectError}</span>
+          </div>
+          <button
+            onClick={() => setProjectError(null)}
+            className="p-1 hover:bg-destructive/20 rounded-md transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {generatedProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6 animate-in zoom-in-95 my-8">
+            <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`p-2 rounded-lg ${generatedProject.duplicate ? "bg-amber-500/10 text-amber-400" : "bg-primary/10 text-primary"}`}
+                >
+                  <Sparkles className="w-5 h-5" />
+                </div>
                 <div>
-                  <h4 className="text-base font-bold text-foreground">
-                    {generatedProject.title}
-                  </h4>
-                  <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                    {generatedProject.description}
+                  <h3 className="text-lg font-bold text-foreground">
+                    {generatedProject.duplicate
+                      ? "You already have an AI project for this learning context."
+                      : "Milestone Project Generated"}
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    {generatedProject.duplicate
+                      ? "AI Pather reused your existing project instead of creating another duplicate."
+                      : "Added to your portfolio evidence graph"}
                   </p>
                 </div>
+              </div>
+              <button
+                onClick={() => setGeneratedProject(null)}
+                className="p-1 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-                {generatedProject.duplicate && (
-                  <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs space-y-1 text-amber-300">
-                    <p className="font-bold flex items-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4 text-amber-400" /> Existing Project Reused:
-                    </p>
-                    <p className="text-muted-foreground">
-                      This context already has a project, so AI Pather reused the existing project instead of creating another one.
-                    </p>
-                  </div>
-                )}
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-base font-bold text-foreground">
+                  {generatedProject.title}
+                </h4>
+                <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                  {generatedProject.description}
+                </p>
+              </div>
 
-                {generatedProject.techStack && generatedProject.techStack.length > 0 && (
+              {generatedProject.duplicate && (
+                <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs space-y-1 text-amber-300">
+                  <p className="font-bold flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-amber-400" /> Existing
+                    Project Reused:
+                  </p>
+                  <p className="text-muted-foreground">
+                    This context already has a project, so AI Pather reused the
+                    existing project instead of creating another one.
+                  </p>
+                </div>
+              )}
+
+              {generatedProject.techStack &&
+                generatedProject.techStack.length > 0 && (
                   <div>
                     <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
                       Technologies / Skills Covered
                     </span>
                     <div className="flex flex-wrap gap-1.5">
-                      {generatedProject.techStack.map((tech: string, idx: number) => (
-                        <span
-                          key={idx}
-                          className="px-2.5 py-1 text-xs font-semibold rounded-md bg-primary/10 text-primary border border-primary/20"
-                        >
-                          {tech}
-                        </span>
-                      ))}
+                      {generatedProject.techStack.map(
+                        (tech: string, idx: number) => (
+                          <span
+                            key={idx}
+                            className="px-2.5 py-1 text-xs font-semibold rounded-md bg-primary/10 text-primary border border-primary/20"
+                          >
+                            {tech}
+                          </span>
+                        ),
+                      )}
                     </div>
                   </div>
                 )}
 
-                <div className="pt-4 border-t border-border flex items-center justify-end gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setGeneratedProject(null)}
-                    className="px-4 py-2 text-xs font-semibold rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-                  >
-                    Close
-                  </button>
-                  <Link
-                    href="/dashboard/learner/portfolio"
-                    className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity flex items-center gap-1.5"
-                  >
-                    {generatedProject.duplicate ? "View Existing Project" : "View in Portfolio"} <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
+              <div className="pt-4 border-t border-border flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setGeneratedProject(null)}
+                  className="px-4 py-2 text-xs font-semibold rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                >
+                  Close
+                </button>
+                <Link
+                  href="/dashboard/learner/portfolio"
+                  className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity flex items-center gap-1.5"
+                >
+                  {generatedProject.duplicate
+                    ? "View Existing Project"
+                    : "View in Portfolio"}{" "}
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

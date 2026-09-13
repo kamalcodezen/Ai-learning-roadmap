@@ -21,6 +21,7 @@
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",
+    "@xyflow/react": "^12.11.6",
     "aos": "^2.3.4",
     "better-auth": "^1.7.2",
     "canvas-confetti": "^1.9.4",

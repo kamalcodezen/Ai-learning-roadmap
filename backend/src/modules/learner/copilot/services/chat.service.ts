@@ -22,6 +22,9 @@ export interface ChatResult {
 }
 
 const groq = env.GROQ_API_KEY ? new Groq({ apiKey: env.GROQ_API_KEY }) : null;
+const groqSecondary = env.GROQ_API_KEY_SECONDARY
+  ? new Groq({ apiKey: env.GROQ_API_KEY_SECONDARY })
+  : null;
 const gemini = env.GEMINI_API_KEY
   ? new GoogleGenAI({ apiKey: env.GEMINI_API_KEY })
   : null;
@@ -32,6 +35,8 @@ const mistral = env.MISTRAL_API_KEY
 // Models
 const GROQ_SIMPLE_MODEL = "openai/gpt-oss-120b";
 const GROQ_COMPLEX_MODEL = "openai/gpt-oss-120b";
+const GROQ_FALLBACK_MODEL = "qwen/qwen3.8-27b";
+const GROQ_TERTIARY_MODEL = "openai/gpt-oss-20b";
 const OPENROUTER_MODEL = "qwen/qwen-2.5-coder-32b-instruct";
 const GEMINI_MODEL = "gemini-3.6-flash";
 const MISTRAL_MODEL = "mistral-small-latest";
@@ -129,7 +134,25 @@ export const extractValidJsonString = (raw: string): string => {
     cleaned = cleaned.slice(startIdx, endIdx + 1);
   }
 
-  return cleaned.trim();
+  cleaned = cleaned.trim();
+
+  // Test if valid JSON as-is
+  try {
+    JSON.parse(cleaned);
+    return cleaned;
+  } catch {
+    // Attempt repair: strip trailing commas before closing braces/brackets and remove line comments
+    const repaired = cleaned
+      .replace(/\/\/.*$/gm, "")
+      .replace(/,\s*([}\]])/g, "$1")
+      .trim();
+    try {
+      JSON.parse(repaired);
+      return repaired;
+    } catch {
+      return repaired || cleaned;
+    }
+  }
 };
 
 import prisma from "../../../../lib/prisma.js";
@@ -354,6 +377,71 @@ export class ChatService {
         }
       } catch (err: any) {
         console.warn(`[Groq failed]: ${err.message}`);
+        // If Rate limit 429 on primary model, try secondary high-capacity model on Groq
+        if (err.message?.includes("429") || err.message?.includes("Rate limit")) {
+          try {
+            const fallbackResp = await withTimeout(
+              groq.chat.completions.create({
+                model: GROQ_FALLBACK_MODEL,
+                messages,
+                max_tokens: maxTokens as any,
+                temperature: 0.2,
+              }),
+            );
+            const content = (fallbackResp as any).choices[0]?.message?.content?.trim();
+            if (content) {
+              reply = content;
+              provider = "Groq";
+              model = GROQ_FALLBACK_MODEL;
+            }
+          } catch (fbErr: any) {
+            console.warn(`[Groq fallback model failed]: ${fbErr.message}`);
+          }
+        }
+      }
+    }
+
+    // 1b. Groq Secondary Key (if configured)
+    if (!reply && groqSecondary) {
+      try {
+        const groqModel =
+          complexity === "complex" ? GROQ_COMPLEX_MODEL : GROQ_SIMPLE_MODEL;
+        const response = await withTimeout(
+          groqSecondary.chat.completions.create({
+            model: groqModel,
+            messages,
+            max_tokens: maxTokens as any,
+            temperature: 0.2,
+          }),
+        );
+        const content = (response as any).choices[0]?.message?.content?.trim();
+        if (content) {
+          reply = content;
+          provider = "Groq-Secondary";
+          model = groqModel;
+        }
+      } catch (err: any) {
+        console.warn(`[Groq Secondary failed]: ${err.message}`);
+        if (err.message?.includes("429") || err.message?.includes("Rate limit")) {
+          try {
+            const fallbackResp = await withTimeout(
+              groqSecondary.chat.completions.create({
+                model: GROQ_FALLBACK_MODEL,
+                messages,
+                max_tokens: maxTokens as any,
+                temperature: 0.2,
+              }),
+            );
+            const content = (fallbackResp as any).choices[0]?.message?.content?.trim();
+            if (content) {
+              reply = content;
+              provider = "Groq-Secondary";
+              model = GROQ_FALLBACK_MODEL;
+            }
+          } catch (fbErr: any) {
+            console.warn(`[Groq Secondary fallback model failed]: ${fbErr.message}`);
+          }
+        }
       }
     }
 
@@ -482,10 +570,83 @@ export class ChatService {
     let model = "none";
 
     // 1. Groq (Force complex model for reasoning)
+    const attemptTimeout = Math.min(timeoutMs, 6000);
     if (groq) {
       try {
         const response = await withTimeout(
           groq.chat.completions.create({
+            model: GROQ_COMPLEX_MODEL,
+            messages,
+            max_tokens: maxTokens as any,
+            temperature: 0.1,
+            response_format: { type: "json_object" },
+          }),
+          attemptTimeout
+        );
+        const content = (response as any).choices[0]?.message?.content?.trim();
+        if (content) {
+          reply = extractValidJsonString(content);
+          provider = "Groq";
+          model = GROQ_COMPLEX_MODEL;
+        }
+      } catch (err: any) {
+        console.warn(`[Groq JSON failed]: ${err.message}`);
+        // If rate limit (429), token limit, or timeout on primary model, immediately try fallback models on Groq!
+        if (
+          err.message?.includes("429") ||
+          err.message?.includes("Rate limit") ||
+          err.message?.includes("tokens") ||
+          err.message?.includes("Timeout")
+        ) {
+          try {
+            const fallbackResp = await withTimeout(
+              groq.chat.completions.create({
+                model: GROQ_FALLBACK_MODEL,
+                messages,
+                max_tokens: maxTokens as any,
+                temperature: 0.1,
+                response_format: { type: "json_object" },
+              }),
+              attemptTimeout
+            );
+            const fbContent = (fallbackResp as any).choices[0]?.message?.content?.trim();
+            if (fbContent) {
+              reply = extractValidJsonString(fbContent);
+              provider = "Groq";
+              model = GROQ_FALLBACK_MODEL;
+            }
+          } catch (fbErr: any) {
+            console.warn(`[Groq fallback model JSON failed]: ${fbErr.message}`);
+            try {
+              const tertResp = await withTimeout(
+                groq.chat.completions.create({
+                  model: GROQ_TERTIARY_MODEL,
+                  messages,
+                  max_tokens: maxTokens as any,
+                  temperature: 0.1,
+                  response_format: { type: "json_object" },
+                }),
+                timeoutMs
+              );
+              const tertContent = (tertResp as any).choices[0]?.message?.content?.trim();
+              if (tertContent) {
+                reply = extractValidJsonString(tertContent);
+                provider = "Groq";
+                model = GROQ_TERTIARY_MODEL;
+              }
+            } catch (tertErr: any) {
+              console.warn(`[Groq tertiary model JSON failed]: ${tertErr.message}`);
+            }
+          }
+        }
+      }
+    }
+
+    // 1b. Groq Secondary Key (if configured)
+    if (!reply && groqSecondary) {
+      try {
+        const response = await withTimeout(
+          groqSecondary.chat.completions.create({
             model: GROQ_COMPLEX_MODEL,
             messages,
             max_tokens: maxTokens as any,
@@ -497,11 +658,33 @@ export class ChatService {
         const content = (response as any).choices[0]?.message?.content?.trim();
         if (content) {
           reply = extractValidJsonString(content);
-          provider = "Groq";
+          provider = "Groq-Secondary";
           model = GROQ_COMPLEX_MODEL;
         }
       } catch (err: any) {
-        console.warn(`[Groq JSON failed]: ${err.message}`);
+        console.warn(`[Groq Secondary JSON failed]: ${err.message}`);
+        if (err.message?.includes("429") || err.message?.includes("Rate limit") || err.message?.includes("tokens")) {
+          try {
+            const fallbackResp = await withTimeout(
+              groqSecondary.chat.completions.create({
+                model: GROQ_FALLBACK_MODEL,
+                messages,
+                max_tokens: maxTokens as any,
+                temperature: 0.1,
+                response_format: { type: "json_object" },
+              }),
+              timeoutMs
+            );
+            const fbContent = (fallbackResp as any).choices[0]?.message?.content?.trim();
+            if (fbContent) {
+              reply = extractValidJsonString(fbContent);
+              provider = "Groq-Secondary";
+              model = GROQ_FALLBACK_MODEL;
+            }
+          } catch (fbErr: any) {
+            console.warn(`[Groq Secondary fallback model JSON failed]: ${fbErr.message}`);
+          }
+        }
       }
     }
 

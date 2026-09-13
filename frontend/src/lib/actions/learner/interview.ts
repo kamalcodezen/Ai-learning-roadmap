@@ -1,7 +1,7 @@
 import { serverFetch, serverMutation } from "../../core/server";
 
-export const startInterview = async () => {
-  return serverMutation("/api/interview/start", {});
+export const startInterview = async (options?: { mode?: string; questionCount?: number }) => {
+  return serverMutation("/api/interview/start", options || {});
 };
 
 export const submitInterviewAnswer = async (data: { questionId: string; answerText: string }) => {

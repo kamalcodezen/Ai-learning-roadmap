@@ -176,3 +176,8 @@ export type UserAchievement = Prisma.UserAchievementModel
  * 
  */
 export type Notification = Prisma.NotificationModel
+/**
+ * Model Resume
+ * 
+ */
+export type Resume = Prisma.ResumeModel

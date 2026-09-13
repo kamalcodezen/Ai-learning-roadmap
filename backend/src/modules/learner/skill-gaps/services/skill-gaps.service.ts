@@ -97,7 +97,18 @@ export const getSkillGaps = async (userId: string) => {
   const moderateGaps = mappedSkillStates.filter(s => s.knowledgeScore >= 40 && s.knowledgeScore < 70).length;
   const strongSkills = mappedSkillStates.filter(s => s.knowledgeScore >= 70).length;
 
-  const gaps = mappedSkillStates.filter(s => s.knowledgeScore < 70).map((s, idx) => {
+  // Deduplicate gaps by canonical skillName and ensure globally unique IDs
+  const seenGapSkills = new Set<string>();
+  const deduplicatedGaps = [];
+
+  for (let idx = 0; idx < mappedSkillStates.length; idx++) {
+    const s = mappedSkillStates[idx];
+    if (!s || s.knowledgeScore >= 70) continue;
+
+    const normSkill = s.skillName.trim().toLowerCase();
+    if (seenGapSkills.has(normSkill)) continue;
+    seenGapSkills.add(normSkill);
+
     const severity: "critical" | "moderate" = (s.knowledgeScore < 40 || s.isCritical) && s.knowledgeScore < 40 
       ? "critical" 
       : "moderate";
@@ -117,17 +128,19 @@ export const getSkillGaps = async (userId: string) => {
       ? "No assessment or project evidence recorded." 
       : `Current verified proficiency: ${Math.round(s.knowledgeScore)}%`;
 
-    // Match skill against active roadmap milestone unlocks using canonical skill matcher
+    // Match skill against active roadmap milestone unlocks or title using canonical skill matcher
     const matchingMilestone = activeRoadmap?.milestones.find((m) =>
-      (m.unlocks || []).some((u: string) => isMatchingSkill(u, s.skillName))
+      (m.unlocks || []).some((u: string) => isMatchingSkill(u, s.skillName)) ||
+      isMatchingSkill(m.title, s.skillName)
     );
 
     const href = matchingMilestone
       ? `/dashboard/learner/learning-path?skill=${encodeURIComponent(s.skillName)}&milestone=${encodeURIComponent(matchingMilestone.id)}`
       : `/dashboard/learner/learning-path?skill=${encodeURIComponent(s.skillName)}`;
 
-    return {
-      id: s.id || `missing-${idx}`,
+    const slug = normSkill.replace(/[^a-z0-9]/g, "-");
+    deduplicatedGaps.push({
+      id: s.id ? `${s.id}-${slug}` : `missing-${slug}-${idx}`,
       skill: s.skillName,
       score: Math.round(s.knowledgeScore),
       severity,
@@ -136,8 +149,10 @@ export const getSkillGaps = async (userId: string) => {
       relatedAssessment: "Domain Assessment & Diagnostic",
       recommendedAction: `Start ${s.skillName} Learning Path`,
       href
-    };
-  }).sort((a, b) => (a.severity === "critical" ? -1 : b.severity === "critical" ? 1 : 0));
+    });
+  }
+
+  const gaps = deduplicatedGaps.sort((a, b) => (a.severity === "critical" ? -1 : b.severity === "critical" ? 1 : 0));
 
   return {
     overallHealth,

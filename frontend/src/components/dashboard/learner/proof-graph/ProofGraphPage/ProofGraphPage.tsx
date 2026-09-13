@@ -17,6 +17,8 @@ import GenericPageSkeleton from "../../../shared/GenericPageSkeleton";
 import DashboardButton from "@/src/components/dashboard/shared/patterns/DashboardButton/DashboardButton";
 import { Card, CardContent } from "@/src/components/ui/Card";
 import { DashboardCard } from "@/src/components/dashboard/shared/cards";
+import { ProofGraphCanvas } from "../ProofGraphCanvas/ProofGraphCanvas";
+import { SkillPassportStream } from "../SkillPassport/SkillPassportStream";
 import {
   CheckCircle2,
   Circle,
@@ -41,6 +43,8 @@ import {
   Check,
   Loader2,
   X,
+  Network,
+  List,
 } from "lucide-react";
 
 export default function ProofGraphPage() {
@@ -48,6 +52,7 @@ export default function ProofGraphPage() {
   const [activeTab, setActiveTab] = useState<
     "proof-graph" | "skill-tree" | "achievements"
   >("proof-graph");
+  const [viewMode, setViewMode] = useState<"passport" | "canvas" | "tree">("passport");
 
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [isSharing, setIsSharing] = useState(false);
@@ -363,7 +368,7 @@ export default function ProofGraphPage() {
     </div>
 
       {/* Level & Proof Banner */}
-      <DashboardCard className="border-primary/20">
+      <DashboardCard className="border-primary/20 ">
         <CardContent className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center md:text-left">
             <p className="text-sm text-muted-foreground">
@@ -418,23 +423,85 @@ export default function ProofGraphPage() {
 
       {/* TAB 1: PROOF GRAPH */}
       {activeTab === "proof-graph" && (
-        <div className="mx-auto w-full max-w-4xl py-4 flex flex-col dashboard-card-gap">
-          {rootNodes.length === 0 ||
-          data.nodes.find((n) => n.id === "empty-state-node") ? (
-            <div className="flex flex-col items-center justify-center p-12 text-center border-2 border-dashed border-border rounded-xl">
-              <ShieldCheck className="w-12 h-12 text-muted-foreground mb-4" />
-              <h3 className="text-xl font-bold mb-2">
-                No proof available yet.
-              </h3>
-              <p className="text-muted-foreground max-w-md">
-                Complete assessments, build projects, and add verified evidence
-                to build your proof graph.
-              </p>
+        <div className="w-full py-2 flex flex-col dashboard-card-gap">
+          {viewMode === "passport" ? (
+            <SkillPassportStream
+              primarySkill={data.primarySkill}
+              overallProofScore={data.overallProofScore}
+              nodes={data.nodes}
+              edges={data.edges}
+              onShare={handleShareProofGraph}
+              onSwitchView={(v) => setViewMode(v)}
+            />
+          ) : viewMode === "canvas" ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-card border border-border dashboard-card">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  Viewing Technical Interactive Graph Canvas
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("passport")}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-white hover:opacity-90 transition-opacity cursor-pointer"
+                >
+                  <Award className="w-3.5 h-3.5" />
+                  Switch to Passport View (Recommended)
+                </button>
+              </div>
+              <ProofGraphCanvas
+                primarySkill={data.primarySkill}
+                overallProofScore={data.overallProofScore}
+                nodes={data.nodes}
+                edges={data.edges}
+                onToggleView={() => setViewMode("passport")}
+                onShare={handleShareProofGraph}
+              />
             </div>
           ) : (
-            rootNodes.map((rootNode, i) =>
-              renderTree(rootNode, 0, i === rootNodes.length - 1),
-            )
+            <div className="mx-auto w-full max-w-4xl py-2 flex flex-col dashboard-card-gap">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-card border border-border mb-2">
+                <div className="flex items-center gap-2">
+                  <List className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-semibold">Hierarchical Tree View</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("passport")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-white hover:opacity-90 transition-opacity cursor-pointer"
+                  >
+                    <Award className="w-3.5 h-3.5" />
+                    Passport View
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("canvas")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-muted hover:bg-muted/80 text-foreground transition-colors cursor-pointer"
+                  >
+                    <Network className="w-3.5 h-3.5" />
+                    Graph Canvas
+                  </button>
+                </div>
+              </div>
+
+              {rootNodes.length === 0 ||
+              data.nodes.find((n) => n.id === "empty-state-node") ? (
+                <div className="flex flex-col items-center justify-center p-12 text-center border-2 border-dashed border-border rounded-xl">
+                  <ShieldCheck className="w-12 h-12 text-muted-foreground mb-4" />
+                  <h3 className="text-xl font-bold mb-2">
+                    No proof available yet.
+                  </h3>
+                  <p className="text-muted-foreground max-w-md">
+                    Complete assessments, build projects, and add verified evidence
+                    to build your proof graph.
+                  </p>
+                </div>
+              ) : (
+                rootNodes.map((rootNode, i) =>
+                  renderTree(rootNode, 0, i === rootNodes.length - 1),
+                )
+              )}
+            </div>
           )}
         </div>
       )}
