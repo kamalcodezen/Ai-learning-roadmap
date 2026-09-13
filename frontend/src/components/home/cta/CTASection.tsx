@@ -73,11 +73,11 @@ export default function CTASection() {
           <div className="w-full mt-2 mb-4 flex justify-center items-center gap-3">
             {/* Mobile Button (smaller overrides) */}
             <div className="sm:hidden">
-              <Button text="Create My Roadmap" href="#" className="h-9 text-sm px-3 pl-4 pr-10" />
+              <Button text="Create My Roadmap" href="/dashboard/learner" className="h-9 text-sm px-3 pl-4 pr-10" />
             </div>
             {/* Desktop Button (default style) */}
             <div className="hidden sm:block">
-              <Button text="Create My Roadmap" href="#" />
+              <Button text="Create My Roadmap" href="/dashboard/learner" />
             </div>
           </div>
         </div>
@@ -85,34 +85,34 @@ export default function CTASection() {
         {/* ====== Purple geometric blocks ====== */}
         {/* Bottom-left block */}
         <div className="absolute bottom-0 left-0 hidden sm:flex items-end gap-0 pointer-events-none">
-          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-48 sm:h-85 md:h-85 lg:h-85 bg-[#8142c9]" />
-          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-36 sm:h-60 md:h-60 lg:h-60 bg-[#8142c9]" />
-          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-60 sm:h-60 md:h-60 lg:h-30 bg-[#8142c9]" />
+          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-32 sm:h-57 md:h-57 lg:h-57 bg-[#8142c9]" />
+          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-24 sm:h-40 md:h-40 lg:h-40 bg-[#8142c9]" />
+          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-40 sm:h-40 md:h-40 lg:h-20 bg-[#8142c9]" />
         </div>
 
         {/* Bottom center connecting bar */}
         <div className="absolute bottom-0 left-0 right-0 hidden sm:block pointer-events-none">
-          <div className="w-full h-14 sm:h-15 bg-[#8142c9]" />
+          <div className="w-full h-9 sm:h-10 bg-[#8142c9]" />
         </div>
 
         {/* Bottom-right block */}
         <div className="absolute bottom-0 right-0 hidden sm:flex items-end gap-0 pointer-events-none">
-          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-60 sm:h-60 md:h-60 lg:h-30 bg-[#8142c9]" />
-          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-36 sm:h-60 md:h-60 lg:h-60 bg-[#8142c9]" />
-          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-48 sm:h-85 md:h-85 lg:h-85 bg-[#8142c9]" />
+          <div className="hidden sm:block sm:w-28 md:w-40 lg:w-40 h-40 sm:h-40 md:h-40 lg:h-20 bg-[#8142c9]" />
+          <div className="hidden sm:block w-12 sm:w-28 md:w-40 lg:w-60 h-24 sm:h-40 md:h-40 lg:h-40 bg-[#8142c9]" />
+          <div className="w-16 sm:w-40 md:w-56 lg:w-64 h-32 sm:h-57 md:h-57 lg:h-57 bg-[#8142c9]" />
         </div>
 
         {/* Bottom corner labels */}
         <div className="absolute bottom-10 sm:bottom-6 left-8 sm:left-8 md:left-16 z-20 flex items-center gap-2">
-          <span className="block h-2 w-2 sm:h-3 sm:w-3 bg-white dark:bg-white" />
-          <span className="text-caption font-bold uppercase tracking-widest text-white dark:text-white">
+          <span className="block h-2 w-2 sm:h-3 sm:w-3 dark:text-white text-zinc-900 sm:dark:text-white" />
+          <span className="text-caption font-bold uppercase tracking-widest dark:text-white text-zinc-900 sm:dark:text-white hidden min-[25rem]:block">
             Personalized Learning
           </span>
         </div>
 
         <div className="absolute bottom-10 sm:bottom-6 right-8 sm:right-8 md:right-16 z-20 flex items-center gap-2">
-          <span className="block h-2 w-2 sm:h-3 sm:w-3 bg-white dark:bg-white" />
-          <span className="text-caption font-bold uppercase tracking-widest text-white dark:text-white">
+          <span className="block h-2 w-2 sm:h-3 sm:w-3 dark:text-white text-zinc-900 sm:dark:text-white" />
+          <span className="text-caption font-bold uppercase tracking-widest dark:text-white text-zinc-900 sm:dark:text-white hidden min-[25rem]:block">
             AI-Powered Paths
           </span>
         </div>
