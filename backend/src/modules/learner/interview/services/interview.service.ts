@@ -1,28 +1,68 @@
 import prisma from "../../../../lib/prisma.js";
 import { generateInterviewQuestions, evaluateInterviewAnswer } from "./interview-ai.service.js";
 
-export const startInterviewSession = async (userId: string) => {
-  // 1. Fetch user profile
-  const profile = await prisma.careerProfile.findUnique({
-    where: { userId },
-  });
+export const startInterviewSession = async (
+  userId: string,
+  options?: {
+    mode?: string;
+    questionCount?: number;
+  }
+) => {
+  // 1. Fetch user profile, active skills, weak skills, and roadmap topics for deep personalization
+  const [profile, skillStates, weakSkills, activeRoadmap] = await Promise.all([
+    prisma.careerProfile.findUnique({
+      where: { userId },
+    }),
+    prisma.skillState.findMany({
+      where: { userId },
+      select: { skillName: true, practiceScore: true, knowledgeScore: true },
+      take: 15,
+    }),
+    prisma.skillState.findMany({
+      where: {
+        userId,
+        OR: [
+          { practiceScore: { lt: 70 } },
+          { knowledgeScore: { lt: 70 } },
+        ],
+      },
+      select: { skillName: true },
+      take: 6,
+    }),
+    prisma.roadmap.findFirst({
+      where: { userId, status: "ACTIVE" },
+      include: {
+        milestones: { select: { title: true }, take: 8 },
+      },
+    }),
+  ]);
 
   if (!profile) {
     throw new Error("Career profile not found. Please complete onboarding.");
   }
 
-  // 2. Generate questions
+  const focusSkills = (weakSkills as Array<{ skillName: string }>).map((s) => s.skillName).filter(Boolean);
+  const activeSkills = (skillStates as Array<{ skillName: string }>).map((s) => s.skillName).filter(Boolean);
+  const roadmapTopics = (activeRoadmap?.milestones || []).map((m: { title: string }) => m.title).filter(Boolean);
+  const mode = options?.mode || "TECHNICAL";
+  const questionCount = options?.questionCount || 3;
+
+  // 2. Generate questions dynamically tailored to the role, stack, and skills
   const generatedQuestions = await generateInterviewQuestions({
     targetRole: profile.targetRoleName || profile.targetRole,
     experienceLevel: profile.experienceLevel,
+    mode,
+    questionCount,
+    focusSkills,
+    activeSkills,
+    roadmapTopics,
   });
 
   // 3. Create Session and Questions in a transaction
   const session = await prisma.$transaction(async (tx) => {
-    // Optional: mark any existing IN_PROGRESS as ABANDONED (just using COMPLETED vs IN_PROGRESS for now)
     await tx.interviewSession.updateMany({
       where: { userId, status: "IN_PROGRESS" },
-      data: { status: "COMPLETED" } // Safely close out old ones without scoring them.
+      data: { status: "COMPLETED" },
     });
 
     const newSession = await tx.interviewSession.create({
@@ -136,12 +176,18 @@ export const completeInterviewSession = async (userId: string) => {
     const evalData = answer.evaluation as any;
     if (evalData) {
       const { technicalKnowledge, problemSolving, clarity, practicalUnderstanding, communication } = evalData;
-      const ansScore = (technicalKnowledge + problemSolving + clarity + practicalUnderstanding + communication) / 5;
+      const ansScore = (
+        (Number(technicalKnowledge) || 70) +
+        (Number(problemSolving) || 70) +
+        (Number(clarity) || 70) +
+        (Number(practicalUnderstanding) || 70) +
+        (Number(communication) || 70)
+      ) / 5;
       totalAnswerScore += ansScore;
     }
   }
 
-  const finalScore = Math.round(totalAnswerScore / session.answers.length);
+  const finalScore = Math.round(totalAnswerScore / Math.max(1, session.answers.length));
 
   // 4. Complete session and update profile in transaction
   await prisma.$transaction(async (tx) => {
@@ -160,6 +206,24 @@ export const completeInterviewSession = async (userId: string) => {
         interviewScore: finalScore,
       },
     });
+
+    // If candidate scored >= 60%, boost practiceScore on relevant skillState records
+    if (finalScore >= 60) {
+      const existingSkills = await tx.skillState.findMany({
+        where: { userId },
+      });
+
+      for (const skill of existingSkills) {
+        const currentPractice = skill.practiceScore || 0;
+        const boostedPractice = Math.min(100, Math.max(currentPractice, Math.round(currentPractice + (finalScore * 0.1))));
+        await tx.skillState.update({
+          where: { id: skill.id },
+          data: {
+            practiceScore: boostedPractice,
+          },
+        });
+      }
+    }
   }, {
     maxWait: 10000,
     timeout: 20000,
@@ -210,7 +274,15 @@ export const completeInterviewSession = async (userId: string) => {
     console.error("Failed to create interview notification:", err);
   }
 
-  return { success: true, finalScore };
+  const completedSession = await prisma.interviewSession.findUnique({
+    where: { id: session.id },
+    include: {
+      questions: { orderBy: { order: "asc" } },
+      answers: true,
+    },
+  });
+
+  return { success: true, finalScore, session: completedSession };
 };
 
 export const getInterviewHistory = async (userId: string) => {
