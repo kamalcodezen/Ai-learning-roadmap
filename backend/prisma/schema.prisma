@@ -97,6 +97,9 @@ model user {
 
   // Notifications
   notifications  Notification[]
+
+  // AI Resume & ATS
+  resume         Resume?
 }
 
 // ============================================================
@@ -614,5 +617,39 @@ model Notification {
   @@index([userId])
   @@index([userId, isRead])
   @@index([userId, createdAt(sort: Desc)])
+}
+
+// ============================================================
+// AI RESUME & ATS
+// ============================================================
+
+model Resume {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  targetRole     String
+  fullName       String
+  email          String
+  phone          String?
+  location       String?
+  website        String?
+  github         String?
+  linkedin       String?
+
+  summary        String
+  skills         Json     // { category: string, items: string[] }[]
+  experience     Json     // { company: string, role: string, duration: string, location?: string, bullets: string[] }[]
+  projects       Json     // { title: string, description: string, techStack: string[], liveUrl?: string, githubUrl?: string, bullets: string[] }[]
+  education      Json     // { institution: string, degree: string, year: string, gpa?: string }[]
+  certifications Json?    // { name: string, issuer: string, year: string }[]
+
+  atsScore       Int?     @default(0)
+  atsFeedback    Json?    // { score: number, strengths: string[], missingKeywords: string[], suggestions: string[], breakdown: { formatting: number, keywords: number, impactMetrics: number, relevance: number } }
+
+  createdAt      DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId])
 }
 

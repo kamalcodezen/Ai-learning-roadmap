@@ -36,7 +36,9 @@ router.get("/session/:id", requireAuth, async (req: Request, res: Response, next
 router.post("/start", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId as string;
-    const session = await startInterviewSession(userId);
+    const mode = (req.body?.mode as string) || "TECHNICAL";
+    const questionCount = typeof req.body?.questionCount === "number" ? req.body.questionCount : 3;
+    const session = await startInterviewSession(userId, { mode, questionCount });
     res.json({ success: true, data: session });
   } catch (error) {
     next(error);
