@@ -108,6 +108,189 @@ const AiGeneratedSimulationSchema = z.object({
   }),
 });
 
+/**
+ * Deterministic fallback simulation generator guaranteeing zero 500 errors
+ * when AI providers are in cooldown, rate-limited, or offline.
+ */
+export function generateFallbackSimulation(
+  skill: string,
+  targetRole: string,
+  difficulty: string
+): z.infer<typeof AiGeneratedSimulationSchema> {
+  const s = skill.toLowerCase();
+
+  if (s.includes("react") || s.includes("frontend") || s.includes("vue") || s.includes("next")) {
+    return {
+      title: `${skill} Mastery Simulation (${targetRole})`,
+      description: `Evaluate your practical ability at ${difficulty} level to understand component lifecycles, debug re-renders, implement state logic, and explain rendering tradeoffs in ${skill}.`,
+      understand: {
+        question: `When optimizing component performance in ${skill}, which pattern prevents unnecessary child re-renders caused by passing inline objects or callbacks?`,
+        options: [
+          "Memoizing values with useMemo and callbacks with useCallback",
+          "Wrapping all child components unconditionally in React.Fragment",
+          "Moving state to global window object to bypass component trees",
+          "Converting functional components to class components with shouldComponentUpdate returning true"
+        ],
+        correctAnswer: "Memoizing values with useMemo and callbacks with useCallback",
+      },
+      debug: {
+        question: `Identify the root cause of the bug in this ${skill} snippet:`,
+        codeSnippet: `function UserList({ fetchUsers }) {\n  const [users, setUsers] = useState([]);\n  useEffect(() => {\n    fetchUsers().then(data => setUsers(data));\n  }, [fetchUsers]);\n  return <ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>;\n}`,
+        options: [
+          "Infinite fetch loop if fetchUsers is recreated on every parent render without useCallback",
+          "setUsers cannot accept a promise result directly inside useEffect",
+          "The list key must be an index instead of u.id",
+          "useEffect must be marked async directly: useEffect(async () => ...)"
+        ],
+        correctAnswer: "Infinite fetch loop if fetchUsers is recreated on every parent render without useCallback",
+      },
+      code: {
+        question: `Implement an optimized data fetcher hook or helper for ${skill} with loading, error, and cancellation handling.`,
+        starterCode: `import { useState, useEffect } from 'react';\n\nexport function useAsyncData(fetcher) {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState(null);\n\n  useEffect(() => {\n    let isMounted = true;\n    // TODO: Invoke fetcher, handle resolution and cleanup\n\n    return () => { isMounted = false; };\n  }, [fetcher]);\n\n  return { data, loading, error };\n}`,
+        instructions: [
+          "Call the fetcher inside useEffect and check isMounted before updating state",
+          "Catch any rejected promise or error and update the error state",
+          "Set loading to false once the operation completes or fails"
+        ],
+        requiredPatterns: ["isMounted", "setLoading", "catch"],
+      },
+      explain: {
+        question: `Explain how ${skill} manages the reconciliation and virtual DOM diffing process, and describe two common rendering bottlenecks in production applications.`,
+        placeholder: `Discuss the diffing algorithm, key prop significance, fiber architecture, and avoidance of waterfall re-renders...`,
+        keyConcepts: ["reconciliation", "virtual dom", "re-rendering", "memoization", "props"],
+      },
+    };
+  }
+
+  if (s.includes("node") || s.includes("backend") || s.includes("api") || s.includes("express") || s.includes("nest")) {
+    return {
+      title: `${skill} Mastery Simulation (${targetRole})`,
+      description: `Evaluate your practical ability at ${difficulty} level to design resilient services, handle asynchronous errors, implement scalable handlers, and explain event-loop mechanics in ${skill}.`,
+      understand: {
+        question: `In ${skill} asynchronous runtime, what happens if an unhandled promise rejection occurs during request handling?`,
+        options: [
+          "The process emits unhandledRejection which may terminate the Node process in modern versions if not caught",
+          "The request automatically retries 3 times with exponential backoff",
+          "The event loop blocks all other concurrent socket connections indefinitely",
+          "V8 garbage collector immediately frees the memory of the rejected promise without logging"
+        ],
+        correctAnswer: "The process emits unhandledRejection which may terminate the Node process in modern versions if not caught",
+      },
+      debug: {
+        question: `Identify the critical concurrency or resource issue in this ${skill} handler:`,
+        codeSnippet: `app.get('/data', async (req, res) => {\n  const items = await db.getItems();\n  items.forEach(async (item) => {\n    await db.updateItemAudit(item.id);\n  });\n  res.json({ success: true, count: items.length });\n});`,
+        options: [
+          "forEach does not await async iterations; responses complete before audits finish, risking unhandled failures",
+          "res.json cannot be called after database query execution",
+          "db.getItems() must always accept a callback parameter in Node.js",
+          "items.length cannot be accessed on an asynchronous array"
+        ],
+        correctAnswer: "forEach does not await async iterations; responses complete before audits finish, risking unhandled failures",
+      },
+      code: {
+        question: `Implement a robust Express middleware or error-boundary handler in ${skill} with structured logging and HTTP status formatting.`,
+        starterCode: `export function errorHandler(err, req, res, next) {\n  const statusCode = err.statusCode || 500;\n  // TODO: Log error details and return sanitized response\n  res.status(statusCode).json({\n    error: err.message || 'Internal Server Error'\n  });\n}`,
+        instructions: [
+          "Check err.statusCode or default to 500",
+          "Log the error stack in development or structured logger",
+          "Send a standardized JSON error response with status code"
+        ],
+        requiredPatterns: ["status", "json", "next"],
+      },
+      explain: {
+        question: `Explain how the ${skill} Event Loop handles macrotasks vs microtasks (Promise jobs), and how to avoid blocking the event loop under heavy traffic.`,
+        placeholder: `Discuss libuv, microtask queue priority, worker threads, and avoiding synchronous CPU-bound operations...`,
+        keyConcepts: ["event loop", "microtasks", "libuv", "non-blocking", "concurrency"],
+      },
+    };
+  }
+
+  if (s.includes("sql") || s.includes("database") || s.includes("postgres") || s.includes("prisma") || s.includes("mongo")) {
+    return {
+      title: `${skill} Mastery Simulation (${targetRole})`,
+      description: `Evaluate your database design, query optimization, indexing strategy, and transaction isolation skills in ${skill} at ${difficulty} level.`,
+      understand: {
+        question: `What is the primary architectural consequence of using the READ COMMITTED isolation level versus REPEATABLE READ in relational databases?`,
+        options: [
+          "READ COMMITTED prevents dirty reads but allows non-repeatable reads if another transaction updates data between queries",
+          "READ COMMITTED completely prevents phantom reads across all concurrent transactions",
+          "REPEATABLE READ disables all table locking and relies solely on optimistic memory hashing",
+          "READ COMMITTED requires exclusive table locks for every SELECT statement"
+        ],
+        correctAnswer: "READ COMMITTED prevents dirty reads but allows non-repeatable reads if another transaction updates data between queries",
+      },
+      debug: {
+        question: `Identify the performance bottleneck in this ${skill} query pattern:`,
+        codeSnippet: `SELECT * FROM orders WHERE LOWER(customer_email) = 'user@example.com' ORDER BY created_at DESC;`,
+        options: [
+          "Applying LOWER() prevents the query planner from utilizing a standard B-tree index on customer_email",
+          "ORDER BY created_at causes a syntax error when combined with LOWER()",
+          "SELECT * is prohibited when indexing on text fields",
+          "B-tree indexes cannot index emails containing '@' symbols"
+        ],
+        correctAnswer: "Applying LOWER() prevents the query planner from utilizing a standard B-tree index on customer_email",
+      },
+      code: {
+        question: `Write a database transaction or parameterized query in ${skill} that updates an inventory balance safely against race conditions.`,
+        starterCode: `async function transferCredits(senderId, receiverId, amount) {\n  // TODO: Implement atomic transaction ensuring no negative balance\n}`,
+        instructions: [
+          "Wrap balance validation and transfers in an atomic transaction",
+          "Ensure sender has sufficient credits before decrementing",
+          "Commit the transaction or roll back on failure"
+        ],
+        requiredPatterns: ["transaction", "commit", "rollback"],
+      },
+      explain: {
+        question: `Explain indexing strategies (B-Tree, Hash, GIN) in ${skill}, and describe how indexing write-heavy tables impacts write latency and VACUUM maintenance.`,
+        placeholder: `Discuss index overhead on INSERT/UPDATE, index bloat, execution plan analysis via EXPLAIN ANALYZE...`,
+        keyConcepts: ["indexing", "b-tree", "explain analyze", "transactions", "acid"],
+      },
+    };
+  }
+
+  // Generic High-Quality Technical Skill Simulation for any other skill
+  return {
+    title: `${skill} Mastery Simulation (${targetRole})`,
+    description: `Evaluate your practical ability at ${difficulty} level to understand, debug, code, and explain ${skill} in a professional ${targetRole} context.`,
+    understand: {
+      question: `What is the core architectural principle and recommended best practice when designing scalable solutions with ${skill}?`,
+      options: [
+        `Separation of concerns, modularity, and enforcing idempotent operations for ${skill}`,
+        `Coupling all application layers directly into single global shared state`,
+        `Ignoring error boundaries and relying entirely on process restarts`,
+        `Bypassing typing and schema validations to maximize raw network throughput`
+      ],
+      correctAnswer: `Separation of concerns, modularity, and enforcing idempotent operations for ${skill}`,
+    },
+    debug: {
+      question: `Review the following code or configuration for ${skill}. What is the primary bug or security flaw?`,
+      codeSnippet: `// Configuration / Handler for ${skill}\nfunction processPayload(data) {\n  if (!data) return;\n  const result = eval(data.expression); // dynamic evaluation\n  return { success: true, result };\n}`,
+      options: [
+        "Unsanitized dynamic evaluation (eval) introduces arbitrary code execution vulnerabilities",
+        `data.expression is a reserved keyword in ${skill}`,
+        "The return statement cannot return object literals with boolean keys",
+        `Functions in ${skill} must always declare parameters as constants`
+      ],
+      correctAnswer: "Unsanitized dynamic evaluation (eval) introduces arbitrary code execution vulnerabilities",
+    },
+    code: {
+      question: `Implement a clean, reusable utility or service method for ${skill} adhering to clean architecture standards.`,
+      starterCode: `// Implementation for ${skill}\nexport function executeTask(config) {\n  if (!config) throw new Error('Config required');\n  // TODO: Implement core execution logic with error handling\n  return { success: true };\n}`,
+      instructions: [
+        `Validate input configuration and handle boundary conditions for ${skill}`,
+        "Ensure errors are caught and transformed into structured return types",
+        "Return an object containing status and execution results"
+      ],
+      requiredPatterns: ["config", "return", "error"],
+    },
+    explain: {
+      question: `Explain how ${skill} is strategically utilized in production architectures for a ${targetRole}. Detail key trade-offs, scaling considerations, and monitoring strategies.`,
+      placeholder: `Discuss system reliability, throughput, trade-offs between complexity vs maintainability, and testing strategies for ${skill}...`,
+      keyConcepts: ["architecture", "reliability", "scalability", "testing", "maintainability"],
+    },
+  };
+}
+
 // ============================================================
 // DYNAMIC AI SIMULATION GENERATOR (NO FIXED QUESTION BANK)
 // ============================================================
@@ -234,8 +417,8 @@ Return ONLY valid JSON matching this exact structure:
     const rawJson = JSON.parse(aiResponse.reply);
     parsed = AiGeneratedSimulationSchema.parse(rawJson);
   } catch (err: any) {
-    console.error(`[Dynamic AI Simulation Generation Failed for ${normSkill}]:`, err.message);
-    throw new Error(`Unable to generate your personalized assessment right now. ${err.message}`);
+    console.warn(`[Dynamic AI Simulation Generation Fallback used for ${normSkill}]:`, err.message);
+    parsed = generateFallbackSimulation(normSkill, targetRole, difficulty);
   }
 
   // 4. Structure the Simulation View Data
