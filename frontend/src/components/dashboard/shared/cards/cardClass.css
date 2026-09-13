@@ -1,0 +1,8 @@
+/* Shared gradient backgrounds used by KPI/glow cards across both dashboards. */
+.kpi-card-gradient {
+  background: var(--gradient-proof-card);
+}
+
+.dark .kpi-card-gradient {
+  background: var(--gradient-proof-card);
+}

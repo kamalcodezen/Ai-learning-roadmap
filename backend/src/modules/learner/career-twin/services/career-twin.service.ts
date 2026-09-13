@@ -1,41 +1,71 @@
 import prisma from "../../../../lib/prisma.js";
+import { getCareerReadiness } from "../../readiness/services/readiness.service.js";
 
 export const getCareerTwin = async (userId: string) => {
-  const profile = await prisma.careerProfile.findUnique({ where: { userId } });
-  const skillStates = await prisma.skillState.findMany({ where: { userId } });
-  
-  const avgKnowledge = skillStates.length ? skillStates.reduce((a, s) => a + s.knowledgeScore, 0) / skillStates.length : 0;
-  const avgPractice = skillStates.length ? skillStates.reduce((a, s) => a + s.practiceScore, 0) / skillStates.length : 0;
-  const avgProject = skillStates.length ? skillStates.reduce((a, s) => a + s.projectScore, 0) / skillStates.length : 0;
-  const avgEvidence = skillStates.length ? skillStates.reduce((a, s) => a + s.evidenceScore, 0) / skillStates.length : 0;
+  const [profile, activeRoadmap, readinessResult] = await Promise.all([
+    prisma.careerProfile.findUnique({ where: { userId } }),
+    prisma.roadmap.findFirst({
+      where: { userId, status: "ACTIVE" },
+      include: { milestones: { orderBy: { order: "asc" } } },
+    }),
+    getCareerReadiness(userId),
+  ]);
 
-  const totalScore = Math.round((avgKnowledge + avgPractice + avgProject + avgEvidence) / 4) || 0;
+  const targetRole =
+    profile?.targetRoleName || profile?.targetRole || "Unknown Role";
+  const experienceLevel = profile?.experienceLevel || "Beginner";
 
-  // Determine strong and weak skills based on knowledgeScore
-  const strongSkills = skillStates.filter(s => s.knowledgeScore > 70).map(s => s.skillName).slice(0, 5);
-  const weakSkills = skillStates.filter(s => s.knowledgeScore < 40).map(s => s.skillName).slice(0, 5);
+  const toNumeric = (val: number | string): number =>
+    typeof val === "number" ? val : 0;
+
+  const currentMilestone =
+    activeRoadmap?.milestones.find((m) => m.status === "CURRENT") ||
+    activeRoadmap?.milestones.find((m) => m.status === "UPCOMING") ||
+    activeRoadmap?.milestones[0];
 
   return {
-    targetRole: profile?.targetRole || "Unknown Role",
-    experienceLevel: profile?.experienceLevel || "Beginner",
-    readinessScore: totalScore,
+    targetRole,
+    experienceLevel,
+    readinessScore: readinessResult.score,
     scores: {
-      knowledge: Math.round(avgKnowledge),
-      practical: Math.round(avgPractice),
-      projects: Math.round(avgProject),
-      evidence: Math.round(avgEvidence),
-      interview: 0,
+      knowledge: toNumeric(readinessResult.scores.knowledge),
+      practical: toNumeric(readinessResult.scores.practical),
+      projects: toNumeric(readinessResult.scores.projects),
+      evidence: toNumeric(readinessResult.scores.evidence),
+      communication: toNumeric(readinessResult.scores.communication),
+      interview: toNumeric(readinessResult.scores.interview),
     },
-    strongSkills,
-    weakSkills,
-    currentFocus: weakSkills.length > 0 ? `Improve ${weakSkills[0]}` : null,
-    careerGaps: weakSkills.length > 0 ? weakSkills.map(w => `Missing deep knowledge in ${w}`) : [],
-    recommendedAction: profile ? {
-      title: "Continue Learning",
-      description: "Keep working on your roadmap to improve your readiness.",
-      actionLabel: "View Roadmap",
-      href: "/learning-path"
-    } : null
+    communicationEvaluation: readinessResult.communicationEvaluation,
+    strongSkills: readinessResult.strongSkills,
+    weakSkills: readinessResult.weakSkills,
+    currentFocus:
+      readinessResult.weakSkills.length > 0
+        ? `Improve ${readinessResult.weakSkills[0]}`
+        : currentMilestone
+          ? `Master ${currentMilestone.title}`
+          : null,
+    careerGaps:
+      readinessResult.weakSkills.length > 0
+        ? readinessResult.weakSkills.map((w) => `Missing deep knowledge in ${w}`)
+        : [],
+    recommendedAction: currentMilestone
+      ? {
+          title: currentMilestone.title,
+          description:
+            currentMilestone.description ||
+            "Continue your current learning milestone to increase your readiness.",
+          actionLabel: "View Learning Path",
+          href: "/dashboard/learner/learning-path",
+        }
+      : profile
+        ? {
+            title: "Continue Learning",
+            description:
+              "Keep working on your roadmap to improve your career readiness.",
+            actionLabel: "View Roadmap",
+            href: "/dashboard/learner/learning-path",
+          }
+        : null,
   };
 };
 

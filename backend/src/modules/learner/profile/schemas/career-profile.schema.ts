@@ -8,6 +8,8 @@ export const careerProfileSchema = z.object({
   targetRoleName: z.string().min(1, "Target role name is required"),
 
   experienceLevel: z.enum(["BEGINNER", "INTERMEDIATE"]),
+
+  weeklyAvailableHours: z.number().int().min(1).max(80).optional(),
 });
 
 export type CareerProfileInput = z.infer<typeof careerProfileSchema>;

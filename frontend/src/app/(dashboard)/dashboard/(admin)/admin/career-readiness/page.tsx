@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import AdminCareerReadinessView from "@/src/components/dashboard/admin/AdminCareerReadinessView";
 
 export const metadata: Metadata = {
-  title: "Career Readiness | Admin | AI Pather",
+  title: "Career Readiness",
 };
 
 export default function Page() {

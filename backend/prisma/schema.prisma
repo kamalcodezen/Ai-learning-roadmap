@@ -77,8 +77,9 @@ model user {
   // CareerOS
   careerProfile CareerProfile?
 
-  // Diagnostic
+  // Diagnostic & Interview
   diagnosticAttempts DiagnosticAttempt[]
+  interviewSessions  InterviewSession[]
 
   // New features
   skillStates         SkillState[]
@@ -88,6 +89,14 @@ model user {
   skillStateHistories SkillStateHistory[]
   twoFactors          twoFactor[]
   adminAuditLogs      AdminAuditLog[]
+
+  // Gamification & Achievements
+  gamification   UserGamification?
+  xpTransactions XPTransaction[]
+  achievements   UserAchievement[]
+
+  // Notifications
+  notifications  Notification[]
 }
 
 // ============================================================
@@ -145,6 +154,7 @@ model CareerProfile {
 
   resumeScore    Float?
   interviewScore Float?
+  aiAnalysis     Json?
 
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @updatedAt
@@ -216,6 +226,7 @@ model DiagnosticAttempt {
 
   @@index([userId])
   @@index([status])
+  @@index([userId, status, completedAt(sort: Desc)])
 }
 
 // ============================================================
@@ -236,6 +247,8 @@ model DiagnosticAnswer {
   selectedAnswer String
 
   isCorrect Boolean?
+
+  evaluation Json?
 
   createdAt DateTime @default(now()) @db.Timestamptz(6)
 
@@ -285,6 +298,7 @@ model Roadmap {
   milestones Milestone[]
 
   @@index([userId])
+  @@index([userId, status, targetRole])
 }
 
 model Milestone {
@@ -324,13 +338,44 @@ model Project {
   repositoryUrl String?
   liveUrl       String?
 
+  projectType        String   @default("GENERATED") // GENERATED (Flow A) or IMPORTED (Flow B)
+  specification      Json?    // Flow A AI Generated Build Specification
+  aiSummary          Json?    // AI Implementation Summary or AI Project Summary
+  plannedVsActual    Json?    // Flow A Planned vs Actual comparison analysis
+
+  techStack          String[] @default([])
+  explanationQuality Float?
+  isVerified         Boolean  @default(false)
+  aiReview           Json?
+
   score Float @default(0)
 
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @updatedAt
 
+  evidence ProjectEvidence[]
+
   @@index([userId])
 }
+
+model ProjectEvidence {
+  id String @id @default(cuid())
+  
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  userId String
+  
+  skillName String
+  evidenceType String // "GITHUB", "LIVE", "MANUAL"
+  url String?
+  
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  
+  @@unique([projectId, skillName])
+  @@index([userId])
+}
+
 
 // ============================================================
 // ACTIVITY LOG & TRENDS
@@ -352,6 +397,8 @@ model ActivityLog {
   @@index([userId])
   @@index([type])
   @@index([createdAt])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, type, createdAt])
 }
 
 model SkillStateHistory {
@@ -440,5 +487,132 @@ model AnalyticsSnapshot {
   createdAt           DateTime @default(now()) @db.Timestamptz(6)
 
   @@index([date])
+}
+
+// ============================================================
+// INTERVIEW 
+// ============================================================
+
+model InterviewSession {
+  id          String   @id @default(cuid())
+  userId      String
+  user        user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  
+  targetRole  String?
+  status      String   @default("IN_PROGRESS") // IN_PROGRESS, COMPLETED
+  
+  score       Float?
+  
+  startedAt   DateTime @default(now()) @db.Timestamptz(6)
+  completedAt DateTime? @db.Timestamptz(6)
+
+  questions   InterviewQuestion[]
+  answers     InterviewAnswer[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model InterviewQuestion {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  
+  question    String
+  order       Int
+  
+  answers     InterviewAnswer[]
+
+  @@index([sessionId])
+  @@index([order])
+}
+
+model InterviewAnswer {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  
+  questionId  String
+  question    InterviewQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  
+  answerText  String
+  
+  evaluation  Json?
+  
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([sessionId, questionId])
+  @@index([questionId])
+}
+
+// ============================================================
+// GAMIFICATION, ACHIEVEMENTS & XP LEDGER
+// ============================================================
+
+model UserGamification {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  totalXp      Int      @default(0)
+  currentLevel Int      @default(1)
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model XPTransaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  amount      Int
+  actionType  String   // ASSESSMENT_COMPLETION, MILESTONE_COMPLETION, PROJECT_COMPLETION, EVIDENCE_VERIFIED, INTERVIEW_COMPLETION, ACHIEVEMENT_UNLOCKED
+  referenceId String   // attemptId, milestoneId, projectId, evidenceId, sessionId, or achievementCode
+  description String
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([userId, actionType, referenceId])
+  @@index([userId])
+  @@index([actionType])
+  @@index([createdAt])
+}
+
+model UserAchievement {
+  id              String   @id @default(cuid())
+  userId          String
+  user            user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  achievementCode String   // e.g., FIRST_DIAGNOSTIC, FIRST_MILESTONE, FIRST_PROJECT, SKILL_APPRENTICE, SKILL_MASTER, INTERVIEW_CHAMPION, CAREER_READY
+  title           String
+  description     String
+  badgeIcon       String
+  category        String   // ONBOARDING, SKILL, PROJECT, ASSESSMENT, CAREER
+  xpReward        Int      @default(50)
+  unlockedAt      DateTime @default(now()) @db.Timestamptz(6)
+  metadata        Json?
+
+  @@unique([userId, achievementCode])
+  @@index([userId])
+  @@index([achievementCode])
+  @@index([category])
+}
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  type      String   // SYSTEM, PROJECT, ASSESSMENT, INTERVIEW, MILESTONE, ACHIEVEMENT
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  metadata  Json?
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([userId])
+  @@index([userId, isRead])
+  @@index([userId, createdAt(sort: Desc)])
 }
 

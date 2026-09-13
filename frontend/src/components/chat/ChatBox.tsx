@@ -1,23 +1,102 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import brandLogo from "../../../public/brand/logo-p-purple.png"
 
 import {
   sendChatMessage,
+  getChatHistory,
   type ChatMessage,
 } from "@/src/lib/api/chat-ai-mentor/chat";
+import { authClient } from "@/src/lib/auth-client";
 import { Meteors } from "@/src/components/ui/meteors";
 import { BorderBeam } from "@/src/components/ui/border-beam";
+import Lenis from "lenis";
 import Image from "next/image";
+
+function getTimeGreeting(): string {
+  const hours = new Date().getHours();
+  if (hours >= 5 && hours < 12) {
+    return "Good morning";
+  }
+  if (hours >= 12 && hours < 17) {
+    return "Good afternoon";
+  }
+  return "Good evening";
+}
 
 export default function ChatBox() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { data: session } = authClient.useSession();
+  const [timeGreeting, setTimeGreeting] = useState(getTimeGreeting);
   const glowRef = useRef<HTMLDivElement>(null);
+  const chatScrollRef = useRef<HTMLDivElement>(null);
+  const chatContentRef = useRef<HTMLDivElement>(null);
+  const chatLenisRef = useRef<Lenis | null>(null);
+  const hasHydratedRef = useRef(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeGreeting(getTimeGreeting());
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fetch persistent conversation history when session is available
+  useEffect(() => {
+    if (session?.user?.id) {
+      getChatHistory()
+        .then((history) => {
+          if (history && history.length > 0) {
+            setMessages(history);
+          }
+        })
+        .catch((err) => console.error("Could not load chat history:", err))
+        .finally(() => {
+          hasHydratedRef.current = true;
+        });
+    }
+  }, [session?.user?.id]);
+
+  const rawName = session?.user?.name?.trim();
+  const userName = rawName ? rawName.split(/\s+/)[0] : undefined;
+  const greeting = userName ? `${timeGreeting}, ${userName}` : timeGreeting;
+
+  // Auto-scroll the inner chat area after hydration, only when messages/loading change
+  useEffect(() => {
+    if (!hasHydratedRef.current) return;
+
+    if (chatLenisRef.current) {
+      chatLenisRef.current.scrollTo("bottom");
+    } else if (chatScrollRef.current) {
+      chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+    }
+  }, [messages, isLoading]);
+
+  // Lenis smooth scrolling for the inner chat scroll area
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    if (!chatScrollRef.current || !chatContentRef.current) return;
+
+    const lenis = new Lenis({
+      wrapper: chatScrollRef.current,
+      content: chatContentRef.current,
+      autoRaf: true,
+    });
+
+    chatLenisRef.current = lenis;
+
+    return () => {
+      chatLenisRef.current = null;
+      lenis.destroy();
+    };
+  }, []);
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!glowRef.current) return;
@@ -79,7 +158,8 @@ export default function ChatBox() {
 
   return (
     <section
-      className="group relative flex h-[calc(100vh-3rem)] w-full flex-col rounded-md border-2 border-zinc-200 dark:border-zinc-800 hover:border-brand transition-all duration-300 bg-background overflow-clip"
+      className="group relative flex h-[75vh] lg:h-[85vh] w-full flex-col rounded-xl border-2 border-[#E6E9EE] dark:border-[rgba(159,84,247,0.15)] transition-all duration-300 bg-background overflow-clip"
+      id="dashboard-chatbot"
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
     >
@@ -87,9 +167,9 @@ export default function ChatBox() {
         ref={glowRef}
         className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300"
       />
-      <Meteors number={15} className="bg-primary/60" />
+      <Meteors number={8} className="bg-primary/30" />
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-6">
+      <header className="flex items-center justify-between border-b border-border px-5 py-2 sm:px-6">
         <div className="flex items-center gap-3">
           {/* AI Pathar Icon */}
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
@@ -113,26 +193,21 @@ export default function ChatBox() {
       </header>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 bg-background">
+      <div ref={chatScrollRef} className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 proof-card">
+        <div ref={chatContentRef} className="min-h-full">
         {messages.length === 0 ? (
           /* Welcome Screen */
           <div className="flex h-full items-center justify-center">
             <div className="w-full max-w-xl text-center">
               {/* Welcome Icon */}
-              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl border border-primary/20 bg-primary/5 shadow-[0_0_40px_rgba(159,84,247,0.08)]">
-                <Image src={brandLogo} alt="Brand-logo" className="ml-1 w-4 h-4 md:w-5 md:h-5 dark:brightness-0 dark:invert" height={20} width={20}/>
+              <div className="mx-auto mb-4 flex items-center justify-center">
+                <Image src={brandLogo} alt="AI Pathar" className="h-11 w-11 object-contain dark:brightness-0 dark:invert" height={44} width={44}/>
               </div>
 
-              {/* Heading */}
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                How can I help you?
+              {/* Greeting */}
+              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl mb-6">
+                {greeting}
               </h2>
-
-              {/* Description */}
-              <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-                Your AI career copilot for personalized learning, skill growth,
-                project guidance, interview preparation, and career development.
-              </p>
 
               {/* Feature Suggestions */}
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -341,24 +416,25 @@ export default function ChatBox() {
             )}
           </div>
         )}
+        </div>
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-border p-4 sm:p-5">
+      <div className="border-t border-border px-4 py-2 md:p-3">
         <form
           onSubmit={handleSubmit}
-          className="relative mx-auto flex max-w-3xl items-end gap-3 rounded-2xl border border-border bg-card p-2 transition focus-within:border-primary/30"
+          className="relative mx-auto flex max-w-3xl items-end gap-3 rounded-2xl border border-border bg-card py-0 px-2 md:py-2 transition focus-within:border-primary/30"
         >
           <BorderBeam
             duration={6}
-            size={400}
+            size={100}
             colorFrom="rgba(239,68,68,0)"
             colorTo="#ef4444"
           />
           <BorderBeam
             duration={6}
             delay={3}
-            size={400}
+            size={100}
             borderWidth={2}
             colorFrom="rgba(59,130,246,0)"
             colorTo="#3b82f6"
@@ -384,16 +460,16 @@ export default function ChatBox() {
             type="submit"
             disabled={!input.trim() || isLoading}
             aria-label="Send message"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-semibold text-white transition hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-30"
+            className="flex h-10 w-9 mb-0.5 -mr-1 md:h-11 md:w-11 md:m-0 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-semibold text-white transition hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-30"
           >
             ↑
           </button>
         </form>
 
         {/* Disclaimer */}
-        <p className="mt-2 text-center text-[11px] text-muted-foreground">
+        {/* <p className="mt-2 text-center text-[11px] text-muted-foreground">
           AI Pathar can make mistakes. Verify important information.
-        </p>
+        </p> */}
       </div>
     </section>
   );

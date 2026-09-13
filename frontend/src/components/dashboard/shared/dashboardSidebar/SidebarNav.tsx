@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { getDashboardNavSections } from "../navigation";
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import SidebarNavItem from "./SidebarNavItem";
 
 interface SidebarNavProps {
@@ -15,7 +15,7 @@ export default function SidebarNav({
   onItemClick,
 }: SidebarNavProps) {
   const pathname = usePathname();
-  const { data: session } = authClient.useSession();
+  const { data: session } = useDashboardSession();
   const user = session?.user;
 
   const userRole = (user as { role?: string })?.role || "LEARNER";
@@ -28,7 +28,7 @@ export default function SidebarNav({
   return (
     <nav
       aria-label="Dashboard navigation"
-      className="flex-1 space-y-6 overflow-y-auto pl-4 py-2 pb-6"
+      className="flex-1 space-y-6 overflow-y-auto overscroll-contain pl-4 py-2 pb-6"
     >
       {dashboardNavSections.map((section, idx) => (
         <div key={idx} className="space-y-1.5">

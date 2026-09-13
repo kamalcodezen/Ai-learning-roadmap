@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -23,10 +23,10 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Avatar } from "@heroui/react";
-import { useTheme } from "next-themes";
 import { authClient } from "@/src/lib/auth-client";
 import { showToast } from "@/src/components/ui/toast";
-import AdminGlowCard from "@/src/components/dashboard/admin/AdminGlowCard";
+import { GlowCard } from "@/src/components/dashboard/shared/cards";
+import Image from "next/image";
 
 export interface ProfileMetric {
   label: string;
@@ -55,6 +55,7 @@ export interface ProfileChart {
 
 interface DashboardProfileProps {
   coverImage: string;
+  coverImageDark?: string;
   roleLabel: string;
   bio: string;
   metaItems?: ProfileMetaItem[];
@@ -66,6 +67,7 @@ interface DashboardProfileProps {
 
 export default function DashboardProfile({
   coverImage,
+  coverImageDark,
   roleLabel,
   bio,
   metaItems = [],
@@ -77,10 +79,27 @@ export default function DashboardProfile({
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const activeUser = session?.user;
-  const { theme } = useTheme();
-  const dark = theme === "dark";
+
+  const [dark, setDark] = useState(() =>
+    typeof window !== "undefined"
+      ? document.documentElement.classList.contains("dark")
+      : false,
+  );
+
+  useEffect(() => {
+    const syncTheme = () =>
+      setDark(document.documentElement.classList.contains("dark"));
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   const primary = dark ? "#B978FF" : "#9F54F7";
-  const gridStroke = "color-mix(in srgb, var(--color-foreground) 40%, transparent)";
+  const gridStroke =
+    "color-mix(in srgb, var(--color-foreground) 40%, transparent)";
   const tickColor = dark ? "#a8a8a8" : "#6b6b6b";
 
   const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
@@ -132,7 +151,10 @@ export default function DashboardProfile({
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      return showToast({ variant: "error", message: "Please select a valid image file" });
+      return showToast({
+        variant: "error",
+        message: "Please select a valid image file",
+      });
     }
 
     setIsUpdatingAvatar(true);
@@ -171,7 +193,8 @@ export default function DashboardProfile({
     } catch (error) {
       showToast({
         variant: "error",
-        message: (error as Error)?.message || "Failed to update profile picture",
+        message:
+          (error as Error)?.message || "Failed to update profile picture",
       });
     } finally {
       setIsUpdatingAvatar(false);
@@ -181,12 +204,15 @@ export default function DashboardProfile({
   return (
     <div className="w-full font-urbanist text-foreground min-h-screen pb-12">
       {/* ============ COVER & AVATAR ============ */}
-      <div className="dashboard-card relative !p-0 overflow-hidden">
+      <div className="dashboard-card relative !p-0 overflow-hidden max-w-6xl mx-auto">
         <div className="h-48 md:h-64 w-full relative bg-gradient-to-r from-primary/40 via-secondary/20 to-primary/40">
-          <img
-            src={coverImage}
+          <Image
+            src={coverImageDark ? (dark ? coverImageDark : coverImage) : coverImage}
             alt="Profile Cover"
-            className="w-full h-full object-cover opacity-80"
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover opacity-80"
           />
         </div>
 
@@ -223,7 +249,7 @@ export default function DashboardProfile({
           </div>
 
           {/* name & bio */}
-          <div className="flex-1 text-center md:text-left md:pt-10 mt-12">
+          <div className="flex-1 text-center md:text-left md:pt-10 mt-0 md:mt-12">
             <div className="flex items-center justify-center md:justify-start gap-3 h-10">
               {isEditingName ? (
                 <div className="flex items-center gap-2 bg-card border border-border px-2 py-1 rounded-xl shadow-sm max-w-xs w-full">
@@ -266,7 +292,8 @@ export default function DashboardProfile({
                     <Edit2 size={16} />
                   </button>
                   <span className="text-base sm:text-sm bg-primary/20 text-primary font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider h-5 flex items-center font-urbanist">
-                    {(activeUser as { role?: string } | undefined)?.role || roleLabel}
+                    {(activeUser as { role?: string } | undefined)?.role ||
+                      roleLabel}
                   </span>
                 </h1>
               )}
@@ -306,10 +333,10 @@ export default function DashboardProfile({
       </div>
 
       {/* ============ TIMELINE LAYOUT ============ */}
-      <div className="max-w-6xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="max-w-6xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-2 items-start dashboard-card-gap">
         {/* left column */}
         <div className="space-y-6">
-          <AdminGlowCard corner="top-left">
+          <GlowCard corner="top-left">
             <h3 className="text-lg font-bold font-poppins mb-3">Intro</h3>
             <div className="space-y-4 text-lg sm:text-base text-foreground/90 font-medium">
               {introItems.map((item, idx) => (
@@ -319,15 +346,14 @@ export default function DashboardProfile({
                 </div>
               ))}
             </div>
-          </AdminGlowCard>
+          </GlowCard>
 
           {quickMetrics.length > 0 && (
-            <AdminGlowCard corner="bottom-left">
-              <h3 className="text-lg font-bold font-poppins mb-3">Quick Metrics</h3>
-              <div
-                className={`grid gap-2 text-center`}
-                style={{ gridTemplateColumns: `repeat(${quickMetrics.length}, minmax(0, 1fr))` }}
-              >
+            <GlowCard corner="bottom-left">
+              <h3 className="text-lg font-bold font-poppins mb-3">
+                Quick Metrics
+              </h3>
+              <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4">
                 {quickMetrics.map((metric, idx) => (
                   <div
                     key={idx}
@@ -342,14 +368,14 @@ export default function DashboardProfile({
                   </div>
                 ))}
               </div>
-            </AdminGlowCard>
+            </GlowCard>
           )}
         </div>
 
         {/* right column */}
         <div className="lg:col-span-1 space-y-6">
           {chart && chart.data.length > 0 && (
-            <AdminGlowCard corner="bottom-right">
+            <GlowCard corner="bottom-right">
               <div className="pb-4 border-b border-border/50 mb-6">
                 <h3 className="font-sans text-xl font-semibold text-foreground tracking-tight">
                   {chart.title}
@@ -366,9 +392,23 @@ export default function DashboardProfile({
                     margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                   >
                     <defs>
-                      <linearGradient id="profilePrimary" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={primary} stopOpacity={0.3} />
-                        <stop offset="95%" stopColor={primary} stopOpacity={0} />
+                      <linearGradient
+                        id="profilePrimary"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="5%"
+                          stopColor={primary}
+                          stopOpacity={0.3}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor={primary}
+                          stopOpacity={0}
+                        />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
@@ -409,7 +449,7 @@ export default function DashboardProfile({
                 <TrendingUp size={14} className="text-primary" />
                 <span>{chart.subtitle}</span>
               </div>
-            </AdminGlowCard>
+            </GlowCard>
           )}
         </div>
       </div>

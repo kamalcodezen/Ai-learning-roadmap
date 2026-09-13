@@ -15,17 +15,13 @@ interface ProfileDropdownProps {
 export const getDropdownLinks = (role: string, prefix: string) => {
   if (role === "ADMIN") {
     return [
-      { label: "Profile", href: `${prefix}/profile`, variant: "default" },
       { label: "Dashboard", href: `${prefix}/dashboard`, variant: "default" },
-      { label: "Settings", href: `${prefix}/settings`, variant: "default" },
       { label: "Sign out", href: "#", variant: "danger" },
     ] as const;
   }
   
   return [
-    { label: "Profile", href: `${prefix}/profile`, variant: "default" },
     { label: "Dashboard", href: `${prefix}`, variant: "default" },
-    { label: "Settings", href: `${prefix}/settings`, variant: "default" },
     { label: "Sign out", href: "#", variant: "danger" },
   ] as const;
 };

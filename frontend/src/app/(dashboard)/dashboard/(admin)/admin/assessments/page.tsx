@@ -2,7 +2,7 @@ import AdminAssessmentsView from "@/src/components/dashboard/admin/AdminAssessme
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Assessments | Admin | AI Pather",
+  title: "Assessments",
 };
 
 export default function AdminAssessmentsPage() {

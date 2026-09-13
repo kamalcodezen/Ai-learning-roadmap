@@ -12,6 +12,8 @@ const envSchema = z.object({
 
   CORS_ORIGIN: z.string().url().default("http://localhost:3000"),
 
+  FRONTEND_URL: z.string().url().default("http://localhost:3000"),
+
   DATABASE_URL: z.string().url(),
 
   GROQ_API_KEY: z.string().default(""),

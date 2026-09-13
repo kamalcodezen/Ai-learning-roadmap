@@ -25,15 +25,16 @@ export default function BentoCanvas({
         className="
           group isolate relative
           flex h-[58vh] max-h-[580px] min-h-[420px] w-full flex-col
-          rounded-[30px]
-          border-4 border-brand
+          rounded-3xl
+          border-5 border-brand
           bg-brand/30
+          overflow-hidden
           transition-all duration-700
           ease-[cubic-bezier(0.22,1,0.36,1)]
         "
       >
         {/* MacBook Window Controls & Header Info */}
-        <div className="flex items-center justify-between px-6 pb-3 pt-4 shrink-0 bg-brand/20">
+        <div className="flex items-center justify-between px-6 pb-3 pt-4 shrink-0 bg-brand/20 rounded-t-[19px]">
           {/* Left: Window Controls + Title */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -59,7 +60,7 @@ export default function BentoCanvas({
         </div>
 
         {/* Inner Content Frame */}
-        <div className="relative flex flex-1 flex-col overflow-hidden rounded-b-[26px] rounded-t-none bg-card text-foreground">
+        <div className="relative flex flex-1 flex-col overflow-hidden rounded-none bg-card text-foreground">
         
         {/* Full-width WarpBackground */}
         <WarpBackground className="absolute inset-0 size-full border-none p-0 rounded-none bg-transparent z-0" />
@@ -68,7 +69,7 @@ export default function BentoCanvas({
           className="pointer-events-none absolute inset-0 opacity-[0.08] dark:hidden"
           style={{
             backgroundImage: `radial-gradient(rgb(var(--primary)) 1.5px, transparent 1.5px)`,
-            backgroundSize: "22px 22px",
+            backgroundSize: "20px 20px",
           }}
         />
 

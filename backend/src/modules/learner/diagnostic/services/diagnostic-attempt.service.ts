@@ -1,5 +1,6 @@
 import prisma from "../../../../lib/prisma.js";
 import { getOrGenerateLearningPath } from "../../roadmap/services/learning-path.service.js";
+import { isMatchingSkill } from "../../assessments/services/skill-simulation.service.js";
 
 import type { CreateDiagnosticAttemptInput } from "../schemas/diagnostic-attempt.schema.js";
 
@@ -10,8 +11,8 @@ import type { CreateDiagnosticAttemptInput } from "../schemas/diagnostic-attempt
 export const createDiagnosticAttempt = async (
   data: CreateDiagnosticAttemptInput,
 ) => {
-  // Onboarding diagnostic always contains 5 questions.
-  const totalQuestions = 5;
+  // Onboarding diagnostic contains 5 MCQ + 1 Communication = 6 questions total.
+  const totalQuestions = 6;
 
   const attempt = await prisma.diagnosticAttempt.create({
     data: {
@@ -55,20 +56,27 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
   }
 
   let correctCount = 0;
+  let mcqCount = 0; // Only count MCQ questions (order 1-5) for the MCQ score
   const skillScores: Record<string, { total: number; correct: number }> = {};
 
   for (const answer of answers) {
-    if (answer.isCorrect) correctCount++;
-    
-    const skill = answer.question.skill;
-    if (!skillScores[skill]) skillScores[skill] = { total: 0, correct: 0 };
-    skillScores[skill].total++;
-    if (answer.isCorrect) skillScores[skill].correct++;
+    // Q6 is the open-ended communication question — exclude from MCQ score and SkillState
+    const isMcq = answer.question.order !== 6;
+    if (isMcq) {
+      mcqCount++;
+      if (answer.isCorrect) correctCount++;
+
+      const skill = answer.question.skill?.trim() || "General";
+      if (!skillScores[skill]) skillScores[skill] = { total: 0, correct: 0 };
+      skillScores[skill].total++;
+      if (answer.isCorrect) skillScores[skill].correct++;
+    }
   }
 
-  const score = Math.round((correctCount / attempt.totalQuestions) * 100);
+  // Score is based on MCQ questions only (out of 5)
+  const score = mcqCount > 0 ? Math.round((correctCount / mcqCount) * 100) : 0;
 
-  const updatedAttempt = await prisma.diagnosticAttempt.update({
+  await prisma.diagnosticAttempt.update({
     where: { id: attemptId },
     data: {
       status: "COMPLETED",
@@ -79,20 +87,19 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
   });
 
   // Upsert SkillState and Record History if changed
+  const existingSkillStates = await prisma.skillState.findMany({
+    where: { userId: attempt.userId },
+  });
+
   for (const [skill, counts] of Object.entries(skillScores)) {
+    if (counts.total === 0) continue;
     const knowledgeScore = Math.round((counts.correct / counts.total) * 100);
     
-    // Check previous state
-    const previousState = await prisma.skillState.findUnique({
-      where: {
-        userId_skillName: {
-          userId: attempt.userId,
-          skillName: skill,
-        }
-      }
-    });
+    // Check previous state (exact match or matching alias)
+    const previousMatchingStates = existingSkillStates.filter(s => isMatchingSkill(s.skillName, skill));
+    const previousState = previousMatchingStates.find(s => s.skillName === skill) || previousMatchingStates[0];
 
-    // Upsert the new state
+    // Upsert the state under the current diagnostic skill name
     const newState = await prisma.skillState.upsert({
       where: {
         userId_skillName: {
@@ -110,6 +117,19 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
         knowledgeScore,
       },
     });
+
+    // Also update any existing matching alias records to ensure consistency
+    for (const prev of previousMatchingStates) {
+      if (prev.skillName !== skill) {
+        await prisma.skillState.update({
+          where: { id: prev.id },
+          data: {
+            knowledgeScore,
+            lastReviewed: new Date(),
+          },
+        });
+      }
+    }
 
     // Only create history if it's a new skill or the score actually changed
     if (!previousState || previousState.knowledgeScore !== knowledgeScore) {
@@ -141,15 +161,43 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
     },
   });
 
+  // Award XP and evaluate achievements asynchronously
+  try {
+    const { awardXp, evaluateAchievements } = await import(
+      "../../gamification/services/gamification.service.js"
+    );
+    await awardXp(
+      attempt.userId,
+      "ASSESSMENT_COMPLETION",
+      attempt.id,
+      100,
+      `Completed diagnostic assessment (${score}%)`,
+    );
+    await evaluateAchievements(attempt.userId);
+  } catch (err) {
+    console.error("Failed to award gamification XP for diagnostic:", err);
+  }
+
+  // Create real Notification
+  try {
+    const { createNotification } = await import("../../notifications/services/notification.service.js");
+    await createNotification({
+      userId: attempt.userId,
+      type: "ASSESSMENT",
+      title: "Diagnostic Assessment Completed",
+      message: `You completed your baseline diagnostic assessment with a score of ${score}%.`,
+      metadata: { attemptId, score },
+    });
+  } catch (err) {
+    console.error("Failed to create diagnostic assessment notification:", err);
+  }
+
+  // Fetch and return the rich diagnostic result
+  const { getDiagnosticResult } = await import("./diagnostic-result.service.js");
+  const result = await getDiagnosticResult(attemptId, userId);
+
   return {
-    id: updatedAttempt.id,
-    userId: updatedAttempt.userId,
-    status: updatedAttempt.status,
-    totalQuestions: updatedAttempt.totalQuestions,
-    answeredQuestions: updatedAttempt.answeredQuestions,
-    correctAnswers: correctCount,
-    score: updatedAttempt.score,
-    startedAt: updatedAttempt.startedAt,
-    completedAt: updatedAttempt.completedAt,
+    ...result,
+    score: result.overallScore, // Backward compatibility alias
   };
 };

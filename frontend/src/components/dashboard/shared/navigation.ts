@@ -1,5 +1,6 @@
 import {
   BarChart,
+  BrainCircuit,
   ClipboardCheck,
   FolderKanban,
   GitMerge,
@@ -14,6 +15,7 @@ import {
   BookOpen,
   ShieldCheck,
   FileText,
+  Mic,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -107,6 +109,7 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
         { href: `${learnerPrefix}/learning-path`, label: "My Roadmap", icon: Route },
         { href: `${learnerPrefix}/skill-gaps`, label: "Skill Gaps", icon: Target },
         { href: `${learnerPrefix}/assessments`, label: "Assessments", icon: ClipboardCheck },
+        { href: `${learnerPrefix}/interview`, label: "Mock Interview", icon: Mic },
         { href: `${learnerPrefix}/portfolio`, label: "Projects", icon: FolderKanban },
       ],
     },
@@ -121,7 +124,9 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
     {
       title: "CAREER",
       items: [
+        { href: `${learnerPrefix}/career-intelligence`, label: "Career Intelligence", icon: BrainCircuit },
         { href: `${learnerPrefix}/career-alignment`, label: "Career Alignment", icon: Map },
+        { href: `${learnerPrefix}/job-reality`, label: "Job Reality", icon: Target },
         { href: `${learnerPrefix}/application-readiness`, label: "Application Readiness", icon: ClipboardCheck },
       ],
     },

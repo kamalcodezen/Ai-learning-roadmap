@@ -6,6 +6,8 @@ import { getDiagnosticQuestionsController } from "./controllers/diagnostic-quest
 import {
   createDiagnosticAttemptController,
   completeDiagnosticAttemptController,
+  getDiagnosticResultController,
+  getLatestDiagnosticResultController,
 } from "./controllers/diagnostic-attempt.controller.js";
 
 import { submitDiagnosticAnswerController } from "./controllers/diagnostic-answer.controller.js";
@@ -25,6 +27,28 @@ diagnosticRoutes.get("/questions", requireAuth, getDiagnosticQuestionsController
 // ============================================================
 
 diagnosticRoutes.post("/attempts", requireAuth, createDiagnosticAttemptController);
+
+// ============================================================
+// GET LATEST COMPLETED DIAGNOSTIC RESULT
+// GET /api/diagnostic/attempts/latest/result
+// ============================================================
+
+diagnosticRoutes.get(
+  "/attempts/latest/result",
+  requireAuth,
+  getLatestDiagnosticResultController,
+);
+
+// ============================================================
+// GET DIAGNOSTIC RESULT BY ATTEMPT ID
+// GET /api/diagnostic/attempts/:attemptId/result
+// ============================================================
+
+diagnosticRoutes.get(
+  "/attempts/:attemptId/result",
+  requireAuth,
+  getDiagnosticResultController,
+);
 
 // ============================================================
 // SUBMIT DIAGNOSTIC ANSWER
@@ -49,3 +73,4 @@ diagnosticRoutes.post(
 );
 
 export default diagnosticRoutes;
+

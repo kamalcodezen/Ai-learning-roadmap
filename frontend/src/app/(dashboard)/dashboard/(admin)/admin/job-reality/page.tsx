@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import AdminJobRealityView from "@/src/components/dashboard/admin/AdminJobRealityView";
 
 export const metadata: Metadata = {
-  title: "Job Reality | Admin | AI Pather",
+  title: "Job Reality",
 };
 
 export default function Page() {

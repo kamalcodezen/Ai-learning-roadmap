@@ -4,6 +4,17 @@
   overflow-x: clip;
 }
 
+/* Mobile drawer scroll area — enables iOS momentum scrolling */
+.sidebar-container .mobile-nav-scroll {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: none;
+}
+
+.sidebar-container .mobile-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .sidebar-container nav {
   scrollbar-width: none;
 }

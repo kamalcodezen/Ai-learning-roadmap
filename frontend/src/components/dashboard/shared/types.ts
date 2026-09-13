@@ -8,6 +8,13 @@ export interface DashboardData {
     experienceLevel: string;
     status?: string;
   };
+  kpis?: {
+    targetRole: string;
+    careerReadiness: number;
+    skillProgress: number;
+    learningProgress: number;
+    proofStrength: number;
+  };
   readiness: {
     score: number;
     knowledge: number | null;
@@ -27,6 +34,7 @@ export interface DashboardData {
   } | null;
   roadmap: {
     currentMilestone: string;
+    blockingPrerequisite?: string | null;
     progress: number;
     milestones: {
       name: string;
@@ -57,6 +65,9 @@ export interface DashboardData {
   };
   proof: {
     trackedSkillsCount: number;
+    overallProofScore?: number;
+    overallSkillScore?: number;
+    employerConfidenceSignal?: number;
   };
   careerAlignment: {
     target: string;

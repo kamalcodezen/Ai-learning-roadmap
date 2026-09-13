@@ -15,17 +15,33 @@ export const upsertCareerProfile = async (input: CareerProfileInput) => {
     throw new Error("User not found");
   }
 
+  const updateData: {
+    targetRole: string;
+    targetRoleName: string;
+    experienceLevel: "BEGINNER" | "INTERMEDIATE";
+    weeklyAvailableHours?: number;
+  } = {
+    targetRole: profileData.targetRole,
+    targetRoleName: profileData.targetRoleName,
+    experienceLevel: profileData.experienceLevel,
+  };
+
+  if (profileData.weeklyAvailableHours !== undefined) {
+    updateData.weeklyAvailableHours = profileData.weeklyAvailableHours;
+  }
+
   // Profile থাকলে update, না থাকলে create
   const careerProfile = await prisma.careerProfile.upsert({
     where: {
       userId,
     },
-    update: {
-      ...profileData,
-    },
+    update: updateData,
     create: {
       userId,
-      ...profileData,
+      targetRole: profileData.targetRole,
+      targetRoleName: profileData.targetRoleName,
+      experienceLevel: profileData.experienceLevel,
+      weeklyAvailableHours: profileData.weeklyAvailableHours ?? 10,
     },
   });
 

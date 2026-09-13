@@ -10,25 +10,25 @@ export const narrativeStates: NarrativeState[] = [
   {
     id: "01",
     eyebrow: "PHASE 01",
-    tag: "CAPABILITY GAP",
-    title: "Knowledge ≠ Job Readiness",
+    tag: "KNOWLEDGE ≠ CAPABILITY",
+    title: "Completing Lessons Isn't Mastery",
     description:
-      "Finishing lessons doesn't guarantee you can build, solve, explain, and prove your skills. Course completion is not engineering capability.",
+      "Finishing courses and quizzes doesn't prove you can build, solve, explain, or apply what you've learned.",
   },
   {
     id: "02",
     eyebrow: "PHASE 02",
-    tag: "ARCHITECTURAL DEBT",
-    title: "Invisible Learning Debt",
+    tag: "HIDDEN SKILL GAPS",
+    title: "You Can Learn Without Knowing What You're Missing",
     description:
-      "A missing foundational concept quietly makes every advanced topic harder. You are left guessing why complex patterns break.",
+      "Static learning paths can't identify the foundational gaps that quietly hold you back from more advanced skills.",
   },
   {
     id: "03",
     eyebrow: "PHASE 03",
-    tag: "SYSTEM ADAPTATION",
-    title: "Abandonment & Guilt",
+    tag: "NO SYSTEM ADAPTATION",
+    title: "Your Learning Path Doesn't Adapt",
     description:
-      "When life interrupts learning, static roadmaps turn a short break into a full stop. The system must adapt dynamically to your pace.",
+      "When you struggle, move faster, or fall behind, a static path keeps going instead of adjusting to what you actually need.",
   },
 ];

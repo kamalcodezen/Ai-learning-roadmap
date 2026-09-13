@@ -48,6 +48,7 @@ export type DiagnosticAnswerCountAggregateOutputType = {
   questionId: number
   selectedAnswer: number
   isCorrect: number
+  evaluation: number
   createdAt: number
   _all: number
 }
@@ -77,6 +78,7 @@ export type DiagnosticAnswerCountAggregateInputType = {
   questionId?: true
   selectedAnswer?: true
   isCorrect?: true
+  evaluation?: true
   createdAt?: true
   _all?: true
 }
@@ -159,6 +161,7 @@ export type DiagnosticAnswerGroupByOutputType = {
   questionId: string
   selectedAnswer: string
   isCorrect: boolean | null
+  evaluation: runtime.JsonValue | null
   createdAt: Date
   _count: DiagnosticAnswerCountAggregateOutputType | null
   _min: DiagnosticAnswerMinAggregateOutputType | null
@@ -189,6 +192,7 @@ export type DiagnosticAnswerWhereInput = {
   questionId?: Prisma.StringFilter<"DiagnosticAnswer"> | string
   selectedAnswer?: Prisma.StringFilter<"DiagnosticAnswer"> | string
   isCorrect?: Prisma.BoolNullableFilter<"DiagnosticAnswer"> | boolean | null
+  evaluation?: Prisma.JsonNullableFilter<"DiagnosticAnswer">
   createdAt?: Prisma.DateTimeFilter<"DiagnosticAnswer"> | Date | string
   attempt?: Prisma.XOR<Prisma.DiagnosticAttemptScalarRelationFilter, Prisma.DiagnosticAttemptWhereInput>
   question?: Prisma.XOR<Prisma.DiagnosticQuestionScalarRelationFilter, Prisma.DiagnosticQuestionWhereInput>
@@ -200,6 +204,7 @@ export type DiagnosticAnswerOrderByWithRelationInput = {
   questionId?: Prisma.SortOrder
   selectedAnswer?: Prisma.SortOrder
   isCorrect?: Prisma.SortOrderInput | Prisma.SortOrder
+  evaluation?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   attempt?: Prisma.DiagnosticAttemptOrderByWithRelationInput
   question?: Prisma.DiagnosticQuestionOrderByWithRelationInput
@@ -215,6 +220,7 @@ export type DiagnosticAnswerWhereUniqueInput = Prisma.AtLeast<{
   questionId?: Prisma.StringFilter<"DiagnosticAnswer"> | string
   selectedAnswer?: Prisma.StringFilter<"DiagnosticAnswer"> | string
   isCorrect?: Prisma.BoolNullableFilter<"DiagnosticAnswer"> | boolean | null
+  evaluation?: Prisma.JsonNullableFilter<"DiagnosticAnswer">
   createdAt?: Prisma.DateTimeFilter<"DiagnosticAnswer"> | Date | string
   attempt?: Prisma.XOR<Prisma.DiagnosticAttemptScalarRelationFilter, Prisma.DiagnosticAttemptWhereInput>
   question?: Prisma.XOR<Prisma.DiagnosticQuestionScalarRelationFilter, Prisma.DiagnosticQuestionWhereInput>
@@ -226,6 +232,7 @@ export type DiagnosticAnswerOrderByWithAggregationInput = {
   questionId?: Prisma.SortOrder
   selectedAnswer?: Prisma.SortOrder
   isCorrect?: Prisma.SortOrderInput | Prisma.SortOrder
+  evaluation?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.DiagnosticAnswerCountOrderByAggregateInput
   _max?: Prisma.DiagnosticAnswerMaxOrderByAggregateInput
@@ -241,6 +248,7 @@ export type DiagnosticAnswerScalarWhereWithAggregatesInput = {
   questionId?: Prisma.StringWithAggregatesFilter<"DiagnosticAnswer"> | string
   selectedAnswer?: Prisma.StringWithAggregatesFilter<"DiagnosticAnswer"> | string
   isCorrect?: Prisma.BoolNullableWithAggregatesFilter<"DiagnosticAnswer"> | boolean | null
+  evaluation?: Prisma.JsonNullableWithAggregatesFilter<"DiagnosticAnswer">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DiagnosticAnswer"> | Date | string
 }
 
@@ -248,6 +256,7 @@ export type DiagnosticAnswerCreateInput = {
   id?: string
   selectedAnswer: string
   isCorrect?: boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   attempt: Prisma.DiagnosticAttemptCreateNestedOneWithoutAnswersInput
   question: Prisma.DiagnosticQuestionCreateNestedOneWithoutAnswersInput
@@ -259,6 +268,7 @@ export type DiagnosticAnswerUncheckedCreateInput = {
   questionId: string
   selectedAnswer: string
   isCorrect?: boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -266,6 +276,7 @@ export type DiagnosticAnswerUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   selectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attempt?: Prisma.DiagnosticAttemptUpdateOneRequiredWithoutAnswersNestedInput
   question?: Prisma.DiagnosticQuestionUpdateOneRequiredWithoutAnswersNestedInput
@@ -277,6 +288,7 @@ export type DiagnosticAnswerUncheckedUpdateInput = {
   questionId?: Prisma.StringFieldUpdateOperationsInput | string
   selectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -286,6 +298,7 @@ export type DiagnosticAnswerCreateManyInput = {
   questionId: string
   selectedAnswer: string
   isCorrect?: boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -293,6 +306,7 @@ export type DiagnosticAnswerUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   selectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -302,6 +316,7 @@ export type DiagnosticAnswerUncheckedUpdateManyInput = {
   questionId?: Prisma.StringFieldUpdateOperationsInput | string
   selectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -326,6 +341,7 @@ export type DiagnosticAnswerCountOrderByAggregateInput = {
   questionId?: Prisma.SortOrder
   selectedAnswer?: Prisma.SortOrder
   isCorrect?: Prisma.SortOrder
+  evaluation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -435,6 +451,7 @@ export type DiagnosticAnswerCreateWithoutQuestionInput = {
   id?: string
   selectedAnswer: string
   isCorrect?: boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   attempt: Prisma.DiagnosticAttemptCreateNestedOneWithoutAnswersInput
 }
@@ -444,6 +461,7 @@ export type DiagnosticAnswerUncheckedCreateWithoutQuestionInput = {
   attemptId: string
   selectedAnswer: string
   isCorrect?: boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -482,6 +500,7 @@ export type DiagnosticAnswerScalarWhereInput = {
   questionId?: Prisma.StringFilter<"DiagnosticAnswer"> | string
   selectedAnswer?: Prisma.StringFilter<"DiagnosticAnswer"> | string
   isCorrect?: Prisma.BoolNullableFilter<"DiagnosticAnswer"> | boolean | null
+  evaluation?: Prisma.JsonNullableFilter<"DiagnosticAnswer">
   createdAt?: Prisma.DateTimeFilter<"DiagnosticAnswer"> | Date | string
 }
 
@@ -489,6 +508,7 @@ export type DiagnosticAnswerCreateWithoutAttemptInput = {
   id?: string
   selectedAnswer: string
   isCorrect?: boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   question: Prisma.DiagnosticQuestionCreateNestedOneWithoutAnswersInput
 }
@@ -498,6 +518,7 @@ export type DiagnosticAnswerUncheckedCreateWithoutAttemptInput = {
   questionId: string
   selectedAnswer: string
   isCorrect?: boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -532,6 +553,7 @@ export type DiagnosticAnswerCreateManyQuestionInput = {
   attemptId: string
   selectedAnswer: string
   isCorrect?: boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -539,6 +561,7 @@ export type DiagnosticAnswerUpdateWithoutQuestionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   selectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attempt?: Prisma.DiagnosticAttemptUpdateOneRequiredWithoutAnswersNestedInput
 }
@@ -548,6 +571,7 @@ export type DiagnosticAnswerUncheckedUpdateWithoutQuestionInput = {
   attemptId?: Prisma.StringFieldUpdateOperationsInput | string
   selectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -556,6 +580,7 @@ export type DiagnosticAnswerUncheckedUpdateManyWithoutQuestionInput = {
   attemptId?: Prisma.StringFieldUpdateOperationsInput | string
   selectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -564,6 +589,7 @@ export type DiagnosticAnswerCreateManyAttemptInput = {
   questionId: string
   selectedAnswer: string
   isCorrect?: boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -571,6 +597,7 @@ export type DiagnosticAnswerUpdateWithoutAttemptInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   selectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   question?: Prisma.DiagnosticQuestionUpdateOneRequiredWithoutAnswersNestedInput
 }
@@ -580,6 +607,7 @@ export type DiagnosticAnswerUncheckedUpdateWithoutAttemptInput = {
   questionId?: Prisma.StringFieldUpdateOperationsInput | string
   selectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -588,6 +616,7 @@ export type DiagnosticAnswerUncheckedUpdateManyWithoutAttemptInput = {
   questionId?: Prisma.StringFieldUpdateOperationsInput | string
   selectedAnswer?: Prisma.StringFieldUpdateOperationsInput | string
   isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  evaluation?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -599,6 +628,7 @@ export type DiagnosticAnswerSelect<ExtArgs extends runtime.Types.Extensions.Inte
   questionId?: boolean
   selectedAnswer?: boolean
   isCorrect?: boolean
+  evaluation?: boolean
   createdAt?: boolean
   attempt?: boolean | Prisma.DiagnosticAttemptDefaultArgs<ExtArgs>
   question?: boolean | Prisma.DiagnosticQuestionDefaultArgs<ExtArgs>
@@ -610,6 +640,7 @@ export type DiagnosticAnswerSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   questionId?: boolean
   selectedAnswer?: boolean
   isCorrect?: boolean
+  evaluation?: boolean
   createdAt?: boolean
   attempt?: boolean | Prisma.DiagnosticAttemptDefaultArgs<ExtArgs>
   question?: boolean | Prisma.DiagnosticQuestionDefaultArgs<ExtArgs>
@@ -621,6 +652,7 @@ export type DiagnosticAnswerSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   questionId?: boolean
   selectedAnswer?: boolean
   isCorrect?: boolean
+  evaluation?: boolean
   createdAt?: boolean
   attempt?: boolean | Prisma.DiagnosticAttemptDefaultArgs<ExtArgs>
   question?: boolean | Prisma.DiagnosticQuestionDefaultArgs<ExtArgs>
@@ -632,10 +664,11 @@ export type DiagnosticAnswerSelectScalar = {
   questionId?: boolean
   selectedAnswer?: boolean
   isCorrect?: boolean
+  evaluation?: boolean
   createdAt?: boolean
 }
 
-export type DiagnosticAnswerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "attemptId" | "questionId" | "selectedAnswer" | "isCorrect" | "createdAt", ExtArgs["result"]["diagnosticAnswer"]>
+export type DiagnosticAnswerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "attemptId" | "questionId" | "selectedAnswer" | "isCorrect" | "evaluation" | "createdAt", ExtArgs["result"]["diagnosticAnswer"]>
 export type DiagnosticAnswerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attempt?: boolean | Prisma.DiagnosticAttemptDefaultArgs<ExtArgs>
   question?: boolean | Prisma.DiagnosticQuestionDefaultArgs<ExtArgs>
@@ -661,6 +694,7 @@ export type $DiagnosticAnswerPayload<ExtArgs extends runtime.Types.Extensions.In
     questionId: string
     selectedAnswer: string
     isCorrect: boolean | null
+    evaluation: runtime.JsonValue | null
     createdAt: Date
   }, ExtArgs["result"]["diagnosticAnswer"]>
   composites: {}
@@ -1092,6 +1126,7 @@ export interface DiagnosticAnswerFieldRefs {
   readonly questionId: Prisma.FieldRef<"DiagnosticAnswer", 'String'>
   readonly selectedAnswer: Prisma.FieldRef<"DiagnosticAnswer", 'String'>
   readonly isCorrect: Prisma.FieldRef<"DiagnosticAnswer", 'Boolean'>
+  readonly evaluation: Prisma.FieldRef<"DiagnosticAnswer", 'Json'>
   readonly createdAt: Prisma.FieldRef<"DiagnosticAnswer", 'DateTime'>
 }
     

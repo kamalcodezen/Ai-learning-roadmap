@@ -26,15 +26,22 @@ export default function MobileCardCarousel({
   };
 
   return (
-    <div className="w-full py-6">
+    <div className="w-full py-2">
       <Swiper
         modules={[EffectCoverflow]}
         effect="coverflow"
         grabCursor
         centeredSlides
         loop
-        slidesPerView={1.9}
+        slidesPerView={1.5}
         spaceBetween={16}
+        // Homepage banner mobile device card height controller
+        breakpoints={{
+          350: { slidesPerView: 1.7 },
+          450: { slidesPerView: 2 },
+          500: { slidesPerView: 2.7 },
+          600: { slidesPerView: 3 },
+        }}
         initialSlide={0}
         coverflowEffect={{
           rotate: 24,
@@ -48,7 +55,7 @@ export default function MobileCardCarousel({
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div className="overflow-hidden rounded-xl bg-card shadow-[var(--shadow)] transition-shadow duration-300">
+            <div className="overflow-hidden rounded-xl bg-card shadow-[var(--shadow)] transition-shadow duration-300 my-10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={slide.src}

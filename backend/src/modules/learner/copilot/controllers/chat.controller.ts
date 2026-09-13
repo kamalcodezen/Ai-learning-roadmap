@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { z } from "zod";
+import prisma from "../../../../lib/prisma.js";
 import { ChatService } from "../services/chat.service.js";
 
 const chatRequestSchema = z.object({
@@ -48,6 +49,25 @@ export class ChatController {
         finalContext,
       );
 
+      // Persist to ActivityLog asynchronously without blocking the user response
+      if (req.userId) {
+        prisma.activityLog
+          .create({
+            data: {
+              userId: req.userId,
+              type: "COPILOT_CHAT",
+              description: validatedData.message.slice(0, 100),
+              metadata: {
+                userMessage: validatedData.message,
+                assistantReply: result.reply,
+                provider: result.provider,
+                model: result.model,
+              },
+            },
+          })
+          .catch((err) => console.error("Error logging chat conversation:", err));
+      }
+
       return res.status(200).json({
         success: true,
         data: {
@@ -56,6 +76,43 @@ export class ChatController {
           model: result.model,
           complexity: result.complexity,
         },
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  static async getChatHistory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.userId;
+      if (!userId) {
+        return res.status(200).json({ success: true, data: [] });
+      }
+
+      const logs = await prisma.activityLog.findMany({
+        where: {
+          userId,
+          type: "COPILOT_CHAT",
+        },
+        orderBy: { createdAt: "desc" },
+        take: 20,
+      });
+
+      const messages = logs.reverse().flatMap((log) => {
+        const meta = (log.metadata as Record<string, any>) || {};
+        const pairs: Array<{ role: "user" | "assistant"; content: string; createdAt: string }> = [];
+        if (meta.userMessage) {
+          pairs.push({ role: "user", content: meta.userMessage, createdAt: log.createdAt.toISOString() });
+        }
+        if (meta.assistantReply) {
+          pairs.push({ role: "assistant", content: meta.assistantReply, createdAt: log.createdAt.toISOString() });
+        }
+        return pairs;
+      });
+
+      return res.status(200).json({
+        success: true,
+        data: messages,
       });
     } catch (error) {
       return next(error);

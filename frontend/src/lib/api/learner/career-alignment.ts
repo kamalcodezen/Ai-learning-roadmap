@@ -4,7 +4,9 @@ export interface AlignmentData {
   targetRole: string;
   matchPercentage: number;
   strongSkills: string[];
+  developingSkills: string[];
   missingSkills: string[];
+  criticalGaps: string[];
   requirements: {
     skill: string;
     importance: "High" | "Medium" | "Low";

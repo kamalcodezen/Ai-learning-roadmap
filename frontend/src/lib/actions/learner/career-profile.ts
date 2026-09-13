@@ -5,6 +5,7 @@ export type CareerProfilePayload = {
   targetRole: string;
   targetRoleName: string;
   experienceLevel: "BEGINNER" | "INTERMEDIATE";
+  weeklyAvailableHours?: number;
 };
 
 export type CareerProfileData = {
@@ -13,6 +14,7 @@ export type CareerProfileData = {
   targetRole: string;
   targetRoleName: string;
   experienceLevel: "BEGINNER" | "INTERMEDIATE";
+  weeklyAvailableHours?: number;
   onboardingCompleted: boolean;
   createdAt: string;
   updatedAt: string;
@@ -26,6 +28,12 @@ export type CareerProfileResponse = {
 
 export const onboardingCareerProfile = async (
   data: CareerProfilePayload,
+): Promise<CareerProfileResponse> => {
+  return serverMutation("/api/career-profile", data);
+};
+
+export const updateCareerProfile = async (
+  data: Partial<CareerProfilePayload>,
 ): Promise<CareerProfileResponse> => {
   return serverMutation("/api/career-profile", data);
 };

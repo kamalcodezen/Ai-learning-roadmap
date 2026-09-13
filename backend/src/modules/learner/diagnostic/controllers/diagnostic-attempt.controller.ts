@@ -4,6 +4,10 @@ import {
   createDiagnosticAttempt,
   completeDiagnosticAttempt,
 } from "../services/diagnostic-attempt.service.js";
+import {
+  getDiagnosticResult,
+  getLatestDiagnosticResult,
+} from "../services/diagnostic-result.service.js";
 
 export const createDiagnosticAttemptController = async (
   req: Request,
@@ -59,3 +63,63 @@ export const completeDiagnosticAttemptController = async (
     });
   }
 };
+
+export const getDiagnosticResultController = async (
+  req: Request,
+  res: Response,
+) => {
+  const { attemptId } = req.params;
+
+  if (!attemptId || Array.isArray(attemptId)) {
+    return res.status(400).json({
+      success: false,
+      message: "Valid diagnostic attempt ID is required.",
+    });
+  }
+
+  try {
+    const userId = req.userId as string;
+    const result = await getDiagnosticResult(attemptId, userId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Diagnostic result retrieved successfully.",
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      success: false,
+      message: error.message || "Diagnostic result not found.",
+    });
+  }
+};
+
+export const getLatestDiagnosticResultController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const userId = req.userId as string;
+    const result = await getLatestDiagnosticResult(userId);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "No completed diagnostic assessment found for this user.",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Latest diagnostic result retrieved successfully.",
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to retrieve latest diagnostic result.",
+    });
+  }
+};
+

@@ -66,7 +66,7 @@ export default function CTASection() {
             Let&apos;s Build Your AI Career Path
           </h1>
 
-          <p className="font-poppins text-lg leading-7 text-muted-foreground mb-6 [&:not(:first-child)]:mt-6 text-balance mx-auto max-w-2xl">
+          <p className="font-poppins text-lg leading-7 text-muted-foreground mb-6 [&:not(:first-child)]:mt-6 text-balance mx-auto max-w-max">
             Tell us where you want to go, and we&apos;ll help you understand what to learn next
           </p>
 

@@ -19,7 +19,13 @@ import assessmentsRoutes from "./modules/learner/assessments/assessments.routes.
 import careeralignmentRoutes from "./modules/learner/career-alignment/career-alignment.routes.js";
 import applicationreadinessRoutes from "./modules/learner/application-readiness/application-readiness.routes.js";
 import portfolioRoutes from "./modules/learner/projects/portfolio.routes.js";
+import jobRealityRoutes from "./modules/learner/job-reality/job-reality.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
+import interviewRoutes from "./modules/learner/interview/interview.routes.js";
+import gamificationRoutes from "./modules/learner/gamification/gamification.routes.js";
+import careerIntelligenceRoutes from "./modules/learner/career-intelligence/career-intelligence.routes.js";
+import notificationRoutes from "./modules/learner/notifications/notification.routes.js";
+import settingsRoutes from "./modules/learner/settings/settings.routes.js";
 const isProduction = env.NODE_ENV === "production";
 
 const app = express();
@@ -75,8 +81,26 @@ app.use("/api/application-readiness", applicationreadinessRoutes);
 // Portfolio Routes
 app.use("/api/portfolio", portfolioRoutes);
 
+// Job Reality Routes
+app.use("/api/job-reality", jobRealityRoutes);
+
+// Interview Routes
+app.use("/api/interview", interviewRoutes);
+
+// Gamification & Skill Tree Routes
+app.use("/api/gamification", gamificationRoutes);
+
+// Career Intelligence Routes (Decision Engine & Evidence Verifier)
+app.use("/api/career-intelligence", careerIntelligenceRoutes);
+
 // Career Profile Routes/ onboarding
 app.use("/api/career-profile", careerProfileRoutes);
+
+// Notification Routes
+app.use("/api/notifications", notificationRoutes);
+
+// Settings & Account Routes
+app.use("/api/settings", settingsRoutes);
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);

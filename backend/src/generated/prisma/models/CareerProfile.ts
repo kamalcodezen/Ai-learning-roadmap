@@ -76,6 +76,7 @@ export type CareerProfileCountAggregateOutputType = {
   onboardingCompleted: number
   resumeScore: number
   interviewScore: number
+  aiAnalysis: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -132,6 +133,7 @@ export type CareerProfileCountAggregateInputType = {
   onboardingCompleted?: true
   resumeScore?: true
   interviewScore?: true
+  aiAnalysis?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -233,6 +235,7 @@ export type CareerProfileGroupByOutputType = {
   onboardingCompleted: boolean
   resumeScore: number | null
   interviewScore: number | null
+  aiAnalysis: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: CareerProfileCountAggregateOutputType | null
@@ -270,6 +273,7 @@ export type CareerProfileWhereInput = {
   onboardingCompleted?: Prisma.BoolFilter<"CareerProfile"> | boolean
   resumeScore?: Prisma.FloatNullableFilter<"CareerProfile"> | number | null
   interviewScore?: Prisma.FloatNullableFilter<"CareerProfile"> | number | null
+  aiAnalysis?: Prisma.JsonNullableFilter<"CareerProfile">
   createdAt?: Prisma.DateTimeFilter<"CareerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CareerProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
@@ -285,6 +289,7 @@ export type CareerProfileOrderByWithRelationInput = {
   onboardingCompleted?: Prisma.SortOrder
   resumeScore?: Prisma.SortOrderInput | Prisma.SortOrder
   interviewScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiAnalysis?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.userOrderByWithRelationInput
@@ -303,6 +308,7 @@ export type CareerProfileWhereUniqueInput = Prisma.AtLeast<{
   onboardingCompleted?: Prisma.BoolFilter<"CareerProfile"> | boolean
   resumeScore?: Prisma.FloatNullableFilter<"CareerProfile"> | number | null
   interviewScore?: Prisma.FloatNullableFilter<"CareerProfile"> | number | null
+  aiAnalysis?: Prisma.JsonNullableFilter<"CareerProfile">
   createdAt?: Prisma.DateTimeFilter<"CareerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CareerProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
@@ -318,6 +324,7 @@ export type CareerProfileOrderByWithAggregationInput = {
   onboardingCompleted?: Prisma.SortOrder
   resumeScore?: Prisma.SortOrderInput | Prisma.SortOrder
   interviewScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiAnalysis?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CareerProfileCountOrderByAggregateInput
@@ -340,6 +347,7 @@ export type CareerProfileScalarWhereWithAggregatesInput = {
   onboardingCompleted?: Prisma.BoolWithAggregatesFilter<"CareerProfile"> | boolean
   resumeScore?: Prisma.FloatNullableWithAggregatesFilter<"CareerProfile"> | number | null
   interviewScore?: Prisma.FloatNullableWithAggregatesFilter<"CareerProfile"> | number | null
+  aiAnalysis?: Prisma.JsonNullableWithAggregatesFilter<"CareerProfile">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CareerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CareerProfile"> | Date | string
 }
@@ -353,6 +361,7 @@ export type CareerProfileCreateInput = {
   onboardingCompleted?: boolean
   resumeScore?: number | null
   interviewScore?: number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.userCreateNestedOneWithoutCareerProfileInput
@@ -368,6 +377,7 @@ export type CareerProfileUncheckedCreateInput = {
   onboardingCompleted?: boolean
   resumeScore?: number | null
   interviewScore?: number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -381,6 +391,7 @@ export type CareerProfileUpdateInput = {
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resumeScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   interviewScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.userUpdateOneRequiredWithoutCareerProfileNestedInput
@@ -396,6 +407,7 @@ export type CareerProfileUncheckedUpdateInput = {
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resumeScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   interviewScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -410,6 +422,7 @@ export type CareerProfileCreateManyInput = {
   onboardingCompleted?: boolean
   resumeScore?: number | null
   interviewScore?: number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -423,6 +436,7 @@ export type CareerProfileUpdateManyMutationInput = {
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resumeScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   interviewScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -437,6 +451,7 @@ export type CareerProfileUncheckedUpdateManyInput = {
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resumeScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   interviewScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -456,6 +471,7 @@ export type CareerProfileCountOrderByAggregateInput = {
   onboardingCompleted?: Prisma.SortOrder
   resumeScore?: Prisma.SortOrder
   interviewScore?: Prisma.SortOrder
+  aiAnalysis?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -561,6 +577,7 @@ export type CareerProfileCreateWithoutUserInput = {
   onboardingCompleted?: boolean
   resumeScore?: number | null
   interviewScore?: number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -574,6 +591,7 @@ export type CareerProfileUncheckedCreateWithoutUserInput = {
   onboardingCompleted?: boolean
   resumeScore?: number | null
   interviewScore?: number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -603,6 +621,7 @@ export type CareerProfileUpdateWithoutUserInput = {
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resumeScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   interviewScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -616,6 +635,7 @@ export type CareerProfileUncheckedUpdateWithoutUserInput = {
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resumeScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   interviewScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiAnalysis?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -632,6 +652,7 @@ export type CareerProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   onboardingCompleted?: boolean
   resumeScore?: boolean
   interviewScore?: boolean
+  aiAnalysis?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.userDefaultArgs<ExtArgs>
@@ -647,6 +668,7 @@ export type CareerProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   onboardingCompleted?: boolean
   resumeScore?: boolean
   interviewScore?: boolean
+  aiAnalysis?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.userDefaultArgs<ExtArgs>
@@ -662,6 +684,7 @@ export type CareerProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   onboardingCompleted?: boolean
   resumeScore?: boolean
   interviewScore?: boolean
+  aiAnalysis?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.userDefaultArgs<ExtArgs>
@@ -677,11 +700,12 @@ export type CareerProfileSelectScalar = {
   onboardingCompleted?: boolean
   resumeScore?: boolean
   interviewScore?: boolean
+  aiAnalysis?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CareerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "targetRole" | "targetRoleName" | "experienceLevel" | "weeklyAvailableHours" | "onboardingCompleted" | "resumeScore" | "interviewScore" | "createdAt" | "updatedAt", ExtArgs["result"]["careerProfile"]>
+export type CareerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "targetRole" | "targetRoleName" | "experienceLevel" | "weeklyAvailableHours" | "onboardingCompleted" | "resumeScore" | "interviewScore" | "aiAnalysis" | "createdAt" | "updatedAt", ExtArgs["result"]["careerProfile"]>
 export type CareerProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }
@@ -707,6 +731,7 @@ export type $CareerProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     onboardingCompleted: boolean
     resumeScore: number | null
     interviewScore: number | null
+    aiAnalysis: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["careerProfile"]>
@@ -1142,6 +1167,7 @@ export interface CareerProfileFieldRefs {
   readonly onboardingCompleted: Prisma.FieldRef<"CareerProfile", 'Boolean'>
   readonly resumeScore: Prisma.FieldRef<"CareerProfile", 'Float'>
   readonly interviewScore: Prisma.FieldRef<"CareerProfile", 'Float'>
+  readonly aiAnalysis: Prisma.FieldRef<"CareerProfile", 'Json'>
   readonly createdAt: Prisma.FieldRef<"CareerProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CareerProfile", 'DateTime'>
 }

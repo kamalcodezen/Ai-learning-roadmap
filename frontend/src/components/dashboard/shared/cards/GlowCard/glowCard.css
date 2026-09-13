@@ -1,0 +1,7 @@
+.glow-card {
+  background: var(--gradient-proof-card);
+}
+
+.dark .glow-card {
+  background: var(--gradient-proof-card);
+}

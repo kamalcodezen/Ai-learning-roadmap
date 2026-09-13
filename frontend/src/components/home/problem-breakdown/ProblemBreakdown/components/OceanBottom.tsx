@@ -4,7 +4,7 @@
  */
 export default function OceanBottom() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-36 overflow-hidden rounded-b-[30px]">
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-36 overflow-hidden rounded-none">
       <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-card via-card/80 to-transparent" />
 
       <div className="anim-beam absolute bottom-10 inset-x-4 h-[2px] rounded-full bg-gradient-to-r from-transparent via-primary to-transparent shadow-[0_0_12px_rgb(var(--primary))]" />
