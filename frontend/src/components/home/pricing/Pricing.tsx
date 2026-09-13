@@ -21,7 +21,7 @@ const Pricing = () => {
         <Header billing={billing} onBillingChange={setBilling} />
 
         {/* Pricing Cards */}
-        <div className="mt-16 grid grid-cols-1 items-stretch gap-0 lg:grid-cols-3 mx-auto max-w-6xl">
+        <div className="mt-16 grid grid-cols-1 items-stretch gap-0 min-[55rem]:grid-cols-3 mx-auto max-w-6xl">
           {pricingPlans.map((plan) => {
             return (
               <div
