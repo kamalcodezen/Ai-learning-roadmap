@@ -308,7 +308,7 @@ export default function MobileNav() {
                   <div className="flex flex-col gap-2 border-t border-border/60 dark:border-white/10 pt-3 mt-1">
                     <Button
                       text="Start for Free"
-                      href="/signup"
+                      href="/dashboard/learner"
                       onClick={() => setIsOpen(false)}
                       className="w-full justify-center"
                     />
