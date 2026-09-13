@@ -25,6 +25,7 @@ import {
 import { ContainerScroll } from "@/src/components/ui/container-scroll-animation";
 import { AnimatedBeam } from "@/src/components/ui/animated-beam";
 import { motion, AnimatePresence } from "framer-motion";
+import { redirect } from "next/navigation";
 
 /* ------------------------------ data ------------------------------ */
 
@@ -513,9 +514,10 @@ export default function CareerTwinSection() {
 
   const handleAction = () => {
     setIsRedirecting(true);
+    redirect("/dashboard/learner")
     setTimeout(() => {
       setIsRedirecting(false);
-    }, 2000);
+    }, 1000);
   };
 
   return (
