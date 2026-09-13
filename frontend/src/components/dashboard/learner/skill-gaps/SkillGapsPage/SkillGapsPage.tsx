@@ -106,9 +106,9 @@ export default function SkillGapsPage() {
             </p>
           </div>
         ) : (
-          data.gaps.map((gap) => (
+          data.gaps.map((gap, index) => (
             <DashboardCard
-              key={gap.id}
+              key={gap.id ? `${gap.id}-${index}` : `${gap.skill}-${index}`}
               className={`border-l-4 dashboard-card ${gap.severity === "critical" ? "border-l-destructive" : "border-l-amber-500"}`}
             >
               <CardContent>
