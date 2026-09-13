@@ -93,7 +93,7 @@ export default function AboutHero() {
                 href="#the-problem"
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
-                Why We Built This ↓
+                Why We Built This
               </a>
             </div>
           </motion.div>
