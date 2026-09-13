@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
@@ -10,12 +11,12 @@ import {
 } from "react-icons/fa6";
 import Link from "next/link";
 import Image from "next/image";
+import { authClient } from "@/src/lib/auth-client";
 
 const mainLinks = [
   { title: "How It Works", href: "/#how-it-works" },
   { title: "Features", href: "/#features" },
   { title: "About Us", href: "/about" },
-  { title: "Login", href: "/signin" },
 ];
 
 const socialLinks = [
@@ -31,6 +32,11 @@ const bottomLinks = [
 ];
 
 export default function Footer() {
+  const { data: session } = authClient.useSession();
+
+  // User থাকলে true, না থাকলে false
+  const isLoggedIn = !!session?.user;
+
   return (
     <footer className="relative w-full flex flex-col items-center justify-center border-t border-white/10 bg-[#050510] bg-[radial-gradient(35%_128px_at_50%_0%,theme(backgroundColor.white/8%),transparent)] px-6 pt-0 pb-12 lg:pb-16 mt-auto overflow-hidden">
       <div className="absolute inset-x-0 -top-[1px] w-full h-40 pointer-events-none">
@@ -40,25 +46,25 @@ export default function Footer() {
         <div className="absolute inset-x-0 mx-auto top-0 bg-gradient-to-r from-transparent via-[var(--color-primary)] to-transparent h-[5px] w-1/4 blur-sm" />
         <div className="absolute inset-x-0 mx-auto top-0 bg-gradient-to-r from-transparent via-[var(--color-primary)] to-transparent h-px w-1/4" />
 
-        {/* Radial Gradient to prevent sharp edges */}
-        <div className="absolute inset-0 w-full h-full bg-[#050510] [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+        {/* Radial Gradient */}
+        <div className="absolute inset-0 w-full h-full bg-[#050510] [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]" />
       </div>
 
-      {/* Noise Overlay for Grunge Effect */}
-      <div 
+      {/* Noise Overlay */}
+      <div
         className="absolute inset-0 z-0 opacity-20 mix-blend-overlay pointer-events-none"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
         }}
-      ></div>
+      />
 
-      {/* Top Right Aurora/Grunge Gradient */}
+      {/* Top Right Aurora */}
       <div className="absolute top-0 right-0 w-[400px] md:w-[600px] h-[400px] md:h-[600px] pointer-events-none z-0 translate-x-1/4 -translate-y-1/4 opacity-60 mix-blend-screen">
         <div className="absolute inset-0 border-[40px] md:border-[80px] border-[var(--color-primary)] rounded-[40%_60%_70%_30%] blur-[40px] md:blur-[70px]" />
         <div className="absolute inset-8 md:inset-12 border-[20px] md:border-[40px] border-[var(--color-primary)] rounded-[60%_40%_30%_70%] blur-[30px] md:blur-[50px] opacity-70" />
       </div>
-      
-      {/* Bottom Left Aurora/Grunge Gradient */}
+
+      {/* Bottom Left Aurora */}
       <div className="absolute bottom-0 left-0 w-[450px] md:w-[700px] h-[450px] md:h-[700px] pointer-events-none z-0 -translate-x-1/4 translate-y-1/4 opacity-60 mix-blend-screen">
         <div className="absolute inset-0 border-[50px] md:border-[100px] border-[var(--color-primary)] rounded-[30%_70%_50%_50%] blur-[50px] md:blur-[80px]" />
         <div className="absolute inset-10 md:inset-16 border-[30px] md:border-[50px] border-[var(--color-primary)] rounded-[50%_50%_70%_30%] blur-[40px] md:blur-[60px] opacity-70" />
@@ -97,6 +103,16 @@ export default function Footer() {
                 {link.title}
               </Link>
             ))}
+
+            {/* User না থাকলে Login দেখাবে */}
+            {!isLoggedIn && (
+              <Link
+                href="/signin"
+                className="font-poppins text-small font-medium text-slate-400 hover:text-[var(--color-primary)] transition-colors duration-300"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </AnimatedContainer>
 
@@ -110,7 +126,7 @@ export default function Footer() {
             © {new Date().getFullYear()} AI Pather. All rights reserved.
           </div>
 
-          {/* Social Links (Centered) */}
+          {/* Social Links */}
           <div className="flex items-center justify-center gap-4 order-1 md:order-2 flex-1">
             {socialLinks.map((link) => (
               <Link
@@ -119,12 +135,12 @@ export default function Footer() {
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-white/5 text-slate-400 hover:text-[var(--color-primary)] hover:bg-white/10 transition-all duration-300"
                 aria-label={link.title}
               >
-                {link.icon && <link.icon className="size-5" />}
+                <link.icon className="size-5" />
               </Link>
             ))}
           </div>
 
-          {/* Bottom Links (Privacy, Terms) */}
+          {/* Bottom Links */}
           <div className="flex items-center justify-center md:justify-end gap-6 text-small order-2 md:order-3 flex-1">
             {bottomLinks.map((link) => (
               <Link
