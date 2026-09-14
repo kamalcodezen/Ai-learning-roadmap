@@ -1,10 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import Image from "next/image";
+import { AnimatePresence, motion } from "motion/react";
+import {
+  LayoutDashboard,
+  User as UserIcon,
+  Settings,
+  LogOut,
+  ChevronDown,
+  Sparkles,
+  Crown,
+  Zap,
+  Loader2,
+} from "lucide-react";
 import { authClient } from "@/src/lib/auth-client";
 
 interface ProfileDropdownProps {
@@ -12,17 +23,53 @@ interface ProfileDropdownProps {
   email?: string;
 }
 
-export const getDropdownLinks = (role: string, prefix: string) => {
-  if (role === "ADMIN") {
-    return [
-      { label: "Dashboard", href: `${prefix}/dashboard`, variant: "default" },
-      { label: "Sign out", href: "#", variant: "danger" },
-    ] as const;
+export const getPlanBadge = (plan?: string) => {
+  const userPlan = plan?.toUpperCase() || "FREE";
+  switch (userPlan) {
+    case "PRO":
+      return {
+        label: "PRO",
+        icon: Crown,
+        style: "bg-amber-500/15 text-amber-500 dark:text-amber-400 border-amber-500/30",
+      };
+    case "PLUS":
+      return {
+        label: "PLUS",
+        icon: Sparkles,
+        style: "bg-primary/15 text-primary border-primary/30",
+      };
+    default:
+      return {
+        label: "GO (FREE)",
+        icon: Zap,
+        style: "bg-muted text-muted-foreground border-border/50",
+      };
   }
-  
+};
+
+export const getDropdownLinks = (role: string, prefix: string) => {
+  const isRoleAdmin = role === "ADMIN";
   return [
-    { label: "Dashboard", href: `${prefix}`, variant: "default" },
-    { label: "Sign out", href: "#", variant: "danger" },
+    {
+      label: isRoleAdmin ? "Admin Dashboard" : "Dashboard",
+      href: isRoleAdmin ? `${prefix}/dashboard` : `${prefix}`,
+      variant: "default",
+    },
+    {
+      label: "My Profile",
+      href: `${prefix}/profile`,
+      variant: "default",
+    },
+    {
+      label: "Settings & Billing",
+      href: `${prefix}/settings`,
+      variant: "default",
+    },
+    {
+      label: "Sign out",
+      href: "#",
+      variant: "danger",
+    },
   ] as const;
 };
 
@@ -33,32 +80,56 @@ export default function ProfileDropdown({
   const [open, setOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { data: session } = authClient.useSession();
-  const userRole = (session?.user as { role?: string })?.role?.toUpperCase() || "LEARNER";
+  const user = session?.user as { role?: string; plan?: string; image?: string | null } | undefined;
+  const userRole = user?.role?.toUpperCase() || "LEARNER";
+  const userPlan = user?.plan?.toUpperCase() || "FREE";
   const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
-  const links = getDropdownLinks(userRole, prefix);
 
+  const desktopNavItems = [
+    {
+      label: userRole === "ADMIN" ? "Admin Dashboard" : "Dashboard",
+      href: userRole === "ADMIN" ? `${prefix}/dashboard` : `${prefix}`,
+      icon: LayoutDashboard,
+    },
+    {
+      label: "My Profile",
+      href: `${prefix}/profile`,
+      icon: UserIcon,
+    },
+    {
+      label: "Settings & Billing",
+      href: `${prefix}/settings`,
+      icon: Settings,
+    },
+  ];
+
+  const initial = (name?.trim() || "U").charAt(0).toUpperCase();
+
+  // Close on outside click
   useEffect(() => {
-    AOS.init({ duration: 400, easing: "ease-out", once: true });
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  // Re-scan AOS each time the menu mounts (it only exists while hovered)
-  useEffect(() => {
-    if (!open) return;
-    const frame = requestAnimationFrame(() => AOS.refreshHard());
-    return () => cancelAnimationFrame(frame);
-  }, [open]);
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
+          setOpen(false);
           router.replace("/");
           router.refresh();
         },
         onError: () => {
+          setOpen(false);
           router.replace("/");
           router.refresh();
         },
@@ -67,99 +138,187 @@ export default function ProfileDropdown({
     setIsSigningOut(false);
   };
 
+  const planBadge = getPlanBadge(userPlan);
+  const PlanIcon = planBadge.icon;
+
   return (
     <div
-      className="relative"
+      ref={dropdownRef}
+      className="relative inline-block text-left"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
+      {/* Trigger Button */}
       <button
         type="button"
-        className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-all"
-        style={{ background: "var(--gradient-primary)" }}
+        onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
+        className="group relative flex items-center gap-2 rounded-full border border-primary/30 bg-card/80 py-1 pl-1 pr-3 text-foreground backdrop-blur-md transition-all duration-200 hover:border-primary/60 hover:shadow-[0_0_16px_rgba(159,84,247,0.2)] focus:outline-none"
       >
-        <span className="flex size-9 items-center justify-center rounded-full bg-neutral-900 text-white">
+        {/* User Avatar Circle */}
+        <div className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-tr from-primary to-secondary text-xs font-bold text-white shadow-xs">
+          {user?.image ? (
+            <Image
+              src={user.image}
+              alt={name || "User"}
+              fill
+              className="object-cover"
+              sizes="32px"
+            />
+          ) : (
+            <span>{initial}</span>
+          )}
+        </div>
 
-          {/* Temporary user icon here */}
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-          >
-            <circle cx="12" cy="8" r="3.5" />
-            <path d="M5 20c.8-3.5 3.2-5.5 7-5.5s6.2 2 7 5.5" />
-          </svg>
-
-
+        {/* User First Name */}
+        <span className="hidden max-w-28 truncate text-xs font-semibold tracking-wide text-foreground sm:inline-block">
+          {name?.split(" ")[0] || "Account"}
         </span>
 
-        <span className="hidden max-w-24 truncate text-sm font-medium text-white sm:block">
-          {name}
-        </span>
-
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          className={`text-white transition-transform duration-200 ${
-            open ? "rotate-180" : ""
+        {/* Smooth Chevron */}
+        <ChevronDown
+          className={`size-3.5 text-muted-foreground transition-transform duration-200 group-hover:text-primary ${
+            open ? "rotate-180 text-primary" : ""
           }`}
-        >
-          <path d="m6 9 6 6 6-6" />
-        </svg>
+        />
       </button>
 
-      {open && (
-        <div
-          data-aos="flip-left"
-          className="absolute right-0 top-[calc(100%+8px)] w-60 overflow-hidden rounded-lg p-2 shadow-xl -mt-2
-          bg-[linear-gradient(to_bottom,#f3e8ff_0%,#ede5ff_45%,#ddd0ff_100%)]
-          dark:bg-[linear-gradient(to_bottom,#0a0015_0%,#120025_28%,#1a0040_55%,#2d1065_100%)]"
-        >
-          <div className="px-3 pb-2 pt-3">
-            <p className="truncate text-sm font-semibold text-neutral-900 dark:text-white">
-              {name}
-            </p>
+      {/* Dropdown Menu Panel */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.96 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            className="absolute right-0 top-[calc(100%+6px)] z-50 w-72 origin-top-right max-h-[85vh] overflow-y-auto overscroll-contain rounded-2xl border border-border/80 bg-card/95 p-2 shadow-[0_16px_40px_rgba(0,0,0,0.14)] backdrop-blur-2xl dark:border-primary/20 dark:bg-[#120722]/95 dark:shadow-[0_20px_50px_rgba(0,0,0,0.55)]"
+          >
+            {/* Header: User Profile Info */}
+            <div className="rounded-xl border border-border/50 bg-muted/40 p-3.5">
+              <div className="flex items-center gap-3">
+                {/* Avatar with active indicator */}
+                <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-tr from-primary to-secondary text-sm font-bold text-white shadow-xs">
+                  {user?.image ? (
+                    <Image
+                      src={user.image}
+                      alt={name || "User"}
+                      fill
+                      className="object-cover"
+                      sizes="40px"
+                    />
+                  ) : (
+                    <span>{initial}</span>
+                  )}
+                  <span className="absolute bottom-0 right-0 size-2.5 rounded-full border-2 border-card bg-emerald-500" />
+                </div>
 
-            {email && (
-              <p className="mt-0.5 truncate text-xs text-neutral-500 dark:text-white/70">
-                {email}
-              </p>
-            )}
-          </div>
+                {/* Name, Email, & Tier Badge */}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-1.5">
+                    <p className="truncate text-sm font-bold text-foreground">
+                      {name || "User"}
+                    </p>
+                    <span
+                      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider border ${planBadge.style}`}
+                    >
+                      <PlanIcon className="size-2.5" />
+                      {planBadge.label}
+                    </span>
+                  </div>
 
-          <div className="mt-1">
-            {links.map((link) =>
-              link.variant === "danger" ? (
-                <button
-                  key={link.label}
-                  type="button"
-                  onClick={handleSignOut}
-                  disabled={isSigningOut}
-                  className="flex w-full px-3 py-2.5 text-left text-sm transition-colors rounded-md bg-red-500 font-medium text-white hover:bg-red-600 disabled:pointer-events-none disabled:opacity-60"
-                >
-                  {isSigningOut ? "Signing out..." : link.label}
-                </button>
-              ) : (
+                  <p className="truncate text-xs text-muted-foreground mt-0.5">
+                    {email || "—"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Dynamic Plan Upgrade Card */}
+            <div className="mt-2 px-1">
+              {userPlan === "FREE" && (
                 <Link
-                  key={link.label}
-                  href={link.href}
-                  className="flex w-full px-3 py-2.5 text-left text-sm transition-colors rounded-lg text-neutral-700 hover:bg-neutral-50 dark:text-white/75 dark:hover:bg-white/10"
+                  href="/#pricing"
+                  onClick={() => setOpen(false)}
+                  className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
                 >
-                  {link.label}
+                  <span className="flex items-center gap-1.5">
+                    <Sparkles className="size-3.5 text-yellow-300" />
+                    <span>Upgrade to Plus</span>
+                  </span>
+                  <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                    Save 20%
+                  </span>
                 </Link>
-              )
-            )}
-          </div>
-        </div>
-      )}
+              )}
+
+              {userPlan === "PLUS" && (
+                <Link
+                  href="/#pricing"
+                  onClick={() => setOpen(false)}
+                  className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Crown className="size-3.5 text-yellow-200" />
+                    <span>Upgrade to Pro</span>
+                  </span>
+                  <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                    Enterprise
+                  </span>
+                </Link>
+              )}
+
+              {userPlan === "PRO" && (
+                <div className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-500 dark:text-amber-400">
+                  <Crown className="size-3.5" />
+                  <span>Verified Pro Member</span>
+                </div>
+              )}
+            </div>
+
+            {/* Navigation Links */}
+            <div className="mt-2 space-y-0.5">
+              {desktopNavItems.map((item) => {
+                const ItemIcon = item.icon;
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-foreground/80 transition-colors hover:bg-muted/70 hover:text-primary"
+                  >
+                    <ItemIcon className="size-4 text-primary shrink-0" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+
+              <div className="my-1.5 h-px bg-border/60" />
+
+              {/* Sign out button */}
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-semibold text-red-500 transition-colors hover:bg-red-500/10 disabled:pointer-events-none disabled:opacity-60 cursor-pointer"
+              >
+                {isSigningOut ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin text-red-500 shrink-0" />
+                    <span>Signing out...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogOut className="size-4 text-red-500 shrink-0" />
+                    <span>Sign out</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
