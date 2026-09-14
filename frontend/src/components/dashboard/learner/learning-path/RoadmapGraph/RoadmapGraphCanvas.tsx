@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useMemo, useState, useCallback, useEffect } from "react";
+import { useMemo, useState, useCallback, useEffect, useRef } from "react";
+import type Lenis from "lenis";
 import {
   ReactFlow,
   MiniMap,
@@ -217,8 +218,67 @@ export function RoadmapGraphCanvas({
     setEdges(initialEdges);
   }, [initialNodes, initialEdges, setNodes, setEdges]);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheelCapture = (e: WheelEvent) => {
+      // Allow browser or graph zoom if modifier key (Ctrl or Meta) is held
+      if (e.ctrlKey || e.metaKey) return;
+
+      const delta =
+        e.deltaMode === 1
+          ? e.deltaY * 24
+          : e.deltaMode === 2
+            ? e.deltaY * window.innerHeight
+            : e.deltaY;
+
+      // Stop ReactFlow / D3 from capturing or hijacking the wheel
+      e.preventDefault();
+      e.stopPropagation();
+
+      const dashboardLenis =
+        typeof window !== "undefined"
+          ? (window as unknown as { __dashboardLenis?: Lenis }).__dashboardLenis
+          : undefined;
+
+      if (dashboardLenis) {
+        dashboardLenis.scrollTo(dashboardLenis.targetScroll + delta, {
+          programmatic: false,
+          lerp: 0.1,
+        });
+      } else {
+        const scrollContainer =
+          (container.closest("section[aria-label='Dashboard content']") as HTMLElement | null) ||
+          (document.querySelector("section[aria-label='Dashboard content']") as HTMLElement | null);
+
+        if (scrollContainer) {
+          scrollContainer.scrollBy({
+            top: delta,
+            behavior: "smooth",
+          });
+        } else {
+          window.scrollBy({
+            top: delta,
+            behavior: "smooth",
+          });
+        }
+      }
+    };
+
+    container.addEventListener("wheel", handleWheelCapture, { capture: true, passive: false });
+    return () => {
+      container.removeEventListener("wheel", handleWheelCapture, { capture: true });
+    };
+  }, []);
+
   return (
-    <div className="relative w-full h-[760px] md:h-[840px] rounded-2xl overflow-hidden border border-border dashboard-card !p-0">
+    <div
+      ref={containerRef}
+      className="relative w-full h-[760px] md:h-[840px] rounded-2xl overflow-hidden border border-border dashboard-card !p-0 nowheel"
+    >
       {/* Top Left Title Card Overlay (Matching the reference screenshot) */}
       <div className="absolute top-6 left-6 z-10 max-w-sm md:max-w-md p-5 rounded-2xl bg-card/95 border border-border backdrop-blur-xl space-y-3">
         <div className="flex items-center justify-between gap-3">
@@ -273,12 +333,15 @@ export function RoadmapGraphCanvas({
         fitViewOptions={{ padding: 0.25 }}
         minZoom={0.2}
         maxZoom={1.5}
-        panOnDrag={true}
-        zoomOnScroll={true}
+        preventScrolling={false}
+        zoomOnScroll={false}
         panOnScroll={false}
-        zoomOnPinch={true}
+        panOnDrag={true}
+        zoomOnPinch={false}
         zoomOnDoubleClick={false}
-        className="bg-transparent"
+        zoomActivationKeyCode={null}
+        panActivationKeyCode={null}
+        className="bg-transparent nowheel"
       >
 
         {/* Grid Background */}
