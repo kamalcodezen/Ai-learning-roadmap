@@ -9,6 +9,9 @@ export interface Milestone {
   estimatedTime: string;
   description: string;
   whyItMatters: string;
+  phase?: string;
+  hasProject?: boolean;
+  projectId?: string | null;
 }
 
 export interface LearningPathData {
