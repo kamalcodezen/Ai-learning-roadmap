@@ -21,9 +21,24 @@ export default function DashboardScrollProvider({ children }: DashboardScrollPro
       wrapper: wrapperRef.current,
       content: contentRef.current,
       autoRaf: true,
+      smoothWheel: true,
+      lerp: 0.1,
+      duration: 1.2,
+      orientation: "vertical",
+      gestureOrientation: "vertical",
     });
 
+    (window as unknown as { __dashboardLenis?: Lenis }).__dashboardLenis = lenis;
+
+    const handleResize = () => {
+      lenis.resize();
+    };
+
+    window.addEventListener("resize", handleResize);
+
     return () => {
+      window.removeEventListener("resize", handleResize);
+      delete (window as unknown as { __dashboardLenis?: Lenis }).__dashboardLenis;
       lenis.destroy();
     };
   }, []);
