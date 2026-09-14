@@ -1,4 +1,5 @@
 import JobRealityContent from "@/src/components/dashboard/learner/job-reality/JobRealityContent";
+import PlanGuard from "@/src/components/dashboard/shared/PlanGuard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +7,9 @@ export const metadata: Metadata = {
 };
 
 export default function JobRealityPage() {
-  return <JobRealityContent />;
+  return (
+    <PlanGuard requiredPlan="PLUS">
+      <JobRealityContent />
+    </PlanGuard>
+  );
 }
