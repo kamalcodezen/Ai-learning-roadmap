@@ -1,5 +1,5 @@
 import prisma from "../../../../lib/prisma.js";
-import { getRequiredSkillsForRole } from "../../career-alignment/services/career-skills.map.js";
+import { getRequiredSkillsForRole, getCanonicalRoleDefinition } from "../../career-alignment/services/career-skills.map.js";
 import { isMatchingSkill } from "../../assessments/services/skill-simulation.service.js";
 
 export const getSkillGaps = async (userId: string) => {
@@ -128,15 +128,51 @@ export const getSkillGaps = async (userId: string) => {
       ? "No assessment or project evidence recorded." 
       : `Current verified proficiency: ${Math.round(s.knowledgeScore)}%`;
 
-    // Match skill against active roadmap milestone unlocks or title using canonical skill matcher
-    const matchingMilestone = activeRoadmap?.milestones.find((m) =>
+    const canonicalRole = getCanonicalRoleDefinition(targetRole);
+
+    // 1. Direct match against active roadmap milestone unlocks or title
+    let matchingMilestone = activeRoadmap?.milestones.find((m) =>
       (m.unlocks || []).some((u: string) => isMatchingSkill(u, s.skillName)) ||
       isMatchingSkill(m.title, s.skillName)
     );
 
-    const href = matchingMilestone
-      ? `/dashboard/learner/learning-path?skill=${encodeURIComponent(s.skillName)}&milestone=${encodeURIComponent(matchingMilestone.id)}`
-      : `/dashboard/learner/learning-path?skill=${encodeURIComponent(s.skillName)}`;
+    // 2. If not matched directly, match via canonical role blueprint
+    if (!matchingMilestone && activeRoadmap?.milestones && activeRoadmap.milestones.length > 0) {
+      const canonicalIdx = canonicalRole.milestones.findIndex((cm) =>
+        (cm.skillsCovered || []).some((u) => isMatchingSkill(u, s.skillName)) ||
+        (cm.technologies || []).some((t) => isMatchingSkill(t, s.skillName)) ||
+        isMatchingSkill(cm.title, s.skillName) ||
+        cm.description.toLowerCase().includes(normSkill) ||
+        normSkill.includes(cm.title.toLowerCase())
+      );
+      if (canonicalIdx !== -1 && activeRoadmap.milestones[canonicalIdx]) {
+        matchingMilestone = activeRoadmap.milestones[canonicalIdx];
+      }
+    }
+
+    // 3. Fallback for fundamental / web / tooling skills (e.g. Live Server, HTTP, Git, HTML, DOM)
+    if (!matchingMilestone && activeRoadmap?.milestones && activeRoadmap.milestones.length > 0) {
+      const isFoundational = /live server|http|syntax|basics|git|html|css|terminal|editor|web fundamentals/i.test(normSkill);
+      if (isFoundational) {
+        matchingMilestone = activeRoadmap.milestones[0];
+      } else {
+        matchingMilestone = activeRoadmap.milestones.find((m) => m.status === "CURRENT") || activeRoadmap.milestones[0];
+      }
+    }
+
+    const targetMilestone = matchingMilestone || activeRoadmap?.milestones[0];
+    const isTargetLocked = targetMilestone && targetMilestone.status === "UPCOMING";
+    const activeFrontier = activeRoadmap?.milestones.find((m) => m.status === "CURRENT") || activeRoadmap?.milestones[0];
+
+    const recommendedAction = targetMilestone
+      ? isTargetLocked
+        ? `Unlock via ${activeFrontier?.title || "Stage 1"}`
+        : `Master in ${targetMilestone.title}`
+      : `Start ${s.skillName} Learning Path`;
+
+    const href = targetMilestone
+      ? `/dashboard/learner/learning-path?skill=${encodeURIComponent(s.skillName)}&milestone=${encodeURIComponent(targetMilestone.id)}&source=fix-gap`
+      : `/dashboard/learner/learning-path?skill=${encodeURIComponent(s.skillName)}&source=fix-gap`;
 
     const slug = normSkill.replace(/[^a-z0-9]/g, "-");
     deduplicatedGaps.push({
@@ -147,7 +183,7 @@ export const getSkillGaps = async (userId: string) => {
       reason,
       evidence,
       relatedAssessment: "Domain Assessment & Diagnostic",
-      recommendedAction: `Start ${s.skillName} Learning Path`,
+      recommendedAction,
       href
     });
   }
