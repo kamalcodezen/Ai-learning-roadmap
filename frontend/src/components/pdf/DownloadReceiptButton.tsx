@@ -12,6 +12,7 @@ interface DownloadReceiptButtonProps {
   amountTotal?: number | null;
   currency?: string | null;
   interval?: string | null;
+  className?: string;
 }
 
 interface CheckoutMetadata {
@@ -38,6 +39,7 @@ export const DownloadReceiptButton = ({
   amountTotal,
   currency,
   interval,
+  className,
 }: DownloadReceiptButtonProps) => {
   const [metadata] = useState<CheckoutMetadata>(readCheckoutMetadata);
 
@@ -65,7 +67,7 @@ export const DownloadReceiptButton = ({
     <PDFDownloadLink
       document={document}
       fileName={`receipt_${sessionId}.pdf`}
-      className="group relative inline-flex h-12 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full bg-foreground py-3 pl-5 pr-5 text-base font-medium text-background transition-colors duration-300 hover:bg-primary"
+      className={`group relative inline-flex h-12 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background transition-colors duration-300 hover:bg-primary sm:text-base ${className || ""}`}
     >
       {({ loading }) => (
         <>
