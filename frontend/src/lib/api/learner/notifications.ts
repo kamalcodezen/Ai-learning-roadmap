@@ -47,3 +47,12 @@ export const markNotificationAsRead = async (id: string) => {
 export const markAllNotificationsAsRead = async () => {
   return await serverMutation(`/api/notifications/read-all`, undefined, "PATCH");
 };
+
+export const clearAllNotifications = async () => {
+  return await serverMutation(`/api/notifications/clear-all`, undefined, "DELETE");
+};
+
+export const deleteNotification = async (id: string) => {
+  return await serverMutation(`/api/notifications/${id}`, undefined, "DELETE");
+};
+
