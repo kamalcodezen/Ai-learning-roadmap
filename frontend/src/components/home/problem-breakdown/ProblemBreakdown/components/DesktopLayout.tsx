@@ -43,12 +43,12 @@ export default function DesktopLayout({ states }: DesktopLayoutProps) {
       ref={containerRef}
       className="relative hidden h-[260vh] lg:block"
     >
-      {/* হেডার ও কন্টেন্ট একসাথে উপরে স্টিকি হয়ে থাকবে */}
+      {/* Header and content stick together at top */}
       <div className="sticky top-20 flex w-full flex-col justify-start pt-0 lg:pt-3 xl:pt-1 gap-6 mb-12">
-        {/* টপ হেডার যা এই সেকশনের সাথে সবসময় লক থাকবে */}
+        {/* Top header pinned with section */}
         <ProblemHeader />
 
-        {/* মেইন ক্যানভাস ও টাইমলাইন */}
+        {/* Main canvas and timeline */}
         <div className="flex w-full items-center justify-between gap-16">
           <BentoCanvas
             activeState={activeState}
