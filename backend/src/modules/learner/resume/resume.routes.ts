@@ -10,6 +10,7 @@ import {
 } from "./services/resume.service.js";
 import { scanUploadedResume } from "./services/resume-ai.service.js";
 import { requireAuth } from "../../../middlewares/auth.middleware.js";
+import { requirePlan } from "../../../middlewares/plan.middleware.js";
 
 const router = Router();
 
@@ -45,7 +46,7 @@ router.post("/save", requireAuth, async (req: Request, res: Response, next: Next
  * POST /api/resume/generate
  * 1-Click Auto-generate resume from learner's verified skills & projects
  */
-router.post("/generate", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
+router.post("/generate", requireAuth, requirePlan(["PLUS", "PRO"]), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId as string;
     const result = await generateAutoResume(userId);
@@ -59,7 +60,7 @@ router.post("/generate", requireAuth, async (req: Request, res: Response, next: 
  * POST /api/resume/scan
  * Run ATS compatibility scan
  */
-router.post("/scan", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
+router.post("/scan", requireAuth, requirePlan(["PLUS", "PRO"]), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId as string;
     const { jobDescription } = req.body || {};
@@ -111,7 +112,7 @@ router.post("/job-match", requireAuth, async (req: Request, res: Response, next:
  * Instant stateless ATS scan for uploaded resume file (PDF / TXT / DOC)
  * ZERO database writes — 100% in-memory calculation
  */
-router.post("/upload-scan", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
+router.post("/upload-scan", requireAuth, requirePlan(["PLUS", "PRO"]), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { textContent, base64Pdf, targetRole } = req.body || {};
     if (!textContent && !base64Pdf) {
