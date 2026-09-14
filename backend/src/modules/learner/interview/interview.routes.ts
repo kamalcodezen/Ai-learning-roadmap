@@ -9,6 +9,7 @@ import {
 } from "./services/interview.service.js";
 import { submitInterviewAnswerSchema } from "./schemas/interview.schema.js";
 import { requireAuth } from "../../../middlewares/auth.middleware.js";
+import { requirePlan } from "../../../middlewares/plan.middleware.js";
 
 const router = Router();
 
@@ -33,7 +34,8 @@ router.get("/session/:id", requireAuth, async (req: Request, res: Response, next
   }
 });
 
-router.post("/start", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
+// Starting mock interview requires PLUS or PRO plan
+router.post("/start", requireAuth, requirePlan(["PLUS", "PRO"]), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId as string;
     const mode = (req.body?.mode as string) || "TECHNICAL";
