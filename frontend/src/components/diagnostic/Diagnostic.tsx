@@ -21,6 +21,7 @@ import { BorderBeam } from "@/src/components/ui/border-beam";
 import { glowCardClass } from "@/src/components/dashboard/shared/cards";
 
 import { authClient } from "@/src/lib/auth-client";
+import { serverFetch } from "@/src/lib/core/server";
 
 import {
   completeDiagnosticAttempt,
@@ -32,6 +33,7 @@ import {
   getLatestDiagnosticResult,
   type DiagnosticQuestion,
 } from "@/src/lib/api/learner/diagnostic";
+import BrandLoader from "@/src/components/shared/BrandLoader";
 import DiagnosticResultView from "./DiagnosticResultView";
 
 type DiagnosticStatus =
@@ -42,12 +44,57 @@ type DiagnosticStatus =
   | "completed"
   | "error";
 
+interface RoutingStateResponse {
+  success: boolean;
+  data: {
+    onboardingCompleted: boolean;
+    diagnosticCompleted: boolean;
+  };
+}
+
 export default function Diagnostic() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const { data: session, isPending: isSessionLoading } =
     authClient.useSession();
+
+  const activeUser = session?.user;
+  const userRole = ((activeUser as { role?: string })?.role || "").toUpperCase();
+  const isAdmin = userRole === "ADMIN";
+
+  // Check onboarding & diagnostic routing state for non-admin learners
+  const {
+    data: routingState,
+    isLoading: isRoutingLoading,
+  } = useQuery({
+    queryKey: ["routingState", activeUser?.id],
+    queryFn: async () => {
+      const res = (await serverFetch("/api/career-profile/routing-state")) as RoutingStateResponse;
+      return res?.data;
+    },
+    enabled: !!activeUser && !isAdmin,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  // Protect diagnostic route:
+  // 1. Unauthenticated users -> /signin
+  // 2. Admin users -> /dashboard/admin/dashboard
+  // 3. Learners who haven't completed onboarding -> /onboarding
+  useEffect(() => {
+    if (isSessionLoading) return;
+    if (!activeUser) {
+      router.replace("/signin");
+      return;
+    }
+    if (isAdmin) {
+      router.replace("/dashboard/admin/dashboard");
+      return;
+    }
+    if (!isRoutingLoading && routingState && !routingState.onboardingCompleted) {
+      router.replace("/onboarding");
+    }
+  }, [isSessionLoading, activeUser, isAdmin, isRoutingLoading, routingState, router]);
 
   const [questions, setQuestions] = useState<DiagnosticQuestion[]>([]);
 
@@ -298,6 +345,7 @@ export default function Diagnostic() {
       const completeResponse = await completeDiagnosticAttempt(attemptId);
 
       if (session?.user?.id) {
+        queryClient.invalidateQueries({ queryKey: ["routingState"] });
         queryClient.invalidateQueries({ queryKey: ["dashboardData", session.user.id] });
         queryClient.invalidateQueries({ queryKey: ["careerTwin", session.user.id] });
         queryClient.invalidateQueries({ queryKey: ["skillGaps", session.user.id] });
@@ -387,48 +435,16 @@ export default function Diagnostic() {
   }
 
   // ============================================================
-  // SESSION LOADING
+  // SESSION & ROUTING LOADING
   // ============================================================
 
-  if (isSessionLoading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-background">
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          Loading your diagnostic...
-        </div>
-      </main>
-    );
+  if (isSessionLoading || (!isAdmin && isRoutingLoading)) {
+    return <BrandLoader message="Loading your diagnostic..." />;
   }
 
-  // ============================================================
-  // AUTH REQUIRED
-  // ============================================================
-
-  if (!session?.user?.id) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-background px-4">
-        <section className={`w-full max-w-lg ${glowCardClass} p-8 text-center`}>
-          <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
-            <Target className="h-6 w-6 text-primary" />
-          </div>
-
-          <h1 className="text-xl font-semibold">Sign in required</h1>
-
-          <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            Please sign in before starting your diagnostic.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => router.push("/signin")}
-            className="mt-6 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-secondary transition hover:opacity-90"
-          >
-            Go to Sign In
-          </button>
-        </section>
-      </main>
-    );
+  // Prevent UI flashing while redirects are taking effect
+  if (!activeUser || isAdmin || (!isAdmin && routingState && !routingState.onboardingCompleted)) {
+    return null;
   }
 
   // ============================================================
@@ -578,14 +594,7 @@ export default function Diagnostic() {
   // ============================================================
 
   if (status === "loading" || !currentQuestion) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-background">
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          Generating your personalized diagnostic...
-        </div>
-      </main>
-    );
+    return <BrandLoader message="Generating your personalized diagnostic..." />;
   }
 
   // ============================================================

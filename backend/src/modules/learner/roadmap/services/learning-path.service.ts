@@ -52,9 +52,19 @@ export function validateRoadmapCompleteness(
 ): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
 
-  if (!roadmap || !Array.isArray(roadmap.milestones) || roadmap.milestones.length < 5) {
+  const expectedMinStages = Math.max(5, canonicalRole.milestones.length - 1);
+  const expectedMaxStages = canonicalRole.milestones.length + 2;
+
+  if (!roadmap || !Array.isArray(roadmap.milestones) || roadmap.milestones.length < expectedMinStages) {
     errors.push(
-      `Roadmap has only ${roadmap?.milestones?.length || 0} milestones; complete role curriculum requires multiple progressive stages (minimum 5).`
+      `Roadmap has only ${roadmap?.milestones?.length || 0} milestones; complete role curriculum for ${canonicalRole.roleName} requires at least ${expectedMinStages} progressive stages.`
+    );
+    return { valid: false, errors };
+  }
+
+  if (roadmap.milestones.length > expectedMaxStages) {
+    errors.push(
+      `Roadmap has ${roadmap.milestones.length} milestones, which exceeds the focused curriculum limit (${expectedMaxStages}) for ${canonicalRole.roleName}.`
     );
     return { valid: false, errors };
   }
@@ -63,6 +73,8 @@ export function validateRoadmapCompleteness(
   const hasFoundations = roadmap.milestones.some(
     (m: any) =>
       m.phase === "FOUNDATIONS" ||
+      m.type === "FOUNDATIONS" ||
+      m.type === "CORE_CONCEPTS" ||
       (m.title && /foundation|basics|fundamentals|core principles/i.test(m.title))
   );
   if (!hasFoundations) {
@@ -73,8 +85,11 @@ export function validateRoadmapCompleteness(
   const hasProjectsOrPortfolio = roadmap.milestones.some(
     (m: any) =>
       m.phase === "PRACTICAL_PROJECTS" ||
+      m.type === "PRACTICAL_PROJECTS" ||
       m.phase === "PRODUCTION_PORTFOLIO" ||
+      m.type === "PRODUCTION_PORTFOLIO" ||
       m.phase === "JOB_READINESS" ||
+      m.type === "JOB_READINESS" ||
       (m.title && /project|capstone|portfolio|case study/i.test(m.title)) ||
       Boolean(m.projectDeliverable)
   );
@@ -87,6 +102,7 @@ export function validateRoadmapCompleteness(
   const allRoadmapSkills: string[] = roadmap.milestones.flatMap((m: any) => [
     ...(m.skillsCovered || []),
     ...(m.technologies || []),
+    ...(m.unlocks || []),
   ]);
 
   if (canonicalCriticalSkills.length > 0) {
@@ -211,35 +227,75 @@ export const getOrGenerateLearningPath = async (userId: string) => {
   });
 
   // 3. Check for existing active roadmap
-  const existingRoadmap = await prisma.roadmap.findFirst({
+  let existingRoadmap = await prisma.roadmap.findFirst({
     where: {
       userId,
       status: "ACTIVE",
-      targetRole: { in: [targetRole, profile.targetRole, profile.targetRoleName, canonicalRole.roleName].filter(Boolean) as string[] },
     },
     include: {
       milestones: {
         orderBy: { order: "asc" },
       },
     },
+    orderBy: { createdAt: "desc" },
   });
 
-  if (existingRoadmap && existingRoadmap.milestones.length >= 5) {
-    const completenessCheck = validateRoadmapCompleteness(existingRoadmap, targetRole, canonicalRole);
-    if (completenessCheck.valid) {
-      return formatLearningPathResponse(existingRoadmap, targetRole);
+  // If no ACTIVE roadmap found, check if a previous roadmap exists for this user to restore their progress
+  if (!existingRoadmap) {
+    const previousRoadmap = await prisma.roadmap.findFirst({
+      where: { userId },
+      include: {
+        milestones: {
+          orderBy: { order: "asc" },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (previousRoadmap && previousRoadmap.milestones.length > 0) {
+      await prisma.roadmap.update({
+        where: { id: previousRoadmap.id },
+        data: { status: "ACTIVE" },
+      });
+      existingRoadmap = previousRoadmap;
     }
   }
 
-  // If existing roadmap was incomplete, legacy, or missing, archive older roadmaps
+  const isMatchingRole = (rRole?: string | null) => {
+    if (!rRole) return false;
+    const cleanRoadmap = rRole.toLowerCase().trim();
+    const cleanTarget = targetRole.toLowerCase().trim();
+    const cleanCanonical = canonicalRole.roleName.toLowerCase().trim();
+    if (cleanRoadmap === cleanTarget || cleanRoadmap === cleanCanonical) return true;
+    return canonicalRole.aliases.some((a) => a.toLowerCase().trim() === cleanRoadmap);
+  };
+
+  // If existing active roadmap matches the learner's current target role, PERSIST IT PERMANENTLY!
+  // Never re-generate with AI or wipe completed milestones on page visits or route transitions.
+  if (existingRoadmap && isMatchingRole(existingRoadmap.targetRole) && existingRoadmap.milestones.length > 0) {
+    return await formatLearningPathResponse(existingRoadmap, existingRoadmap.targetRole || targetRole);
+  }
+
+  // 4. Archive any old roadmaps before creating the new complete curriculum
   await prisma.roadmap.updateMany({
     where: { userId, status: "ACTIVE" },
     data: { status: "ARCHIVED" },
   });
 
-  // 4. Construct AI Prompt focused purely on the CANONICAL ROLE CURRICULUM
+  // 5. Construct AI Prompt anchored strictly to the CANONICAL ROLE BLUEPRINT
+  const canonicalBlueprint = canonicalRole.milestones
+    .map(
+      (m, idx) => `Stage ${idx + 1}: "${m.title}" [Phase: ${m.phase}]
+- Focus: ${m.description}
+- Skills: ${m.skillsCovered.join(", ")}
+- Technologies: ${m.technologies.join(", ")}
+- Strategic Importance: ${m.whyItMatters}
+- Hands-on Deliverable: ${m.projectDeliverable || "Concrete practical deliverable"}`
+    )
+    .join("\n\n");
+
   const prompt = `
-You are the Chief Curriculum Architect for AI Pather. Generate a complete, professional learning roadmap for the target role: "${canonicalRole.roleName}".
+You are the Chief Curriculum Architect for AI Pather. Generate the complete, definitive learning roadmap for the target role: "${canonicalRole.roleName}".
 
 TARGET ROLE SPECIFICATION:
 - Role: ${canonicalRole.roleName}
@@ -248,20 +304,16 @@ TARGET ROLE SPECIFICATION:
 - Learner Experience Level: ${profile.experienceLevel}
 - Available Learning Time: ${profile.weeklyAvailableHours || 15} hours/week
 
-CANONICAL CURRICULUM REQUIREMENTS:
-The roadmap must represent the COMPLETE learning journey required to achieve job-readiness for this role:
-1. FOUNDATIONS: Core principles, environment setup, fundamental syntax/tools.
-2. CORE_CONCEPTS: Domain architecture, primary frameworks, component lifecycles, and data modeling.
-3. INTERMEDIATE_SYSTEMS: Security, state management, relational databases, backend APIs, or domain workflows.
-4. ADVANCED_ARCHITECTURE: Scalability, performance optimization, concurrency, or advanced domain tools.
-5. PRACTICAL_PROJECTS: End-to-end verified project deliverable.
-6. JOB_READINESS: Production capstone, portfolio presentation, and technical interview readiness.
+CANONICAL ROLE CURRICULUM BLUEPRINT (${canonicalRole.milestones.length} progressive stages for ${canonicalRole.roleName}):
+${canonicalBlueprint}
 
-CRITICAL INSTRUCTIONS:
-- You MUST generate a complete curriculum tailored specifically to ${canonicalRole.roleName}.
-- Do NOT output generic placeholder milestones.
-- Do NOT restrict the curriculum to only 5 items if the role requires comprehensive coverage. Generate between 6 and 9 progressive milestones.
-- Every milestone MUST have a clear title, phase, skillsCovered, technologies, realistic estimatedTime, description, whyItMatters, and projectDeliverable.
+CRITICAL CURRICULUM INTEGRITY RULES (STRICT):
+1. COMPLETE ROLE COVERAGE: Generate the exact, comprehensive learning path for "${canonicalRole.roleName}".
+2. EXACT NATURAL STAGES - NO CUTS, NO BLOAT: You must faithfully follow the ${canonicalRole.milestones.length} progressive stages defined in the CANONICAL ROLE CURRICULUM BLUEPRINT above.
+   - Do NOT cut corners or omit critical stages (every stage in the blueprint is essential for job readiness).
+   - Do NOT add unnecessary, arbitrary, or bloated extra stages. Output exactly ${canonicalRole.milestones.length} progressive milestones.
+3. PERSONALIZATION: Tailor each milestone's descriptions, learning pace (estimatedTime), and hands-on deliverables to the learner's experience level (${profile.experienceLevel}) and weekly study time (${profile.weeklyAvailableHours || 15} hours/week).
+4. PROJECT DELIVERABLE: Every milestone MUST have a tangible projectDeliverable and whyItMatters explaining its career impact.
 
 Format ONLY as valid JSON matching this schema:
 {
@@ -390,23 +442,67 @@ Please fix these issues and regenerate the COMPLETE, professional roadmap JSON f
     },
   });
 
-  return formatLearningPathResponse(savedRoadmap, targetRole);
+  return await formatLearningPathResponse(savedRoadmap, targetRole);
 };
 
-export function formatLearningPathResponse(roadmap: any, targetRole: string) {
+export async function formatLearningPathResponse(roadmap: any, targetRole: string) {
   const canonicalRole = getCanonicalRoleDefinition(targetRole);
 
-  const milestones = (roadmap.milestones || []).map((m: any) => ({
-    id: m.id,
-    title: m.title,
-    status: m.status.toLowerCase(), // completed, current, upcoming
-    progress: m.status === "COMPLETED" ? 100 : m.status === "CURRENT" ? 15 : 0,
-    skillsCovered: m.unlocks || [],
-    estimatedTime: m.estimatedTime || "2-3 weeks",
-    description: m.description || "",
-    whyItMatters: m.why || "",
-    phase: m.type || "CORE_CONCEPTS",
-  }));
+  const userProjects = roadmap.userId
+    ? await prisma.project.findMany({
+        where: { userId: roadmap.userId },
+        select: { id: true, title: true, specification: true },
+      })
+    : [];
+
+  const milestones = (roadmap.milestones || []).map((m: any) => {
+    const cleanTitle = (m.title || "").toLowerCase().trim();
+    const matchedProject = userProjects.find((p) => {
+      const spec = p.specification as any;
+      if (spec?.milestoneId && spec.milestoneId === m.id) return true;
+      const specTitle = (spec?.milestoneTitle || "").toLowerCase().trim();
+      if (
+        specTitle &&
+        (specTitle === cleanTitle ||
+          specTitle.includes(cleanTitle) ||
+          cleanTitle.includes(specTitle))
+      )
+        return true;
+      const forContext = (spec?.generatedForContext || "").toLowerCase().trim();
+      if (
+        forContext &&
+        (forContext.includes(cleanTitle) || cleanTitle.includes(forContext))
+      )
+        return true;
+      const obj = (spec?.primaryLearningObjective || "").toLowerCase().trim();
+      if (
+        obj &&
+        (obj === cleanTitle || obj.includes(cleanTitle) || cleanTitle.includes(obj))
+      )
+        return true;
+      const pTitle = (p.title || "").toLowerCase().trim();
+      if (
+        pTitle &&
+        (pTitle.includes(cleanTitle) || cleanTitle.includes(pTitle))
+      )
+        return true;
+      return false;
+    });
+
+    return {
+      id: m.id,
+      title: m.title,
+      status: m.status.toLowerCase(), // completed, current, upcoming
+      progress: m.status === "COMPLETED" ? 100 : m.status === "CURRENT" ? 15 : 0,
+      skillsCovered: m.unlocks || [],
+      estimatedTime: m.estimatedTime || "2-3 weeks",
+      description: m.description || "",
+      whyItMatters: m.why || "",
+      phase: m.type || "CORE_CONCEPTS",
+      hasProject: Boolean(matchedProject),
+      projectId: matchedProject?.id || null,
+    };
+  });
 
   const completedCount = milestones.filter((m: any) => m.status === "completed").length;
   const overallProgress = milestones.length > 0 ? Math.round((completedCount / milestones.length) * 100) : 0;
@@ -435,6 +531,19 @@ export const completeMilestone = async (userId: string, milestoneId: string) => 
   if (milestone.roadmap.userId !== userId) throw new Error("Unauthorized");
   if (milestone.status === "COMPLETED") throw new Error("Milestone already completed");
 
+  // Verify prerequisite milestones are completed (sequential unlocking enforcement)
+  const uncompletedPrerequisite = await prisma.milestone.findFirst({
+    where: {
+      roadmapId: milestone.roadmapId,
+      order: { lt: milestone.order },
+      status: { not: "COMPLETED" },
+    },
+  });
+
+  if (uncompletedPrerequisite) {
+    throw new Error("Cannot complete this milestone: previous prerequisite milestones must be completed first");
+  }
+
   // 1. Mark this milestone as COMPLETED
   await prisma.milestone.update({
     where: { id: milestoneId },
@@ -457,41 +566,75 @@ export const completeMilestone = async (userId: string, milestoneId: string) => 
     });
   }
 
-  // 3. Add knowledge points for covered skills
+  // 3. Elevate proficiency and resolve skill gaps for covered skills
   if (milestone.unlocks && milestone.unlocks.length > 0) {
+    const userExistingSkills = await prisma.skillState.findMany({
+      where: { userId },
+    });
+
     for (const skill of milestone.unlocks) {
-      const existingSkill = await prisma.skillState.findUnique({
-        where: { userId_skillName: { userId, skillName: skill } }
-      });
-      let updatedSkill;
-      if (existingSkill) {
-        updatedSkill = await prisma.skillState.update({
-          where: { id: existingSkill.id },
-          data: { knowledgeScore: Math.min(100, existingSkill.knowledgeScore + 15) }
-        });
+      // Find exact or matching alias skill states
+      const matchingStates = userExistingSkills.filter((s) => isMatchingSkill(s.skillName, skill));
+      const targetScore = 75; // Passing proficiency threshold to resolve critical/moderate gaps
+
+      if (matchingStates.length > 0) {
+        for (const state of matchingStates) {
+          const newKnowledge = Math.max(targetScore, Math.min(100, state.knowledgeScore + 30));
+          const newPractice = Math.max(65, state.practiceScore);
+
+          const updatedSkill = await prisma.skillState.update({
+            where: { id: state.id },
+            data: {
+              knowledgeScore: newKnowledge,
+              practiceScore: newPractice,
+              lastReviewed: new Date(),
+            },
+          });
+
+          await prisma.skillStateHistory
+            .create({
+              data: {
+                userId,
+                skillName: state.skillName,
+                knowledgeScore: updatedSkill.knowledgeScore,
+                practiceScore: updatedSkill.practiceScore,
+                projectScore: updatedSkill.projectScore,
+                evidenceScore: updatedSkill.evidenceScore,
+              },
+            })
+            .catch((err) =>
+              console.error("Failed to record skill state history on milestone complete:", err)
+            );
+        }
       } else {
-        updatedSkill = await prisma.skillState.create({
+        // Create fresh skill state with proficient scores
+        const newSkill = await prisma.skillState.create({
           data: {
             userId,
             skillName: skill,
-            knowledgeScore: 15,
-            practiceScore: 0,
+            knowledgeScore: targetScore,
+            practiceScore: 65,
             projectScore: 0,
-            evidenceScore: 0
-          }
+            evidenceScore: 0,
+            lastReviewed: new Date(),
+          },
         });
-      }
 
-      await prisma.skillStateHistory.create({
-        data: {
-          userId,
-          skillName: skill,
-          knowledgeScore: updatedSkill.knowledgeScore,
-          practiceScore: updatedSkill.practiceScore,
-          projectScore: updatedSkill.projectScore,
-          evidenceScore: updatedSkill.evidenceScore,
-        }
-      }).catch((err) => console.error("Failed to record skill state history on milestone complete:", err));
+        await prisma.skillStateHistory
+          .create({
+            data: {
+              userId,
+              skillName: skill,
+              knowledgeScore: newSkill.knowledgeScore,
+              practiceScore: newSkill.practiceScore,
+              projectScore: newSkill.projectScore,
+              evidenceScore: newSkill.evidenceScore,
+            },
+          })
+          .catch((err) =>
+            console.error("Failed to record skill state history on milestone complete:", err)
+          );
+      }
     }
   }
 
@@ -544,5 +687,5 @@ export const completeMilestone = async (userId: string, milestoneId: string) => 
     }
   });
 
-  return formatLearningPathResponse(updatedRoadmap, updatedRoadmap.targetRole);
+  return await formatLearningPathResponse(updatedRoadmap, updatedRoadmap.targetRole);
 };

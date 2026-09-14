@@ -66,12 +66,17 @@ export const getNotificationPreferences = async (
       select: { aiAnalysis: true },
     });
 
-    const metadata = (profile?.aiAnalysis as any) || {};
-    const preferences = metadata.notificationPreferences || {
+    const metadata = (profile?.aiAnalysis as Record<string, any>) || {};
+    const defaultPrefs = {
       emailWeeklySummary: true,
       emailAchievementAlerts: true,
       emailMilestoneReminders: true,
       browserAlerts: false,
+    };
+
+    const preferences = {
+      ...defaultPrefs,
+      ...(metadata.notificationPreferences || {}),
     };
 
     return res.status(200).json({
@@ -94,38 +99,65 @@ export const updateNotificationPreferences = async (
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    const {
-      emailWeeklySummary = true,
-      emailAchievementAlerts = true,
-      emailMilestoneReminders = true,
-      browserAlerts = false,
-    } = req.body;
-
     const profile = await prisma.careerProfile.findUnique({
       where: { userId },
       select: { aiAnalysis: true },
     });
 
     const currentAnalysis = (profile?.aiAnalysis as Record<string, any>) || {};
-    const updatedAnalysis = {
-      ...currentAnalysis,
-      notificationPreferences: {
-        emailWeeklySummary: Boolean(emailWeeklySummary),
-        emailAchievementAlerts: Boolean(emailAchievementAlerts),
-        emailMilestoneReminders: Boolean(emailMilestoneReminders),
-        browserAlerts: Boolean(browserAlerts),
-      },
+    const existingPrefs = (currentAnalysis.notificationPreferences as Record<string, any>) || {
+      emailWeeklySummary: true,
+      emailAchievementAlerts: true,
+      emailMilestoneReminders: true,
+      browserAlerts: false,
     };
 
-    await prisma.careerProfile.update({
-      where: { userId },
-      data: { aiAnalysis: updatedAnalysis },
-    });
+    // Only update fields explicitly passed in req.body; preserve existing states for all other fields
+    const updatedPreferences = {
+      emailWeeklySummary:
+        req.body.emailWeeklySummary !== undefined
+          ? Boolean(req.body.emailWeeklySummary)
+          : Boolean(existingPrefs.emailWeeklySummary ?? true),
+      emailAchievementAlerts:
+        req.body.emailAchievementAlerts !== undefined
+          ? Boolean(req.body.emailAchievementAlerts)
+          : Boolean(existingPrefs.emailAchievementAlerts ?? true),
+      emailMilestoneReminders:
+        req.body.emailMilestoneReminders !== undefined
+          ? Boolean(req.body.emailMilestoneReminders)
+          : Boolean(existingPrefs.emailMilestoneReminders ?? true),
+      browserAlerts:
+        req.body.browserAlerts !== undefined
+          ? Boolean(req.body.browserAlerts)
+          : Boolean(existingPrefs.browserAlerts ?? false),
+    };
+
+    const updatedAnalysis = {
+      ...currentAnalysis,
+      notificationPreferences: updatedPreferences,
+    };
+
+    if (profile) {
+      await prisma.careerProfile.update({
+        where: { userId },
+        data: { aiAnalysis: updatedAnalysis },
+      });
+    } else {
+      await prisma.careerProfile.create({
+        data: {
+          userId,
+          targetRole: "SOFTWARE_ENGINEER",
+          targetRoleName: "Software Engineer",
+          experienceLevel: "BEGINNER",
+          aiAnalysis: updatedAnalysis,
+        },
+      });
+    }
 
     return res.status(200).json({
       success: true,
       message: "Notification preferences updated successfully",
-      data: updatedAnalysis.notificationPreferences,
+      data: updatedPreferences,
     });
   } catch (error) {
     next(error);

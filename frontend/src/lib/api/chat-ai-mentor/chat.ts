@@ -27,7 +27,7 @@ export interface ChatResponse {
 export const sendChatMessage = async (
   payload: ChatRequest,
 ): Promise<ChatResponse> => {
-  // ফ্রন্টএন্ড থেকে শুধু শেষ ৪টি প্রাসঙ্গিক মেসেজ যাবে
+  // Only the last 4 relevant messages are sent from frontend for optimization
   const optimizedPayload: ChatRequest = {
     ...payload,
     history: payload.history

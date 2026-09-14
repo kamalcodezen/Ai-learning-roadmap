@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Loader2,
   Brain,
   Wand2,
   Sparkles,
@@ -28,6 +27,7 @@ import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGu
 import { InterviewLobby } from "./InterviewLobby";
 import { InterviewLiveRoom } from "./InterviewLiveRoom";
 import { InterviewScorecard, QuestionAnswerPair, EvaluationData } from "./InterviewScorecard";
+import BrandLoader from "@/src/components/shared/BrandLoader";
 
 type InterviewView = "lobby" | "generating" | "live_room" | "scorecard" | "error";
 
@@ -215,6 +215,8 @@ export default function Interview() {
           queryClient.invalidateQueries({ queryKey: ["dashboardData", session.user.id] });
           queryClient.invalidateQueries({ queryKey: ["careerTwin", session.user.id] });
           queryClient.invalidateQueries({ queryKey: ["interviewHistory", session.user.id] });
+          queryClient.invalidateQueries({ queryKey: ["applicationReadiness", session.user.id] });
+          queryClient.invalidateQueries({ queryKey: ["readiness", session.user.id] });
         }
 
         // Build QuestionAnswerPair list
@@ -279,14 +281,7 @@ export default function Interview() {
 
   // Session loading screen
   if (isSessionLoading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center">
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin text-primary" />
-          Loading your mock interview studio...
-        </div>
-      </main>
-    );
+    return <BrandLoader message="Loading your mock interview studio..." />;
   }
 
   // Not signed in

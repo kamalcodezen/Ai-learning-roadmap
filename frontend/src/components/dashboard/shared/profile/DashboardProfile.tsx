@@ -295,6 +295,17 @@ export default function DashboardProfile({
                     {(activeUser as { role?: string } | undefined)?.role ||
                       roleLabel}
                   </span>
+                  {((activeUser as { role?: string } | undefined)?.role || "").toUpperCase() !== "ADMIN" && (
+                    <span className={`text-base sm:text-sm font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider h-5 flex items-center font-urbanist border ${
+                      ((activeUser as { plan?: string } | undefined)?.plan || "FREE").toUpperCase() === "PRO"
+                        ? "bg-amber-500/15 text-amber-500 dark:text-amber-400 border-amber-500/30"
+                        : ((activeUser as { plan?: string } | undefined)?.plan || "FREE").toUpperCase() === "PLUS"
+                        ? "bg-primary/20 text-primary border-primary/30"
+                        : "bg-muted text-muted-foreground border-border/50"
+                    }`}>
+                      {((activeUser as { plan?: string } | undefined)?.plan || "FREE").toUpperCase()} TIER
+                    </span>
+                  )}
                 </h1>
               )}
             </div>

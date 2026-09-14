@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { MapPin, Calendar, GraduationCap, Clock, Sliders, Check, X, Loader2 } from "lucide-react";
 import { getDashboardOverview } from "@/src/lib/api/learner/dashboard";
@@ -89,6 +90,7 @@ export default function LearnerProfilePage() {
   const targetRole = data?.career?.targetRole || "Learner";
   const weeklyHours = data?.career?.weeklyAvailableHours ?? 10;
   const experienceLevel = (data?.career?.experienceLevel as "BEGINNER" | "INTERMEDIATE") || "BEGINNER";
+  const userPlan = ((session?.user as { plan?: string } | undefined)?.plan || "FREE").toUpperCase();
 
   const handleOpenEdit = () => {
     setEditedRole(targetRole);
@@ -128,9 +130,36 @@ export default function LearnerProfilePage() {
             value: session?.user?.email || "learner@aipather.com",
           },
           {
+            icon: "👑",
+            label: "Subscription",
+            value: (
+              <span className="font-bold flex items-center gap-1.5">
+                <span
+                  className={
+                    userPlan === "PRO"
+                      ? "text-amber-500 dark:text-amber-400 font-extrabold"
+                      : userPlan === "PLUS"
+                      ? "text-primary font-extrabold"
+                      : "text-muted-foreground font-semibold"
+                  }
+                >
+                  {userPlan === "PRO" ? "Pro Member" : userPlan === "PLUS" ? "Plus Member" : "Go Tier (Free)"}
+                </span>
+                {userPlan !== "PRO" && (
+                  <Link
+                    href="/#pricing"
+                    className="text-xs text-primary underline ml-1 hover:text-secondary font-bold"
+                  >
+                    Upgrade
+                  </Link>
+                )}
+              </span>
+            ),
+          },
+          {
             icon: "📈",
             label: "Active Status",
-            value: <span className="text-green-500 font-bold">Verified</span>,
+            value: <span className="text-emerald-500 font-bold">Verified</span>,
           },
           {
             icon: "🎯",

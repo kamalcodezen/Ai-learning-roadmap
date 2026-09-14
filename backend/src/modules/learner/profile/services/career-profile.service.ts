@@ -4,7 +4,7 @@ import type { CareerProfileInput } from "../schemas/career-profile.schema.js";
 export const upsertCareerProfile = async (input: CareerProfileInput) => {
   const { userId, ...profileData } = input;
 
-  // আগে নিশ্চিত করছি Better Auth-এর user database-এ আছে
+  // Ensure user exists in database
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -30,7 +30,7 @@ export const upsertCareerProfile = async (input: CareerProfileInput) => {
     updateData.weeklyAvailableHours = profileData.weeklyAvailableHours;
   }
 
-  // Profile থাকলে update, না থাকলে create
+  // Update existing profile or create new one
   const careerProfile = await prisma.careerProfile.upsert({
     where: {
       userId,

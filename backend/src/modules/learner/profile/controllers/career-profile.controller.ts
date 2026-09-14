@@ -40,11 +40,14 @@ export const getRoutingState = async (req: Request, res: Response) => {
 
     const careerProfile = await prisma.careerProfile.findUnique({
       where: { userId },
+      select: { id: true },
     });
 
     const diagnosticAttempt = await prisma.diagnosticAttempt.findFirst({
       where: { userId, status: 'COMPLETED' },
+      select: { id: true },
     });
+
 
     return res.status(200).json({
       success: true,

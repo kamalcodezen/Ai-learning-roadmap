@@ -14,8 +14,8 @@ export type PricingPlan = {
 // yearlyPrice = monthlyPrice * 12 * 0.8 → keeps the header's "Save 20%" honest
 export const pricingPlans: PricingPlan[] = [
   {
-    slug: "starter",
-    name: "Starter",
+    slug: "go-ai-pather",
+    name: "Go",
     monthlyPrice: 0,
     yearlyPrice: 0,
     cta: "Get Started",
@@ -28,8 +28,8 @@ export const pricingPlans: PricingPlan[] = [
     description: "Find your baseline. Start free.",
   },
   {
-    slug: "pro-career-os",
-    name: "Pro Career OS",
+    slug: "plus-ai-pather",
+    name: "Plus",
     monthlyPrice: 29,
     yearlyPrice: 199,
     monthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PRICE_ID || "",
@@ -46,12 +46,14 @@ export const pricingPlans: PricingPlan[] = [
     popular: true,
   },
   {
-    slug: "enterprise",
-    name: "Enterprise",
+    slug: "pro-ai-pather",
+    name: "Pro",
     monthlyPrice: 99,
     yearlyPrice: 699,
-    monthlyPriceId: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_MONTHLY_PRICE_ID || "",
-    yearlyPriceId: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_YEARLY_PRICE_ID || "",
+    monthlyPriceId:
+      process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_MONTHLY_PRICE_ID || "",
+    yearlyPriceId:
+      process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_YEARLY_PRICE_ID || "",
     cta: "Get Plan",
     features: [
       "Unlimited Organization Members",

@@ -38,6 +38,7 @@ import {
 } from "@/src/lib/actions/learner/resume";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { ResumeAtsScorecard } from "./ResumeAtsScorecard";
+import BrandLoader from "@/src/components/shared/BrandLoader";
 import { ResumePreview } from "./ResumePreview";
 import { ResumeUploadScanner } from "./ResumeUploadScanner";
 
@@ -260,15 +261,7 @@ export function ResumeStudio() {
   };
 
   if (isResumeLoading || !resumeState) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3 p-8 rounded-lg bg-card border border-border shadow-sm text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-sm font-bold text-foreground">Loading Your AI Resume & ATS Studio...</p>
-          <p className="text-xs text-muted-foreground">Synchronizing live profile, verified skills, and roadmap milestones</p>
-        </div>
-      </main>
-    );
+    return <BrandLoader message="Loading Your AI Resume & ATS Studio..." />;
   }
 
   const targetRole = resumeState.targetRole || "Software Engineer";

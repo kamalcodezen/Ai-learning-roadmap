@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -10,27 +9,64 @@ import {
 } from "react-icons/fa6";
 import Link from "next/link";
 import Image from "next/image";
+import { authClient } from "@/src/lib/auth-client";
 
-const mainLinks = [
+const guestLinks = [
   { title: "How It Works", href: "/#how-it-works" },
   { title: "Features", href: "/#features" },
   { title: "About Us", href: "/about" },
   { title: "Login", href: "/signin" },
+  { title: "Sign Up", href: "/signup" },
+];
+
+const learnerLinks = [
+  { title: "Dashboard", href: "/dashboard/learner" },
+  { title: "Learning Path", href: "/dashboard/learner/learning-path" },
+  { title: "Assessments", href: "/dashboard/learner/assessments" },
+  { title: "Proof Graph", href: "/dashboard/learner/proof-graph" },
+  { title: "Portfolio", href: "/dashboard/learner/portfolio" },
+  { title: "About Us", href: "/about" },
+];
+
+const adminLinks = [
+  { title: "Dashboard", href: "/dashboard/admin/dashboard" },
+  { title: "User Management", href: "/dashboard/admin/users" },
+  { title: "Skill Health", href: "/dashboard/admin/skill-health" },
+  { title: "Analytics", href: "/dashboard/admin/analytics" },
+  { title: "About Us", href: "/about" },
 ];
 
 const socialLinks = [
-  { title: "Facebook", href: "#", icon: FaFacebook },
-  { title: "Instagram", href: "#", icon: FaInstagram },
-  { title: "Youtube", href: "#", icon: FaYoutube },
-  { title: "LinkedIn", href: "#", icon: FaLinkedin },
-];
-
-const bottomLinks = [
-  { title: "Privacy Policy", href: "#" },
-  { title: "Terms of Service", href: "#" },
+  { title: "Facebook", href: "https://facebook.com", icon: FaFacebook },
+  { title: "Instagram", href: "https://instagram.com", icon: FaInstagram },
+  { title: "Youtube", href: "https://youtube.com", icon: FaYoutube },
+  { title: "LinkedIn", href: "https://linkedin.com", icon: FaLinkedin },
 ];
 
 export default function Footer() {
+  const { data: session } = authClient.useSession();
+  const isAuthenticated = !!session?.user;
+  const userRole = (session?.user as { role?: string } | undefined)?.role?.toUpperCase() || "LEARNER";
+
+  const mainLinks = isAuthenticated
+    ? userRole === "ADMIN"
+      ? adminLinks
+      : learnerLinks
+    : guestLinks;
+
+  const bottomLinks = [
+    { title: "Privacy Policy", href: "/privacy" },
+    { title: "Terms of Service", href: "/terms" },
+    ...(isAuthenticated
+      ? [
+          {
+            title: "Settings",
+            href: userRole === "ADMIN" ? "/dashboard/admin/settings" : "/dashboard/learner/settings",
+          },
+        ]
+      : []),
+  ];
+
   return (
     <footer className="relative w-full flex flex-col items-center justify-center border-t border-white/10 bg-[#050510] bg-[radial-gradient(35%_128px_at_50%_0%,theme(backgroundColor.white/8%),transparent)] px-6 pt-0 pb-12 lg:pb-16 mt-auto overflow-hidden">
       <div className="absolute inset-x-0 -top-[1px] w-full h-40 pointer-events-none">
@@ -113,14 +149,16 @@ export default function Footer() {
           {/* Social Links (Centered) */}
           <div className="flex items-center justify-center gap-4 order-1 md:order-2 flex-1">
             {socialLinks.map((link) => (
-              <Link
+              <a
                 key={link.title}
                 href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-white/5 text-slate-400 hover:text-[var(--color-primary)] hover:bg-white/10 transition-all duration-300"
                 aria-label={link.title}
               >
                 {link.icon && <link.icon className="size-5" />}
-              </Link>
+              </a>
             ))}
           </div>
 

@@ -6,13 +6,75 @@ import Header, { type BillingPeriod } from "./Header";
 import { pricingPlans, type PricingPlan } from "./plans";
 import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import Button from "../../ui/button";
+import { authClient } from "@/src/lib/auth-client";
 
 const Pricing = () => {
   const router = useRouter();
   const [billing, setBilling] = useState<BillingPeriod>("monthly");
+  const { data: session } = authClient.useSession();
+
+  const user = session?.user as { plan?: string; role?: string } | undefined;
+  const userPlan = user?.plan?.toUpperCase() || "FREE";
+  const isLoggedIn = !!user;
 
   const getCurrentPrice = (plan: PricingPlan) =>
     billing === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
+
+  const getPlanStatus = (plan: PricingPlan) => {
+    if (!isLoggedIn) {
+      return { isCurrent: false, isIncluded: false, buttonText: plan.cta, disabled: false };
+    }
+
+    if (plan.slug === "go-ai-pather") {
+      if (userPlan === "FREE") {
+        return { isCurrent: true, isIncluded: false, buttonText: "Current Plan", disabled: true };
+      }
+      return { isCurrent: false, isIncluded: true, buttonText: "Included in Plan", disabled: true };
+    }
+
+    if (plan.slug === "plus-ai-pather") {
+      if (userPlan === "PLUS") {
+        return { isCurrent: true, isIncluded: false, buttonText: "Current Plan", disabled: true };
+      }
+      if (userPlan === "PRO") {
+        return { isCurrent: false, isIncluded: true, buttonText: "Included in Pro", disabled: true };
+      }
+      return { isCurrent: false, isIncluded: false, buttonText: plan.cta, disabled: false };
+    }
+
+    if (plan.slug === "pro-ai-pather") {
+      if (userPlan === "PRO") {
+        return { isCurrent: true, isIncluded: false, buttonText: "Current Plan", disabled: true };
+      }
+      return {
+        isCurrent: false,
+        isIncluded: false,
+        buttonText: userPlan === "PLUS" ? "Upgrade to Pro" : plan.cta,
+        disabled: false,
+      };
+    }
+
+    return { isCurrent: false, isIncluded: false, buttonText: plan.cta, disabled: false };
+  };
+
+  const handlePlanClick = (plan: PricingPlan) => {
+    const status = getPlanStatus(plan);
+    if (status.disabled) return;
+
+    if (!session?.user) {
+      router.push("/signin");
+      return;
+    }
+
+    // Free plan (Go): send directly to dashboard
+    if (plan.monthlyPrice === 0 || plan.slug === "go-ai-pather") {
+      const userRole = (user?.role || "LEARNER").toUpperCase();
+      router.push(userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner");
+      return;
+    }
+
+    router.push(`/checkout/${plan.slug}?billing=${billing}`);
+  };
 
   return (
     <section id="pricing" className="section-pad lg:px-10 relative w-full overflow-hidden px-4 sm:px-8 md:px-12">
@@ -46,7 +108,7 @@ const Pricing = () => {
                 )}
 
                 {/* Plan Name */}
-                <h3 className="pt-1 text-center text-base font-semibold text-foreground">
+                <h3 className="pt-1 text-3xl text-center  font-semibold text-foreground">
                   {plan.name}
                 </h3>
 
@@ -87,14 +149,18 @@ const Pricing = () => {
 
                 {/* Action */}
                 <div className="flex justify-center">
-                  <Button
-                    text={plan.cta}
-                    variant={plan.popular ? "primary" : "soft"}
-                    className="w-fit"
-                    onClick={() =>
-                      router.push(`/checkout/${plan.slug}?billing=${billing}`)
-                    }
-                  />
+                  {(() => {
+                    const status = getPlanStatus(plan);
+                    return (
+                      <Button
+                        text={status.buttonText}
+                        variant={status.disabled ? "soft" : plan.popular ? "primary" : "soft"}
+                        disabled={status.disabled}
+                        className={`w-fit ${status.disabled ? "!opacity-75 !cursor-not-allowed" : ""}`}
+                        onClick={() => handlePlanClick(plan)}
+                      />
+                    );
+                  })()}
                 </div>
 
                 {/* Description */}

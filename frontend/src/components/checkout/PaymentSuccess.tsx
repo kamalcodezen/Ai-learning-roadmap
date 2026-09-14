@@ -17,6 +17,7 @@ import {
 import Button from "../ui/button";
 import BackToHome from "../ui/BackToHome";
 import { BorderBeam } from "@/src/components/ui/border-beam";
+import { authClient } from "@/src/lib/auth-client";
 
 const DownloadReceiptButton = dynamic(
   () =>
@@ -58,6 +59,21 @@ export default function PaymentSuccess({
     }
   }, [sessionId]);
 
+  // Refresh session on successful checkout so user's tier is immediately active across the app
+  useEffect(() => {
+    if (isCancelled) return;
+    authClient
+      .getSession({
+        fetchOptions: {
+          headers: { "Cache-Control": "no-cache" },
+        },
+      })
+      .then(() => {
+        router.refresh();
+      })
+      .catch(() => {});
+  }, [isCancelled, router]);
+
   useEffect(() => {
     if (isCancelled) return;
 
@@ -98,8 +114,19 @@ export default function PaymentSuccess({
       : sessionId;
   }, [sessionId]);
 
+  const formattedPlanName = useMemo(() => {
+    if (!planName) return "AI Pather Plus";
+    if (planName.toLowerCase().includes("career os") || planName.toLowerCase().includes("plus")) {
+      return "AI Pather Plus";
+    }
+    if (planName.toLowerCase().includes("enterprise") || planName.toLowerCase().includes("pro")) {
+      return "AI Pather Pro";
+    }
+    return planName.replace(/-\s*Monthly/gi, "").replace(/-\s*Yearly/gi, "").trim();
+  }, [planName]);
+
   const rows = [
-    planName && { icon: Crown, label: "Plan", value: planName },
+    formattedPlanName && { icon: Crown, label: "Plan", value: formattedPlanName },
     amountLabel && { icon: CreditCard, label: "Amount", value: amountLabel },
     interval && {
       icon: CalendarDays,
@@ -115,7 +142,7 @@ export default function PaymentSuccess({
   }>;
 
   return (
-    <main className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#f4edff] px-5 py-16 dark:bg-[#120a1e]">
+    <main className="relative isolate flex h-screen items-center justify-center overflow-hidden bg-[#f4edff] px-5 py-20 dark:bg-[#120a1e] ">
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.08] dark:opacity-[0.04]"
         style={{
@@ -187,9 +214,7 @@ export default function PaymentSuccess({
           <h1 className="font-poppins text-3xl font-bold text-foreground sm:text-4xl">
             {isCancelled
               ? "Payment not completed — nothing was charged"
-              : planName
-                ? `Welcome to ${planName}`
-                : "Payment Successful"}
+              : `Welcome to ${formattedPlanName}`}
           </h1>
           <p className="mx-auto mt-3 max-w-md text-muted-foreground">
             {isCancelled ? (
@@ -233,38 +258,56 @@ export default function PaymentSuccess({
         )}
 
         {/* Actions */}
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 w-full">
           {isCancelled ? (
-            <>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
               <Button
                 text="Browse Plans"
                 onClick={() => router.push("/#pricing")}
-                className="w-fit md:w-auto"
+                className="w-full sm:w-auto justify-center text-sm sm:text-base px-5 sm:px-6"
               />
               <Button
                 text="Try Again"
                 variant="soft"
                 onClick={() => router.back()}
-                className="w-fit md:w-auto"
+                className="w-full sm:w-auto justify-center text-sm sm:text-base px-5 sm:px-6"
               />
-            </>
+            </div>
           ) : (
-            <>
-              <Button
-                text="Go to Homepage"
-                onClick={() => router.push("/")}
-                className="w-fit md:w-auto"
-              />
-              {sessionId && (
-                <DownloadReceiptButton
-                  sessionId={sessionId}
-                  planName={planName}
-                  amountTotal={amountTotal}
-                  currency={currency}
-                  interval={interval}
+            <div className="flex flex-col items-center justify-center gap-3 w-full">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
+                <Button
+                  text="Go to Dashboard"
+                  onClick={() => {
+                    router.push("/dashboard/learner");
+                    router.refresh();
+                  }}
+                  className="w-full sm:flex-1 justify-center text-sm sm:text-base px-5 sm:px-6 whitespace-nowrap"
                 />
+                <Button
+                  text="Go to Homepage"
+                  
+                  onClick={() => {
+                    router.push("/");
+                    router.refresh();
+                  }}
+                  className="w-full sm:flex-1 justify-center text-sm sm:text-base px-5 sm:px-6 whitespace-nowrap"
+                />
+              </div>
+
+              {sessionId && (
+                <div className="flex justify-center w-full">
+                  <DownloadReceiptButton
+                    sessionId={sessionId}
+                    planName={formattedPlanName}
+                    amountTotal={amountTotal}
+                    currency={currency}
+                    interval={interval}
+                    className="w-full sm:w-auto sm:min-w-[220px] justify-center text-center"
+                  />
+                </div>
               )}
-            </>
+            </div>
           )}
         </div>
 

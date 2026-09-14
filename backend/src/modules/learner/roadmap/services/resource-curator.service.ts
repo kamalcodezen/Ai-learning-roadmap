@@ -296,6 +296,19 @@ export const getCuratedResourcesForMilestone = async (
   if (!milestone) throw new Error("Milestone not found");
   if (milestone.roadmap.userId !== userId) throw new Error("Unauthorized");
 
+  // Verify prerequisite milestones are completed (upcoming milestones are locked)
+  const uncompletedPrerequisite = await prisma.milestone.findFirst({
+    where: {
+      roadmapId: milestone.roadmapId,
+      order: { lt: milestone.order },
+      status: { not: "COMPLETED" },
+    },
+  });
+
+  if (uncompletedPrerequisite) {
+    throw new Error("Learning resources are locked until previous prerequisite milestones are completed");
+  }
+
   // Check cache first
   const cached = resourceCache.get(milestoneId);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {

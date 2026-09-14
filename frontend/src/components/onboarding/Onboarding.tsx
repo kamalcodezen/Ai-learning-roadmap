@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import {
   careerTracks,
@@ -25,10 +26,11 @@ import { OnboardingFooter } from "./OnboardingFooter";
 
 export default function OnboardingPage() {
   // ============================================================
-  // ROUTER
+  // ROUTER & QUERY CLIENT
   // ============================================================
 
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   // ============================================================
   // AUTH SESSION
@@ -36,6 +38,19 @@ export default function OnboardingPage() {
 
   const { data: session, isPending: isSessionLoading } =
     authClient.useSession();
+
+  // Protect onboarding route: redirect unauthenticated users to signin, admins to admin dashboard
+  useEffect(() => {
+    if (isSessionLoading) return;
+    if (!session?.user) {
+      router.replace("/signin");
+      return;
+    }
+    const userRole = ((session.user as { role?: string })?.role || "").toUpperCase();
+    if (userRole === "ADMIN") {
+      router.replace("/dashboard/admin/dashboard");
+    }
+  }, [isSessionLoading, session?.user, router]);
 
   // ============================================================
   // STATE
@@ -164,6 +179,9 @@ export default function OnboardingPage() {
       const response = await onboardingCareerProfile(onboardingData);
 
       console.log("Career profile saved successfully:", response);
+
+      // Invalidate routing state so guards know onboarding is done
+      queryClient.invalidateQueries({ queryKey: ["routingState"] });
 
       // --------------------------------------------------------
       // FINAL ONBOARDING FLOW

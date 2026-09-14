@@ -555,6 +555,11 @@ export const auth = betterAuth({
         // নতুন user-এর default role
         defaultValue: "LEARNER",
       },
+      plan: {
+        // user-এর সাবস্ক্রিপশন প্ল্যান: FREE, PLUS, PRO
+        type: "string",
+        defaultValue: "FREE",
+      },
     },
   },
 
