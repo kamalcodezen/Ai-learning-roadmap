@@ -25,6 +25,7 @@ export interface NavLink {
   href: string;
   label: string;
   icon: LucideIcon;
+  requiredPlan?: "PLUS" | "PRO";
 }
 
 export interface NavSection {
@@ -110,17 +111,17 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
     {
       title: "LEARN",
       items: [
-        { href: `${learnerPrefix}/learning-path`, label: "My Roadmap", icon: Route },
+        { href: `${learnerPrefix}/learning-path`, label: "My Roadmap", icon: Route }, // সম্পূর্ণ ফ্রি
         { href: `${learnerPrefix}/skill-gaps`, label: "Skill Gaps", icon: Target },
-        { href: `${learnerPrefix}/assessments`, label: "Assessments", icon: ClipboardCheck },
+        { href: `${learnerPrefix}/assessments`, label: "Assessments", icon: ClipboardCheck, requiredPlan: "PLUS" },
         { href: `${learnerPrefix}/portfolio`, label: "Projects", icon: FolderKanban },
-        { href: `${learnerPrefix}/interview`, label: "Mock Interview", icon: Mic },
+        { href: `${learnerPrefix}/interview`, label: "Mock Interview", icon: Mic, requiredPlan: "PLUS" },
       ],
     },
     {
       title: "PROVE",
       items: [
-        { href: `${learnerPrefix}/proof-graph`, label: "Proof Graph", icon: GitMerge },
+        { href: `${learnerPrefix}/proof-graph`, label: "Proof Graph", icon: GitMerge, requiredPlan: "PRO" },
         { href: `${learnerPrefix}/career-twin`, label: "Career Twin", icon: UserCheck },
         { href: `${learnerPrefix}/progress`, label: "Progress", icon: TrendingUp },
       ],
@@ -128,10 +129,10 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
     {
       title: "CAREER",
       items: [
-        { href: `${learnerPrefix}/resume`, label: "AI Resume & ATS", icon: FileText },
-        { href: `${learnerPrefix}/job-reality`, label: "Job Reality", icon: Briefcase },
+        { href: `${learnerPrefix}/resume`, label: "AI Resume & ATS", icon: FileText, requiredPlan: "PLUS" },
+        { href: `${learnerPrefix}/job-reality`, label: "Job Reality", icon: Briefcase, requiredPlan: "PLUS" },
         { href: `${learnerPrefix}/career-alignment`, label: "Career Alignment", icon: Map },
-        { href: `${learnerPrefix}/career-intelligence`, label: "Career Intelligence", icon: BrainCircuit },
+        { href: `${learnerPrefix}/career-intelligence`, label: "Career Intelligence", icon: BrainCircuit, requiredPlan: "PRO" },
         { href: `${learnerPrefix}/application-readiness`, label: "Application Readiness", icon: ClipboardCheck },
       ],
     },
