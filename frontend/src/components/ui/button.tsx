@@ -2,12 +2,13 @@ import { ReactNode } from "react";
 import { GoArrowUpRight } from "react-icons/go";
 
 interface ButtonProps {
-  text: string;
+  text: ReactNode;
   href?: string;
   onClick?: () => void;
   icon?: ReactNode;
   variant?: "primary" | "soft";
   className?: string;
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -17,6 +18,7 @@ export default function Button({
   icon,
   variant = "primary",
   className = "",
+  disabled = false,
 }: ButtonProps) {
   const content = (
     <>
@@ -79,6 +81,11 @@ export default function Button({
     transition-colors
     duration-300
     ${
+      disabled
+        ? "opacity-60 cursor-not-allowed pointer-events-none select-none"
+        : ""
+    }
+    ${
       variant === "primary"
         ? "bg-foreground text-background"
         : "border border-border bg-card-soft text-foreground shadow-sm"
@@ -86,7 +93,7 @@ export default function Button({
     ${className}
   `;
 
-  if (href) {
+  if (href && !disabled) {
     return (
       <a href={href} className={classes}>
         {content}
@@ -95,7 +102,7 @@ export default function Button({
   }
 
   return (
-    <button type="button" onClick={onClick} className={classes}>
+    <button type="button" onClick={disabled ? undefined : onClick} disabled={disabled} className={classes}>
       {content}
     </button>
   );

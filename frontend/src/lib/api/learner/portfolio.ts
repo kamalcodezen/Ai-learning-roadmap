@@ -12,6 +12,10 @@ export interface ProjectSpecification {
   summary?: string;
   primaryLearningObjective?: string;
   generatedForContext?: string;
+  milestoneTitle?: string;
+  milestoneId?: string;
+  skill?: string;
+  roadmapTitle?: string;
   problemBeingSolved?: string;
   whyItMatters?: string;
   coreRequirements?: string[];

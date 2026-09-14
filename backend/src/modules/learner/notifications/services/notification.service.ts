@@ -78,3 +78,26 @@ export const markAllAsRead = async (userId: string) => {
 
   return { updatedCount: result.count };
 };
+
+export const clearAllNotifications = async (userId: string) => {
+  const result = await prisma.notification.deleteMany({
+    where: { userId },
+  });
+
+  return { deletedCount: result.count };
+};
+
+export const deleteNotification = async (userId: string, notificationId: string) => {
+  const existing = await prisma.notification.findUnique({
+    where: { id: notificationId },
+  });
+
+  if (!existing || existing.userId !== userId) {
+    throw new Error("Notification not found");
+  }
+
+  return prisma.notification.delete({
+    where: { id: notificationId },
+  });
+};
+

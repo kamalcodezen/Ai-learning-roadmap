@@ -51,6 +51,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const formData = await req.formData()
     const priceId = formData.get('priceId') as string
+    const customerEmail = (formData.get('customerEmail') as string) || undefined
+    const userId = (formData.get('userId') as string) || ''
+    const planName = (formData.get('planName') as string) || ''
+    const billing = (formData.get('billing') as string) || 'monthly'
 
     if (!priceId) {
       return NextResponse.json({ error: 'Missing priceId' }, { status: 400 })
@@ -60,6 +64,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const origin = headersList.get('origin') ?? ''
 
     const session: Stripe.Checkout.Session = await stripe.checkout.sessions.create({
+      customer_email: customerEmail,
+      metadata: {
+        userId,
+        customerEmail: customerEmail || '',
+        planName,
+        billing,
+      },
+      subscription_data: {
+        metadata: {
+          userId,
+          customerEmail: customerEmail || '',
+          planName,
+          billing,
+        },
+      },
       line_items: [
         {
           price: priceId,

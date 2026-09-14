@@ -6,7 +6,7 @@ import { optionalAuth } from "../../../middlewares/auth.middleware.js";
 const router = Router();
 
 
-// express-rate-limit প্রতি মিনিটে সর্বোচ্চ ১০০টি রিকোয়েস্টের সাপোর্ট
+// Express rate limit: maximum 100 requests per minute
 const chatRateLimiter = rateLimit({
   windowMs: 60 * 1000,
   limit: 100,

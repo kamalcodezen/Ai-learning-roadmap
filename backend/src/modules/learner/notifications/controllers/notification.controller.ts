@@ -63,3 +63,31 @@ export const markAllAsRead = async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 };
+
+export const clearAllNotifications = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = getUserId(req);
+    const result = await notificationService.clearAllNotifications(userId);
+    res.json({ success: true, message: "All notifications cleared", data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteNotification = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = getUserId(req);
+    const notificationId = req.params.id as string;
+    if (!notificationId) {
+      return res.status(400).json({ success: false, error: "Notification ID required" });
+    }
+    const result = await notificationService.deleteNotification(userId, notificationId);
+    res.json({ success: true, message: "Notification deleted", data: result });
+  } catch (error: any) {
+    if (error.message === "Notification not found") {
+      return res.status(404).json({ success: false, error: "Notification not found" });
+    }
+    next(error);
+  }
+};
+

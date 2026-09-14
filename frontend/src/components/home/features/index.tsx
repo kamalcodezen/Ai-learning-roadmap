@@ -16,7 +16,7 @@ export default function FeaturesSection() {
   };
 
   return (
-    <section className="section-pad relative w-full overflow-hidden px-4 sm:px-8 md:px-12">
+    <section id="features" className="section-pad relative w-full overflow-hidden px-4 sm:px-8 md:px-12">
         <GridPattern
                 width={45}
                 height={45}

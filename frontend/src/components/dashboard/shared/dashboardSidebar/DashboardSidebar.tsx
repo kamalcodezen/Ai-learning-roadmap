@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Variants } from "motion/react";
+import Link from "next/link";
+import { Sparkles, Zap } from "lucide-react";
 
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { getBottomNavItems } from "../navigation";
@@ -148,7 +150,7 @@ export default function DashboardSidebar() {
 
               {/* Fixed profile card */}
               <div className="shrink-0 px-4 pt-2 pb-2">
-                <ProfileCard name={user?.name} email={user?.email} />
+                <ProfileCard name={user?.name} email={user?.email} plan={(user as { plan?: string })?.plan} />
               </div>
 
               {/* Scrollable navigation — independent scroll zone */}
@@ -162,6 +164,36 @@ export default function DashboardSidebar() {
                   onItemClick={closeDrawer}
                 />
               </div>
+
+              {/* Dynamic Plan Upgrade Banner for Mobile Drawer */}
+              {userRole.toUpperCase() !== "ADMIN" && ((user as { plan?: string })?.plan || "FREE").toUpperCase() !== "PRO" && (
+                <div className="px-4 py-2">
+                  <Link
+                    href="/#pricing"
+                    onClick={closeDrawer}
+                    className="group relative flex flex-col gap-1.5 overflow-hidden rounded-xl border border-primary/30 bg-[linear-gradient(to_bottom,rgba(159,84,247,0.12)_0%,rgba(133,35,245,0.06)_100%)] p-3 text-left transition-all hover:border-primary/60"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+                        {((user as { plan?: string })?.plan || "FREE").toUpperCase() === "PLUS" ? (
+                          <>
+                            <Sparkles className="size-3.5 text-primary" />
+                            Upgrade to Pro
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="size-3.5 text-primary" />
+                            Unlock All AI Features
+                          </>
+                        )}
+                      </span>
+                      <span className="rounded-full bg-primary/20 px-1.5 py-0.5 text-[9px] font-extrabold text-primary">
+                        {((user as { plan?: string })?.plan || "FREE").toUpperCase() === "PLUS" ? "PRO" : "PLUS"}
+                      </span>
+                    </div>
+                  </Link>
+                </div>
+              )}
 
               {/* Fixed footer */}
               <SignOutButton onSignOut={closeDrawer} />

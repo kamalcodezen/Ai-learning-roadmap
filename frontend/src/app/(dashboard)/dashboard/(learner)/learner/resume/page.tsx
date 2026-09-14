@@ -1,4 +1,5 @@
 import { ResumeStudio } from "@/src/components/resume/ResumeStudio";
+import PlanGuard from "@/src/components/dashboard/shared/PlanGuard";
 
 export const metadata = {
   title: "AI Resume & ATS Optimizer",
@@ -7,9 +8,11 @@ export const metadata = {
 
 const ResumePage = () => {
   return (
-    <div className="flex flex-col min-h-[94vh]">
-      <ResumeStudio />
-    </div>
+    <PlanGuard requiredPlan="PLUS">
+      <div className="flex flex-col min-h-[94vh]">
+        <ResumeStudio />
+      </div>
+    </PlanGuard>
   );
 };
 

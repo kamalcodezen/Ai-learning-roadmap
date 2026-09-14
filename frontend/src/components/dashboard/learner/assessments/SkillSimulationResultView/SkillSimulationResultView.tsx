@@ -292,7 +292,7 @@ export default function SkillSimulationResultView({ result, onRetake }: Props) {
           </p>
         </div>
         <DashboardButton
-          href={`/dashboard/learner/learning-path?skill=${encodeURIComponent(result.skill)}`}
+          href={`/dashboard/learner/learning-path?skill=${encodeURIComponent(result.skill)}&source=fix-gap`}
           text={
             <>
               Open Learning Path <ArrowRight className="w-3.5 h-3.5" />

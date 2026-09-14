@@ -75,7 +75,8 @@ export default function SignInForm({ onSwitch }: SignInFormProps) {
 
     try {
       const { data: sessionData } = await authClient.getSession();
-      if ((sessionData?.user as { role?: string })?.role === "ADMIN") {
+      const userRole = ((sessionData?.user as { role?: string })?.role || "").toUpperCase();
+      if (userRole === "ADMIN") {
         router.push("/dashboard/admin/dashboard");
         return;
       }
@@ -94,11 +95,13 @@ export default function SignInForm({ onSwitch }: SignInFormProps) {
         }
       }
     } catch (error) {
-      console.warn("Routing state API error. Falling back to dashboard.", error);
+      console.warn("Routing state API error. Redirecting to onboarding.", error);
+      router.push("/onboarding");
+      return;
     }
 
-    // Default: fully onboarded learner → go to dashboard
-    router.push("/");
+    // Default: fully onboarded learner → go to learner dashboard
+    router.push("/dashboard/learner");
   };
 
   return (

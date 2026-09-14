@@ -1,4 +1,5 @@
 import CareerIntelligenceCard from "@/src/components/dashboard/learner/career-intelligence/CareerIntelligenceCard";
+import PlanGuard from "@/src/components/dashboard/shared/PlanGuard";
 
 export const metadata = {
   title: "Career Intelligence | AI Learning Roadmap",
@@ -8,14 +9,16 @@ export const metadata = {
 
 export default function CareerIntelligencePage() {
   return (
-    <div className="flex flex-col gap-6 pb-4">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Career Intelligence</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          AI-powered career decision analytics tailored to your real progress and evidence.
-        </p>
+    <PlanGuard requiredPlan="PRO">
+      <div className="flex flex-col gap-6 pb-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Career Intelligence</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            AI-powered career decision analytics tailored to your real progress and evidence.
+          </p>
+        </div>
+        <CareerIntelligenceCard />
       </div>
-      <CareerIntelligenceCard />
-    </div>
+    </PlanGuard>
   );
 }

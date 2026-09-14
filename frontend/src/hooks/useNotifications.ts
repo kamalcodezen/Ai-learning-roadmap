@@ -6,6 +6,10 @@ import {
   getUnreadNotificationCount,
   markNotificationAsRead,
   markAllNotificationsAsRead,
+  clearAllNotifications,
+  deleteNotification,
+  type NotificationsResponse,
+  type NotificationItem,
 } from "@/src/lib/api/learner/notifications";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 
@@ -47,6 +51,73 @@ export function useNotifications(limit = 20) {
     },
   });
 
+  const clearAllMutation = useMutation({
+    mutationFn: () => clearAllNotifications(),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: NOTIFICATIONS_QUERY_KEY });
+      await queryClient.cancelQueries({ queryKey: UNREAD_COUNT_QUERY_KEY });
+
+      queryClient.setQueriesData<NotificationsResponse>(
+        { queryKey: NOTIFICATIONS_QUERY_KEY },
+        (old) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: {
+              ...old.data,
+              notifications: [],
+              total: 0,
+              unreadCount: 0,
+            },
+          };
+        }
+      );
+
+      queryClient.setQueriesData(
+        { queryKey: UNREAD_COUNT_QUERY_KEY },
+        { success: true, data: { unreadCount: 0 } }
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: UNREAD_COUNT_QUERY_KEY });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteNotification(id),
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: NOTIFICATIONS_QUERY_KEY });
+      await queryClient.cancelQueries({ queryKey: UNREAD_COUNT_QUERY_KEY });
+
+      queryClient.setQueriesData<NotificationsResponse>(
+        { queryKey: NOTIFICATIONS_QUERY_KEY },
+        (old) => {
+          if (!old?.data) return old;
+          const currentList = old.data.notifications || [];
+          const target = currentList.find((n: NotificationItem) => n.id === id);
+          const wasUnread = target && !target.isRead;
+          return {
+            ...old,
+            data: {
+              ...old.data,
+              notifications: currentList.filter((n: NotificationItem) => n.id !== id),
+              total: Math.max(0, (old.data.total || 0) - 1),
+              unreadCount: wasUnread
+                ? Math.max(0, (old.data.unreadCount || 0) - 1)
+                : old.data.unreadCount,
+            },
+          };
+        }
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: UNREAD_COUNT_QUERY_KEY });
+    },
+  });
+
+
   return {
     notifications: notificationsQuery.data?.data?.notifications || [],
     total: notificationsQuery.data?.data?.total || 0,
@@ -60,5 +131,9 @@ export function useNotifications(limit = 20) {
     isMarkingRead: markReadMutation.isPending,
     markAllAsRead: markAllReadMutation.mutate,
     isMarkingAllRead: markAllReadMutation.isPending,
+    clearAll: clearAllMutation.mutate,
+    isClearingAll: clearAllMutation.isPending,
+    deleteNotification: deleteMutation.mutate,
+    isDeleting: deleteMutation.isPending,
   };
 }
