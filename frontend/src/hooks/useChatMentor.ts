@@ -25,7 +25,7 @@ export function useChatMentor() {
     try {
       const response = await sendChatMessage({
         message: textToSend,
-        history: updatedMessages.slice(-4), // টোকেন অপ্টিমাইজেশন
+        history: updatedMessages.slice(-4), // Token optimization
       });
 
       const assistantMessage: ChatMessage = {
