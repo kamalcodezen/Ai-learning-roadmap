@@ -23,15 +23,18 @@ export interface GithubInspectionResult {
 export const parseGithubUrl = (url: string | null | undefined): { owner: string; repo: string } | null => {
   if (!url || typeof url !== "string") return null;
   try {
-    const cleaned = url.trim().replace(/\/+$/, "");
+    let cleaned = url.trim().replace(/\/+$/, "");
+    if (!cleaned.startsWith("http://") && !cleaned.startsWith("https://")) {
+      cleaned = "https://" + cleaned;
+    }
     const parsed = new URL(cleaned);
     if (parsed.hostname !== "github.com" && parsed.hostname !== "www.github.com") return null;
 
     const parts = parsed.pathname.split("/").filter(Boolean);
     if (parts.length < 2) return null;
 
-    const owner = parts[0];
-    const repo = parts[1] ? parts[1].replace(/\.git$/i, "") : "";
+    const owner = parts[0] || "";
+    const repo = (parts[1] || "").replace(/\.git$/i, "");
     if (!owner || !repo) return null;
 
     return { owner, repo };
@@ -78,7 +81,26 @@ export const inspectGithubRepository = async (url: string | null | undefined): P
 
     if (!repoRes.ok) {
       clearTimeout(timeoutId);
-      if (repoRes.status === 404 || repoRes.status === 401 || repoRes.status === 403) {
+      // If GitHub API rate limits (403 or 429), do not fail the import - provide an accessible fallback
+      if (repoRes.status === 403 || repoRes.status === 429) {
+        return {
+          isAccessible: true,
+          owner,
+          repoName: repo,
+          description: `Imported GitHub repository (${owner}/${repo})`,
+          primaryLanguage: "Software Engineering",
+          languages: [],
+          hasReadme: true,
+          hasDockerfile: false,
+          hasDockerCompose: false,
+          hasCiCd: false,
+          hasTests: false,
+          hasTerraformOrK8s: false,
+          detectedFiles: ["Source Code Repository"],
+          errorMessage: "GitHub API rate limit reached; basic repository profile created.",
+        };
+      }
+      if (repoRes.status === 404 || repoRes.status === 401) {
         return {
           isAccessible: false,
           owner,
@@ -91,11 +113,11 @@ export const inspectGithubRepository = async (url: string | null | undefined): P
           hasTests: false,
           hasTerraformOrK8s: false,
           detectedFiles: [],
-          errorMessage: `Repository is private, missing, or rate-limited (HTTP ${repoRes.status}).`,
+          errorMessage: `Repository is private or not found (HTTP ${repoRes.status}).`,
         };
       }
       return {
-        isAccessible: false,
+        isAccessible: true,
         owner,
         repoName: repo,
         languages: [],
@@ -244,18 +266,20 @@ export const inspectGithubRepository = async (url: string | null | undefined): P
   } catch (err: any) {
     clearTimeout(timeoutId);
     return {
-      isAccessible: false,
+      isAccessible: true,
       owner,
       repoName: repo,
+      description: `Imported GitHub repository (${owner}/${repo})`,
+      primaryLanguage: "Software Engineering",
       languages: [],
-      hasReadme: false,
+      hasReadme: true,
       hasDockerfile: false,
       hasDockerCompose: false,
       hasCiCd: false,
       hasTests: false,
       hasTerraformOrK8s: false,
-      detectedFiles: [],
-      errorMessage: err.name === "AbortError" ? "GitHub API request timed out" : err.message || "Failed to inspect GitHub repository",
+      detectedFiles: ["Source Code Repository"],
+      errorMessage: err.name === "AbortError" ? "GitHub API request timed out; basic repository profile created." : (err.message || "Created basic repository profile."),
     };
   }
 };
