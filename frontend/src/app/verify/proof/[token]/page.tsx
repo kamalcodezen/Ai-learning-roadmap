@@ -3,10 +3,10 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getPublicProofGraph } from "@/src/lib/api/learner/proof-graph";
+import BrandLoader from "@/src/components/shared/BrandLoader";
 import {
   AlertCircle,
   ExternalLink,
-  Loader2,
   Lock,
 } from "lucide-react";
 import Link from "next/link";
@@ -23,14 +23,7 @@ export default function PublicProofGraphPage() {
   });
 
   if (isLoading) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-background p-4">
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <Loader2 className="w-5 h-5 animate-spin text-primary" />
-          Verifying cryptographic proof credentials...
-        </div>
-      </main>
-    );
+    return <BrandLoader message="Verifying cryptographic proof credentials..." />;
   }
 
   if (error || !data) {
