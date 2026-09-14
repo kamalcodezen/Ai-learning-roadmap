@@ -16,7 +16,7 @@ export default function ProblemBreakdown() {
       <ProblemBreakdownStyles />
 
       <div className="global-pos px-4 sm:px-6 lg:px-8">
-        {/* শুধুমাত্র মোবাইলে দৃশ্যমান, ডেস্কটপে হাইড থাকবে */}
+        {/* Visible only on mobile, hidden on desktop */}
         <div className="block lg:hidden mt-2 sm:mt-3 md:mt-5">
           <ProblemHeader />
         </div>

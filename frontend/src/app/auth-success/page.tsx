@@ -3,7 +3,16 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
+import { serverFetch } from "@/src/lib/core/server";
 import { Spinner } from "@heroui/react";
+
+interface RoutingStateResponse {
+  success: boolean;
+  data: {
+    onboardingCompleted: boolean;
+    diagnosticCompleted: boolean;
+  };
+}
 
 export default function AuthSuccessPage() {
   const router = useRouter();
@@ -12,26 +21,33 @@ export default function AuthSuccessPage() {
   useEffect(() => {
     if (!isPending) {
       if (session?.user) {
-        // Check role if it exists, otherwise default to learner
-        const userRole = (session.user as { role?: string }).role || "learner";
+        const userRole = ((session.user as { role?: string }).role || "learner").toUpperCase();
 
-        if (userRole === "admin") {
-          // Admins bypass the diagnostic/onboarding entirely
-          router.push("/dashboard/admin");
+        if (userRole === "ADMIN") {
+          router.replace("/dashboard/admin/dashboard");
           return;
         }
 
-        // If the user was created within the last 15 seconds, they are new
-        const isNewUser = new Date().getTime() - new Date(session.user.createdAt).getTime() < 15000;
-        
-        if (isNewUser) {
-          router.push("/onboarding");
-        } else {
-          router.push("/dashboard/learner");
-        }
+        serverFetch("/api/career-profile/routing-state")
+          .then((res) => {
+            const data = (res as RoutingStateResponse)?.data;
+            if (data) {
+              if (!data.onboardingCompleted) {
+                router.replace("/onboarding");
+                return;
+              }
+              if (!data.diagnosticCompleted) {
+                router.replace("/diagnostic");
+                return;
+              }
+            }
+            router.replace("/dashboard/learner");
+          })
+          .catch(() => {
+            router.replace("/onboarding");
+          });
       } else {
-        // If no session, go back to sign in
-        router.push("/signin");
+        router.replace("/signin");
       }
     }
   }, [session, isPending, router]);

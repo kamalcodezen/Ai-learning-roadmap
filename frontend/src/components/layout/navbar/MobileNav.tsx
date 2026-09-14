@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -16,31 +17,83 @@ import {
   FiCreditCard,
   FiMoon,
 } from "react-icons/fi";
+import { Sparkles, Crown, Loader2 } from "lucide-react";
 import Logo from "./Logo";
 import Button from "../../ui/button";
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 import { authClient } from "@/src/lib/auth-client";
-import { getDropdownLinks } from "./profileDropdown";
+import { getDropdownLinks, getPlanBadge } from "./profileDropdown";
 import { getNavLinks } from "./NavLinks";
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [expandedSolutions, setExpandedSolutions] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const mobileNavRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.stopPropagation();
+    };
+    el.addEventListener("wheel", onWheel, { passive: true });
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+    };
+  }, [isOpen]);
+
+  // Close on outside click, touch, or Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        mobileNavRef.current &&
+        !mobileNavRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside, { passive: true });
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
 
   const { data: session } = authClient.useSession();
   const isAuthenticated = !!session?.user;
 
+  const sessionUser = session?.user as { role?: string; plan?: string; image?: string | null } | undefined;
   const user = {
     name: session?.user?.name || "User",
     email: session?.user?.email || "",
+    image: sessionUser?.image || null,
   };
 
-  const userRole = (session?.user as { role?: string })?.role?.toUpperCase() || "LEARNER";
+  const userRole = sessionUser?.role?.toUpperCase() || "LEARNER";
+  const userPlan = sessionUser?.plan?.toUpperCase() || "FREE";
   const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
   const profileLinks = getDropdownLinks(userRole, prefix);
   const navLinks = getNavLinks();
+
+  const planBadge = getPlanBadge(userPlan);
+  const PlanIcon = planBadge.icon;
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -79,11 +132,14 @@ export default function MobileNav() {
 
   const getProfileIcon = (label: string) => {
     switch (label) {
-      case "Profile":
-        return <FiUser className="size-4 text-primary" />;
       case "Dashboard":
+      case "Admin Dashboard":
         return <FiLayout className="size-4 text-primary" />;
+      case "Profile":
+      case "My Profile":
+        return <FiUser className="size-4 text-primary" />;
       case "Settings":
+      case "Settings & Billing":
         return <FiSettings className="size-4 text-primary" />;
       default:
         return <FiUser className="size-4 text-primary" />;
@@ -91,21 +147,41 @@ export default function MobileNav() {
   };
 
   return (
-    <div className="w-full flex justify-center relative mt-2 px-3">
-      <motion.div
-        layout
-        initial={false}
-        animate={{ borderRadius: isOpen ? 28 : 50 }}
-        transition={
-          isOpen
-            ? { duration: 0.3, ease: "easeOut" }
-            : { type: "spring", stiffness: 260, damping: 20 }
-        }
-        className="bg-card/90 dark:bg-[#191029]/95 backdrop-blur-xl border border-border/80 dark:border-primary/25 w-full max-w-sm mx-auto shadow-xl overflow-hidden flex flex-col z-50"
-        style={{
-          zIndex: isOpen ? 999 : 50,
-        }}
-      >
+    <>
+      {/* Backdrop overlay when open: tapping or clicking anywhere outside the navbar closes it */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setIsOpen(false)}
+            onTouchStart={() => setIsOpen(false)}
+            className="fixed inset-0 z-40 bg-black/40 dark:bg-black/60 backdrop-blur-[2px]"
+            aria-hidden="true"
+          />
+        )}
+      </AnimatePresence>
+
+      <div ref={mobileNavRef} className="w-full flex justify-center relative mt-2 px-3 z-50">
+        <motion.div
+          layout
+          initial={false}
+          animate={{ borderRadius: isOpen ? 28 : 50 }}
+          transition={
+            isOpen
+              ? { duration: 0.3, ease: "easeOut" }
+              : { type: "spring", stiffness: 260, damping: 20 }
+          }
+          data-lenis-prevent="true"
+          data-lenis-prevent-wheel="true"
+          className="bg-card/90 dark:bg-[#191029]/95 backdrop-blur-xl border border-border/80 dark:border-primary/25 w-full max-w-sm mx-auto shadow-xl overflow-hidden flex flex-col z-50"
+          style={{
+            zIndex: isOpen ? 999 : 50,
+          }}
+        >
+
         {/* Header Bar (Always visible) */}
         <div className="flex items-center justify-between w-full px-2 py-1.5">
           {/* Logo Section */}
@@ -155,26 +231,89 @@ export default function MobileNav() {
               style={{ originY: 0 }}
               className="overflow-hidden"
             >
-              <div className="flex flex-col gap-4 px-3.5 pt-2 pb-4 max-h-[76vh] overflow-y-auto">
+              <div
+                ref={scrollContainerRef}
+                data-lenis-prevent="true"
+                data-lenis-prevent-wheel="true"
+                className="flex flex-col gap-4 px-3.5 pt-2 pb-4 max-h-[76vh] overflow-y-auto overscroll-contain"
+              >
                 {/* User Profile Card (when authenticated) */}
                 {isAuthenticated && (
                   <div className="flex items-center justify-between rounded-2xl bg-muted/60 dark:bg-white/5 border border-border/60 dark:border-white/10 p-3 mt-1">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-secondary text-white font-semibold text-sm shadow-sm">
-                        {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                      <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-tr from-primary to-secondary text-sm font-bold text-white shadow-xs">
+                        {user.image ? (
+                          <Image
+                            src={user.image}
+                            alt={user.name || "User"}
+                            fill
+                            className="object-cover"
+                            sizes="40px"
+                          />
+                        ) : (
+                          <span>{user.name ? user.name.charAt(0).toUpperCase() : "U"}</span>
+                        )}
+                        <span className="absolute bottom-0 right-0 size-2.5 rounded-full border-2 border-card bg-emerald-500" />
                       </div>
                       <div className="min-w-0 text-left">
-                        <p className="truncate text-sm font-semibold text-foreground">
+                        <p className="truncate text-sm font-bold text-foreground">
                           {user.name}
                         </p>
                         <p className="truncate text-xs text-muted-foreground">
-                          {user.email}
+                          {user.email || "—"}
                         </p>
                       </div>
                     </div>
-                    <span className="shrink-0 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
-                      {userRole}
+                    <span
+                      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider border ${planBadge.style}`}
+                    >
+                      <PlanIcon className="size-2.5" />
+                      {planBadge.label}
                     </span>
+                  </div>
+                )}
+
+                {/* Dynamic Plan Upgrade Card */}
+                {isAuthenticated && (
+                  <div className="px-0.5">
+                    {userPlan === "FREE" && (
+                      <Link
+                        href="/#pricing"
+                        onClick={() => setIsOpen(false)}
+                        className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                      >
+                        <span className="flex items-center gap-1.5">
+                          <Sparkles className="size-3.5 text-yellow-300" />
+                          <span>Upgrade to Plus</span>
+                        </span>
+                        <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                          Save 20%
+                        </span>
+                      </Link>
+                    )}
+
+                    {userPlan === "PLUS" && (
+                      <Link
+                        href="/#pricing"
+                        onClick={() => setIsOpen(false)}
+                        className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                      >
+                        <span className="flex items-center gap-1.5">
+                          <Crown className="size-3.5 text-yellow-200" />
+                          <span>Upgrade to Pro</span>
+                        </span>
+                        <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                          Enterprise
+                        </span>
+                      </Link>
+                    )}
+
+                    {userPlan === "PRO" && (
+                      <div className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3.5 py-2 text-xs font-bold text-amber-500 dark:text-amber-400">
+                        <Crown className="size-3.5" />
+                        <span>Verified Pro Member</span>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -282,10 +421,19 @@ export default function MobileNav() {
                           type="button"
                           onClick={handleSignOut}
                           disabled={isSigningOut}
-                          className="flex items-center gap-2.5 w-full rounded-xl px-3 py-2.5 mt-1 text-sm font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all disabled:opacity-50"
+                          className="flex items-center gap-2.5 w-full rounded-xl px-3 py-2.5 mt-1 text-sm font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all disabled:opacity-50 cursor-pointer"
                         >
-                          <FiLogOut className="size-4 shrink-0" />
-                          <span>{isSigningOut ? "Signing out..." : link.label}</span>
+                          {isSigningOut ? (
+                            <>
+                              <Loader2 className="size-4 animate-spin text-red-500 shrink-0" />
+                              <span>Signing out...</span>
+                            </>
+                          ) : (
+                            <>
+                              <FiLogOut className="size-4 shrink-0" />
+                              <span>{link.label}</span>
+                            </>
+                          )}
                         </button>
                       ) : (
                         <Link
@@ -319,6 +467,7 @@ export default function MobileNav() {
         </AnimatePresence>
       </motion.div>
     </div>
+    </>
   );
 }
 

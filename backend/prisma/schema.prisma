@@ -67,6 +67,7 @@ model user {
   emailVerified    Boolean
   image            String?
   role             String   @default("LEARNER") // LEARNER, ADMIN
+  plan             String   @default("FREE") // FREE, PLUS, PRO
   createdAt        DateTime @default(now()) @db.Timestamptz(6)
   updatedAt        DateTime @default(now()) @db.Timestamptz(6)
   twoFactorEnabled Boolean?

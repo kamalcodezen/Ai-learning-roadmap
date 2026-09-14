@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,8 @@ import type { PricingPlan } from "../home/pricing/plans";
 import Button from "../ui/button";
 import BackToHome from "../ui/BackToHome";
 import { BorderBeam } from "@/src/components/ui/border-beam";
+import { authClient } from "@/src/lib/auth-client";
+import BrandLoader from "@/src/components/shared/BrandLoader";
 
 type BillingPeriod = "monthly" | "yearly";
 
@@ -48,8 +50,18 @@ const inputClasses =
 export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+  const { data: session, isPending } = authClient.useSession();
 
-  const isStarter = plan.slug === "starter";
+  useEffect(() => {
+    if (!isPending && !session?.user) {
+      router.replace("/signin");
+    }
+  }, [isPending, session, router]);
+
+  const isStarter =
+    plan.slug === "starter" ||
+    plan.slug === "go-ai-pather" ||
+    plan.monthlyPrice === 0;
 
   const priceId = billing === "yearly" ? plan.yearlyPriceId : plan.monthlyPriceId;
   const price = billing === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
@@ -60,7 +72,7 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     if (isStarter) {
       event.preventDefault();
-      router.push("/dashboard");
+      router.push("/dashboard/learner");
       return;
     }
 
@@ -80,6 +92,10 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
     };
     sessionStorage.setItem("checkout_metadata", JSON.stringify(metadata));
   };
+
+  if (isPending || !session?.user) {
+    return <BrandLoader message="Preparing checkout..." />;
+  }
 
   return (
     <main className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#f4edff] px-5 py-16 dark:bg-[#120a1e]">
@@ -154,7 +170,13 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
           className="mt-7 space-y-5 md:row-span-2 md:mt-0"
         >
           {!isStarter && priceId && (
-            <input type="hidden" name="priceId" value={priceId} />
+            <>
+              <input type="hidden" name="priceId" value={priceId} />
+              <input type="hidden" name="customerEmail" value={session?.user?.email || ""} />
+              <input type="hidden" name="userId" value={session?.user?.id || ""} />
+              <input type="hidden" name="planName" value={plan.name} />
+              <input type="hidden" name="billing" value={billing} />
+            </>
           )}
 
           <Field label="Full Name" htmlFor="name">
@@ -163,6 +185,7 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
               name="name"
               type="text"
               required
+              defaultValue={session.user.name || ""}
               autoComplete="name"
               placeholder="e.g. Alif Rahman"
               className={inputClasses}
@@ -175,6 +198,7 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
               name="email"
               type="email"
               required
+              defaultValue={session.user.email || ""}
               autoComplete="email"
               placeholder="you@example.com"
               className={inputClasses}

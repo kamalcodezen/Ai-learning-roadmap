@@ -4,8 +4,8 @@ import {
   DashboardButton,
 } from "@/src/components/dashboard/shared/patterns";
 
-import { useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import {
   getPortfolio,
@@ -49,12 +49,70 @@ import {
   ShieldCheck,
   ArrowRight,
   Code2,
+  FolderKanban,
 } from "lucide-react";
 
 export default function PortfolioPage() {
   const { data: session, isPending: isSessionLoading } = useDashboardSession();
   const queryClient = useQueryClient();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const targetProjectId = searchParams.get("projectId")?.trim() || null;
+  const targetMilestoneId = searchParams.get("milestoneId")?.trim() || null;
+  const targetMilestoneTitle = searchParams.get("milestone")?.trim() || null;
+  const isFilteredByMilestone = Boolean(
+    targetProjectId || targetMilestoneId || targetMilestoneTitle
+  );
+
+  const isTargetMatch = useCallback(
+    (project: ProjectData) => {
+      if (targetProjectId && project.id === targetProjectId) return true;
+      const spec = project.specification;
+      if (
+        targetMilestoneId &&
+        spec?.milestoneId &&
+        spec.milestoneId === targetMilestoneId
+      )
+        return true;
+      if (targetMilestoneTitle) {
+        const cleanTarget = targetMilestoneTitle.toLowerCase().trim();
+        const specTitle = (spec?.milestoneTitle || "").toLowerCase().trim();
+        if (
+          specTitle &&
+          (specTitle === cleanTarget ||
+            specTitle.includes(cleanTarget) ||
+            cleanTarget.includes(specTitle))
+        )
+          return true;
+        const forContext = (spec?.generatedForContext || "")
+          .toLowerCase()
+          .trim();
+        if (
+          forContext &&
+          (forContext.includes(cleanTarget) || cleanTarget.includes(forContext))
+        )
+          return true;
+        const obj = (spec?.primaryLearningObjective || "").toLowerCase().trim();
+        if (
+          obj &&
+          (obj === cleanTarget ||
+            obj.includes(cleanTarget) ||
+            cleanTarget.includes(obj))
+        )
+          return true;
+        const projName = (project.name || "").toLowerCase().trim();
+        if (
+          projName &&
+          (projName.includes(cleanTarget) || cleanTarget.includes(projName))
+        )
+          return true;
+      }
+      return false;
+    },
+    [targetProjectId, targetMilestoneId, targetMilestoneTitle]
+  );
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
@@ -112,8 +170,32 @@ export default function PortfolioPage() {
     enabled: !!session?.user?.id,
   });
 
-  const generateAiProjectMut = useMutation({
-    mutationFn: () => generateMilestoneProject(null, null),
+  useEffect(() => {
+    if (!data?.projects || data.projects.length === 0) return;
+    if (isFilteredByMilestone) {
+      const matched = data.projects.find(isTargetMatch);
+      if (matched) {
+        const timer = setTimeout(() => {
+          const el = document.getElementById(`project-${matched.id}`);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 250);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [
+    data?.projects,
+    isFilteredByMilestone,
+    isTargetMatch,
+  ]);
+
+  const generateMilestoneForFilterMut = useMutation({
+    mutationFn: () =>
+      generateMilestoneProject(
+        targetMilestoneId || null,
+        targetMilestoneTitle || null
+      ),
     onSuccess: (resData) => {
       setGenerateErrorMsg(null);
       const proj = resData.project || resData.data;
@@ -141,7 +223,7 @@ export default function PortfolioPage() {
     },
     onError: (err: Error) => {
       setGenerateErrorMsg(
-        err.message || "Failed to generate AI project. Please try again.",
+        err.message || "Failed to generate project for this milestone. Please try again."
       );
     },
   });
@@ -191,6 +273,7 @@ export default function PortfolioPage() {
       });
       setIsImportModalOpen(false);
       resetImportForm();
+      setActiveFilter("ALL");
     },
     onError: (err: Error) =>
       setImportErrorMsg(err.message || "Failed to import GitHub project"),
@@ -420,16 +503,27 @@ export default function PortfolioPage() {
   const handleImportSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setImportErrorMsg("");
-    if (!importFormData.repositoryUrl) {
+    let rawUrl = (importFormData.repositoryUrl || "").trim();
+    if (!rawUrl) {
       setImportErrorMsg("GitHub Repository URL is required");
       return;
     }
 
+    if (!rawUrl.startsWith("http://") && !rawUrl.startsWith("https://")) {
+      rawUrl = "https://" + rawUrl;
+    }
+    rawUrl = rawUrl.replace(/\.git$/i, "").replace(/\/+$/, "");
+
+    let liveUrlClean = importFormData.liveUrl?.trim() || undefined;
+    if (liveUrlClean && !liveUrlClean.startsWith("http://") && !liveUrlClean.startsWith("https://")) {
+      liveUrlClean = "https://" + liveUrlClean;
+    }
+
     const payload = {
-      repositoryUrl: importFormData.repositoryUrl,
-      liveUrl: importFormData.liveUrl || undefined,
-      title: importFormData.title || undefined,
-      description: importFormData.description || undefined,
+      repositoryUrl: rawUrl,
+      liveUrl: liveUrlClean,
+      title: importFormData.title?.trim() || undefined,
+      description: importFormData.description?.trim() || undefined,
       techStack: importFormData.techStack
         ? importFormData.techStack
             .split(",")
@@ -444,14 +538,18 @@ export default function PortfolioPage() {
   const isSaving = createMut.isPending || updateMut.isPending;
   const isImporting = importMut.isPending;
 
-  const generatedProjectsCount = data.projects.filter(
+  const baseProjects = isFilteredByMilestone
+    ? data.projects.filter(isTargetMatch)
+    : data.projects;
+
+  const generatedProjectsCount = baseProjects.filter(
     (p) => (p.projectType || "GENERATED") === "GENERATED",
   ).length;
-  const importedProjectsCount = data.projects.filter(
+  const importedProjectsCount = baseProjects.filter(
     (p) => p.projectType === "IMPORTED",
   ).length;
 
-  const filteredProjects = data.projects.filter((p) => {
+  const filteredProjects = baseProjects.filter((p) => {
     if (activeFilter === "GENERATED")
       return (p.projectType || "GENERATED") === "GENERATED";
     if (activeFilter === "IMPORTED") return p.projectType === "IMPORTED";
@@ -468,36 +566,36 @@ export default function PortfolioPage() {
       if (isVerified && hasReview)
         return {
           text: "Proof Verified",
-          color: "bg-green-500/10 text-green-500 border-green-500/20",
+          color: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20 font-bold",
         };
       if (hasReview)
         return {
           text: "AI Reviewed",
-          color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+          color: "bg-primary/10 text-primary border-primary/20 font-bold",
         };
       if (hasRepo)
         return {
           text: "Evidence Analyzed",
-          color: "bg-cyan-500/10 text-cyan-500 border-cyan-500/20",
+          color: "bg-primary/10 text-primary border-primary/20 font-bold",
         };
       return {
         text: "Specification Generated (In Progress)",
-        color: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+        color: "bg-primary/10 text-primary border-primary/20 font-bold",
       };
     } else {
       if (isVerified && hasReview)
         return {
           text: "Proof Verified",
-          color: "bg-green-500/10 text-green-500 border-green-500/20",
+          color: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20 font-bold",
         };
       if (hasReview)
         return {
           text: "AI Reviewed",
-          color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+          color: "bg-primary/10 text-primary border-primary/20 font-bold",
         };
       return {
         text: "GitHub Analyzed",
-        color: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+        color: "bg-primary/10 text-primary border-primary/20 font-bold",
       };
     }
   };
@@ -534,156 +632,190 @@ export default function PortfolioPage() {
         </CardContent>
       </DashboardCard>
 
-      {/* TWO SEPARATE PRODUCT ENTRY CARDS FOR FLOW A & FLOW B */}
-      <div className="space-y-3">
-        <h2 className="text-lg font-bold uppercase tracking-wider text-muted-foreground">
-          PROJECT CREATION & IMPORT
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
-          {/* FLOW A ENTRY CARD */}
-          <Card className="border border-purple-500/30 bg-purple-500/5 hover:border-purple-500/50 transition-all flex flex-col justify-between p-6">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
-                  FLOW A — GIVE ME SOMETHING TO BUILD
-                </span>
-                <Sparkles className="w-5 h-5 text-purple-400" />
-              </div>
-              <h3 className="text-xl font-bold text-foreground">
-                Generate AI Project
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Want AI Pather to create a project based on your skill gaps? AI
-                generates a dynamic build specification, requirements, and
-                deliverables for your learning stage.
-              </p>
+      {/* FLOW B: BRING YOUR OWN GITHUB REPOSITORY */}
+      <div className="relative overflow-hidden border border-primary/25 rounded-2xl dashboard-card hover:border-primary/40 transition-all p-5 sm:p-7 space-y-6">
+        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
 
-              {generateErrorMsg && (
-                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs flex items-center justify-between animate-in fade-in">
-                  <span>{generateErrorMsg}</span>
-                  <button
-                    onClick={() => setGenerateErrorMsg(null)}
-                    className="p-1 hover:bg-destructive/20 rounded"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
+        {/* TOP HERO ROW: HEADER + DESCRIPTION + ACTION BUTTON */}
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-5 relative">
+          <div className="space-y-3 flex-1 max-w-3xl">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-primary/15 text-primary border border-primary/25 tracking-wide uppercase">
+                <FolderGit2 className="w-3.5 h-3.5" />
+                Flow B • External Code Import
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground border border-border">
+                No Artificial Spec Required
+              </span>
             </div>
-            <div className="pt-6 space-y-2">
-              <DashboardButton
-                text={
-                  generateAiProjectMut.isPending ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin mr-1" />{" "}
-                      Generating AI Project...
-                    </>
-                  ) : (
-                    <>
-                      Generate AI Project <ArrowRight className="w-4 h-4" />
-                    </>
-                  )
-                }
-                icon={
-                  generateAiProjectMut.isPending ? undefined : (
-                    <Sparkles className="w-4 h-4" />
-                  )
-                }
-                fullWidth
-                radius="xl"
-                disabled={generateAiProjectMut.isPending}
-                onClick={() => generateAiProjectMut.mutate()}
-              />
-              <button
-                type="button"
-                onClick={() => router.push("/dashboard/learner/learning-path")}
-                className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors pt-1"
-              >
-                Or pick a milestone from My Roadmap →
-              </button>
-            </div>
-          </Card>
 
-          {/* FLOW B ENTRY CARD */}
-          <Card className="border border-blue-500/30 bg-blue-500/5 hover:border-blue-500/50 transition-all flex flex-col justify-between p-6">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                  FLOW B — ANALYZE SOMETHING I BUILT
-                </span>
-                <FolderGit2 className="w-5 h-5 text-blue-400" />
-              </div>
-              <h3 className="text-xl font-bold text-foreground">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
                 Import Existing GitHub Project
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Already built a project outside AI Pather? Connect your GitHub
-                repository and AI Pather will analyze what you actually built—no
-                artificial spec required.
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mt-1.5">
+                Already built real software outside AI Pather? Connect your public GitHub repository to analyze what you actually built—no roadmap specification required. AI Pather deep-scans your source files, detected tech stack, test coverage, and CI/CD pipelines to generate an objective <strong className="text-foreground font-semibold">AI Architectural Review</strong>, calculate your verified <strong className="text-foreground font-semibold">Technical Depth Score</strong>, and sync real evidence directly into your <strong className="text-foreground font-semibold">Skill States</strong> and <strong className="text-foreground font-semibold">Portfolio Strength</strong>.
               </p>
             </div>
-            <div className="pt-6">
-              <DashboardButton
-                text={
-                  <>
-                    Import Existing Project <ArrowRight className="w-4 h-4 " />
-                  </>
-                }
-                icon={<FolderGit2 className="w-4 h-4" />}
-                fullWidth
-                radius="xl"
-                className="bg-card text-black dark:text-white border border-border hover:bg-muted hover:text-black"
-                onClick={openImportModal}
-              />
+          </div>
+
+          {/* ACTION BUTTON & COMPANION TEXT */}
+          <div className="flex flex-col items-stretch sm:items-start lg:items-end justify-center gap-2 shrink-0 pt-2 lg:pt-0">
+            <DashboardButton
+              text={
+                <span className="flex items-center justify-center gap-2 font-semibold text-sm">
+                  <span>Import GitHub Project</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 shrink-0" />
+                </span>
+              }
+              icon={<FolderGit2 className="w-4 h-4 shrink-0" />}
+              size="md"
+              radius="xl"
+              onClick={openImportModal}
+              className="w-full sm:w-auto shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/30 transition-all cursor-pointer py-2.5 px-6 active:scale-[0.99]"
+            />
+            <div className="flex items-center justify-center sm:justify-start lg:justify-end gap-1.5 text-[11px] sm:text-xs text-muted-foreground w-full">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
+              <span className="font-medium">Instant ~15s analysis</span>
+              <span className="opacity-40">•</span>
+              <span>Public repositories supported</span>
             </div>
-          </Card>
+          </div>
+        </div>
+
+        {/* BOTTOM FULL-WIDTH AUDIT & EVIDENCE EXPLANATION CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 pt-5 border-t border-border/60 relative">
+          <div className="p-3.5 rounded-xl bg-muted/40 border border-border/60 space-y-1.5 transition-colors hover:bg-muted/60">
+            <div className="flex items-center gap-2 text-foreground font-bold text-xs">
+              <div className="p-1.5 rounded-lg bg-primary/10 text-primary shrink-0">
+                <FileCode2 className="w-4 h-4" />
+              </div>
+              <span>Codebase & Stack Inspection</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground leading-relaxed pl-7">
+              Scans root directory, programming languages, Dockerfiles, CI/CD workflows, and automated test frameworks.
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-muted/40 border border-border/60 space-y-1.5 transition-colors hover:bg-muted/60">
+            <div className="flex items-center gap-2 text-foreground font-bold text-xs">
+              <div className="p-1.5 rounded-lg bg-primary/10 text-primary shrink-0">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <span>AI Architecture Review</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground leading-relaxed pl-7">
+              Senior Architect AI assesses real implementation, engineering decisions, documentation quality, and strengths.
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-muted/40 border border-border/60 space-y-1.5 transition-colors hover:bg-muted/60">
+            <div className="flex items-center gap-2 text-foreground font-bold text-xs">
+              <div className="p-1.5 rounded-lg bg-primary/10 text-primary shrink-0">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <span>Proof Graph & Skill State Sync</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground leading-relaxed pl-7">
+              Awards verifiable evidence scores, boosting your technical depth score and updating your Career Twin readiness.
+            </p>
+          </div>
         </div>
       </div>
 
       {/* PROJECT FILTER BAR & LIST */}
-      <div className="space-y-4 mt-4">
+      <div className="space-y-4 mt-2">
+        {/* MILESTONE FILTER ACTIVE BANNER */}
+        {isFilteredByMilestone && (
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-primary/10 border border-primary/20 text-sm animate-in fade-in duration-300 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-lg bg-primary/20 text-primary shrink-0">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-bold text-foreground">
+                    Filtered by Milestone:
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-primary/20 text-primary font-bold text-xs border border-primary/30">
+                    📍 {targetMilestoneTitle || "Roadmap Milestone"}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {filteredProjects.length > 0
+                    ? "Displaying the project created for this roadmap milestone."
+                    : "No project has been created for this milestone yet. Create one below!"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              {filteredProjects.length === 0 && (
+                <button
+                  type="button"
+                  onClick={() => generateMilestoneForFilterMut.mutate()}
+                  disabled={generateMilestoneForFilterMut.isPending}
+                  className="px-3.5 py-2 text-xs font-bold rounded-lg bg-primary hover:bg-primary/90 text-white transition-all flex items-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
+                >
+                  {generateMilestoneForFilterMut.isPending ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+                  ) : (
+                    <Sparkles className="w-3.5 h-3.5 text-white" />
+                  )}
+                  <span>Create Project</span>
+                </button>
+              )}
+              <button
+                onClick={() => router.push("/dashboard/learner/portfolio")}
+                className="px-3.5 py-2 text-xs font-bold rounded-lg bg-background hover:bg-card border border-border text-foreground hover:text-primary transition-all flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+              >
+                <span>Show All Projects ({data.projects.length})</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-semibold">
-              Your Portfolio Projects ({data.projects.length})
+              {isFilteredByMilestone
+                ? `Milestone Project (${filteredProjects.length})`
+                : `Your Portfolio Projects (${data.projects.length})`}
             </h2>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Source of truth:{" "}
-              <code className="text-primary font-mono font-bold">
-                projectType
-              </code>{" "}
-              (GENERATED vs IMPORTED)
+              {isFilteredByMilestone
+                ? `Targeted milestone project showcase for ${targetMilestoneTitle || "selected milestone"}.`
+                : "Manage both AI-generated specifications and imported production repositories."}
             </p>
           </div>
 
-          {/* Filter Pills */}
-          <div className="flex flex-co md:flex-row items-center gap-1.5 p-1 bg-muted rounded-xl border border-brand">
+          <div className="flex flex-wrap items-center gap-2 bg-muted/60 p-1 rounded-xl border border-border">
             <button
               onClick={() => setActiveFilter("ALL")}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 activeFilter === "ALL"
-                  ? "bg-brand text-white shadow-sm"
+                  ? "bg-card text-foreground shadow-sm font-semibold"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              All ({data.projects.length})
+              All Projects ({data.projects.length})
             </button>
             <button
               onClick={() => setActiveFilter("GENERATED")}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
                 activeFilter === "GENERATED"
-                  ? "bg-brand text-white shadow-sm"
+                  ? "bg-card text-foreground shadow-sm font-semibold"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <Sparkles className="w-3 h-3" /> AI Generated (
+              <Sparkles className="w-3 h-3 text-primary" /> AI Generated (
               {generatedProjectsCount})
             </button>
             <button
               onClick={() => setActiveFilter("IMPORTED")}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
                 activeFilter === "IMPORTED"
-                  ? "bg-brand text-white shadow-sm"
+                  ? "bg-card text-foreground shadow-sm font-semibold"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -694,10 +826,146 @@ export default function PortfolioPage() {
         </div>
 
         {filteredProjects.length === 0 ? (
-          <Card className="border-dashed border-2 border-border/60 bg-transparent shadow-none p-8 text-center">
-            <p className="text-muted-foreground text-sm">
-              No projects found for the selected filter.
-            </p>
+          <Card className="border-dashed border-2 border-border/70 bg-card/40 p-8 sm:p-12 text-center space-y-5 rounded-2xl shadow-none animate-in fade-in duration-300">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mx-auto shadow-inner">
+              {isFilteredByMilestone ? (
+                <Sparkles className="w-7 h-7" />
+              ) : activeFilter === "IMPORTED" ? (
+                <FolderGit2 className="w-7 h-7" />
+              ) : (
+                <FolderKanban className="w-7 h-7" />
+              )}
+            </div>
+
+            <div className="space-y-2 max-w-lg mx-auto">
+              <h3 className="text-lg sm:text-xl font-bold text-foreground">
+                {isFilteredByMilestone
+                  ? `No Project Generated for "${targetMilestoneTitle || "this Milestone"}" Yet`
+                  : data.projects.length === 0
+                  ? "Your Portfolio is Empty — Start Building Verifiable Proof"
+                  : activeFilter === "IMPORTED"
+                  ? "No GitHub Repositories Imported Yet"
+                  : activeFilter === "GENERATED"
+                  ? "No Milestone Projects Created Yet"
+                  : "No Projects Match the Selected Filter"}
+              </h3>
+
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                {isFilteredByMilestone
+                  ? "Generate a tailored milestone project to validate this roadmap competency, or build it and link your repository to showcase your skills to recruiters."
+                  : data.projects.length === 0
+                  ? "Recruiters and hiring managers look for verifiable proof of what you've built. Generate a project from your roadmap milestones, or import an existing GitHub repository to run an automated technical audit."
+                  : activeFilter === "IMPORTED"
+                  ? "Connect any public GitHub repository you have built. AI Pather will audit your code architecture, commit frequency, and quality to showcase your real-world skills."
+                  : activeFilter === "GENERATED"
+                  ? "Milestone projects are generated directly from your learning roadmap milestones to test and verify your skills with AI guidance."
+                  : "Try resetting your filter or add a new project to your portfolio."}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              {isFilteredByMilestone ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => generateMilestoneForFilterMut.mutate()}
+                    disabled={generateMilestoneForFilterMut.isPending}
+                    className="px-4 py-2.5 text-xs font-bold rounded-xl bg-primary hover:bg-primary/90 text-white transition-all flex items-center gap-2 shadow-lg shadow-primary/25 cursor-pointer disabled:opacity-50"
+                  >
+                    {generateMilestoneForFilterMut.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin text-white" />
+                        <span>Generating Milestone Project...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 text-white" />
+                        <span>Create Project for &ldquo;{targetMilestoneTitle || "this Milestone"}&rdquo;</span>
+                      </>
+                    )}
+                  </button>
+                  <DashboardButton
+                    href="/dashboard/learner/learning-path"
+                    text="Go to Roadmap"
+                    size="sm"
+                    radius="lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => router.push("/dashboard/learner/portfolio")}
+                    className="px-3.5 py-2 text-xs font-semibold rounded-lg bg-muted hover:bg-card-soft text-foreground border border-border transition-colors cursor-pointer"
+                  >
+                    View All Projects ({data.projects.length})
+                  </button>
+                </>
+              ) : data.projects.length === 0 ? (
+                <>
+                  <DashboardButton
+                    href="/dashboard/learner/learning-path"
+                    text="Build Milestone Project from Roadmap"
+                    icon={<Sparkles className="w-4 h-4" />}
+                    size="md"
+                    radius="xl"
+                  />
+                  <DashboardButton
+                    text="Import GitHub Project"
+                    icon={<FolderGit2 className="w-4 h-4" />}
+                    size="md"
+                    radius="xl"
+                    className="bg-card text-foreground border border-border hover:bg-muted"
+                    onClick={openImportModal}
+                  />
+                </>
+              ) : activeFilter === "IMPORTED" ? (
+                <>
+                  <DashboardButton
+                    text="Import GitHub Project"
+                    icon={<FolderGit2 className="w-4 h-4" />}
+                    size="md"
+                    radius="xl"
+                    onClick={openImportModal}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter("ALL")}
+                    className="px-4 py-2 text-xs font-semibold rounded-xl bg-muted hover:bg-card text-foreground border border-border transition-colors cursor-pointer"
+                  >
+                    Show All Projects ({data.projects.length})
+                  </button>
+                </>
+              ) : activeFilter === "GENERATED" ? (
+                <>
+                  <DashboardButton
+                    href="/dashboard/learner/learning-path"
+                    text="Go to My Roadmap"
+                    icon={<Sparkles className="w-4 h-4" />}
+                    size="md"
+                    radius="xl"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter("ALL")}
+                    className="px-4 py-2 text-xs font-semibold rounded-xl bg-muted hover:bg-card text-foreground border border-border transition-colors cursor-pointer"
+                  >
+                    Show All Projects ({data.projects.length})
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setActiveFilter("ALL")}
+                  className="px-4 py-2 text-xs font-semibold rounded-xl bg-primary text-white transition-all cursor-pointer shadow-sm"
+                >
+                  Reset Filter (Show All)
+                </button>
+              )}
+            </div>
+
+            {generateMilestoneForFilterMut.isError && generateErrorMsg && (
+              <p className="text-xs text-destructive font-medium mt-2">
+                {generateErrorMsg}
+              </p>
+            )}
           </Card>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-2 dashboard-card-gap">
@@ -705,6 +973,28 @@ export default function PortfolioPage() {
               const statusPill = getLifecycleStatusPill(project);
               const isGenerated =
                 (project.projectType || "GENERATED") === "GENERATED";
+              const isTargeted = isTargetMatch(project);
+
+              const rawMilestoneTitle =
+                project.specification?.milestoneTitle ||
+                (project.specification?.generatedForContext?.toLowerCase().startsWith("generated for:")
+                  ? project.specification.generatedForContext.replace(/^generated for:\s*/i, "").trim()
+                  : project.specification?.generatedForContext?.trim()) ||
+                null;
+
+              const repoDisplayName = (() => {
+                if (!project.githubUrl) return null;
+                try {
+                  const cleaned = project.githubUrl.trim().replace(/\/+$/, "").replace(/\.git$/i, "");
+                  const parts = cleaned.split("/").filter(Boolean);
+                  if (parts.length >= 2) {
+                    return `${parts[parts.length - 2]}/${parts[parts.length - 1]}`;
+                  }
+                } catch {
+                  // fallback
+                }
+                return null;
+              })();
 
               return (
                 <div
@@ -714,11 +1004,22 @@ export default function PortfolioPage() {
                 >
                   <DashboardCard
                     className={`flex flex-col h-full transition-all hover:border-primary/30 relative group ${
-                      isGenerated
-                        ? "border-l-4 border-l-purple-500"
-                        : "border-l-4 border-l-blue-500"
+                      isTargeted
+                        ? "border-2 border-primary shadow-xl shadow-primary/15 ring-2 ring-primary/25"
+                        : "border-l-4 border-l-primary"
                     }`}
                   >
+                    {isTargeted && (
+                      <div className="px-4 py-2 bg-primary/15 border-b border-primary/25 flex items-center justify-between text-xs font-bold text-primary">
+                        <span className="flex items-center gap-2">
+                          <span className="text-sm">🎯</span>
+                          <span>Selected Milestone Project</span>
+                        </span>
+                        <span className="text-[10px] uppercase tracking-wider bg-primary text-white px-2 py-0.5 rounded font-extrabold shadow-sm">
+                          Active Match
+                        </span>
+                      </div>
+                    )}
                     <div className="absolute top-0 right-0 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       <button
                         onClick={() => openEditModal(project)}
@@ -741,25 +1042,60 @@ export default function PortfolioPage() {
                     </div>
 
                     <CardHeader className="border-b border-border pb-6">
+                      {/* Top Distinct Context Banner */}
+                      {isGenerated && rawMilestoneTitle && (
+                        <div className="mb-3 pr-16 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 text-xs font-semibold text-primary flex flex-wrap items-center justify-between gap-2 shadow-sm">
+                          <span className="flex items-center gap-2">
+                            <span className="text-sm">📍</span>
+                            <span>Created for Roadmap Milestone: <strong className="text-foreground font-bold">{rawMilestoneTitle}</strong></span>
+                          </span>
+                          <span className="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">
+                            Milestone Project
+                          </span>
+                        </div>
+                      )}
+
+                      {!isGenerated && (
+                        <div className="mb-3 pr-16 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 text-xs font-semibold text-primary flex flex-wrap items-center justify-between gap-2 shadow-sm">
+                          <span className="flex items-center gap-2">
+                            <FolderGit2 className="w-4 h-4 text-primary shrink-0" />
+                            <span>
+                              Imported GitHub Repository:{" "}
+                              <strong className="text-foreground font-bold">
+                                {repoDisplayName || project.name}
+                              </strong>
+                            </span>
+                          </span>
+                          <span className="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">
+                            GitHub Import
+                          </span>
+                        </div>
+                      )}
+
                       <div className="flex flex-wrap items-center gap-2 mb-3">
                         {isGenerated ? (
-                          <span className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                            <Sparkles className="w-3.5 h-3.5" /> AI Generated
-                            Project
-                          </span>
-                        ) : (
-                          <span className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                            <FolderGit2 className="w-3.5 h-3.5" /> Imported
-                            GitHub Project
-                          </span>
-                        )}
-
-                        {isGenerated &&
-                          project.specification?.generatedForContext && (
-                            <span className="flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
-                              🎯 {project.specification.generatedForContext}
+                          <>
+                            <span className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                              <Sparkles className="w-3.5 h-3.5" /> AI Generated Project
                             </span>
-                          )}
+                            {rawMilestoneTitle && (
+                              <span className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm">
+                                📍 Milestone: {rawMilestoneTitle}
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <span className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                              <FolderGit2 className="w-3.5 h-3.5" /> Imported GitHub Project
+                            </span>
+                            {repoDisplayName && (
+                              <span className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm">
+                                🐙 {repoDisplayName}
+                              </span>
+                            )}
+                          </>
+                        )}
 
                         <span
                           className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusPill.color}`}
@@ -772,9 +1108,9 @@ export default function PortfolioPage() {
                         <div className="flex items-center gap-3">
                           <div className="p-2.5 bg-background rounded-lg shadow-sm border border-border">
                             {isGenerated ? (
-                              <Code2 className="w-6 h-6 text-purple-400" />
+                              <Code2 className="w-6 h-6 text-primary" />
                             ) : (
-                              <FolderGit2 className="w-6 h-6 text-blue-400" />
+                              <FolderGit2 className="w-6 h-6 text-primary" />
                             )}
                           </div>
                           <CardTitle className="text-xl">
@@ -1316,13 +1652,13 @@ export default function PortfolioPage() {
                   GitHub Repository URL (Optional)
                 </label>
                 <input
-                  type="url"
+                  type="text"
                   value={formData.repositoryUrl}
                   onChange={(e) =>
                     setFormData({ ...formData, repositoryUrl: e.target.value })
                   }
-                  placeholder="https://github.com/username/repo"
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                  placeholder="https://github.com/username/repo or github.com/username/repo"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary font-mono"
                 />
               </div>
               <div>
@@ -1408,8 +1744,8 @@ export default function PortfolioPage() {
                   GitHub Repository URL *
                 </label>
                 <input
-                  type="url"
-                  placeholder="https://github.com/owner/repository"
+                  type="text"
+                  placeholder="https://github.com/owner/repository or github.com/owner/repo"
                   value={importFormData.repositoryUrl}
                   onChange={(e) =>
                     setImportFormData({

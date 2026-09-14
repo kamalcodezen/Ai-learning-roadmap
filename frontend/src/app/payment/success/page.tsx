@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import PaymentSuccess from "@/src/components/checkout/PaymentSuccess";
 import { stripe } from "@/src/lib/stripe";
+import { pool } from "@/src/lib/auth";
 
 export const metadata: Metadata = {
   title: "Payment · AI Pather",
@@ -43,7 +44,27 @@ export default async function PaymentSuccessPage({
 
       if (session.status === "complete") {
         status = "success";
-        planName = lineItem?.description ?? null;
+        const rawDescription = lineItem?.description || "";
+        const priceId = lineItem?.price?.id;
+
+        if (
+          priceId === process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PRICE_ID ||
+          priceId === process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PRICE_ID ||
+          rawDescription.toLowerCase().includes("career os") ||
+          rawDescription.toLowerCase().includes("plus")
+        ) {
+          planName = "AI Pather Plus";
+        } else if (
+          priceId === process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_MONTHLY_PRICE_ID ||
+          priceId === process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_YEARLY_PRICE_ID ||
+          rawDescription.toLowerCase().includes("enterprise") ||
+          rawDescription.toLowerCase().includes("pro")
+        ) {
+          planName = "AI Pather Pro";
+        } else {
+          planName = rawDescription.replace(/-\s*Monthly/gi, "").replace(/-\s*Yearly/gi, "").trim() || "AI Pather Plus";
+        }
+
         interval = lineItem?.price?.recurring?.interval ?? null;
         amountTotal = session.amount_total ?? null;
         currency = session.currency ?? null;
@@ -51,6 +72,19 @@ export default async function PaymentSuccessPage({
           session.customer_details?.email ??
           (session.customer_email as string | null) ??
           null;
+
+        // Automatically update user plan to PLUS or PRO on successful checkout
+        if (customerEmail) {
+          const upgradedPlan = planName?.includes("Pro") ? "PRO" : "PLUS";
+          try {
+            await pool.query('UPDATE "user" SET plan = $1 WHERE email = $2', [
+              upgradedPlan,
+              customerEmail,
+            ]);
+          } catch (dbErr) {
+            console.error("Failed to update user plan on payment success:", dbErr);
+          }
+        }
       }
     } catch {
       // Session not found / invalid — fall through to the cancelled state.

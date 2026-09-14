@@ -27,6 +27,7 @@ import gamificationRoutes from "./modules/learner/gamification/gamification.rout
 import careerIntelligenceRoutes from "./modules/learner/career-intelligence/career-intelligence.routes.js";
 import notificationRoutes from "./modules/learner/notifications/notification.routes.js";
 import settingsRoutes from "./modules/learner/settings/settings.routes.js";
+import subscriptionRoutes from "./modules/learner/subscription/subscription.routes.js";
 const isProduction = env.NODE_ENV === "production";
 
 const app = express();
@@ -45,9 +46,9 @@ app.use(
 // pino http (console.log)
 app.use(
   pinoHttp({
-    logger, // লোকালে সাধারণ রিকোয়েস্ট লগ বন্ধ থাকবে, প্রোডাকশনে অন থাকবে
+    logger, // General request logging enabled in production, muted in local development
     autoLogging: isProduction,
-    // কোনো এরর (400, 500 বা Prisma Crash) হলে লোকালেও সাথে সাথে দেখাবে
+    // Highlight errors immediately even in local development
     customLogLevel: (_req, res, err) => {
       if (res.statusCode >= 400 || err) return "error";
       return "info";
@@ -106,6 +107,9 @@ app.use("/api/notifications", notificationRoutes);
 
 // Settings & Account Routes
 app.use("/api/settings", settingsRoutes);
+
+// Subscription & Plan Routes
+app.use("/api/subscription", subscriptionRoutes);
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);

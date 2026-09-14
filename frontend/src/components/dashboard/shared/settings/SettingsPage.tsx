@@ -15,6 +15,12 @@ import {
   Loader2,
   Lock,
   X,
+  CreditCard,
+  Crown,
+  Sparkles,
+  Check,
+  ExternalLink,
+  Zap,
 } from "lucide-react";
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
@@ -47,6 +53,9 @@ export default function SettingsPage() {
   const [deleteConfirmationInput, setDeleteConfirmationInput] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Billing portal state
+  const [isOpeningPortal, setIsOpeningPortal] = useState(false);
+
   // Notification preferences query
   const { data: preferences } = useQuery<NotificationPreferences>({
     queryKey: ["notificationPreferences", session?.user?.id],
@@ -57,14 +66,50 @@ export default function SettingsPage() {
   const updatePreferencesMutation = useMutation({
     mutationFn: (updated: Partial<NotificationPreferences>) =>
       updateNotificationPreferences(updated),
+    onMutate: async (updated) => {
+      await queryClient.cancelQueries({
+        queryKey: ["notificationPreferences", session?.user?.id],
+      });
+      const previous = queryClient.getQueryData<NotificationPreferences>([
+        "notificationPreferences",
+        session?.user?.id,
+      ]);
+      queryClient.setQueryData<NotificationPreferences>(
+        ["notificationPreferences", session?.user?.id],
+        (old) => ({
+          emailWeeklySummary: true,
+          emailAchievementAlerts: true,
+          emailMilestoneReminders: true,
+          browserAlerts: false,
+          ...old,
+          ...updated,
+        })
+      );
+      return { previous };
+    },
+    onError: (_err, _updated, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(
+          ["notificationPreferences", session?.user?.id],
+          context.previous
+        );
+      }
+      showToast({ message: "Failed to update notification preferences.", variant: "error" });
+    },
     onSuccess: (newData) => {
       queryClient.setQueryData(["notificationPreferences", session?.user?.id], newData);
       showToast({ message: "Notification preferences updated successfully.", variant: "success" });
     },
-    onError: () => {
-      showToast({ message: "Failed to update notification preferences.", variant: "error" });
-    },
   });
+
+  const handleTogglePreference = (
+    key: keyof NotificationPreferences,
+    value: boolean
+  ) => {
+    updatePreferencesMutation.mutate({
+      [key]: value,
+    });
+  };
 
   if (isSessionLoading) {
     return <GenericPageSkeleton />;
@@ -72,7 +117,34 @@ export default function SettingsPage() {
 
   const user = session?.user;
   const userRole = ((user as { role?: string })?.role || "learner").toLowerCase();
+  const userPlan = ((user as { plan?: string })?.plan || "FREE").toUpperCase();
+  const isPro = userPlan === "PRO";
+  const isPlus = userPlan === "PLUS";
+  const isFree = !isPro && !isPlus;
   const profileLink = `/dashboard/${userRole}/profile`;
+
+  const handleManageBilling = async () => {
+    try {
+      setIsOpeningPortal(true);
+      const res = await fetch("/api/stripe/portal", { method: "POST" });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        showToast({
+          message: data.error || "Could not open billing portal. Please contact support.",
+          variant: "error",
+        });
+      }
+    } catch {
+      showToast({
+        message: "Failed to open billing portal.",
+        variant: "error",
+      });
+    } finally {
+      setIsOpeningPortal(false);
+    }
+  };
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -204,6 +276,126 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
+        {/* SUBSCRIPTION & PLAN MANAGEMENT CARD */}
+        <Card mouseGlow className={`${glowCardClass} md:col-span-2 border-primary/30`}>
+          <CardHeader className="relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-primary" /> Subscription & Plan
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">Manage your subscription, billing details, and active tier benefits.</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold tracking-wider uppercase border ${
+                  isPro 
+                    ? "bg-amber-500/15 text-amber-500 dark:text-amber-400 border-amber-500/30" 
+                    : isPlus 
+                    ? "bg-primary/15 text-primary border-primary/30" 
+                    : "bg-muted text-muted-foreground border-border/50"
+                }`}>
+                  {isPro ? <Crown className="size-3.5" /> : isPlus ? <Sparkles className="size-3.5" /> : <Zap className="size-3.5" />}
+                  {isPro ? "PRO PLAN" : isPlus ? "PLUS PLAN" : "GO (FREE)"}
+                </span>
+                <span className="inline-flex items-center rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[11px] font-bold text-emerald-500 border border-emerald-500/20">
+                  Active
+                </span>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="relative z-10 space-y-5">
+            <div className="rounded-xl border border-border/60 bg-[var(--color-card-soft)] p-4 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-bold text-base text-foreground">
+                    {isPro
+                      ? "AI Pather Pro Tier ($99/mo)"
+                      : isPlus
+                      ? "AI Pather Plus Tier ($29/mo)"
+                      : "AI Pather Go Tier ($0 - Free Forever)"}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {isPro
+                      ? "Full access to organization members, candidate verification, and custom roadmaps."
+                      : isPlus
+                      ? "Unlimited skill proofing, AI Copilot, JD scanning & AI interview simulator."
+                      : "Career Readiness Twin Diagnostics & Standard Career Roadmap Generator."}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2.5">
+                  {!isPro && (
+                    <Link
+                      href="/#pricing"
+                      className="px-4 py-2 text-xs font-semibold text-white bg-gradient-to-r from-primary to-secondary hover:opacity-90 rounded-xl transition flex items-center gap-1.5 shadow-sm"
+                    >
+                      <Sparkles className="size-3.5" />
+                      <span>{isPlus ? "Upgrade to Pro" : "Upgrade to Plus"}</span>
+                    </Link>
+                  )}
+
+                  {!isFree && (
+                    <button
+                      type="button"
+                      onClick={handleManageBilling}
+                      disabled={isOpeningPortal}
+                      className="px-4 py-2 text-xs font-semibold rounded-xl border border-border bg-card hover:bg-muted text-foreground transition flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
+                    >
+                      {isOpeningPortal ? (
+                        <>
+                          <Loader2 className="size-3.5 animate-spin text-primary" />
+                          <span>Opening Stripe...</span>
+                        </>
+                      ) : (
+                        <>
+                          <ExternalLink className="size-3.5 text-primary" />
+                          <span>Manage Billing & Invoices</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Feature checklist */}
+              <div className="mt-4 pt-4 border-t border-border/50 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <Check className="size-3.5 text-primary shrink-0" />
+                  <span>Interactive Career Roadmaps</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="size-3.5 text-primary shrink-0" />
+                  <span>Career Readiness Diagnostics</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className={`size-3.5 shrink-0 ${!isFree ? "text-primary" : "text-muted-foreground/40"}`} />
+                  <span className={!isFree ? "text-foreground font-medium" : "line-through text-muted-foreground/60"}>
+                    Job Reality & JD Scanner
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className={`size-3.5 shrink-0 ${!isFree ? "text-primary" : "text-muted-foreground/40"}`} />
+                  <span className={!isFree ? "text-foreground font-medium" : "line-through text-muted-foreground/60"}>
+                    AI Mock Interview Simulator
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className={`size-3.5 shrink-0 ${!isFree ? "text-primary" : "text-muted-foreground/40"}`} />
+                  <span className={!isFree ? "text-foreground font-medium" : "line-through text-muted-foreground/60"}>
+                    Skill Simulation Assessments
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className={`size-3.5 shrink-0 ${isPro ? "text-primary" : "text-muted-foreground/40"}`} />
+                  <span className={isPro ? "text-foreground font-medium" : "line-through text-muted-foreground/60"}>
+                    Recruiter Verification & Org Portal
+                  </span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* NOTIFICATION PREFERENCES CARD */}
         <Card mouseGlow className={`${glowCardClass} md:col-span-2`}>
           <CardHeader className="relative z-10">
@@ -215,17 +407,25 @@ export default function SettingsPage() {
           <CardContent className="relative z-10 space-y-3">
             <div className="flex items-center justify-between p-3.5 bg-[var(--color-card-soft)] rounded-xl border border-border/60">
               <div>
-                <p className="text-sm font-semibold text-foreground">Weekly Learning Progress Summary</p>
+                <label
+                  htmlFor="pref-emailWeeklySummary"
+                  className="text-sm font-semibold text-foreground cursor-pointer block"
+                >
+                  Weekly Learning Progress Summary
+                </label>
                 <p className="text-xs text-muted-foreground">Receive weekly digest of completed milestones and skill readiness delta.</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label
+                htmlFor="pref-emailWeeklySummary"
+                className="relative inline-flex items-center cursor-pointer shrink-0 ml-4"
+              >
                 <input
+                  id="pref-emailWeeklySummary"
+                  name="emailWeeklySummary"
                   type="checkbox"
-                  checked={currentPrefs.emailWeeklySummary}
+                  checked={Boolean(currentPrefs.emailWeeklySummary)}
                   onChange={(e) =>
-                    updatePreferencesMutation.mutate({
-                      emailWeeklySummary: e.target.checked,
-                    })
+                    handleTogglePreference("emailWeeklySummary", e.target.checked)
                   }
                   className="sr-only peer"
                 />
@@ -235,17 +435,25 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between p-3.5 bg-[var(--color-card-soft)] rounded-xl border border-border/60">
               <div>
-                <p className="text-sm font-semibold text-foreground">Achievement & Badge Unlocks</p>
+                <label
+                  htmlFor="pref-emailAchievementAlerts"
+                  className="text-sm font-semibold text-foreground cursor-pointer block"
+                >
+                  Achievement & Badge Unlocks
+                </label>
                 <p className="text-xs text-muted-foreground">Get notified when you earn XP rewards and new achievement badges.</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label
+                htmlFor="pref-emailAchievementAlerts"
+                className="relative inline-flex items-center cursor-pointer shrink-0 ml-4"
+              >
                 <input
+                  id="pref-emailAchievementAlerts"
+                  name="emailAchievementAlerts"
                   type="checkbox"
-                  checked={currentPrefs.emailAchievementAlerts}
+                  checked={Boolean(currentPrefs.emailAchievementAlerts)}
                   onChange={(e) =>
-                    updatePreferencesMutation.mutate({
-                      emailAchievementAlerts: e.target.checked,
-                    })
+                    handleTogglePreference("emailAchievementAlerts", e.target.checked)
                   }
                   className="sr-only peer"
                 />
@@ -255,17 +463,53 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between p-3.5 bg-[var(--color-card-soft)] rounded-xl border border-border/60">
               <div>
-                <p className="text-sm font-semibold text-foreground">Milestone & Study Pace Reminders</p>
+                <label
+                  htmlFor="pref-emailMilestoneReminders"
+                  className="text-sm font-semibold text-foreground cursor-pointer block"
+                >
+                  Milestone & Study Pace Reminders
+                </label>
                 <p className="text-xs text-muted-foreground">Reminders to maintain your weekly study pace and keep active streak.</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label
+                htmlFor="pref-emailMilestoneReminders"
+                className="relative inline-flex items-center cursor-pointer shrink-0 ml-4"
+              >
                 <input
+                  id="pref-emailMilestoneReminders"
+                  name="emailMilestoneReminders"
                   type="checkbox"
-                  checked={currentPrefs.emailMilestoneReminders}
+                  checked={Boolean(currentPrefs.emailMilestoneReminders)}
                   onChange={(e) =>
-                    updatePreferencesMutation.mutate({
-                      emailMilestoneReminders: e.target.checked,
-                    })
+                    handleTogglePreference("emailMilestoneReminders", e.target.checked)
+                  }
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between p-3.5 bg-[var(--color-card-soft)] rounded-xl border border-border/60">
+              <div>
+                <label
+                  htmlFor="pref-browserAlerts"
+                  className="text-sm font-semibold text-foreground cursor-pointer block"
+                >
+                  Browser & In-App Alerts
+                </label>
+                <p className="text-xs text-muted-foreground">Receive real-time push and in-app alerts when active in the dashboard.</p>
+              </div>
+              <label
+                htmlFor="pref-browserAlerts"
+                className="relative inline-flex items-center cursor-pointer shrink-0 ml-4"
+              >
+                <input
+                  id="pref-browserAlerts"
+                  name="browserAlerts"
+                  type="checkbox"
+                  checked={Boolean(currentPrefs.browserAlerts)}
+                  onChange={(e) =>
+                    handleTogglePreference("browserAlerts", e.target.checked)
                   }
                   className="sr-only peer"
                 />

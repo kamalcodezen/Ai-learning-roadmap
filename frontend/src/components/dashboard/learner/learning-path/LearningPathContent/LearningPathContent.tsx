@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { redirect, useSearchParams } from "next/navigation";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import {
@@ -9,7 +9,11 @@ import {
   getMilestoneResources,
   CuratedResource,
 } from "@/src/lib/api/learner/learning-path";
-import { generateMilestoneProject } from "@/src/lib/api/learner/portfolio";
+import {
+  generateMilestoneProject,
+  getPortfolio,
+  PortfolioData,
+} from "@/src/lib/api/learner/portfolio";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import LearningPathSkeleton from "../LearningPathSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
@@ -29,6 +33,7 @@ import {
   AlertTriangle,
   Network,
   List,
+  Lock,
 } from "lucide-react";
 import Link from "next/link";
 import { DashboardButton } from "@/src/components/dashboard/shared/patterns";
@@ -94,12 +99,17 @@ export default function LearningPathContent() {
     title: string;
     description: string;
     techStack: string[];
+    milestoneTitle?: string | null;
     duplicate?: boolean;
   } | null>(null);
   const [projectError, setProjectError] = useState<string | null>(null);
 
   const skillParam = searchParams?.get("skill")?.trim() || null;
   const milestoneParam = searchParams?.get("milestone")?.trim() || null;
+  const sourceParam = searchParams?.get("source")?.trim() || searchParams?.get("from")?.trim() || null;
+
+  // Strict check: Only open drawer automatically when specifically arriving from "Fix Gap"
+  const isFromFixGap = sourceParam === "fix-gap";
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["learningPath", session?.user?.id],
@@ -107,42 +117,88 @@ export default function LearningPathContent() {
     enabled: !!session?.user?.id,
   });
 
-  // Validate and locate target milestone from query params safely using canonical skill matching
+  const { data: portfolioData } = useQuery<PortfolioData>({
+    queryKey: ["portfolio", session?.user?.id],
+    queryFn: () => getPortfolio(),
+    enabled: !!session?.user?.id,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const getProjectForMilestone = useCallback(
+    (milestoneId: string, milestoneTitle: string) => {
+      if (!portfolioData?.projects || portfolioData.projects.length === 0) return null;
+      const cleanTitle = (milestoneTitle || "").toLowerCase().trim();
+
+      const matched = portfolioData.projects.find((p) => {
+        const spec = p.specification;
+        if (spec?.milestoneId && spec.milestoneId === milestoneId) return true;
+        const specTitle = (spec?.milestoneTitle || "").toLowerCase().trim();
+        if (
+          specTitle &&
+          (specTitle === cleanTitle ||
+            specTitle.includes(cleanTitle) ||
+            cleanTitle.includes(specTitle))
+        )
+          return true;
+        const forContext = (spec?.generatedForContext || "").toLowerCase().trim();
+        if (
+          forContext &&
+          (forContext.includes(cleanTitle) || cleanTitle.includes(forContext))
+        )
+          return true;
+        const obj = (spec?.primaryLearningObjective || "").toLowerCase().trim();
+        if (
+          obj &&
+          (obj === cleanTitle || obj.includes(cleanTitle) || cleanTitle.includes(obj))
+        )
+          return true;
+        const projName = (p.name || "").toLowerCase().trim();
+        if (
+          projName &&
+          (projName.includes(cleanTitle) || cleanTitle.includes(projName))
+        )
+          return true;
+        return false;
+      });
+
+      return matched ? { id: matched.id, name: matched.name } : null;
+    },
+    [portfolioData]
+  );
+
+  // Validate and locate target milestone when coming from Fix Gap / query params
   const targetMilestone = (() => {
     if (!data?.milestones || data.milestones.length === 0) return null;
 
-    if (skillParam) {
-      // 1. If milestoneParam is also supplied, verify if that exact milestone covers skillParam
-      if (milestoneParam) {
-        const exactMatch = data.milestones.find(
-          (m) =>
-            m.id === milestoneParam &&
-            m.skillsCovered.some((s) => isMatchingSkillFrontend(s, skillParam)),
-        );
-        if (exactMatch) return exactMatch;
-      }
+    // Direct match by explicit milestoneParam if provided in URL (from Fix Gap)
+    if (milestoneParam) {
+      const explicitMatch = data.milestones.find((m) => m.id === milestoneParam);
+      if (explicitMatch) return explicitMatch;
+    }
 
-      // 2. Find the first milestone in the roadmap explicitly covering skillParam via canonical matching
-      const skillMatch = data.milestones.find((m) =>
-        m.skillsCovered.some((s) => isMatchingSkillFrontend(s, skillParam)),
+    // Direct match by skillParam in skillsCovered or title
+    if (skillParam) {
+      const skillMatch = data.milestones.find(
+        (m) =>
+          m.skillsCovered.some((s) => isMatchingSkillFrontend(s, skillParam)) ||
+          isMatchingSkillFrontend(m.title, skillParam),
       );
       if (skillMatch) return skillMatch;
 
-      // Do NOT attach target badge to an unrelated milestone if no milestone covers skillParam
-      return null;
-    }
-
-    // 3. Fallback: if no skillParam is provided, match by milestoneParam if valid
-    if (milestoneParam) {
-      const milestoneMatch = data.milestones.find(
-        (m) => m.id === milestoneParam,
+      // Fallback: match by substring in description or title
+      const cleanSkill = skillParam.toLowerCase().trim();
+      const textMatch = data.milestones.find(
+        (m) =>
+          (m.description || "").toLowerCase().includes(cleanSkill) ||
+          (m.title || "").toLowerCase().includes(cleanSkill),
       );
-      if (milestoneMatch) return milestoneMatch;
+      if (textMatch) return textMatch;
     }
 
     return null;
   })();
   const targetMilestoneId = targetMilestone?.id || null;
+  const autoOpenDrawer = Boolean(isFromFixGap && targetMilestoneId);
 
   // Contextual auto-scroll into view when target milestone is resolved
   useEffect(() => {
@@ -158,16 +214,26 @@ export default function LearningPathContent() {
 
   const completeMutation = useMutation({
     mutationFn: (milestoneId: string) => completeMilestone(milestoneId),
-    onSuccess: () => {
+    onSuccess: (updatedData) => {
+      if (updatedData) {
+        queryClient.setQueryData(["learningPath", session?.user?.id], updatedData);
+      }
       queryClient.invalidateQueries({
-        queryKey: ["learningPath", session?.user?.id],
+        queryKey: ["learningPath"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["dashboardData", session?.user?.id],
+        queryKey: ["dashboardData"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["careerTwin", session?.user?.id],
+        queryKey: ["careerTwin"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["skillGaps"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["portfolio"],
+      });
+      refetch();
     },
   });
 
@@ -179,6 +245,21 @@ export default function LearningPathContent() {
       const proj = (resData?.project ||
         resData?.data ||
         resData) as unknown as Record<string, unknown>;
+      const spec = (proj?.specification as Record<string, unknown>) || null;
+      const matchedMilestone = data?.milestones?.find(
+        (m) =>
+          m.id ===
+          (generateProjectMutation.variables?.milestoneId ||
+            (spec?.milestoneId as string)),
+      );
+      const milestoneTitleVal =
+        (spec?.milestoneTitle as string) ||
+        matchedMilestone?.title ||
+        (typeof spec?.generatedForContext === "string" &&
+        spec.generatedForContext.toLowerCase().startsWith("generated for:")
+          ? spec.generatedForContext.replace(/^generated for:\s*/i, "").trim()
+          : (spec?.generatedForContext as string)) ||
+        null;
       const titleVal =
         typeof proj?.title === "string"
           ? proj.title
@@ -197,9 +278,16 @@ export default function LearningPathContent() {
         title: titleVal,
         description: descVal,
         techStack: techVal,
+        milestoneTitle: milestoneTitleVal,
         duplicate: !!resData?.duplicate,
       });
       queryClient.invalidateQueries({
+        queryKey: ["portfolio", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["learningPath"],
+      });
+      queryClient.refetchQueries({
         queryKey: ["portfolio", session?.user?.id],
       });
       queryClient.invalidateQueries({
@@ -325,14 +413,51 @@ export default function LearningPathContent() {
         </div>
       </div>
 
-      {skillParam && !targetMilestone && (
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-center gap-3 text-amber-700 dark:text-amber-300 text-sm">
-          <Target className="w-5 h-5 shrink-0 text-amber-500" />
-          <span>
-            Target Skill Gap: <strong>{skillParam}</strong> is preserved, but no
-            directly linked milestone covers this skill in your current active
-            roadmap.
-          </span>
+      {isFromFixGap && skillParam && targetMilestone && (
+        <div className="bg-primary/10 border border-primary/30 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-sm animate-in fade-in duration-300">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-primary/20 text-primary shrink-0">
+              <Target className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-foreground">
+                  Target Skill Gap: <span className="text-primary font-extrabold">{skillParam}</span>
+                </span>
+                <span
+                  className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                    targetMilestone.status === "completed"
+                      ? "bg-emerald-500/20 text-emerald-500"
+                      : targetMilestone.status === "current"
+                        ? "bg-primary/20 text-primary"
+                        : "bg-muted text-muted-foreground border border-border"
+                  }`}
+                >
+                  {targetMilestone.status === "completed"
+                    ? "Stage Completed"
+                    : targetMilestone.status === "current"
+                      ? "Active Frontier"
+                      : "Upcoming Stage (Locked)"}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {targetMilestone.status === "completed"
+                  ? `You have already completed ${targetMilestone.title}. You can review your verified competencies and portfolio projects anytime.`
+                  : targetMilestone.status === "current"
+                    ? `This stage is currently unlocked! You can start working on ${targetMilestone.title} directly.`
+                    : `This skill is covered in ${targetMilestone.title}. You can preview all module details, but to work on it, complete earlier milestones in order from above.`}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <Link
+              href={`/dashboard/learner/assessments?skill=${encodeURIComponent(skillParam)}`}
+              className="px-3 py-1.5 rounded-lg bg-card hover:bg-card-soft text-foreground text-xs font-semibold border border-border transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-primary" /> Test Out in Quiz
+            </Link>
+          </div>
         </div>
       )}
 
@@ -343,13 +468,28 @@ export default function LearningPathContent() {
           overallProgress={data.overallProgress}
           milestones={data.milestones}
           targetMilestoneId={targetMilestoneId}
-          onCompleteMilestone={(id) => completeMutation.mutate(id)}
-          isCompleting={completeMutation.isPending}
-          onGenerateProject={(opts) =>
-            generateProjectMutation.mutate({
-              milestoneId: opts.milestoneId,
-              skill: opts.skill || skillParam || undefined,
+          autoOpenDrawer={autoOpenDrawer}
+          getProjectForMilestone={getProjectForMilestone}
+          onCompleteMilestone={(id, onSuccess) =>
+            completeMutation.mutate(id, {
+              onSuccess: () => {
+                if (onSuccess) onSuccess();
+              },
             })
+          }
+          isCompleting={completeMutation.isPending}
+          onGenerateProject={(opts, onSuccess) =>
+            generateProjectMutation.mutate(
+              {
+                milestoneId: opts.milestoneId,
+                skill: opts.skill || skillParam || undefined,
+              },
+              {
+                onSuccess: () => {
+                  if (onSuccess) onSuccess();
+                },
+              }
+            )
           }
           isGeneratingProject={generateProjectMutation.isPending}
           onToggleView={() => setViewMode("list")}
@@ -361,6 +501,10 @@ export default function LearningPathContent() {
           <div className="flex flex-col dashboard-card-gap relative z-10">
             {data.milestones.map((milestone, idx) => {
               const isTarget = milestone.id === targetMilestoneId;
+              const linkedProject = getProjectForMilestone(milestone.id, milestone.title);
+              const isMilestoneProjectCreated = Boolean(milestone.hasProject || linkedProject);
+              const linkedProjectId = linkedProject?.id || milestone.projectId || null;
+              const portfolioHref = `/dashboard/learner/portfolio?${linkedProjectId ? `projectId=${linkedProjectId}&` : ""}milestoneId=${milestone.id}&milestone=${encodeURIComponent(milestone.title)}`;
 
               return (
                 <div
@@ -457,7 +601,8 @@ export default function LearningPathContent() {
                           <MilestoneResourcesAccordion
                             milestoneId={milestone.id}
                             skills={milestone.skillsCovered}
-                            defaultOpen={isTarget}
+                            defaultOpen={isTarget && milestone.status !== "upcoming"}
+                            isLocked={milestone.status === "upcoming"}
                           />
                         </div>
 
@@ -498,53 +643,61 @@ export default function LearningPathContent() {
                                 }
                                 disabled={completeMutation.isPending}
                               />
-                              <button
-                                onClick={() =>
-                                  generateProjectMutation.mutate({
-                                    milestoneId: milestone.id,
-                                    skill: skillParam || undefined,
-                                  })
-                                }
-                                disabled={generateProjectMutation.isPending}
-                                className="w-full bg-muted text-foreground hover:bg-card-soft py-2 rounded-lg text-xs font-medium border border-border flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-                              >
-                                {generateProjectMutation.isPending &&
-                                generateProjectMutation.variables
-                                  ?.milestoneId === milestone.id ? (
-                                  <>
-                                    <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
-                                    Generating...
-                                  </>
-                                ) : (
-                                  <>
-                                    <FolderKanban className="w-3.5 h-3.5 text-primary" />
-                                    Generate Project
-                                  </>
-                                )}
-                              </button>
+                              {isMilestoneProjectCreated ? (
+                                <Link
+                                  href={portfolioHref}
+                                  className="w-full bg-card hover:bg-card-soft text-foreground py-2 rounded-lg text-xs font-semibold border border-border flex items-center justify-center gap-2 transition-all shadow-sm"
+                                >
+                                  <FolderKanban className="w-3.5 h-3.5 text-primary" />
+                                  View Milestone Project &rarr;
+                                </Link>
+                              ) : (
+                                <button
+                                  onClick={() =>
+                                    generateProjectMutation.mutate({
+                                      milestoneId: milestone.id,
+                                      skill: skillParam || undefined,
+                                    })
+                                  }
+                                  disabled={generateProjectMutation.isPending}
+                                  className="w-full bg-muted text-foreground hover:bg-card-soft py-2 rounded-lg text-xs font-medium border border-border flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                                >
+                                  {generateProjectMutation.isPending &&
+                                  generateProjectMutation.variables
+                                    ?.milestoneId === milestone.id ? (
+                                    <>
+                                      <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
+                                      Generating...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <FolderKanban className="w-3.5 h-3.5 text-primary" />
+                                      Generate Project
+                                    </>
+                                  )}
+                                </button>
+                              )}
                             </div>
                           ) : milestone.status === "upcoming" ? (
                             <div className="flex flex-col gap-2">
                               <button
-                                className="w-full bg-muted text-muted-foreground py-2.5 rounded-lg text-sm font-medium border border-border cursor-not-allowed"
+                                className="w-full bg-muted text-muted-foreground py-2.5 rounded-lg text-sm font-medium border border-border cursor-not-allowed flex items-center justify-center gap-2"
                                 disabled
                               >
+                                <Lock className="w-3.5 h-3.5" />
                                 Locked
                               </button>
-                              {isTarget && (
-                                <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
-                                  Milestone completion is locked until
-                                  prerequisite milestones are completed. You can
-                                  still study the curated resources below.
-                                </p>
-                              )}
+                              <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+                                Complete prerequisite milestones to unlock this module.
+                              </p>
                             </div>
                           ) : (
                             <Link
-                              href="/dashboard/learner/portfolio"
-                              className="w-full bg-card text-foreground py-2.5 rounded-lg text-sm font-medium border border-border hover:bg-card-soft transition-all text-center block"
+                              href={portfolioHref}
+                              className="w-full bg-card text-foreground py-2.5 rounded-lg text-sm font-medium border border-border hover:bg-card-soft transition-all text-center flex items-center justify-center gap-2"
                             >
-                              View Projects
+                              <FolderKanban className="w-4 h-4 text-primary" />
+                              View Milestone Project
                             </Link>
                           )}
                         </div>
@@ -605,6 +758,18 @@ export default function LearningPathContent() {
             </div>
 
             <div className="space-y-4">
+              {generatedProject.milestoneTitle && (
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-primary/10 border border-primary/20 text-primary text-xs font-semibold shadow-sm">
+                  <span className="text-sm">📍</span>
+                  <span>
+                    Created for Roadmap Milestone:{" "}
+                    <strong className="text-foreground font-bold">
+                      {generatedProject.milestoneTitle}
+                    </strong>
+                  </span>
+                </div>
+              )}
+
               <div>
                 <h4 className="text-base font-bold text-foreground">
                   {generatedProject.title}
@@ -657,7 +822,11 @@ export default function LearningPathContent() {
                   Close
                 </button>
                 <Link
-                  href="/dashboard/learner/portfolio"
+                  href={
+                    generatedProject.id
+                      ? `/dashboard/learner/portfolio?projectId=${generatedProject.id}${generatedProject.milestoneTitle ? `&milestone=${encodeURIComponent(generatedProject.milestoneTitle)}` : ""}`
+                      : "/dashboard/learner/portfolio"
+                  }
                   className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity flex items-center gap-1.5"
                 >
                   {generatedProject.duplicate
@@ -677,19 +846,32 @@ export default function LearningPathContent() {
 function MilestoneResourcesAccordion({
   milestoneId,
   defaultOpen = false,
+  isLocked = false,
 }: {
   milestoneId: string;
   skills?: string[];
   defaultOpen?: boolean;
+  isLocked?: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [isOpen, setIsOpen] = useState(defaultOpen && !isLocked);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["milestoneResources", milestoneId],
     queryFn: () => getMilestoneResources(milestoneId),
-    enabled: isOpen,
+    enabled: isOpen && !isLocked,
     staleTime: 1000 * 60 * 60 * 24, // 24h cache
   });
+
+  if (isLocked) {
+    return (
+      <div className="mt-4 pt-4 border-t border-border/60">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/40 px-3.5 py-2.5 rounded-lg border border-border">
+          <Lock className="w-3.5 h-3.5 shrink-0" />
+          <span>Curated Learning Resources are locked until previous milestones are completed.</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-4 pt-4 border-t border-border/60">
