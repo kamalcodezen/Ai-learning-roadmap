@@ -31,7 +31,7 @@ function RoadmapMilestoneNodeComponent({ data }: { data: RoadmapMilestoneNodeDat
         data.isTarget
           ? "bg-card border-2 border-primary ring-4 ring-primary/40"
           : isCompleted
-            ? "bg-card border-2 border-emerald-500/80 hover:border-emerald-400"
+            ? "bg-card border-2 border-primary/80 hover:border-primary"
             : isCurrent
               ? "bg-card border-2 border-primary ring-2 ring-primary/30 animate-pulse-subtle"
               : "bg-card border border-border hover:border-primary/50 hover:bg-card-soft"
@@ -73,24 +73,30 @@ function RoadmapMilestoneNodeComponent({ data }: { data: RoadmapMilestoneNodeDat
           <span
             className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${
               isCompleted
-                ? "bg-emerald-500 text-white font-extrabold"
+                ? "bg-primary text-white font-extrabold"
                 : isCurrent
                   ? "bg-primary text-white font-extrabold"
                   : "bg-muted text-muted-foreground"
             }`}
           >
-            {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : data.order}
+            {isCompleted ? (
+              <CheckCircle2 className="w-3.5 h-3.5" />
+            ) : isUpcoming ? (
+              <Lock className="w-3 h-3" />
+            ) : (
+              data.order
+            )}
           </span>
           <span
             className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
               isCompleted
-                ? "bg-emerald-500/20 text-emerald-400"
+                ? "bg-primary/20 text-primary"
                 : isCurrent
                   ? "bg-primary/20 text-primary font-semibold"
                   : "bg-muted text-muted-foreground"
             }`}
           >
-            {isCompleted ? "Completed" : isCurrent ? "In Progress" : "Upcoming"}
+            {isCompleted ? "Completed" : isCurrent ? "In Progress" : "Locked"}
           </span>
         </div>
 
@@ -102,7 +108,7 @@ function RoadmapMilestoneNodeComponent({ data }: { data: RoadmapMilestoneNodeDat
       {/* Node Title */}
       <h4
         className={`text-sm font-bold line-clamp-2 leading-tight mb-1.5 ${
-          isCompleted ? "text-emerald-500 dark:text-emerald-400" : isCurrent ? "text-primary" : "text-foreground"
+          isCompleted ? "text-primary" : isCurrent ? "text-primary" : "text-foreground"
         }`}
       >
         {data.title}
@@ -134,12 +140,20 @@ function RoadmapMilestoneNodeComponent({ data }: { data: RoadmapMilestoneNodeDat
 
       {/* Bottom Action Footer */}
       <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
-        <span className="text-[11px] font-semibold text-primary hover:text-primary/80 flex items-center gap-1">
-          Learn more <ArrowRight className="w-3 h-3" />
-        </span>
+        {isUpcoming ? (
+          <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+            <Lock className="w-3 h-3" /> View module
+          </span>
+        ) : (
+          <span className="text-[11px] font-semibold text-primary hover:text-primary/80 flex items-center gap-1">
+            Learn more <ArrowRight className="w-3 h-3" />
+          </span>
+        )}
 
         {isCompleted && (
-          <span className="text-[10px] text-emerald-400 font-medium">100% Mastery</span>
+          <span className="text-[10px] text-primary font-semibold flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3" /> Completed
+          </span>
         )}
         {isCurrent && (
           <span className="text-[10px] text-primary font-semibold flex items-center gap-1">
@@ -147,8 +161,8 @@ function RoadmapMilestoneNodeComponent({ data }: { data: RoadmapMilestoneNodeDat
           </span>
         )}
         {isUpcoming && (
-          <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-            <Lock className="w-2.5 h-2.5" /> Prerequisite
+          <span className="text-[10px] text-muted-foreground flex items-center gap-1 font-medium">
+            <Lock className="w-2.5 h-2.5" /> Locked
           </span>
         )}
       </div>

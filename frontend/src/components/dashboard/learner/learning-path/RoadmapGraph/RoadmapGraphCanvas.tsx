@@ -9,7 +9,6 @@ import {
   BackgroundVariant,
   useNodesState,
   useEdgesState,
-  useReactFlow,
   Node,
   Edge,
   MarkerType,
@@ -23,32 +22,6 @@ const nodeTypes = {
   milestoneNode: RoadmapMilestoneNode,
 };
 
-function TargetFocusHandler({
-  targetMilestoneId,
-  nodes,
-}: {
-  targetMilestoneId?: string | null;
-  nodes: Node[];
-}) {
-  const { setCenter } = useReactFlow();
-
-  useEffect(() => {
-    if (!targetMilestoneId || nodes.length === 0) return;
-    const targetNode = nodes.find((n) => n.id === targetMilestoneId);
-    if (targetNode) {
-      const timer = setTimeout(() => {
-        setCenter(targetNode.position.x + 144, targetNode.position.y + 100, {
-          zoom: 1,
-          duration: 900,
-        });
-      }, 350);
-      return () => clearTimeout(timer);
-    }
-  }, [targetMilestoneId, nodes, setCenter]);
-
-  return null;
-}
-
 interface MilestoneItem {
   id: string;
   title: string;
@@ -59,6 +32,8 @@ interface MilestoneItem {
   description: string;
   whyItMatters: string;
   phase?: string;
+  hasProject?: boolean;
+  projectId?: string | null;
 }
 
 interface RoadmapGraphCanvasProps {
@@ -67,11 +42,13 @@ interface RoadmapGraphCanvasProps {
   overallProgress: number;
   milestones: MilestoneItem[];
   targetMilestoneId?: string | null;
-  onCompleteMilestone: (milestoneId: string) => void;
+  autoOpenDrawer?: boolean;
+  onCompleteMilestone: (milestoneId: string, onSuccess?: () => void) => void;
   isCompleting: boolean;
-  onGenerateProject: (opts: { milestoneId: string; skill?: string }) => void;
+  onGenerateProject: (opts: { milestoneId: string; skill?: string }, onSuccess?: () => void) => void;
   isGeneratingProject: boolean;
   onToggleView?: () => void;
+  getProjectForMilestone?: (milestoneId: string, milestoneTitle: string) => { id: string; name: string } | null;
 }
 
 export function RoadmapGraphCanvas({
@@ -80,31 +57,62 @@ export function RoadmapGraphCanvas({
   overallProgress,
   milestones,
   targetMilestoneId,
+  autoOpenDrawer = false,
   onCompleteMilestone,
   isCompleting,
   onGenerateProject,
   isGeneratingProject,
   onToggleView,
+  getProjectForMilestone,
 }: RoadmapGraphCanvasProps) {
-  const [userSelectedMilestoneId, setUserSelectedMilestoneId] = useState<string | null>(targetMilestoneId || null);
-  const [prevTargetId, setPrevTargetId] = useState<string | null | undefined>(targetMilestoneId);
+  const [userSelectedMilestoneId, setUserSelectedMilestoneId] = useState<string | null>(
+    autoOpenDrawer ? targetMilestoneId || null : null
+  );
+  const [prevTargetId, setPrevTargetId] = useState<string | null | undefined>(
+    autoOpenDrawer ? targetMilestoneId : null
+  );
 
-  // Adjust selected milestone during render when targetMilestoneId prop changes (official React pattern)
-  if (targetMilestoneId !== prevTargetId) {
+  // Adjust selected milestone during render ONLY when autoOpenDrawer is explicitly enabled and target changes
+  if (autoOpenDrawer && targetMilestoneId !== prevTargetId) {
     setPrevTargetId(targetMilestoneId);
     setUserSelectedMilestoneId(targetMilestoneId || null);
   }
 
-  const selectedMilestoneId = userSelectedMilestoneId ?? targetMilestoneId ?? null;
+  const selectedMilestoneId = userSelectedMilestoneId;
 
   const selectedMilestone = useMemo(
-    () => milestones.find((m) => m.id === selectedMilestoneId) || null,
+    () => (selectedMilestoneId ? milestones.find((m) => m.id === selectedMilestoneId) || null : null),
     [milestones, selectedMilestoneId]
   );
 
   const handleSelectNode = useCallback((milestoneId: string) => {
     setUserSelectedMilestoneId(milestoneId);
   }, []);
+
+  const handleCloseDrawer = useCallback(() => {
+    setUserSelectedMilestoneId(null);
+    if (typeof window !== "undefined" && window.location.search) {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
+
+  const handleComplete = useCallback(
+    (milestoneId: string) => {
+      onCompleteMilestone(milestoneId, () => {
+        handleCloseDrawer();
+      });
+    },
+    [onCompleteMilestone, handleCloseDrawer]
+  );
+
+  const handleGenerateProject = useCallback(
+    (opts: { milestoneId: string; skill?: string }) => {
+      onGenerateProject(opts, () => {
+        handleCloseDrawer();
+      });
+    },
+    [onGenerateProject, handleCloseDrawer]
+  );
 
   // Compute Layout: Multi-path connected grid positioning
   const { initialNodes, initialEdges } = useMemo(() => {
@@ -149,6 +157,8 @@ export function RoadmapGraphCanvas({
           whyItMatters: m.whyItMatters,
           phase: m.phase,
           isTarget,
+          hasProject: m.hasProject || Boolean(getProjectForMilestone?.(m.id, m.title)),
+          projectId: m.projectId || getProjectForMilestone?.(m.id, m.title)?.id || null,
           onSelectNode: handleSelectNode,
         },
       });
@@ -167,7 +177,7 @@ export function RoadmapGraphCanvas({
           animated: isCurrentEdge,
           style: {
             stroke: isPrevCompleted
-              ? "#10b981"
+              ? "var(--color-primary, #9F54F7)"
               : isCurrentEdge
                 ? "var(--color-primary, #9F54F7)"
                 : "var(--color-border, #52525b)",
@@ -197,7 +207,7 @@ export function RoadmapGraphCanvas({
     });
 
     return { initialNodes: nodes, initialEdges: edges };
-  }, [milestones, targetMilestoneId, handleSelectNode]);
+  }, [milestones, targetMilestoneId, handleSelectNode, getProjectForMilestone]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -258,22 +268,18 @@ export function RoadmapGraphCanvas({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
+        onNodeClick={(_, node) => handleSelectNode(node.id)}
         fitView
         fitViewOptions={{ padding: 0.25 }}
         minZoom={0.2}
         maxZoom={1.5}
-        defaultViewport={{ x: 0, y: 0, zoom: 0.85 }}
-        preventScrolling={false}
-        zoomOnScroll={false}
-        panOnScroll={false}
         panOnDrag={true}
+        zoomOnScroll={true}
+        panOnScroll={false}
         zoomOnPinch={true}
         zoomOnDoubleClick={false}
-        zoomActivationKeyCode="Control"
         className="bg-transparent"
       >
-        {/* Dynamic Viewport Gliding to Target Node */}
-        <TargetFocusHandler targetMilestoneId={targetMilestoneId} nodes={nodes} />
 
         {/* Grid Background */}
         <Background
@@ -294,7 +300,7 @@ export function RoadmapGraphCanvas({
           nodeStrokeWidth={3}
           nodeColor={(node) => {
             const status = (node.data as { status?: string })?.status;
-            if (status === "completed") return "#10b981";
+            if (status === "completed") return "var(--color-primary, #9F54F7)";
             if (status === "current") return "var(--color-primary, #fbbf24)";
             return "var(--color-border, #3f3f46)";
           }}
@@ -306,11 +312,26 @@ export function RoadmapGraphCanvas({
       {/* Slide-out Milestone Details Drawer */}
       <MilestoneDetailDrawer
         milestone={selectedMilestone}
-        onClose={() => setUserSelectedMilestoneId("")}
-        onComplete={onCompleteMilestone}
+        onClose={handleCloseDrawer}
+        onComplete={handleComplete}
         isCompleting={isCompleting}
-        onGenerateProject={onGenerateProject}
+        onGenerateProject={handleGenerateProject}
         isGeneratingProject={isGeneratingProject}
+        hasProject={
+          selectedMilestone
+            ? Boolean(selectedMilestone.hasProject || getProjectForMilestone?.(selectedMilestone.id, selectedMilestone.title))
+            : false
+        }
+        projectId={
+          selectedMilestone
+            ? selectedMilestone.projectId || getProjectForMilestone?.(selectedMilestone.id, selectedMilestone.title)?.id || null
+            : null
+        }
+        onSelectActive={() => {
+          const activeM = milestones.find((m) => m.status === "current") || milestones[0];
+          if (activeM) handleSelectNode(activeM.id);
+        }}
+        activeMilestoneTitle={(milestones.find((m) => m.status === "current") || milestones[0])?.title}
       />
     </div>
   );
