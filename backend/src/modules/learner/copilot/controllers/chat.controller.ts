@@ -29,7 +29,7 @@ export class ChatController {
     try {
       const validatedData = chatRequestSchema.parse(req.body);
 
-      // Zod পার্সিংয়ের পর শেষ ৪টি মেসেজ ফিল্টার করে পাঠানো হচ্ছে
+      // Filter and retain only the last 4 valid messages for context optimization
       const sanitizedHistory = validatedData.history
         .filter((item) => item.content.trim().length > 0)
         .slice(-4);
