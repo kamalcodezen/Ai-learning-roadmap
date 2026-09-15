@@ -130,8 +130,8 @@ export function Onboarding() {
                 {step > i ? <Check className="w-4 h-4 sm:w-5 sm:h-5" /> : i}
               </div>
               {i < 4 && (
-                <div
-                  className={`w-8 sm:w-16 h-1 transition-colors duration-300 ${
+<div
+                  className={`w-8 sm:w-16 h-1 -mr-3 transition-colors duration-300 ${
                     step > i ? "bg-primary" : "bg-border"
                   }`}
                 />
@@ -190,7 +190,7 @@ export function Onboarding() {
 
         {/* STEP 2: Role Selection (Minimalist Clean layout) */}
         {step === 2 && (
-          <div className="space-y-8 animate-in fade-in duration-500 w-full text-left">
+          <div className="space-y-4 animate-in fade-in duration-500 w-full text-left">
             <div className="text-center space-y-2">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
                 Where would you like to go?
@@ -300,7 +300,6 @@ export function Onboarding() {
                 src="/video/down.mp4"
                 autoPlay
                 muted
-                loop
                 playsInline
                 className="w-full h-full object-cover"
               />
@@ -360,10 +359,17 @@ export function Onboarding() {
         {/* STEP 4: Ready to Initialize */}
         {step === 4 && (
           <div className="space-y-8 animate-in fade-in duration-500 w-full text-center">
+            <div className="relative w-36 h-36 mx-auto rounded-full overflow-hidden border-5 border-primary/40 shadow-lg bg-muted flex items-center justify-center">
+              <video
+                src="/video/thumbsup.mp4"
+                autoPlay
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            </div>
+
             <div className="space-y-3">
-              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full mx-auto flex items-center justify-center">
-                <Sparkles className="w-8 h-8" />
-              </div>
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
                 Your AI Career Twin is Ready
               </h1>
