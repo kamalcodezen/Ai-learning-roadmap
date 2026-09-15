@@ -1,6 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import { BrainCircuit, Check, Zap } from "lucide-react";
 
 import { Card } from "@/src/components/ui/Card";
+import { BorderBeam } from "@/src/components/ui/border-beam";
 
 export type ExperienceLevel = "beginner" | "intermediate";
 
@@ -27,111 +31,111 @@ export const experienceLevels: {
 
 interface ExperienceSectionProps {
   experience: ExperienceLevel | "";
-  setExperience: (exp: ExperienceLevel | "") => void;
+  setExperience: (level: ExperienceLevel | "") => void;
+}
+
+interface LevelOptionProps {
+  level: (typeof experienceLevels)[number];
+  icon: typeof BrainCircuit;
+  selected: boolean;
+  onSelect: (level: ExperienceLevel) => void;
+}
+
+function LevelOption({ level, icon: Icon, selected, onSelect }: LevelOptionProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const active = selected || isHovered;
+
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(level.id)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`
+        dashboard-card group relative overflow-hidden rounded-md border text-left transition-all duration-300
+        ${
+          selected
+            ? "border-primary/60 bg-primary/[0.08]"
+            : "border-border hover:border-primary/40"
+        }
+      `}
+    >
+      {active && (
+        <BorderBeam
+          duration={6}
+          size={220}
+          borderWidth={2}
+          colorFrom="#9F54F7"
+          colorTo="#c084fc"
+        />
+      )}
+
+      <div className="relative flex items-start justify-between gap-4">
+        <div>
+          <div
+            className={`
+              mb-4 flex h-10 w-10 items-center justify-center rounded-xl transition-colors
+              ${selected ? "bg-primary text-white" : "bg-muted text-muted-foreground"}
+            `}
+          >
+            <Icon className="h-5 w-5" />
+          </div>
+
+          <h3 className="font-poppins text-base font-semibold text-foreground">
+            {level.title}
+          </h3>
+          <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
+            {level.description}
+          </p>
+        </div>
+
+        <span
+          className={`
+            flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition
+            ${selected ? "border-primary bg-primary text-white" : "border-border"}
+          `}
+        >
+          {selected && <Check className="h-3 w-3" />}
+        </span>
+      </div>
+    </button>
+  );
 }
 
 export function ExperienceSection({ experience, setExperience }: ExperienceSectionProps) {
   return (
     <Card
       mouseGlow
-      className="group relative overflow-hidden rounded-md p-5 transition-all duration-300 border-2 border-background hover:border-brand shadow-none bg-[linear-gradient(to_bottom,#faf5ff_0%,#f3edff_45%,#ede5ff_100%)] dark:bg-[linear-gradient(to_bottom,#1a0e2e_0%,rgba(159,84,247,0.15)_100%)] sm:p-7"
+      className="group relative overflow-hidden rounded-md border-2 border-background shadow-none"
     >
       <div className="relative z-10">
-      <div className="mb-6">
-        <div className="mb-2 flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-            <BrainCircuit className="h-4 w-4 text-primary" />
+        <div className="mb-6 flex items-start gap-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-primary/15 bg-primary/[0.06]">
+            <BrainCircuit className="h-5 w-5 text-primary" />
           </div>
 
-          <h2 className="text-xl font-semibold">
-            What is your current level?
-          </h2>
+          <div>
+            <h2 className="font-poppins text-xl font-semibold text-foreground">
+              Where are you right now?
+            </h2>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+              This calibrates your initial diagnostic so every recommendation
+              matches your starting point.
+            </p>
+          </div>
         </div>
 
-        <p className="text-sm text-muted-foreground">
-          This helps AI Pather calibrate your initial diagnostic.
-        </p>
-      </div>
-
-      <div className="grid gap-3 sm:grid-cols-2">
-        {experienceLevels.map((level) => {
-          const selected = experience === level.id;
-          const Icon = level.icon;
-
-          return (
-            <button
+        <div className="grid gap-3 sm:grid-cols-2">
+          {experienceLevels.map((level) => (
+            <LevelOption
               key={level.id}
-              type="button"
-              onClick={() => setExperience(level.id)}
-              className={`
-                group
-                rounded-2xl
-                border
-                p-5
-                text-left
-                transition-all
-                duration-300
-                ${
-                  selected
-                    ? "border-primary/50 bg-primary/[0.08] shadow-[0_0_30px_rgba(206,255,31,0.06)]"
-                    : "border-border bg-card-soft hover:-translate-y-0.5 hover:border-primary/30"
-                }
-              `}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div
-                    className={`
-                      mb-4
-                      flex
-                      h-9
-                      w-9
-                      items-center
-                      justify-center
-                      rounded-xl
-                      ${
-                        selected
-                          ? "bg-primary text-[#131824]"
-                          : "bg-muted text-muted-foreground"
-                      }
-                    `}
-                  >
-                    <Icon className="h-4 w-4" />
-                  </div>
-
-                  <h3 className="text-sm font-semibold sm:text-base">
-                    {level.title}
-                  </h3>
-
-                  <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                    {level.description}
-                  </p>
-                </div>
-
-                <span
-                  className={`
-                    flex
-                    h-5
-                    w-5
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    ${
-                      selected
-                        ? "border-primary bg-primary text-white"
-                        : "border-border"
-                    }
-                  `}
-                >
-                  {selected && <Check className="h-3 w-3" />}
-                </span>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+              level={level}
+              icon={level.icon}
+              selected={experience === level.id}
+              onSelect={setExperience}
+            />
+          ))}
+        </div>
       </div>
     </Card>
   );
