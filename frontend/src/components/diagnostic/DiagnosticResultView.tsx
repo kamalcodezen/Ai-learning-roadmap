@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import Lenis from "lenis";
 import {
   CheckCircle2,
   ChevronRight,
@@ -20,6 +22,7 @@ import {
 } from "lucide-react";
 import type { DiagnosticResultData } from "@/src/lib/api/learner/diagnostic";
 import { glowCardClass } from "@/src/components/dashboard/shared/cards";
+import brandLogo from "../../../public/brand/AI-Pather-blue.png";
 
 interface DiagnosticResultViewProps {
   result: DiagnosticResultData;
@@ -31,6 +34,28 @@ export default function DiagnosticResultView({
   onRetake,
 }: DiagnosticResultViewProps) {
   const [showTranscript, setShowTranscript] = useState(false);
+
+  const skillScrollRef = useRef<HTMLDivElement>(null);
+  const skillContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    if (!skillScrollRef.current || !skillContentRef.current) return;
+
+    const lenis = new Lenis({
+      wrapper: skillScrollRef.current,
+      content: skillContentRef.current,
+      autoRaf: true,
+    });
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
 
   const displayScore = result.overallScore ?? result.score ?? 0;
   const correctCount = result.correctAnswers ?? 0;
@@ -56,66 +81,91 @@ export default function DiagnosticResultView({
         {/* ============================================================ */}
         {/* HEADER & OVERALL SCORE */}
         {/* ============================================================ */}
-        <section className={`${glowCardClass} p-8 text-center sm:p-12`}>
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 shadow-inner">
-            <CheckCircle2 className="h-8 w-8 text-primary" />
-          </div>
+        <section className={`${glowCardClass} p-8 sm:p-12`}>
+          <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-center">
+            <div className="lg:text-left">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
+                  <Image
+                    src={brandLogo}
+                    alt="AI Pather"
+                    className="ml-1 h-6 w-6 brightness-0 dark:invert"
+                    height={24}
+                    width={24}
+                  />
+                </div>
+                <h2 className="text-xl font-bold tracking-tight">AI Pather</h2>
+              </div>
 
-          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-            Diagnostic Complete
-          </p>
+              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+                Diagnostic Complete
+              </p>
 
-          <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-            Your Skill-Gap Diagnosis is Ready
-          </h1>
+              <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+                Your Skill-Gap Diagnosis is Ready
+              </h1>
 
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-            We evaluated your 5 technical challenges and open-ended communication response against real industry standards. Here is your personalized skill breakdown.
-          </p>
-
-          <div className="mx-auto mt-8 grid max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
-            {/* Overall Technical Score */}
-            <div className="flex flex-col items-center justify-center rounded-xl border border-primary/25 bg-primary/[0.06] p-6">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Technical MCQ Score
-              </span>
-              <span className="mt-2 text-5xl font-extrabold tracking-tight text-primary">
-                {displayScore}%
-              </span>
-              <span className="mt-2 text-xs font-medium text-muted-foreground">
-                {correctCount} of {mcqTotal} technical questions correct
-              </span>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
+                We evaluated your 5 technical challenges and open-ended
+                communication response against real industry standards. Here is
+                your personalized skill breakdown.
+              </p>
             </div>
 
-            {/* Communication Score / Status */}
-            <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-card-soft p-6">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Communication Evaluation
-              </span>
-              {communication?.isAvailable ? (
-                <>
-                  <span className="mt-2 text-5xl font-extrabold tracking-tight text-foreground">
-                    {communication.score}%
-                  </span>
-                  <span className="mt-2 text-xs font-medium text-muted-foreground">
-                    AI evaluated across 5 speech dimensions
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className="mt-2 text-2xl font-bold text-muted-foreground">
-                    Submitted
-                  </span>
-                  <span className="mt-2 text-xs text-muted-foreground text-center">
-                    Evaluation pending or unavailable
-                  </span>
-                </>
-              )}
+            <div className="flex shrink-0 flex-col items-stretch justify-center gap-4 lg:max-w-[300px]">
+              {/* MCQ Score */}
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-primary/25 bg-primary/[0.06] px-8 py-6">
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Technical MCQ Score
+                </span>
+                <span className="mt-2 text-5xl font-extrabold tracking-tight text-primary">
+                  {displayScore}%
+                </span>
+                <span className="mt-2 text-xs font-medium text-muted-foreground">
+                  {correctCount} of {mcqTotal} technical questions correct
+                </span>
+                {onRetake && (
+                  <button
+                    type="button"
+                    onClick={onRetake}
+                    className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 active:scale-[0.98]"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                    Retake
+                  </button>
+                )}
+              </div>
+
+              {/* Communication Score / Status */}
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card-soft p-6">
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Communication Evaluation
+                </span>
+                {communication?.isAvailable ? (
+                  <>
+                    <span className="mt-2 text-5xl font-extrabold tracking-tight text-foreground">
+                      {communication.score}%
+                    </span>
+                    <span className="mt-2 text-xs font-medium text-muted-foreground">
+                      AI evaluated across 5 speech dimensions
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="mt-2 text-2xl font-bold text-muted-foreground">
+                      Submitted
+                    </span>
+                    <span className="mt-2 text-center text-xs text-muted-foreground">
+                      Evaluation pending or unavailable
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Quick CTAs */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3 text-left">
             <Link
               href="/dashboard/learner/skill-gaps"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 active:scale-[0.98]"
@@ -166,8 +216,14 @@ export default function DiagnosticResultView({
               Skill analysis is temporarily unavailable.
             </div>
           ) : (
-            <div className="mt-6 space-y-4">
-              {skills.map((skill) => {
+            <div className="relative">
+              <div
+                ref={skillScrollRef}
+                data-lenis-prevent-wheel
+                className="mt-6 max-h-[25vh] overflow-y-auto space-y-4 pr-1 md:max-h-[40vh]"
+              >
+                <div ref={skillContentRef}>
+                  {skills.map((skill) => {
                 const isStrong = skill.status === "STRONG";
                 const isMedium = skill.status === "MEDIUM";
 
@@ -222,7 +278,14 @@ export default function DiagnosticResultView({
                     </div>
                   </div>
                 );
-              })}
+                })}
+                </div>
+              </div>
+
+              <div className="pointer-events-none absolute -bottom-10 left-1/2 flex -translate-x-1/2 items-center gap-1 text-[12px] text-primary animate-bounce [animation-duration:2.2s]">
+                <ChevronDown className="h-5 w-5" />
+                Scroll down
+              </div>
             </div>
           )}
         </section>

@@ -151,22 +151,37 @@ export function Onboarding() {
 
   return (
     <div className="global-pos dashboard-card w-full min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-primary/25">
+      {/* Floating Back button (mobile & tablet only) */}
+      {step > 1 && (
+        <button
+          onClick={handlePrev}
+          className="absolute left-12 top-30 z-10 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors lg:hidden"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back
+        </button>
+      )}
+
+      {/* Floating Theme Toggler (mobile & tablet only) */}
+      <div className="absolute right-12 top-30 z-10 flex lg:hidden">
+        <AnimatedThemeToggler />
+      </div>
+
       {/* Top Header / Progress & Theme Toggle */}
       <header className="w-full flex items-center justify-between px-6 py-6">
-        {/* Back or Empty space */}
-        <div className="w-24">
-          {step > 1 ? (
+        {/* Back or Empty space (desktop only) */}
+        <div className="hidden w-24 lg:block">
+          {step > 1 && (
             <button
               onClick={handlePrev}
               className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              <ArrowLeft className="w-4 h-4" /> Back
+              <ArrowLeft className="h-4 w-4" /> Back
             </button>
-          ) : null}
+          )}
         </div>
 
         {/* Minimal Step Indicator */}
-        <div className="flex items-center gap-3">
+        <div className="mx-auto flex items-center gap-3 lg:mx-0">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="flex items-center">
               <div
@@ -191,8 +206,8 @@ export function Onboarding() {
           ))}
         </div>
 
-        {/* Theme Toggle only */}
-        <div className="w-24 flex items-center justify-end">
+        {/* Theme Toggle (desktop only) */}
+        <div className="hidden w-24 items-center justify-end lg:flex">
           <AnimatedThemeToggler />
         </div>
       </header>
