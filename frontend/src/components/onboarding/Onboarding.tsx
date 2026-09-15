@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Check, ChevronDown, ChevronsUpDown, Sparkles } from "lucide-react";
 import Lenis from "lenis";
 
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 import { authClient } from "@/src/lib/auth-client";
+import { onboardingCareerProfile, type CareerProfilePayload } from "@/src/lib/actions/learner/career-profile";
 
 import "./onboardingActionButton.css";
 
@@ -24,13 +26,29 @@ const CAREER_TRACKS = [
   "Cloud Engineer",
   "Mobile Developer",
   "Cybersecurity Analyst",
+  "Software Engineer",
+  "Data Analyst",
+  "QA / Automation Engineer",
+  "Embedded / IoT Engineer",
+  "Game Developer",
+  "Blockchain Developer",
+  "UI/UX Designer",
+  "Technical Writer",
+  "Site Reliability Engineer (SRE)",
+  "iOS Developer",
+  "Android Developer",
+  "Database Administrator",
+  "API / Integration Engineer",
+  "Web Accessibility Specialist",
 ];
 
 const VISIBLE_TRACK_COUNT = 6;
 
 export function Onboarding() {
   const router = useRouter();
-  const { data: session } = authClient.useSession();
+  const queryClient = useQueryClient();
+  const { data: session, isPending: isSessionLoading } =
+    authClient.useSession();
   const firstName = session?.user?.name?.trim().split(" ")[0] || "there";
   const [step, setStep] = useState<number>(1);
   const [showMoreTracks, setShowMoreTracks] = useState<boolean>(false);
@@ -43,6 +61,19 @@ export function Onboarding() {
 
   const totalSteps = 4;
 
+  // Route guard: protect onboarding from unauthenticated users
+  useEffect(() => {
+    if (isSessionLoading) return;
+    if (!session?.user) {
+      router.replace("/signin");
+      return;
+    }
+    const userRole = ((session.user as { role?: string })?.role || "").toUpperCase();
+    if (userRole === "ADMIN") {
+      router.replace("/dashboard/admin/dashboard");
+    }
+  }, [isSessionLoading, session?.user, router]);
+
   const handleNext = () => {
     if (step < totalSteps) setStep(step + 1);
   };
@@ -52,13 +83,33 @@ export function Onboarding() {
   };
 
   const handleComplete = async () => {
+    const userId = session?.user?.id;
+
+    if (!userId || !selectedRole || !experience || isSubmitting) {
+      return;
+    }
+
+    // ----------------------------------------------------------
+    // Save Career Profile (same contract as the previous onboarding flow)
+    // ----------------------------------------------------------
+
+    const onboardingData: CareerProfilePayload = {
+      userId,
+      targetRole: selectedRole,
+      targetRoleName: selectedRole,
+      experienceLevel: experience === "beginner" ? "BEGINNER" : "INTERMEDIATE",
+    };
+
     setIsSubmitting(true);
     try {
-      // Execute your existing backend action here (e.g. onboardingCareerProfile)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await onboardingCareerProfile(onboardingData);
+
+      // Invalidate routing state so guards know onboarding is done
+      queryClient.invalidateQueries({ queryKey: ["routingState"] });
+
       router.push("/diagnostic");
     } catch (error) {
-      console.error(error);
+      console.error("Failed to save career profile:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -167,7 +218,7 @@ export function Onboarding() {
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
                 <span className="text-primary">Hi {firstName}!</span>
                 <br />
-                Let&apos;s build your path.
+                Let&apos;s build your learning roadmap.
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground">
                 We tailor your learning journey to your goals.
@@ -371,7 +422,13 @@ export function Onboarding() {
 
             <div className="space-y-3">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
-                Your AI Career Twin is Ready
+                Your 
+                {" "}
+                <span className="text-primary">
+                AI Career Twin
+                </span>
+                {" "}
+                 is Ready
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground">
                 Target Role: <strong className="text-foreground">{selectedRole}</strong> ({experience} level). Click below to launch your diagnostic session.
