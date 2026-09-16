@@ -263,6 +263,7 @@ export default function AdminAiSandboxView() {
                 <button
                   key={tpl.label}
                   type="button"
+                  aria-label={`Load template prompt: ${tpl.label}`}
                   onClick={() => setPrompt(tpl.prompt)}
                   className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-muted/40 border border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all cursor-pointer"
                 >
@@ -273,6 +274,8 @@ export default function AdminAiSandboxView() {
 
             <form onSubmit={handleRun} className="space-y-3">
               <textarea
+                id="sandbox-prompt-input"
+                aria-label="AI Prompt Execution Input"
                 rows={4}
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
