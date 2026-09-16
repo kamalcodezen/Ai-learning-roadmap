@@ -8,19 +8,15 @@ import {
   Sliders,
   Cpu,
   Zap,
-  Clock,
   Copy,
   Check,
   RotateCcw,
-  Layers,
   Loader2,
-  AlertCircle,
   FileCode,
   ChevronDown,
 } from "lucide-react";
 import { authClient } from "@/src/lib/auth-client";
 import { getAiSandboxModels, testAiSandboxPrompt } from "@/src/lib/api/admin/ai-sandbox";
-import { GlowCard } from "@/src/components/dashboard/shared/cards";
 import { showToast } from "@/src/components/ui/toast";
 import { Skeleton } from "@heroui/react";
 
