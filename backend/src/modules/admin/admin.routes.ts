@@ -10,6 +10,8 @@ import * as auditLogsController from "./audit-logs/audit-logs.controller.js";
 import * as errorLogsController from "./error-logs/error-logs.controller.js";
 import * as aiUsageController from "./ai-usage/ai-usage.controller.js";
 import * as activityController from "./activity/activity.controller.js";
+import * as broadcastController from "./broadcast/broadcast.controller.js";
+import * as aiSandboxController from "./ai-sandbox/ai-sandbox.controller.js";
 
 import * as roadmapsController from "./roadmaps/roadmaps.controller.js";
 import * as assessmentsController from "./assessments/assessments.controller.js";
@@ -40,6 +42,14 @@ router.get('/error-logs', errorLogsController.getAdminErrorLogs);
 router.get('/ai-usage', aiUsageController.getAdminAiUsage);
 router.get('/activity', activityController.getAdminActivity);
 
+// Broadcast & Announcement routes
+router.get("/broadcasts", broadcastController.getBroadcasts);
+router.post("/broadcasts", broadcastController.createBroadcast);
+
+// AI Sandbox & Playground routes
+router.get("/ai-sandbox/models", aiSandboxController.getModels);
+router.post("/ai-sandbox/test", aiSandboxController.testPrompt);
+
 // Learning routes
 router.get('/roadmaps', roadmapsController.getAdminRoadmaps);
 router.get('/assessments', assessmentsController.getAdminAssessments);
@@ -55,3 +65,4 @@ router.get('/analytics', analyticsController.getAdminAnalytics);
 router.get('/export/:entity', analyticsController.exportData);
 
 export default router;
+
