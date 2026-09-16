@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import * as adminUsersService from "./users.service.js";
 
+/**
+ * Retrieves paginated user profiles with keyword searching, role filtering, and creation date ranges.
+ * @route GET /api/admin/users
+ */
 export const getUsers = async (
   req: Request,
   res: Response,
@@ -20,6 +24,10 @@ export const getUsers = async (
   }
 };
 
+/**
+ * Modifies RBAC privileges for target account.
+ * @route PATCH /api/admin/users/:id/role
+ */
 export const updateUserRole = async (
   req: Request,
   res: Response,
@@ -40,6 +48,10 @@ export const updateUserRole = async (
   }
 };
 
+/**
+ * Deletes user account and cascaded relationship records.
+ * @route DELETE /api/admin/users/:id
+ */
 export const deleteUser = async (
   req: Request,
   res: Response,
