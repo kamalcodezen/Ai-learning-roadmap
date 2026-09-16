@@ -28,6 +28,10 @@ import { GlowCard } from "@/src/components/dashboard/shared/cards";
 
 const COVER_IMAGE = "/images/Company_welcome.jpeg";
 
+/**
+ * Admin Profile & Management Overview Page.
+ * Displays administrative credentials, live subsystem health, learner activity, and the 6-card Operations Hub.
+ */
 export default function AdminProfilePage() {
   const { data: session, isPending: isSessionLoading } = authClient.useSession();
   const userId = session?.user?.id;
