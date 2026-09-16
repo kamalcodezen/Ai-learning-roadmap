@@ -3,15 +3,16 @@ import { serverFetch } from "../../core/server";
 export interface AdminProjectItem {
   id: string;
   title: string;
-  score?: number;
-  repositoryUrl?: string;
-  liveUrl?: string;
+  description?: string | null;
+  score?: number | null;
+  repositoryUrl?: string | null;
+  liveUrl?: string | null;
   userId: string;
   createdAt: string;
   user?: {
-    name?: string;
-    email?: string;
-  };
+    name?: string | null;
+    email?: string | null;
+  } | null;
 }
 
 export interface AdminProjectsResponse {
