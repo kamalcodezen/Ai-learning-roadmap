@@ -18,7 +18,7 @@ export const exportData = async (req: Request, res: Response, next: NextFunction
     
     switch (entity) {
       case "users":
-        data = await prisma.user.findMany({ select: { id: true, name: true, email: true, role: true, createdAt: true } });
+        data = await prisma.user.findMany({ select: { id: true, name: true, email: true, role: true, plan: true, createdAt: true } });
         break;
       case "roadmaps":
         data = await prisma.roadmap.findMany({ select: { id: true, targetRole: true, status: true, userId: true, createdAt: true } });
@@ -31,6 +31,26 @@ export const exportData = async (req: Request, res: Response, next: NextFunction
         break;
       case "ai-usage":
         data = await prisma.aiUsageLog.findMany({ select: { id: true, provider: true, model: true, feature: true, status: true, durationMs: true, createdAt: true } });
+        break;
+      case "audit-logs":
+        data = await prisma.adminAuditLog.findMany({ select: { id: true, adminId: true, action: true, targetId: true, createdAt: true } });
+        break;
+      case "skill-proof":
+        data = await prisma.projectEvidence.findMany({ select: { id: true, projectId: true, userId: true, skillName: true, evidenceType: true, url: true, createdAt: true } });
+        break;
+      case "error-logs":
+        data = await prisma.errorLog.findMany({ select: { id: true, errorType: true, message: true, endpoint: true, method: true, statusCode: true, userId: true, createdAt: true } });
+        break;
+      case "learning-debt":
+      case "skill-health":
+        data = await prisma.skillState.findMany({ select: { id: true, userId: true, skillName: true, knowledgeScore: true, practiceScore: true, projectScore: true, evidenceScore: true, lastReviewed: true } });
+        break;
+      case "career-readiness":
+      case "job-reality":
+        data = await prisma.careerProfile.findMany({ select: { id: true, userId: true, targetRole: true, targetRoleName: true, experienceLevel: true, resumeScore: true, interviewScore: true, createdAt: true } });
+        break;
+      case "activity":
+        data = await prisma.activityLog.findMany({ select: { id: true, userId: true, type: true, description: true, createdAt: true } });
         break;
       default:
         return res.status(400).json({ success: false, message: "Invalid export entity." });
