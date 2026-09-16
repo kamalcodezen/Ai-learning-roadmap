@@ -10,7 +10,7 @@ export interface CreateBroadcastInput {
 }
 
 // In-memory / persistent broadcast log store
-interface BroadcastRecord {
+export interface BroadcastRecord {
   id: string;
   title: string;
   message: string;
@@ -20,6 +20,20 @@ interface BroadcastRecord {
   recipientsCount: number;
   sentAt: string;
   senderName: string;
+}
+
+export interface GetBroadcastsResult {
+  broadcasts: BroadcastRecord[];
+  stats: {
+    totalBroadcastsSent: number;
+    totalLearners: number;
+    cohortBreakdown: {
+      ALL: number;
+      FREE: number;
+      PLUS: number;
+      PRO: number;
+    };
+  };
 }
 
 const broadcastHistory: BroadcastRecord[] = [
@@ -69,7 +83,7 @@ const broadcastHistory: BroadcastRecord[] = [
   },
 ];
 
-export async function createBroadcast(input: CreateBroadcastInput) {
+export async function createBroadcast(input: CreateBroadcastInput): Promise<BroadcastRecord> {
   const { title, message, targetCohort, priority, actionUrl, senderId } = input;
 
   // 1. Determine target users
