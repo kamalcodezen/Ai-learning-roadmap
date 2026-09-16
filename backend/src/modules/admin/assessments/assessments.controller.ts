@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import * as assessmentsService from "./assessments.service.js";
 
+/**
+ * Retrieves diagnostic assessment attempts, scoring distribution, and pass rates.
+ * @route GET /api/admin/assessments
+ */
 export const getAdminAssessments = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const skip = parseInt(req.query.skip as string) || 0;
