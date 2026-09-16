@@ -672,3 +672,13 @@ button {
   background: rgba(15, 10, 25, 0.95);
   border-color: rgba(159, 84, 247, 0.15);
 }
+
+/* =========================================
+   FORM FIELD RADIUS OVERRIDES (rounded-lg)
+========================================= */
+.select__trigger,
+[data-slot="select-trigger"],
+.search-field__group,
+[data-slot="search-field-group"] {
+  border-radius: 0.5rem !important;
+}
