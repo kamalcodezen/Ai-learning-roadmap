@@ -40,18 +40,19 @@ export default function AdminSkillHealthView() {
   }
 
   type Skill = {
-    id: string;
+    id?: string;
     name: string;
-    category: string;
-    averageProficiency: number;
-    activeLearners: number;
+    category?: string;
+    averageProficiency?: number;
+    activeLearners?: number;
+    usersCount?: number;
     averageScore: number;
   };
 
   const renderSkillRows = (skills: Skill[], variant: "strong" | "weak") =>
-    skills.map((s) => (
+    skills.map((s, idx) => (
       <div
-        key={s.id}
+        key={s.id || s.name || `${variant}-${idx}`}
         className="flex items-center justify-between border-t border-[var(--color-border)] py-3 px-4 hover:bg-muted/30 transition-colors"
       >
         <div className="flex items-center gap-3">
@@ -66,7 +67,9 @@ export default function AdminSkillHealthView() {
           </div>
           <div>
             <div className="font-medium text-foreground">{s.name}</div>
-            <div className="text-xs text-muted-foreground">{s.category}</div>
+            <div className="text-xs text-muted-foreground">
+              {s.category || (s.usersCount !== undefined ? `${s.usersCount} learners` : "")}
+            </div>
           </div>
         </div>
         <span
