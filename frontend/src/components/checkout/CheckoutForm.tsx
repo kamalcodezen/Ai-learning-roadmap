@@ -238,7 +238,7 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
         {/* Back */}
         <button
           type="button"
-          onClick={() => router.push("/#pricing")}
+          onClick={() => router.push("/pricing")}
           className="mt-6 md:mt-49 flex w-full items-center justify-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" />
