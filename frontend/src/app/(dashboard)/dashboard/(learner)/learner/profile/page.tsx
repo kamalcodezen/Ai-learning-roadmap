@@ -147,7 +147,7 @@ export default function LearnerProfilePage() {
                 </span>
                 {userPlan !== "PRO" && (
                   <Link
-                    href="/#pricing"
+                    href="/pricing"
                     className="text-xs text-primary underline ml-1 hover:text-secondary font-bold"
                   >
                     Upgrade
