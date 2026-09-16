@@ -7,9 +7,10 @@ export interface AdminRoadmapItem {
   userId: string;
   createdAt: string;
   user?: {
-    name?: string;
-    email?: string;
-  };
+    name?: string | null;
+    email?: string | null;
+  } | null;
+  milestones?: Array<{ status: string }>;
 }
 
 export interface AdminRoadmapsResponse {
