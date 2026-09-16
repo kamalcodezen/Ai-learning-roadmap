@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { FiMail, FiClock, FiShield, FiCpu } from "react-icons/fi";
+import { FiClock, FiShield, FiCpu } from "react-icons/fi";
 
 export default function ContactHero() {
   const shouldReduceMotion = useReducedMotion();
