@@ -263,7 +263,7 @@ export default function PaymentSuccess({
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
               <Button
                 text="Browse Plans"
-                onClick={() => router.push("/#pricing")}
+                onClick={() => router.push("/pricing")}
                 className="w-full sm:w-auto justify-center text-sm sm:text-base px-5 sm:px-6"
               />
               <Button

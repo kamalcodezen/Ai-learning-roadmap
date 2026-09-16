@@ -5,9 +5,39 @@ import { motion, useReducedMotion } from "motion/react";
 import { FiArrowUpRight, FiLayers, FiCompass, FiShield } from "react-icons/fi";
 import CapabilitySkillGraph from "./CapabilitySkillGraph";
 import Link from "next/link";
+import { authClient } from "@/src/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function AboutHero() {
   const shouldReduceMotion = useReducedMotion();
+
+  const router = useRouter();
+
+const { data: session } = authClient.useSession();
+
+const user = session?.user;
+
+const userRole =
+  (session?.user as { role?: string } | undefined)?.role?.toUpperCase() ||
+  "LEARNER";
+
+const handleWhyWeBuiltClick = () => {
+  if (!user) {
+    router.push("/signup");
+    return;
+  }
+
+  if (userRole === "LEARNER") {
+    router.push("/dashboard/learner");
+  } else if (userRole === "ADMIN") {
+    router.push("/dashboard/admin");
+  } else {
+    router.push("/signup");
+  }
+};
+
+
+
 
   return (
     <section className="relative w-full overflow-hidden pt-32 pb-16 sm:pt-36 sm:pb-20 lg:pt-40 lg:pb-24">
@@ -83,18 +113,20 @@ export default function AboutHero() {
             {/* Quick Action Link */}
             <div className="mt-8 flex items-center gap-4">
               <Link
-                href="/signup"
+                href="#"
                 className="btn-primary inline-flex items-center gap-2 text-sm font-semibold !text-white"
               >
                 <span>Explore The System</span>
                 <FiArrowUpRight className="size-4" />
               </Link>
-              <a
-                href="#the-problem"
+              {/* Dynamic Navigation */}
+              <button
+                type="button"
+                onClick={handleWhyWeBuiltClick}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 Why We Built This
-              </a>
+              </button>
             </div>
           </motion.div>
 

@@ -15,6 +15,7 @@ const CONFETTI_COLORS = ["#9F54F7", "#B978FF", "#ffffff"];
 const Header = ({ billing, onBillingChange }: HeaderProps) => {
   const toggleRef = useRef<HTMLDivElement>(null);
   const echoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastFiredRef = useRef<number>(0);
 
   // Don't let a pending echo burst fire after unmount/navigation
   useEffect(
@@ -36,6 +37,28 @@ const Header = ({ billing, onBillingChange }: HeaderProps) => {
 
   const fireConfetti = () => {
     const origin = getOrigin();
+    const isMobile =
+      typeof window !== "undefined" &&
+      (window.innerWidth < 768 ||
+        window.matchMedia("(max-width: 767px)").matches);
+
+    // Mobile device optimization: lightweight burst & throttle to prevent hanging on rapid clicks
+    if (isMobile) {
+      const now = Date.now();
+      if (now - lastFiredRef.current < 1000) return;
+      lastFiredRef.current = now;
+
+      confetti({
+        particleCount: 35,
+        spread: 60,
+        startVelocity: 30,
+        scalar: 0.75,
+        ticks: 90,
+        origin,
+        colors: CONFETTI_COLORS,
+      });
+      return;
+    }
 
     // Wave 1 — tight, punchy burst from the toggle
     confetti({

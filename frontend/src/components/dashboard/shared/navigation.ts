@@ -133,7 +133,7 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
     {
       title: "CAREER",
       items: [
-        { href: `${learnerPrefix}/resume`, label: "AI Resume & ATS", icon: FileText, requiredPlan: "PLUS" },
+        { href: `${learnerPrefix}/resume`, label: "AI Resume & ATS", icon: FileText, requiredPlan: "PRO" },
         { href: `${learnerPrefix}/job-reality`, label: "Job Reality", icon: Briefcase, requiredPlan: "PLUS" },
         { href: `${learnerPrefix}/career-alignment`, label: "Career Alignment", icon: Map },
         { href: `${learnerPrefix}/career-intelligence`, label: "Career Intelligence", icon: BrainCircuit, requiredPlan: "PRO" },

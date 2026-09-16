@@ -326,7 +326,7 @@ export default function SettingsPage() {
                 <div className="flex flex-wrap items-center gap-2.5">
                   {!isPro && (
                     <Link
-                      href="/#pricing"
+                      href="/pricing"
                       className="px-4 py-2 text-xs font-semibold text-white bg-gradient-to-r from-primary to-secondary hover:opacity-90 rounded-xl transition flex items-center gap-1.5 shadow-sm"
                     >
                       <Sparkles className="size-3.5" />

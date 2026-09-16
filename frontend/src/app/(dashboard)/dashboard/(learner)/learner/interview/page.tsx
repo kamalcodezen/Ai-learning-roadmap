@@ -1,5 +1,5 @@
 import Interview from "@/src/components/interview/Interview";
-import PlanGuard from "@/src/components/dashboard/shared/PlanGuard";
+import FeatureLockedOverlay from "@/src/components/dashboard/shared/FeatureLockedOverlay";
 
 export const metadata = {
   title: "Mock Interview",
@@ -7,12 +7,17 @@ export const metadata = {
 
 const InterviewPage = () => {
   return (
-    <PlanGuard requiredPlan="PLUS">
+    <FeatureLockedOverlay
+      featureName="AI Mock Interview Simulator"
+      requiredPlan="PLUS"
+      description="Practice real-world technical and behavioral interviews with real-time AI audio analysis, scenario scoring, and tailored feedback."
+    >
       <div className="flex flex-col min-h-[94vh] justify-center">
         <Interview />
       </div>
-    </PlanGuard>
+    </FeatureLockedOverlay>
   );
 };
 
 export default InterviewPage;
+

@@ -4,9 +4,39 @@ import React from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { FiZap } from "react-icons/fi";
 import Button from "@/src/components/ui/button";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/src/lib/auth-client";
 
 export default function AboutFutureCta() {
   const shouldReduceMotion = useReducedMotion();
+
+
+  const router = useRouter();
+
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+const userRole =
+  (session?.user as { role?: string } | undefined)?.role?.toUpperCase() ||
+  "LEARNER";
+
+const handleMyCareerPathClick = () => {
+  if (!user) {
+    router.push("/signup");
+    return;
+  }
+
+  if (userRole === "LEARNER") {
+    router.push("/dashboard/learner");
+  } else if (userRole === "ADMIN") {
+    router.push("/dashboard/admin");
+  } else {
+    router.push("/signup");
+  }
+};
+
+
+
+
 
   return (
     <section className="relative w-full overflow-hidden section-pad pb-24 sm:pb-28">
@@ -54,14 +84,24 @@ export default function AboutFutureCta() {
             personalized, evidence-driven, and adaptable to real life.
           </p>
 
+
+
+
+
+
           {/* CTA Action Area */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
-              text="Build My Career Path"
-              href="/signup"
+             onClick={handleMyCareerPathClick}
+              text="Build My Career Path"              
               className="font-poppins"
             />
           </div>
+
+
+
+
+
 
           {/* System Assurance Badges */}
           <div className="mt-5 pt-8 border-t border-border/60 flex flex-wrap items-center justify-center gap-6 sm:gap-10 font-mono text-xs text-muted-foreground">
