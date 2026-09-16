@@ -4,37 +4,41 @@ import React from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { FiArrowUpRight, FiLayers, FiCompass, FiShield } from "react-icons/fi";
 import CapabilitySkillGraph from "./CapabilitySkillGraph";
-import Link from "next/link";
 import { authClient } from "@/src/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 export default function AboutHero() {
   const shouldReduceMotion = useReducedMotion();
-
   const router = useRouter();
+  const { data: session } = authClient.useSession();
 
-const { data: session } = authClient.useSession();
+  const user = session?.user;
+  const userRole =
+    (session?.user as { role?: string } | undefined)?.role?.toUpperCase() ||
+    "LEARNER";
 
-const user = session?.user;
+  const handleExploreSystemClick = () => {
+    if (!user) {
+      router.push("/signup");
+      return;
+    }
 
-const userRole =
-  (session?.user as { role?: string } | undefined)?.role?.toUpperCase() ||
-  "LEARNER";
+    if (userRole === "LEARNER") {
+      router.push("/dashboard/learner");
+    } else if (userRole === "ADMIN") {
+      router.push("/dashboard/admin");
+    } else {
+      router.push("/signup");
+    }
+  };
 
-const handleWhyWeBuiltClick = () => {
-  if (!user) {
-    router.push("/signup");
-    return;
-  }
-
-  if (userRole === "LEARNER") {
-    router.push("/dashboard/learner");
-  } else if (userRole === "ADMIN") {
-    router.push("/dashboard/admin");
-  } else {
-    router.push("/signup");
-  }
-};
+  const handleWhyWeBuiltClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const element = document.getElementById("the-problem");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
 
 
@@ -112,21 +116,22 @@ const handleWhyWeBuiltClick = () => {
 
             {/* Quick Action Link */}
             <div className="mt-8 flex items-center gap-4">
-              <Link
-                href="#"
-                className="btn-primary inline-flex items-center gap-2 text-sm font-semibold !text-white"
+              <button
+                type="button"
+                onClick={handleExploreSystemClick}
+                className="btn-primary inline-flex items-center gap-2 text-sm font-semibold !text-white cursor-pointer"
               >
                 <span>Explore The System</span>
                 <FiArrowUpRight className="size-4" />
-              </Link>
+              </button>
               {/* Dynamic Navigation */}
-              <button
-                type="button"
+              <a
+                href="#the-problem"
                 onClick={handleWhyWeBuiltClick}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
               >
                 Why We Built This
-              </button>
+              </a>
             </div>
           </motion.div>
 
