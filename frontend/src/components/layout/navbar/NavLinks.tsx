@@ -80,6 +80,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const [expandedSolutions, setExpandedSolutions] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+const [activeLink, setActiveLink] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -212,24 +213,30 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
               onMouseLeave={() => {
                 setActiveDropdown(null);
               }}
-            >
-              <Link
-                href={hasChildren ? "#" : link.href}
-                onClick={(e) => {
-                  if (hasChildren) {
-                    e.preventDefault();
-                    setActiveDropdown(isActive ? null : index);
-                  }
-                }}
-                className={`
-                  font-poppins font-medium relative z-10 flex items-center gap-1.5 rounded-lg px-3 py-1.5
-                  text-sm 
-                  transition-all duration-300
-                  ${isActive ? "bg-muted/50 text-black dark:bg-muted/50 dark:text-white" : "text-black hover:opacity-75 dark:text-white dark:hover:opacity-75"}
-                `}
-              >
-                {link.label}
-                {hasChildren && (
+            >          
+<Link
+  href={hasChildren ? "#" : link.href}
+  onClick={(e) => {
+    if (hasChildren) {
+      e.preventDefault();
+      setActiveDropdown(isActive ? null : index);
+    } else {
+      setActiveLink(link.label);
+    }
+  }}
+  className={`
+    font-poppins font-medium relative z-10 flex items-center gap-1.5
+    rounded-lg px-3 py-1.5 text-sm transition-all duration-300
+
+    ${
+      activeLink === link.label
+        ? " after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-primary"
+        : "text-black hover:opacity-75 dark:text-white dark:hover:opacity-75"
+    }
+  `}
+>
+  {link.label}
+  {hasChildren && (
                   <motion.svg
                     animate={{ rotate: isActive ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
@@ -243,7 +250,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                     <path d="m6 9 6 6 6-6" />
                   </motion.svg>
                 )}
-              </Link>
+</Link>
 
               {/* Sub-items dropdown */}
               <AnimatePresence>
@@ -449,6 +456,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                             >
                               <div className="flex flex-col gap-1 border-l-2 border-primary/25 my-1 pl-2.5">
                                 {link.children!.map((child) => (
+                                  
                                   <Link
                                     key={child.label}
                                     href={child.href}
@@ -470,17 +478,38 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                   }
 
                   return (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-3.5 rounded-2xl px-2.5 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
-                    >
-                      <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
-                        {getNavLinkIcon(link.label)}
-                      </span>
-                      <span className="text-[14px] font-medium">{link.label}</span>
-                    </Link>
+<Link
+  key={link.label}
+  href={link.href}
+  onClick={() => {
+    setActiveLink(link.label);
+    setMobileOpen(false);
+  }}
+  className={`
+    flex items-center gap-3.5 rounded-2xl px-2.5 py-2.5
+    text-sm font-poppins font-medium transition-all
+
+    ${
+      activeLink === link.label
+        ? "bg-primary/10  dark:bg-primary/15"
+        : "text-foreground hover:bg-muted/60 dark:hover:bg-white/5"
+    }
+  `}
+>
+  <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
+    {getNavLinkIcon(link.label)}
+  </span>
+
+  <span
+    className={`text-[14px] font-medium ${
+      activeLink === link.label
+        ? "underline underline-offset-4 decoration-2"
+        : ""
+    }`}
+  >
+    {link.label}
+  </span>
+</Link>
                   );
                 })}
 
