@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminRoadmaps } from "@/src/lib/api/admin/roadmaps";
+import { getAdminRoadmaps, AdminRoadmapItem } from "@/src/lib/api/admin/roadmaps";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { Route, User } from "lucide-react";
@@ -11,16 +11,7 @@ import { Label, ListBox, Select, Skeleton } from "@heroui/react";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-interface RoadmapRow {
-  id: string;
-  targetRole: string;
-  status: string;
-  createdAt: string;
-  user: { name: string; email: string };
-  milestones?: Array<{ status: string }>;
-}
-
-const columns: AdminDataTableColumn<RoadmapRow>[] = [
+const columns: AdminDataTableColumn<AdminRoadmapItem>[] = [
   {
     header: "Target Role",
     render: (rm) => (
@@ -38,8 +29,8 @@ const columns: AdminDataTableColumn<RoadmapRow>[] = [
       <div className="flex items-center gap-2">
         <User className="h-4 w-4 text-muted-foreground" />
         <div>
-          <p className="font-medium text-foreground">{rm.user.name}</p>
-          <p className="text-xs text-muted-foreground">{rm.user.email}</p>
+          <p className="font-medium text-foreground">{rm.user?.name || "Unknown"}</p>
+          <p className="text-xs text-muted-foreground">{rm.user?.email || "No email"}</p>
         </div>
       </div>
     ),
