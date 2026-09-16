@@ -111,6 +111,7 @@ export default function DashboardSidebar() {
         <SidebarContent
           userName={user?.name}
           userEmail={user?.email}
+          userImage={user?.image}
           indicatorId="sidebar-nav-active-desktop"
         />
       </aside>
@@ -150,7 +151,7 @@ export default function DashboardSidebar() {
 
               {/* Fixed profile card */}
               <div className="shrink-0 px-4 pt-2 pb-2">
-                <ProfileCard name={user?.name} email={user?.email} plan={(user as { plan?: string })?.plan} />
+                <ProfileCard name={user?.name} email={user?.email} plan={(user as { plan?: string })?.plan} image={user?.image} />
               </div>
 
               {/* Scrollable navigation — independent scroll zone */}

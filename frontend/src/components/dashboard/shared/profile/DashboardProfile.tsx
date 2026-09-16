@@ -103,6 +103,7 @@ export default function DashboardProfile({
   const tickColor = dark ? "#a8a8a8" : "#6b6b6b";
 
   const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isEditingName, setIsEditingName] = useState(false);
   const [updatedName, setUpdatedName] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
@@ -125,7 +126,7 @@ export default function DashboardProfile({
     try {
       const result = await authClient.updateUser({
         name: updatedName.trim(),
-        image: activeUser?.image,
+        image: avatarPreview || activeUser?.image,
       });
 
       if (result?.data) {
@@ -148,12 +149,22 @@ export default function DashboardProfile({
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    // Reset file input value so user can re-upload or select same file again
+    e.target.value = "";
+
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
       return showToast({
         variant: "error",
-        message: "Please select a valid image file",
+        message: "Please select a valid image file (PNG, JPG, JPEG, WEBP)",
+      });
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      return showToast({
+        variant: "error",
+        message: "Image size must be less than 10MB",
       });
     }
 
@@ -162,7 +173,7 @@ export default function DashboardProfile({
 
     try {
       if (!apiKey) {
-        throw new Error("Image upload service not configured");
+        throw new Error("ImgBB API key is not configured in .env");
       }
 
       const imgBBFormData = new FormData();
@@ -174,17 +185,29 @@ export default function DashboardProfile({
       );
       const data = await response.json();
 
-      if (!data?.success) {
-        throw new Error("Image upload failed");
+      if (!data?.success || !data?.data?.url) {
+        throw new Error(data?.error?.message || "Image upload failed");
+      }
+
+      const uploadedUrl = data.data.display_url || data.data.url;
+      setAvatarPreview(uploadedUrl);
+
+      // Dispatch event to instantly update sidebar, navbar, and other components without page reload
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("user-avatar-updated", {
+            detail: { image: uploadedUrl },
+          }),
+        );
       }
 
       const result = await authClient.updateUser({
-        image: data.data.url,
+        image: uploadedUrl,
         name: activeUser?.name,
       });
 
       if (result?.data) {
-        showToast({ variant: "success", message: "Profile picture updated" });
+        showToast({ variant: "success", message: "Profile picture updated successfully!" });
         router.refresh();
       }
       if (result?.error) {
@@ -222,7 +245,7 @@ export default function DashboardProfile({
             <Avatar className="w-32 h-32 md:w-40 md:h-40 rounded-full ring-4 ring-card bg-card shadow-xl text-3xl font-bold font-poppins relative overflow-hidden group">
               <Avatar.Image
                 alt={activeUser?.name || roleLabel}
-                src={activeUser?.image ?? undefined}
+                src={avatarPreview || activeUser?.image || undefined}
                 referrerPolicy="no-referrer"
               />
               <Avatar.Fallback>
