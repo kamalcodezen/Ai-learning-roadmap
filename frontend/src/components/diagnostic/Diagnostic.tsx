@@ -63,18 +63,19 @@ export default function Diagnostic() {
     authClient.useSession();
 
   const activeUser = session?.user;
-  const userRole = ((activeUser as { role?: string })?.role || "").toUpperCase();
+  const userRole = (
+    (activeUser as { role?: string })?.role || ""
+  ).toUpperCase();
   const isAdmin = userRole === "ADMIN";
   const firstName = session?.user?.name?.trim().split(" ")[0] || "there";
 
   // Check onboarding & diagnostic routing state for non-admin learners
-  const {
-    data: routingState,
-    isLoading: isRoutingLoading,
-  } = useQuery({
+  const { data: routingState, isLoading: isRoutingLoading } = useQuery({
     queryKey: ["routingState", activeUser?.id],
     queryFn: async () => {
-      const res = (await serverFetch("/api/career-profile/routing-state")) as RoutingStateResponse;
+      const res = (await serverFetch(
+        "/api/career-profile/routing-state",
+      )) as RoutingStateResponse;
       return res?.data;
     },
     enabled: !!activeUser && !isAdmin,
@@ -95,10 +96,21 @@ export default function Diagnostic() {
       router.replace("/dashboard/admin/dashboard");
       return;
     }
-    if (!isRoutingLoading && routingState && !routingState.onboardingCompleted) {
+    if (
+      !isRoutingLoading &&
+      routingState &&
+      !routingState.onboardingCompleted
+    ) {
       router.replace("/onboarding");
     }
-  }, [isSessionLoading, activeUser, isAdmin, isRoutingLoading, routingState, router]);
+  }, [
+    isSessionLoading,
+    activeUser,
+    isAdmin,
+    isRoutingLoading,
+    routingState,
+    router,
+  ]);
 
   const [questions, setQuestions] = useState<DiagnosticQuestion[]>([]);
 
@@ -178,13 +190,23 @@ export default function Diagnostic() {
     }
 
     const SpeechRecognition =
-      (window as unknown as { SpeechRecognition?: new () => unknown; webkitSpeechRecognition?: new () => unknown })
-        .SpeechRecognition ||
-      (window as unknown as { SpeechRecognition?: new () => unknown; webkitSpeechRecognition?: new () => unknown })
-        .webkitSpeechRecognition;
+      (
+        window as unknown as {
+          SpeechRecognition?: new () => unknown;
+          webkitSpeechRecognition?: new () => unknown;
+        }
+      ).SpeechRecognition ||
+      (
+        window as unknown as {
+          SpeechRecognition?: new () => unknown;
+          webkitSpeechRecognition?: new () => unknown;
+        }
+      ).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      setErrorMessage("Speech recognition is not supported in this browser. Please type your answer.");
+      setErrorMessage(
+        "Speech recognition is not supported in this browser. Please type your answer.",
+      );
       return;
     }
 
@@ -194,7 +216,9 @@ export default function Diagnostic() {
         interimResults: boolean;
         onresult: (event: {
           results: {
-            [index: number]: { [index: number]: { transcript: string } | undefined } | undefined;
+            [index: number]:
+              | { [index: number]: { transcript: string } | undefined }
+              | undefined;
             length: number;
           };
         }) => void;
@@ -221,7 +245,8 @@ export default function Diagnostic() {
           }
         }
 
-        const separator = initialText && transcript && !initialText.endsWith(" ") ? " " : "";
+        const separator =
+          initialText && transcript && !initialText.endsWith(" ") ? " " : "";
         setSelectedAnswer(initialText + separator + transcript);
       };
 
@@ -232,7 +257,9 @@ export default function Diagnostic() {
         }
 
         if (event.error === "not-allowed") {
-          setErrorMessage("Microphone access denied. Please allow it in your browser settings.");
+          setErrorMessage(
+            "Microphone access denied. Please allow it in your browser settings.",
+          );
           setIsRecording(false);
         } else if (event.error === "network") {
           setErrorMessage("Network error with speech recognition.");
@@ -370,11 +397,21 @@ export default function Diagnostic() {
 
       if (session?.user?.id) {
         queryClient.invalidateQueries({ queryKey: ["routingState"] });
-        queryClient.invalidateQueries({ queryKey: ["dashboardData", session.user.id] });
-        queryClient.invalidateQueries({ queryKey: ["careerTwin", session.user.id] });
-        queryClient.invalidateQueries({ queryKey: ["skillGaps", session.user.id] });
-        queryClient.invalidateQueries({ queryKey: ["learningPath", session.user.id] });
-        queryClient.invalidateQueries({ queryKey: ["proofGraph", session.user.id] });
+        queryClient.invalidateQueries({
+          queryKey: ["dashboardData", session.user.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["careerTwin", session.user.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["skillGaps", session.user.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["learningPath", session.user.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["proofGraph", session.user.id],
+        });
       }
 
       setResult(completeResponse.data);
@@ -383,7 +420,9 @@ export default function Diagnostic() {
     } catch (error: unknown) {
       console.error("Failed to complete diagnostic:", error);
       setErrorMessage(
-        error instanceof Error ? error.message : "Failed to complete diagnostic.",
+        error instanceof Error
+          ? error.message
+          : "Failed to complete diagnostic.",
       );
       setStatus("ready");
     }
@@ -467,7 +506,11 @@ export default function Diagnostic() {
   }
 
   // Prevent UI flashing while redirects are taking effect
-  if (!activeUser || isAdmin || (!isAdmin && routingState && !routingState.onboardingCompleted)) {
+  if (
+    !activeUser ||
+    isAdmin ||
+    (!isAdmin && routingState && !routingState.onboardingCompleted)
+  ) {
     return null;
   }
 
@@ -483,10 +526,13 @@ export default function Diagnostic() {
             <Target className="h-6 w-6 text-destructive" />
           </div>
 
-          <h1 className="text-xl font-semibold">Unable to generate your diagnostic right now.</h1>
+          <h1 className="text-xl font-semibold">
+            Unable to generate your diagnostic right now.
+          </h1>
 
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            {errorMessage || "An unexpected issue occurred while preparing your personalized questions. Please retry."}
+            {errorMessage ||
+              "An unexpected issue occurred while preparing your personalized questions. Please retry."}
           </p>
 
           <button
@@ -534,7 +580,9 @@ export default function Diagnostic() {
           <div className="absolute -right-64 bottom-[10%] h-[500px] w-[500px] rounded-full bg-primary/[0.025] blur-[100px]" />
         </div>
 
-        <section className={`relative z-10 w-full max-w-2xl ${glowCardClass} p-8 text-center sm:p-12`}>
+        <section
+          className={`relative z-10 w-full max-w-2xl ${glowCardClass} p-8 text-center sm:p-12`}
+        >
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
             <Image
               src={brandLogo}
@@ -554,8 +602,9 @@ export default function Diagnostic() {
           </h1>
 
           <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
-            Answer 5 multiple-choice questions and 1 open-ended communication question based on your current knowledge. Your result will
-            help AI Pather understand your starting point.
+            Answer 5 multiple-choice questions and 1 open-ended communication
+            question based on your current knowledge. Your result will help AI
+            Pather understand your starting point.
           </p>
 
           {/* Previous result shortcut if available */}
@@ -566,7 +615,11 @@ export default function Diagnostic() {
                   Previous Assessment
                 </span>
                 <p className="text-sm font-bold text-foreground">
-                  Score: {latestResultResponse.overallScore ?? latestResultResponse.score}% ({latestResultResponse.correctAnswers ?? 0}/{latestResultResponse.mcqCount ?? 5} MCQ correct)
+                  Score:{" "}
+                  {latestResultResponse.overallScore ??
+                    latestResultResponse.score}
+                  % ({latestResultResponse.correctAnswers ?? 0}/
+                  {latestResultResponse.mcqCount ?? 5} MCQ correct)
                 </p>
               </div>
               <button
@@ -610,7 +663,9 @@ export default function Diagnostic() {
               onClick={() => void handleStartDiagnostic()}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-semibold text-white transition hover:opacity-90 active:scale-[0.98] w-full sm:w-auto"
             >
-              {latestResultResponse ? "Start New Diagnostic" : "Start Diagnostic"}
+              {latestResultResponse
+                ? "Start New Diagnostic"
+                : "Start Diagnostic"}
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
@@ -634,7 +689,7 @@ export default function Diagnostic() {
   if (isReviewing) {
     return (
       <main className="relative min-h-screen overflow-hidden bg-background text-foreground">
-        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-4xl flex-col justify-center px-4 py-8 sm:px-6 lg:py-12">
+        <div className="relative z-10 mx-auto flex h-screen w-full max-w-6xl flex-col justify-center px-4 py-8 sm:px-6 lg:py-12">
           <header className="mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -661,7 +716,8 @@ export default function Diagnostic() {
               </button>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              Review your responses below. You can jump back to any question to adjust your answers or manage bookmarks before finalizing.
+              Review your responses below. You can jump back to any question to
+              adjust your answers or manage bookmarks before finalizing.
             </p>
           </header>
 
@@ -671,59 +727,69 @@ export default function Diagnostic() {
             className="max-h-[370px] overflow-y-auto space-y-4 pr-1"
           >
             <div ref={reviewContentRef}>
-            {questions.map((q, idx) => {
-              const ans = answersMap[idx];
-              const isBookmarked = bookmarkedQuestions.includes(idx);
-              return (
-                <div
-                  key={q.id || idx}
-                  className={`${glowCardClass} p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4`}
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-xs font-bold text-primary">
-                        Question {idx + 1} ({q.category})
-                      </span>
-                      {isBookmarked && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
-                          <Bookmark className="w-2.5 h-2.5" /> Bookmarked
+              {questions.map((q, idx) => {
+                const ans = answersMap[idx];
+                const isBookmarked = bookmarkedQuestions.includes(idx);
+                return (
+                  <div
+                    key={q.id || idx}
+                    className={`${glowCardClass} p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4`}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-xs font-bold text-primary">
+                          Question {idx + 1} ({q.category})
                         </span>
-                      )}
+                        {isBookmarked && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                            <Bookmark className="w-2.5 h-2.5" /> Bookmarked
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm font-semibold text-foreground line-clamp-2">
+                        {q.question}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-2 truncate">
+                        <span className="font-semibold text-foreground/80">
+                          Your Response:{" "}
+                        </span>
+                        {ans ? (
+                          ans
+                        ) : (
+                          <span className="text-amber-500 italic">
+                            Not yet answered
+                          </span>
+                        )}
+                      </p>
                     </div>
-                    <p className="text-sm font-semibold text-foreground line-clamp-2">
-                      {q.question}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-2 truncate">
-                      <span className="font-semibold text-foreground/80">Your Response: </span>
-                      {ans ? ans : <span className="text-amber-500 italic">Not yet answered</span>}
-                    </p>
-                  </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => toggleBookmark(idx)}
-                      className={`p-2 rounded-xl border transition ${
-                        isBookmarked
-                          ? "border-amber-500/30 bg-amber-500/10 text-amber-600"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      }`}
-                      title={isBookmarked ? "Remove Bookmark" : "Bookmark Question"}
-                    >
-                      <Bookmark className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleJumpToQuestion(idx)}
-                      className="flex items-center gap-1 px-3 py-2 text-xs font-semibold rounded-xl bg-card-soft border border-border hover:bg-muted text-foreground transition"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span>Edit</span>
-                    </button>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => toggleBookmark(idx)}
+                        className={`p-2 rounded-xl border transition ${
+                          isBookmarked
+                            ? "border-amber-500/30 bg-amber-500/10 text-amber-600"
+                            : "border-border text-muted-foreground hover:text-foreground"
+                        }`}
+                        title={
+                          isBookmarked ? "Remove Bookmark" : "Bookmark Question"
+                        }
+                      >
+                        <Bookmark className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleJumpToQuestion(idx)}
+                        className="flex items-center gap-1 px-3 py-2 text-xs font-semibold rounded-xl bg-card-soft border border-border hover:bg-muted text-foreground transition"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Edit</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
             </div>
           </div>
 
@@ -735,9 +801,12 @@ export default function Diagnostic() {
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl border border-primary/20 bg-primary/[0.04]">
             <div>
-              <p className="text-sm font-bold text-foreground">Ready to calculate your skill profile?</p>
+              <p className="text-sm font-bold text-foreground">
+                Ready to calculate your skill profile?
+              </p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {Object.keys(answersMap).length} of {questions.length} questions answered.
+                {Object.keys(answersMap).length} of {questions.length} questions
+                answered.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -785,7 +854,7 @@ export default function Diagnostic() {
         <div className="absolute inset-0 opacity-[0.025] [background-image:linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] [background-size:64px_64px]" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-4xl flex-col justify-center px-4 py-8 sm:px-6 lg:py-12">
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-4 py-8 sm:px-6 lg:py-12">
         <header className="mb-8">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
@@ -828,7 +897,7 @@ export default function Diagnostic() {
                         onClick={() => handleJumpToQuestion(idx)}
                         className={`relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-xs font-bold transition ${
                           isCurrent
-                            ? "bg-primary text-primary-foreground ring-2 ring-primary/40 shadow-sm"
+                            ? "bg-primary text-white ring-2 ring-primary/40 shadow-sm"
                             : isAnswered
                               ? "bg-primary/15 text-primary border border-primary/30"
                               : "bg-muted/60 text-muted-foreground hover:bg-muted"
@@ -889,13 +958,13 @@ export default function Diagnostic() {
                 </span>
               </div>
 
-          <h2 className="mt-6 text-xl font-semibold leading-8 sm:text-2xl">
-            {currentQuestion.question}
-          </h2>
+              <h2 className="mt-6 text-xl font-semibold leading-8 sm:text-2xl">
+                {currentQuestion.question}
+              </h2>
 
-          <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            {currentQuestion.description}
-          </p>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                {currentQuestion.description}
+              </p>
             </div>
 
             <button
@@ -923,7 +992,7 @@ export default function Diagnostic() {
             </button>
           </div>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          <div className="mt-8 flex flex-col gap-3">
             {currentQuestion.options && currentQuestion.options.length > 0 ? (
               currentQuestion.options.map((option) => {
                 const selected = selectedAnswer === option;
@@ -968,22 +1037,30 @@ export default function Diagnostic() {
                       {selected && <CheckCircle2 className="h-4 w-4" />}
                     </span>
 
-                    <span className="text-sm font-medium leading-6">
-                      {option}
-                    </span>
+                    <div className="flex-1 min-w-0 overflow-x-auto py-1 overscroll-x-contain [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-primary/30 dark:[&::-webkit-scrollbar-thumb]:bg-primary/40 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-primary/60">
+                      <span className="whitespace-nowrap text-sm font-medium leading-6 block select-text">
+                        {option}
+                      </span>
+                    </div>
                   </button>
                 );
               })
             ) : (
-              <div className="sm:col-span-2 flex min-w-full flex-col">
+              <div className="flex min-w-full flex-col">
                 <div className="flex items-center justify-between rounded-t-xl border border-b-0 border-border bg-card-soft px-4 py-2">
-                  <p className="text-sm font-medium text-foreground">Record your answer, or type it below.</p>
+                  <p className="text-sm font-medium text-foreground">
+                    Record your answer, or type it below.
+                  </p>
                   <button
                     type="button"
                     onClick={toggleRecording}
-                    className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all ${isRecording ? 'bg-destructive/10 text-destructive hover:bg-destructive/20' : 'bg-primary/10 text-primary hover:bg-primary/20'}`}
+                    className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all ${isRecording ? "bg-destructive/10 text-destructive hover:bg-destructive/20" : "bg-primary/10 text-primary hover:bg-primary/20"}`}
                   >
-                    {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                    {isRecording ? (
+                      <MicOff className="h-4 w-4" />
+                    ) : (
+                      <Mic className="h-4 w-4" />
+                    )}
                     {isRecording ? "Stop Recording" : "Start Recording"}
                   </button>
                 </div>
