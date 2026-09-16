@@ -97,12 +97,25 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   }, [mobileOpen]);
 
   const { data: session } = authClient.useSession();
+  const [liveImage, setLiveImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleAvatarUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ image?: string }>;
+      if (customEvent.detail?.image) {
+        setLiveImage(customEvent.detail.image);
+      }
+    };
+    window.addEventListener("user-avatar-updated", handleAvatarUpdate);
+    return () => window.removeEventListener("user-avatar-updated", handleAvatarUpdate);
+  }, []);
+
   const isAuthenticated = !!session?.user;
   const sessionUser = session?.user as { role?: string; plan?: string; image?: string | null } | undefined;
   const user = {
     name: session?.user?.name || "User",
     email: session?.user?.email || "",
-    image: sessionUser?.image || null,
+    image: liveImage || sessionUser?.image || null,
   };
   const userRole = sessionUser?.role?.toUpperCase() || "LEARNER";
   const userPlan = sessionUser?.plan?.toUpperCase() || "FREE";
@@ -322,6 +335,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                           src={user.image}
                           alt={user.name || "User"}
                           fill
+                          unoptimized
                           className="object-cover"
                           sizes="40px"
                         />

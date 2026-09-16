@@ -83,10 +83,23 @@ export default function ProfileDropdown({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { data: session } = authClient.useSession();
+  const [liveImage, setLiveImage] = useState<string | null>(null);
   const user = session?.user as { role?: string; plan?: string; image?: string | null } | undefined;
+  const userImage = liveImage || user?.image;
   const userRole = user?.role?.toUpperCase() || "LEARNER";
   const userPlan = user?.plan?.toUpperCase() || "FREE";
   const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
+
+  useEffect(() => {
+    const handleAvatarUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ image?: string }>;
+      if (customEvent.detail?.image) {
+        setLiveImage(customEvent.detail.image);
+      }
+    };
+    window.addEventListener("user-avatar-updated", handleAvatarUpdate);
+    return () => window.removeEventListener("user-avatar-updated", handleAvatarUpdate);
+  }, []);
 
   const desktopNavItems = [
     {
@@ -157,11 +170,12 @@ export default function ProfileDropdown({
       >
         {/* User Avatar Circle */}
         <div className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-tr from-primary to-secondary text-xs font-bold text-white shadow-xs">
-          {user?.image ? (
+          {userImage ? (
             <Image
-              src={user.image}
+              src={userImage}
               alt={name || "User"}
               fill
+              unoptimized
               className="object-cover"
               sizes="32px"
             />
@@ -200,11 +214,12 @@ export default function ProfileDropdown({
               <div className="flex items-center gap-3">
                 {/* Avatar with active indicator */}
                 <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-tr from-primary to-secondary text-sm font-bold text-white shadow-xs">
-                  {user?.image ? (
+                  {userImage ? (
                     <Image
-                      src={user.image}
+                      src={userImage}
                       alt={name || "User"}
                       fill
+                      unoptimized
                       className="object-cover"
                       sizes="40px"
                     />
