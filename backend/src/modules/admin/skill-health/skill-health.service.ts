@@ -13,7 +13,9 @@ export const getAdminSkillHealth = async () => {
   });
 
   const result = Array.from(skillAgg.entries()).map(([name, data]) => ({
+    id: name,
     name,
+    category: "Technical Skill",
     averageScore: Math.round(data.total / data.count),
     usersCount: data.count
   })).sort((a: any, b: any) => b.averageScore - a.averageScore);
