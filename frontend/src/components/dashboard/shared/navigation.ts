@@ -18,6 +18,8 @@ import {
   Mic,
   TrendingUp,
   Briefcase,
+  Megaphone,
+  Sparkles,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -78,11 +80,13 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
         title: "AI",
         items: [
           { href: `${prefix}/ai-usage`, label: "AI Usage", icon: BarChart },
+          { href: `${prefix}/ai-sandbox`, label: "AI Playground", icon: Sparkles },
         ],
       },
       {
         title: "SYSTEM",
         items: [
+          { href: `${prefix}/broadcasts`, label: "Broadcasts", icon: Megaphone },
           { href: `${prefix}/activity`, label: "Activity", icon: LayoutDashboard },
           { href: `${prefix}/audit-logs`, label: "Audit Logs", icon: FileText },
           { href: `${prefix}/error-logs`, label: "Error Logs", icon: ShieldCheck },
