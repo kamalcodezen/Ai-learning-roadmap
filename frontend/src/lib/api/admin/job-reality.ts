@@ -1,15 +1,13 @@
 import { serverFetch } from "../../core/server";
 
-export interface AdminJobRealityMarketTrack {
-  roleName: string;
-  demandLevel: "HIGH" | "MEDIUM" | "EMERGING";
-  avgSalaryRange: string;
-  topSkills: string[];
+export interface AdminJobRealityRoleItem {
+  role: string;
+  count: number;
 }
 
 export interface AdminJobRealityResponse {
-  marketTracks: AdminJobRealityMarketTrack[];
-  totalCalibratedRoles: number;
+  popularRoles: AdminJobRealityRoleItem[];
+  totalChecks: number;
 }
 
 /**
