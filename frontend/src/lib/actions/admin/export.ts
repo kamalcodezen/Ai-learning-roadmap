@@ -1,4 +1,22 @@
-export const exportAdminData = async (userId: string, entity: string) => {
+export type ExportEntityOption =
+  | "users"
+  | "roadmaps"
+  | "assessments"
+  | "projects"
+  | "ai-usage"
+  | "audit-logs"
+  | "skill-proof"
+  | "error-logs"
+  | "learning-debt"
+  | "skill-health"
+  | "career-readiness"
+  | "job-reality"
+  | "activity";
+
+/**
+ * Downloads a platform data export CSV directly to the browser.
+ */
+export const exportAdminData = async (userId: string, entity: ExportEntityOption | string) => {
   const normalizedBase =
     typeof window === "undefined"
       ? (
