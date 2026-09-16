@@ -6,7 +6,6 @@ import { serverFetch } from "@/src/lib/core/server";
 import { authClient } from "@/src/lib/auth-client";
 import {
   CheckCircle2,
-  XCircle,
   AlertCircle,
   Database,
   Server,
