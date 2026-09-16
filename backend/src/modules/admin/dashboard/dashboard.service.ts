@@ -34,13 +34,13 @@ export const getDashboardStats = async () => {
     prisma.user.findMany({
       take: 5,
       orderBy: { createdAt: "desc" },
-      select: { id: true, name: true, email: true, role: true, createdAt: true },
+      select: { id: true, name: true, email: true, image: true, role: true, createdAt: true },
     }),
 
     prisma.activityLog.findMany({
       take: 10,
       orderBy: { createdAt: "desc" },
-      include: { user: { select: { name: true, email: true } } },
+      include: { user: { select: { name: true, email: true, image: true } } },
     }),
   ]);
 

@@ -11,6 +11,7 @@ import { useDashboardSession } from "../sessionGuard/SessionGuard";
 interface SidebarContentProps {
   userName?: string | null;
   userEmail?: string | null;
+  userImage?: string | null;
   indicatorId: string;
   onClose?: () => void;
   onNavigate?: () => void;
@@ -19,12 +20,13 @@ interface SidebarContentProps {
 export default function SidebarContent({
   userName,
   userEmail,
+  userImage,
   indicatorId,
   onClose,
   onNavigate,
 }: SidebarContentProps) {
   const { data: session } = useDashboardSession();
-  const user = session?.user as { role?: string; plan?: string } | undefined;
+  const user = session?.user as { role?: string; plan?: string; image?: string | null } | undefined;
   const userRole = (user?.role || "LEARNER").toUpperCase();
   const userPlan = (user?.plan || "FREE").toUpperCase();
   const isPro = userPlan === "PRO";
@@ -35,7 +37,7 @@ export default function SidebarContent({
       <SidebarHeader onClose={onClose} />
 
       <div className="px-4 pt-2 pb-2">
-        <ProfileCard name={userName} email={userEmail} plan={userPlan} />
+        <ProfileCard name={userName} email={userEmail} plan={userPlan} image={userImage || user?.image} />
       </div>
 
       <div className="mt-1 flex min-h-0 flex-1 flex-col overflow-y-auto">

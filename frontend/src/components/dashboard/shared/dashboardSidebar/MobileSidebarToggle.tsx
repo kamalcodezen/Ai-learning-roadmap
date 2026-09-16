@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Menu, Sparkles } from "lucide-react";
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 import { BorderBeam } from "@/src/components/ui/border-beam";
@@ -24,9 +23,15 @@ export default function MobileSidebarToggle({ onOpen }: MobileSidebarToggleProps
       </button>
 
       <div className="flex items-center gap-1">
-        <Link
-          href="/dashboard/learner/#dashboard-chatbot"
-          className="relative flex items-center gap-2 rounded-lg border border-foreground/20 px-2 py-1 font-semibold text-primary transition-colors hover:bg-brand hover:text-white"
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new CustomEvent("open-ai-chat"));
+            }
+          }}
+          aria-label="Open AI Mentor Chat"
+          className="relative flex items-center gap-2 rounded-lg border border-foreground/20 px-2 py-1 font-semibold text-primary transition-colors hover:bg-brand hover:text-white cursor-pointer"
         >
           <BorderBeam
             size={60}
@@ -44,9 +49,9 @@ export default function MobileSidebarToggle({ onOpen }: MobileSidebarToggleProps
           />
           <Sparkles className="size-4.5" aria-hidden="true" />
           <div className="mt-0.5">
-          Ai Mentor
+            Ai Mentor
           </div>
-        </Link>
+        </button>
 
         <NotificationBell />
 

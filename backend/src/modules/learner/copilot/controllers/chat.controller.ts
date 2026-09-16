@@ -49,6 +49,11 @@ export class ChatController {
         finalContext,
       );
 
+      console.log(`\n======================================================`);
+      console.log(`[AI CHAT] Delivered By Provider: 【 ${result.provider} 】`);
+      console.log(`[AI CHAT] Active Model:         【 ${result.model} 】`);
+      console.log(`======================================================\n`);
+
       // Persist to ActivityLog asynchronously without blocking the user response
       if (req.userId) {
         prisma.activityLog
@@ -113,6 +118,26 @@ export class ChatController {
       return res.status(200).json({
         success: true,
         data: messages,
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  static async deleteChatHistory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.userId;
+      if (userId) {
+        await prisma.activityLog.deleteMany({
+          where: {
+            userId,
+            type: "COPILOT_CHAT",
+          },
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Chat history cleared successfully",
       });
     } catch (error) {
       return next(error);

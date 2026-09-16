@@ -17,10 +17,10 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
 
   GROQ_API_KEY: z.string().default(""),
-
   GROQ_API_KEY_SECONDARY: z.string().default(""),
 
   OPENROUTER_API_KEY: z.string().default(""),
+  OPENROUTER_API_KEY_SECONDARY: z.string().default(""),
 
   GEMINI_API_KEY: z.string().default(""),
 

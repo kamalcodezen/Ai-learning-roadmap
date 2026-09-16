@@ -33,21 +33,67 @@ const mistral = env.MISTRAL_API_KEY
   : null;
 
 // Models
+// এই ৪টি কিন্তু ৪টি আলাদা API Key নয়!
+// এগুলো সবই Groq-এর ভেতরের ৪টি আলাদা মডেল, যা একটিমাত্র GROQ_API_KEY দিয়েই চলে:
 const GROQ_SIMPLE_MODEL = "openai/gpt-oss-120b";
 const GROQ_COMPLEX_MODEL = "openai/gpt-oss-120b";
 const GROQ_FALLBACK_MODEL = "qwen/qwen3.8-27b";
 const GROQ_TERTIARY_MODEL = "openai/gpt-oss-20b";
+
+// এটি OpenRouter-এর মডেল ➔ OPENROUTER_API_KEY ও OPENROUTER_API_KEY_SECONDARY দিয়ে চলে
 const OPENROUTER_MODEL = "qwen/qwen-2.5-coder-32b-instruct";
-const GEMINI_MODEL = "gemini-3.6-flash";
+const OPENROUTER_FALLBACK_MODEL = "qwen/qwen-2.5-72b-instruct";
+const OPENROUTER_TERTIARY_MODEL = "meta-llama/llama-3.1-8b-instruct";
+
+// এটি Google-এর মডেল ➔ GEMINI_API_KEY দিয়ে চলে
+const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_FALLBACK_MODEL = "gemini-2.0-flash";
+
+// এটি Mistral-এর মডেল ➔ MISTRAL_API_KEY দিয়ে চলে
 const MISTRAL_MODEL = "mistral-small-latest";
+const MISTRAL_FALLBACK_MODEL = "open-mistral-7b";
+
 
 const OUTPUT_LIMITS: Record<QueryComplexity, number> = {
-  simple: 450,
-  normal: 700,
-  complex: 1200,
+  simple: 2000,
+  normal: 3000,
+  complex: 4000,
 };
 
-const PROVIDER_TIMEOUT_MS = 6000;
+export function ensureCleanResponseCompletion(text: string): string {
+  if (!text || typeof text !== "string") return text;
+  let trimmed = text.trim();
+
+  // If already ends cleanly with valid punctuation or closing markdown
+  const validPunctuation = [".", "!", "?", "```", "---", "*", '"', "'", "`", ")", "}", "]", ":"];
+  const endsCleanly = validPunctuation.some((p) => trimmed.endsWith(p));
+
+  if (!endsCleanly) {
+    // Cut back trailing truncated fragment to the last complete sentence
+    const lastPunctuationIndex = Math.max(
+      trimmed.lastIndexOf(". "),
+      trimmed.lastIndexOf(".\n"),
+      trimmed.lastIndexOf("! "),
+      trimmed.lastIndexOf("!\n"),
+      trimmed.lastIndexOf("? "),
+      trimmed.lastIndexOf("?\n"),
+      trimmed.lastIndexOf("\n\n")
+    );
+
+    if (lastPunctuationIndex > trimmed.length * 0.4) {
+      trimmed = trimmed.slice(0, lastPunctuationIndex + 1).trim();
+    }
+  }
+
+  // Ensure there is always a clean closing call-to-action
+  if (!trimmed.includes("👉 **Next Step:**") && !trimmed.includes("**Next**") && !trimmed.includes("Next Step")) {
+    trimmed += "\n\n---\n👉 **Next Step:**\nReply **\"Next\"** to proceed to the next step, or ask any question to dive deeper!";
+  }
+
+  return trimmed;
+}
+
+const PROVIDER_TIMEOUT_MS = 12000;
 
 const fetchWithTimeout = async (
   url: string,
@@ -78,6 +124,45 @@ const withTimeout = async <T>(
     return await Promise.race([promise, timeoutPromise]);
   } finally {
     if (timeoutId) clearTimeout(timeoutId);
+  }
+};
+
+const queryOpenRouter = async (
+  apiKey: string,
+  model: string,
+  messages: any[],
+  maxTokens: number,
+  jsonMode = false,
+  timeoutMs = PROVIDER_TIMEOUT_MS,
+): Promise<string | null> => {
+  try {
+    const body: any = {
+      model,
+      messages,
+      max_tokens: maxTokens,
+      temperature: jsonMode ? 0.1 : 0.2,
+    };
+    if (jsonMode) {
+      body.response_format = { type: "json_object" };
+    }
+    const response = await fetchWithTimeout(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      },
+      timeoutMs,
+    );
+    if (!response.ok) return null;
+    const data = (await response.json()) as any;
+    return data.choices?.[0]?.message?.content?.trim() || null;
+  } catch (err: any) {
+    console.warn(`[OpenRouter ${model} failed]: ${err.message}`);
+    return null;
   }
 };
 
@@ -158,42 +243,54 @@ export const extractValidJsonString = (raw: string): string => {
 import prisma from "../../../../lib/prisma.js";
 
 export class ChatService {
+  /**
+   * Two-layer context strategy:
+   * Layer A (ALWAYS): Lightweight baseline — target role + experience level (1 cheap DB query)
+   * Layer B (CONDITIONAL): Full career context — skills, roadmap, projects (4 parallel queries)
+   *   → Only triggered when message contains career/learning keywords
+   *
+   * This ensures the AI ALWAYS knows who the learner is and what role they are targeting,
+   * even for general questions like "Is React important?" or "Tell me about Docker."
+   */
   static async fetchUserContext(userId: string, message: string): Promise<string | undefined> {
-    const normalized = message.toLowerCase();
-    const needsContext = [
-      "learn",
-      "roadmap",
-      "progress",
-      "skill",
-      "gap",
-      "career",
-      "role",
-      "project",
-      "assessment",
-      "study",
-      "plan",
-      "framework",
-      "tech",
-      "stack",
-      "build",
-      "explain",
-      "next",
-      "milestone",
-      "help",
-      "what",
-      "how",
-      "why",
-      "guidance",
-      "status",
-      "debt",
-      "readiness",
-    ].some((kw) => normalized.includes(kw));
-
-    if (!needsContext) return undefined;
-
     try {
-      const [profile, roadmap, allSkillStates, projects] = await Promise.all([
-        prisma.careerProfile.findUnique({ where: { userId } }),
+      // Layer A: Always fetch the lightweight baseline profile (single cheap query)
+      const profile = await prisma.careerProfile.findUnique({ where: { userId } });
+
+      if (!profile) {
+        return "USER CONTEXT:\nNo onboarding data found. The user has not set up a career profile yet. Politely suggest they complete onboarding at /onboarding to get a personalized experience.";
+      }
+
+      const roleName = profile.targetRoleName || profile.targetRole || "Unknown Role";
+      const experience = profile.experienceLevel || "Unknown Experience";
+
+      // Layer B: Check if the message warrants full career context (skills, roadmap, projects)
+      const normalized = message.toLowerCase();
+      const needsDeepContext = [
+        "learn", "roadmap", "progress", "skill", "gap", "career", "role",
+        "project", "assessment", "study", "plan", "framework", "tech", "stack",
+        "build", "next", "milestone", "guidance", "status", "debt", "readiness",
+        "ready", "interview", "resume", "job", "evidence", "proof", "diagnostic",
+        "shikhbo", "shikhte", "kivabe", "ki vabe", "bujhiye", "korbo",
+      ].some((kw) => normalized.includes(kw));
+
+      // Baseline context (always included — very low token cost)
+      let contextStr = `USER CONTEXT:\n\nTarget Role: ${roleName}\nExperience Level: ${experience}\n`;
+
+      if (profile.resumeScore !== null && profile.resumeScore !== undefined) {
+        contextStr += `Resume Score: ${Math.round(profile.resumeScore)}%\n`;
+      }
+      if (profile.interviewScore !== null && profile.interviewScore !== undefined) {
+        contextStr += `Interview Score: ${Math.round(profile.interviewScore)}%\n`;
+      }
+
+      // If no deep context needed, return just the lightweight baseline
+      if (!needsDeepContext) {
+        return contextStr;
+      }
+
+      // Layer B: Full career context (parallel queries for performance)
+      const [roadmap, allSkillStates, projects] = await Promise.all([
         prisma.roadmap.findFirst({
           where: { userId, status: "ACTIVE" },
           include: { milestones: { orderBy: { order: "asc" } } },
@@ -214,28 +311,8 @@ export class ChatService {
         }),
       ]);
 
-      if (!profile) {
-        return "USER CAREER CONTEXT:\nNo onboarding data found. The user has not set up a career profile, skills, or a roadmap yet. You should politely ask them to complete onboarding to get a personalized experience.";
-      }
-
-      const roleName =
-        profile.targetRoleName || profile.targetRole || "Unknown Role";
-      const experience = profile.experienceLevel || "Unknown Experience";
-      const availability = profile.weeklyAvailableHours
-        ? `${profile.weeklyAvailableHours} hours/week`
-        : "Unknown";
-
-      let contextStr = `USER CAREER CONTEXT:\n\nTarget Role:\n${roleName}\n\nExperience:\n${experience}\n\nAvailability:\n${availability}\n\n`;
-
-      if (profile.resumeScore !== null && profile.resumeScore !== undefined) {
-        contextStr += `Resume Readiness Score:\n${Math.round(profile.resumeScore)}%\n\n`;
-      }
-      if (profile.interviewScore !== null && profile.interviewScore !== undefined) {
-        contextStr += `Interview Readiness Score:\n${Math.round(profile.interviewScore)}%\n\n`;
-      }
-
       // Skills categorization
-      contextStr += `SKILL MASTERY & GAPS:\n`;
+      contextStr += `\nSKILL MASTERY & GAPS:\n`;
       if (allSkillStates.length > 0) {
         const strongSkills = allSkillStates.filter(
           (s) => (s.knowledgeScore + s.practiceScore + s.projectScore) / 3 >= 70,
@@ -248,25 +325,24 @@ export class ChatService {
           contextStr += `Strengths:\n` + strongSkills.map((s) => `- ${s.skillName} (Score: ${Math.round(s.knowledgeScore)}%)`).join("\n") + "\n";
         }
         if (gapSkills.length > 0) {
-          contextStr += `Active Skill Gaps / Debt:\n` + gapSkills.map((s) => `- ${s.skillName} (Score: ${Math.round(s.knowledgeScore)}%)`).join("\n") + "\n";
+          contextStr += `Active Skill Gaps:\n` + gapSkills.map((s) => `- ${s.skillName} (Score: ${Math.round(s.knowledgeScore)}%)`).join("\n") + "\n";
         }
       } else {
-        contextStr += "No skills assessed yet.\n";
+        contextStr += "No skills assessed yet. Suggest completing the Diagnostic at /diagnostic.\n";
       }
 
       // Roadmap context
       contextStr += `\nACTIVE ROADMAP:\n`;
       if (roadmap && roadmap.milestones.length > 0) {
-        contextStr += `${roadmap.targetRole} Roadmap (Status: ${roadmap.status})\n\n`;
+        contextStr += `${roadmap.targetRole} Roadmap (Status: ${roadmap.status})\n`;
 
         const currentMilestone =
           roadmap.milestones.find((m) => m.status === "CURRENT") ||
           roadmap.milestones.find((m) => m.status === "UPCOMING") ||
           roadmap.milestones[0];
 
-        contextStr += `CURRENT MILESTONE:\n`;
         if (currentMilestone) {
-          contextStr += `Title: ${currentMilestone.title}\n`;
+          contextStr += `Current Milestone: ${currentMilestone.title}\n`;
           if (currentMilestone.description)
             contextStr += `Description: ${currentMilestone.description}\n`;
           if (currentMilestone.why)
@@ -276,30 +352,26 @@ export class ChatService {
           if (currentMilestone.unlocks && currentMilestone.unlocks.length > 0)
             contextStr += `Unlocks: ${currentMilestone.unlocks.join(", ")}\n`;
         } else {
-          contextStr += `None\n`;
+          contextStr += `Current Milestone: None\n`;
         }
 
         const completedMilestones = roadmap.milestones.filter(
           (m) => m.status === "COMPLETED",
         );
-        contextStr += `\nCOMPLETED MILESTONES:\n`;
         if (completedMilestones.length > 0) {
-          contextStr +=
-            completedMilestones.map((m) => `- ${m.title}`).join("\n") + "\n";
-        } else {
-          contextStr += `None\n`;
+          contextStr += `Completed: ` + completedMilestones.map((m) => m.title).join(", ") + "\n";
         }
       } else {
-        contextStr += `No active roadmap found.\nCURRENT MILESTONE: None\nCOMPLETED MILESTONES: None\n`;
+        contextStr += `No active roadmap. Suggest visiting My Roadmap at /dashboard/learner/learning-path.\n`;
       }
 
       // Projects context
       if (projects.length > 0) {
-        contextStr += `\nRECENT PROJECTS & EVIDENCE:\n`;
+        contextStr += `\nRECENT PROJECTS:\n`;
         contextStr += projects
           .map(
             (p) =>
-              `- ${p.title} (${p.techStack.join(", ") || "No stack specified"}) - ${p.isVerified ? "Verified (Score: " + Math.round(p.score) + "%)" : "In Progress"}`,
+              `- ${p.title} (${p.techStack.join(", ") || "No stack"}) - ${p.isVerified ? "Verified (" + Math.round(p.score) + "%)" : "In Progress"}`,
           )
           .join("\n");
       }
@@ -396,6 +468,24 @@ export class ChatService {
             }
           } catch (fbErr: any) {
             console.warn(`[Groq fallback model failed]: ${fbErr.message}`);
+            try {
+              const tertResp = await withTimeout(
+                groq.chat.completions.create({
+                  model: GROQ_TERTIARY_MODEL,
+                  messages,
+                  max_tokens: maxTokens as any,
+                  temperature: 0.2,
+                }),
+              );
+              const tertContent = (tertResp as any).choices[0]?.message?.content?.trim();
+              if (tertContent) {
+                reply = tertContent;
+                provider = "Groq";
+                model = GROQ_TERTIARY_MODEL;
+              }
+            } catch (tertErr: any) {
+              console.warn(`[Groq tertiary model failed]: ${tertErr.message}`);
+            }
           }
         }
       }
@@ -440,71 +530,87 @@ export class ChatService {
             }
           } catch (fbErr: any) {
             console.warn(`[Groq Secondary fallback model failed]: ${fbErr.message}`);
+            try {
+              const tertResp = await withTimeout(
+                groqSecondary.chat.completions.create({
+                  model: GROQ_TERTIARY_MODEL,
+                  messages,
+                  max_tokens: maxTokens as any,
+                  temperature: 0.2,
+                }),
+              );
+              const tertContent = (tertResp as any).choices[0]?.message?.content?.trim();
+              if (tertContent) {
+                reply = tertContent;
+                provider = "Groq-Secondary";
+                model = GROQ_TERTIARY_MODEL;
+              }
+            } catch (tertErr: any) {
+              console.warn(`[Groq Secondary tertiary model failed]: ${tertErr.message}`);
+            }
           }
         }
       }
     }
 
-    // 2. OpenRouter
+    // 2. OpenRouter (Primary Key Cascade)
     if (!reply && env.OPENROUTER_API_KEY) {
-      try {
-        const response = await fetchWithTimeout(
-          "https://openrouter.ai/api/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: OPENROUTER_MODEL,
-              messages,
-              max_tokens: maxTokens as any,
-              temperature: 0.2,
-            }),
-          },
-        );
-        if (response.ok) {
-          const data = (await response.json()) as any;
-          const content = data.choices?.[0]?.message?.content?.trim();
-          if (content) {
-            reply = content;
-            provider = "OpenRouter";
-            model = OPENROUTER_MODEL;
-          }
+      for (const m of [OPENROUTER_MODEL, OPENROUTER_FALLBACK_MODEL, OPENROUTER_TERTIARY_MODEL]) {
+        const content = await queryOpenRouter(env.OPENROUTER_API_KEY, m, messages, maxTokens);
+        if (content) {
+          reply = content;
+          provider = "OpenRouter";
+          model = m;
+          break;
         }
-      } catch (err: any) {
-        console.warn(`[OpenRouter failed]: ${err.message}`);
+      }
+    }
+
+    // 2b. OpenRouter Secondary Key (Secondary Key Cascade)
+    if (!reply && env.OPENROUTER_API_KEY_SECONDARY) {
+      for (const m of [OPENROUTER_MODEL, OPENROUTER_FALLBACK_MODEL, OPENROUTER_TERTIARY_MODEL]) {
+        const content = await queryOpenRouter(env.OPENROUTER_API_KEY_SECONDARY, m, messages, maxTokens);
+        if (content) {
+          reply = content;
+          provider = "OpenRouter-Secondary";
+          model = m;
+          break;
+        }
       }
     }
 
     // 3. Gemini
     if (!reply && gemini) {
-      try {
-        const conversationText = [
-          ...recentHistory.map((item) => `${item.role}: ${item.content}`),
-          `user: ${cleanMessage}`,
-        ].join("\n");
+      for (const m of [GEMINI_MODEL, GEMINI_FALLBACK_MODEL]) {
+        try {
+          const conversationText = [
+            ...recentHistory.map((item) => `${item.role}: ${item.content}`),
+            `user: ${cleanMessage}`,
+          ].join("\n");
 
-        const response = await withTimeout(
-          gemini.models.generateContent({
-            model: GEMINI_MODEL,
-            contents: conversationText,
-            config: {
-              systemInstruction: systemPrompt,
-              maxOutputTokens: maxTokens as any,
-              temperature: 0.2,
-            },
-          }),
-        );
-        const content = response.text?.trim();
-        if (content) {
-          reply = content;
-          provider = "Gemini";
-          model = GEMINI_MODEL;
+          const response = await withTimeout(
+            gemini.models.generateContent({
+              model: m,
+              contents: conversationText,
+              config: {
+                systemInstruction: systemPrompt,
+                thinkingConfig: { thinkingBudget: 0 },
+                maxOutputTokens: Math.max(maxTokens + 2500, 4096) as any,
+                temperature: 0.2,
+              },
+            }),
+            35000,
+          );
+          const content = response.text?.trim();
+          if (content) {
+            reply = content;
+            provider = "Gemini";
+            model = m;
+            break;
+          }
+        } catch (err: any) {
+          console.warn(`[Gemini ${m} failed]: ${err.message}`);
         }
-      } catch (err: any) {
-        console.warn(`[Gemini failed]: ${err.message}`);
       }
     }
 
@@ -527,11 +633,34 @@ export class ChatService {
         }
       } catch (err: any) {
         console.warn(`[Mistral failed]: ${err.message}`);
+        if (err.message?.includes("429") || err.message?.includes("Rate limit")) {
+          try {
+            const fallbackResp = await withTimeout(
+              mistral.chat.complete({
+                model: MISTRAL_FALLBACK_MODEL,
+                messages,
+                maxTokens: maxTokens,
+                temperature: 0.2,
+              }),
+              25000,
+            );
+            const fbContent = (fallbackResp as any).choices?.[0]?.message?.content;
+            if (typeof fbContent === "string" && fbContent.trim()) {
+              reply = fbContent.trim();
+              provider = "Mistral";
+              model = MISTRAL_FALLBACK_MODEL;
+            }
+          } catch (fbErr: any) {
+            console.warn(`[Mistral fallback model failed]: ${fbErr.message}`);
+          }
+        }
       }
     }
 
     if (!reply) {
       reply = `**AI Pather Assistant:** I am currently operating in offline mode. Please review your active Roadmap milestones and Skill Gaps dashboard to continue your learning journey.`;
+    } else {
+      reply = ensureCleanResponseCompletion(reply);
     }
 
     this.logAiUsage(
@@ -603,7 +732,7 @@ export class ChatService {
               groq.chat.completions.create({
                 model: GROQ_FALLBACK_MODEL,
                 messages,
-                max_tokens: maxTokens as any,
+                max_tokens: Math.min(maxTokens, 950) as any,
                 temperature: 0.1,
                 response_format: { type: "json_object" },
               }),
@@ -669,7 +798,7 @@ export class ChatService {
               groqSecondary.chat.completions.create({
                 model: GROQ_FALLBACK_MODEL,
                 messages,
-                max_tokens: maxTokens as any,
+                max_tokens: Math.min(maxTokens, 950) as any,
                 temperature: 0.1,
                 response_format: { type: "json_object" },
               }),
@@ -683,70 +812,85 @@ export class ChatService {
             }
           } catch (fbErr: any) {
             console.warn(`[Groq Secondary fallback model JSON failed]: ${fbErr.message}`);
+            try {
+              const tertResp = await withTimeout(
+                groqSecondary.chat.completions.create({
+                  model: GROQ_TERTIARY_MODEL,
+                  messages,
+                  max_tokens: maxTokens as any,
+                  temperature: 0.1,
+                  response_format: { type: "json_object" },
+                }),
+                timeoutMs
+              );
+              const tertContent = (tertResp as any).choices[0]?.message?.content?.trim();
+              if (tertContent) {
+                reply = extractValidJsonString(tertContent);
+                provider = "Groq-Secondary";
+                model = GROQ_TERTIARY_MODEL;
+              }
+            } catch (tertErr: any) {
+              console.warn(`[Groq Secondary tertiary model JSON failed]: ${tertErr.message}`);
+            }
           }
         }
       }
     }
 
-    // 2. OpenRouter
+    // 2. OpenRouter (Primary Key JSON Cascade)
     if (!reply && env.OPENROUTER_API_KEY) {
-      try {
-        const response = await fetchWithTimeout(
-          "https://openrouter.ai/api/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${env.OPENROUTER_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              model: OPENROUTER_MODEL,
-              messages,
-              max_tokens: maxTokens as any,
-              temperature: 0.1,
-              response_format: { type: "json_object" },
-            }),
-          },
-          timeoutMs
-        );
-        if (response.ok) {
-          const data = (await response.json()) as any;
-          const content = data.choices?.[0]?.message?.content?.trim();
-          if (content) {
-            reply = extractValidJsonString(content);
-            provider = "OpenRouter";
-            model = OPENROUTER_MODEL;
-          }
+      for (const m of [OPENROUTER_MODEL, OPENROUTER_FALLBACK_MODEL, OPENROUTER_TERTIARY_MODEL]) {
+        const content = await queryOpenRouter(env.OPENROUTER_API_KEY, m, messages, maxTokens, true, timeoutMs);
+        if (content) {
+          reply = extractValidJsonString(content);
+          provider = "OpenRouter";
+          model = m;
+          break;
         }
-      } catch (err: any) {
-        console.warn(`[OpenRouter JSON failed]: ${err.message}`);
+      }
+    }
+
+    // 2b. OpenRouter Secondary Key (Secondary Key JSON Cascade)
+    if (!reply && env.OPENROUTER_API_KEY_SECONDARY) {
+      for (const m of [OPENROUTER_MODEL, OPENROUTER_FALLBACK_MODEL, OPENROUTER_TERTIARY_MODEL]) {
+        const content = await queryOpenRouter(env.OPENROUTER_API_KEY_SECONDARY, m, messages, maxTokens, true, timeoutMs);
+        if (content) {
+          reply = extractValidJsonString(content);
+          provider = "OpenRouter-Secondary";
+          model = m;
+          break;
+        }
       }
     }
 
     // 3. Gemini
     if (!reply && gemini) {
-      try {
-        const response = await withTimeout(
-          gemini.models.generateContent({
-            model: GEMINI_MODEL,
-            contents: `user: ${userPrompt}`,
-            config: {
-              systemInstruction: systemInstruction,
-              maxOutputTokens: maxTokens as any,
-              temperature: 0.1,
-              responseMimeType: "application/json",
-            },
-          }),
-          timeoutMs
-        );
-        const content = response.text?.trim();
-        if (content) {
-          reply = extractValidJsonString(content);
-          provider = "Gemini";
-          model = GEMINI_MODEL;
+      for (const m of [GEMINI_MODEL, GEMINI_FALLBACK_MODEL]) {
+        try {
+          const response = await withTimeout(
+            gemini.models.generateContent({
+              model: m,
+              contents: `user: ${userPrompt}`,
+              config: {
+                systemInstruction: systemInstruction,
+                thinkingConfig: { thinkingBudget: 0 },
+                maxOutputTokens: Math.max(maxTokens + 2500, 4096) as any,
+                temperature: 0.1,
+                responseMimeType: "application/json",
+              },
+            }),
+            Math.max(timeoutMs, 35000),
+          );
+          const content = response.text?.trim();
+          if (content) {
+            reply = extractValidJsonString(content);
+            provider = "Gemini";
+            model = m;
+            break;
+          }
+        } catch (err: any) {
+          console.warn(`[Gemini ${m} JSON failed]: ${err.message}`);
         }
-      } catch (err: any) {
-        console.warn(`[Gemini JSON failed]: ${err.message}`);
       }
     }
 
@@ -771,6 +915,28 @@ export class ChatService {
         }
       } catch (err: any) {
         console.warn(`[Mistral JSON failed]: ${err.message}`);
+        if (err.message?.includes("429") || err.message?.includes("Rate limit")) {
+          try {
+            const fallbackResp = await withTimeout(
+              mistral.chat.complete({
+                model: MISTRAL_FALLBACK_MODEL,
+                messages,
+                maxTokens: maxTokens,
+                temperature: 0.1,
+                responseFormat: { type: "json_object" },
+              }),
+              Math.max(timeoutMs, 25000)
+            );
+            const fbContent = (fallbackResp as any).choices?.[0]?.message?.content;
+            if (typeof fbContent === "string" && fbContent.trim()) {
+              reply = extractValidJsonString(fbContent.trim());
+              provider = "Mistral";
+              model = MISTRAL_FALLBACK_MODEL;
+            }
+          } catch (fbErr: any) {
+            console.warn(`[Mistral fallback model JSON failed]: ${fbErr.message}`);
+          }
+        }
       }
     }
 

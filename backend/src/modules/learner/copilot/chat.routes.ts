@@ -20,5 +20,6 @@ const chatRateLimiter = rateLimit({
 
 router.post("/", chatRateLimiter, optionalAuth, ChatController.processChat);
 router.get("/history", optionalAuth, ChatController.getChatHistory);
+router.delete("/history", optionalAuth, ChatController.deleteChatHistory);
 
 export default router;

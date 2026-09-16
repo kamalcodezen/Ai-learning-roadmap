@@ -33,6 +33,7 @@ export const getUsers = async (skip: number, take: number, search?: string, role
         id: true,
         name: true,
         email: true,
+        image: true,
         role: true,
         createdAt: true,
       },

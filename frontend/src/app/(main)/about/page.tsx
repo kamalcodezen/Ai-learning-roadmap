@@ -7,7 +7,6 @@ import AboutPhilosophy from "@/src/components/about/AboutPhilosophy";
 import AboutAudience from "@/src/components/about/AboutAudience";
 import AboutFutureCta from "@/src/components/about/AboutFutureCta";
 import ProgressBridgeSection from "@/src/components/home/ProgressBridge/ProgressBridgeSection";
-import { HomeFloatingChat } from "@/src/components/chat/HomeFloatingChat";
 import { FloatingSocials } from "@/src/components/socials/FloatingSocials";
 
 export const metadata: Metadata = {
@@ -53,7 +52,6 @@ export default function AboutPage() {
       <AboutFutureCta />
 
       {/* Floating Assist Widgets */}
-      <HomeFloatingChat />
       <FloatingSocials />
     </div>
   );

@@ -8,6 +8,7 @@ import brandLogo from "../../../public/brand/logo-p-purple.png"
 import {
   sendChatMessage,
   getChatHistory,
+  clearChatHistory,
   type ChatMessage,
 } from "@/src/lib/api/chat-ai-mentor/chat";
 import { authClient } from "@/src/lib/auth-client";
@@ -15,6 +16,8 @@ import { Meteors } from "@/src/components/ui/meteors";
 import { BorderBeam } from "@/src/components/ui/border-beam";
 import Lenis from "lenis";
 import Image from "next/image";
+import { Mic, MicOff, Volume2, VolumeX, Trash2 } from "lucide-react";
+import { useInlineVoiceChat } from "../voice-agent";
 
 function getTimeGreeting(): string {
   const hours = new Date().getHours();
@@ -38,6 +41,31 @@ export default function ChatBox() {
   const chatContentRef = useRef<HTMLDivElement>(null);
   const chatLenisRef = useRef<Lenis | null>(null);
   const hasHydratedRef = useRef(false);
+  const sendMessageRef = useRef<(text: string) => Promise<void>>(async () => {});
+
+  const handleAutoSubmit = useCallback((spokenText: string) => {
+    if (spokenText.trim()) {
+      sendMessageRef.current(spokenText);
+    }
+  }, []);
+
+  const handleTranscriptUpdate = useCallback((transcript: string) => {
+    if (transcript) {
+      setInput(transcript);
+    }
+  }, []);
+
+  const {
+    isListening,
+    isSpeaking,
+    voiceReplyEnabled,
+    toggleMic,
+    speakReply,
+    toggleVoiceReply,
+  } = useInlineVoiceChat({
+    onAutoSubmit: handleAutoSubmit,
+    onTranscriptUpdate: handleTranscriptUpdate,
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -61,6 +89,19 @@ export default function ChatBox() {
         });
     }
   }, [session?.user?.id]);
+
+  const handleClearChat = useCallback(async () => {
+    setMessages([]);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem("ai_pather_chat_box_history");
+        localStorage.removeItem("ai_pather_floating_chat_history");
+      } catch (e) {
+        console.error("Error clearing chat localStorage:", e);
+      }
+    }
+    await clearChatHistory();
+  }, []);
 
   const rawName = session?.user?.name?.trim();
   const userName = rawName ? rawName.split(/\s+/)[0] : undefined;
@@ -110,50 +151,65 @@ export default function ChatBox() {
     glowRef.current.style.opacity = "0";
   }, []);
 
+  const sendMessageText = useCallback(
+    async (textToSend: string) => {
+      const message = textToSend.trim();
+
+      if (!message || isLoading) {
+        return;
+      }
+
+      const userMessage: ChatMessage = {
+        role: "user",
+        content: message,
+      };
+
+      setMessages((previous) => [...previous, userMessage]);
+      setInput("");
+      setIsLoading(true);
+
+      try {
+        const response = await sendChatMessage({
+          message,
+          history: messages,
+        });
+
+        console.log(`[AI Copilot] Provider: ${response.data.provider} | Model: ${response.data.model}`);
+
+        const reply = response.data.reply;
+        const assistantMessage: ChatMessage = {
+          role: "assistant",
+          content: reply,
+        };
+
+        setMessages((previous) => [...previous, assistantMessage]);
+
+        // Speak the AI reply aloud using natural browser speech synthesis
+        speakReply(reply);
+      } catch (error) {
+        const assistantMessage: ChatMessage = {
+          role: "assistant",
+          content:
+            error instanceof Error
+              ? error.message
+              : "Something went wrong. Please try again.",
+        };
+
+        setMessages((previous) => [...previous, assistantMessage]);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isLoading, messages, speakReply]
+  );
+
+  useEffect(() => {
+    sendMessageRef.current = sendMessageText;
+  }, [sendMessageText]);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const message = input.trim();
-
-    if (!message || isLoading) {
-      return;
-    }
-
-    const userMessage: ChatMessage = {
-      role: "user",
-      content: message,
-    };
-
-    setMessages((previous) => [...previous, userMessage]);
-
-    setInput("");
-    setIsLoading(true);
-
-    try {
-      const response = await sendChatMessage({
-        message,
-        history: messages,
-      });
-
-      const assistantMessage: ChatMessage = {
-        role: "assistant",
-        content: response.data.reply,
-      };
-
-      setMessages((previous) => [...previous, assistantMessage]);
-    } catch (error) {
-      const assistantMessage: ChatMessage = {
-        role: "assistant",
-        content:
-          error instanceof Error
-            ? error.message
-            : "Something went wrong. Please try again.",
-      };
-
-      setMessages((previous) => [...previous, assistantMessage]);
-    } finally {
-      setIsLoading(false);
-    }
+    await sendMessageText(input);
   };
 
   return (
@@ -184,17 +240,53 @@ export default function ChatBox() {
           </div>
         </div>
 
-        {/* Online Status */}
-        <div className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5">
-          <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_rgba(159,84,247,0.8)]" />
+        {/* Right Header Actions */}
+        <div className="flex items-center gap-2">
+          {/* AI Voice Output Toggle */}
+          <button
+            type="button"
+            onClick={toggleVoiceReply}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border opacity-100 shadow-sm ${
+              voiceReplyEnabled
+                ? "bg-primary text-white border-primary-foreground/30 shadow-[0_0_12px_rgba(159,84,247,0.5)]"
+                : "bg-purple-600/20 text-purple-950 dark:text-purple-200 border-purple-500/40 hover:bg-purple-600/30"
+            }`}
+            title={voiceReplyEnabled ? "AI Voice Reply is ON (Click to Mute)" : "AI Voice Reply is OFF (Click to Unmute)"}
+          >
+            {voiceReplyEnabled ? (
+              <Volume2 className="w-3.5 h-3.5 text-white" />
+            ) : (
+              <VolumeX className="w-3.5 h-3.5 text-purple-950 dark:text-purple-200" />
+            )}
+            <span className="hidden xs:inline">
+              {voiceReplyEnabled ? "Voice ON" : "Voice OFF"}
+            </span>
+          </button>
 
-          <span className="text-xs text-primary">Online</span>
+          {/* Clear Chat Button */}
+          {messages.length > 0 && (
+            <button
+              type="button"
+              onClick={() => void handleClearChat()}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer border bg-muted/40 border-border text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 hover:border-rose-500/30"
+              title="Clear Chat History"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span className="hidden xs:inline">Clear Chat</span>
+            </button>
+          )}
+
+          {/* Online Status */}
+          <div className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5">
+            <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_rgba(159,84,247,0.8)]" />
+            <span className="text-xs text-primary font-medium">Online</span>
+          </div>
         </div>
       </header>
 
       {/* Chat Area */}
-      <div ref={chatScrollRef} className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 proof-card">
-        <div ref={chatContentRef} className="min-h-full">
+      <div ref={chatScrollRef} className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-6 sm:px-8 proof-card">
+        <div ref={chatContentRef} className="min-h-full min-w-0">
         {messages.length === 0 ? (
           /* Welcome Screen */
           <div className="flex h-full items-center justify-center">
@@ -234,46 +326,46 @@ export default function ChatBox() {
           </div>
         ) : (
           /* Messages */
-          <div className="mx-auto flex max-w-3xl flex-col gap-5">
+          <div className="mx-auto flex max-w-3xl flex-col gap-5 min-w-0 w-full">
             {messages.map((message, index) => (
               <div
                 key={`${message.role}-${index}`}
-                className={`flex ${
+                className={`flex w-full min-w-0 ${
                   message.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
                 <div
-                  className={`max-w-[90%] rounded-3xl px-4 py-3 text-sm leading-7 sm:max-w-[85%] ${
+                  className={`max-w-[92%] sm:max-w-[85%] min-w-0 rounded-3xl px-4 py-3 text-sm sm:text-base leading-relaxed break-words [overflow-wrap:anywhere] ${
                     message.role === "user"
-                      ? "rounded-br-md bg-primary"
+                      ? "rounded-br-md bg-primary text-white font-medium"
                       : "rounded-bl-md border border-border bg-card text-foreground"
                   }`}
                 >
                   {message.role === "assistant" ? (
-                    <div className="markdown-content">
+                    <div className="markdown-content min-w-0 text-sm sm:text-base break-words [overflow-wrap:anywhere]">
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
                           h1: ({ children }) => (
-                            <h1 className="mb-4 mt-1 text-xl font-bold text-foreground">
+                            <h1 className="mb-4 mt-1 text-xl sm:text-2xl font-bold text-foreground">
                               {children}
                             </h1>
                           ),
 
                           h2: ({ children }) => (
-                            <h2 className="mb-3 mt-5 text-lg font-bold text-foreground">
+                            <h2 className="mb-3 mt-5 text-lg sm:text-xl font-bold text-foreground">
                               {children}
                             </h2>
                           ),
 
                           h3: ({ children }) => (
-                            <h3 className="mb-2 mt-4 text-base font-semibold text-foreground">
+                            <h3 className="mb-2 mt-4 text-base sm:text-lg font-semibold text-foreground">
                               {children}
                             </h3>
                           ),
 
                           p: ({ children }) => (
-                            <p className="mb-3 last:mb-0">{children}</p>
+                            <p className="mb-3.5 last:mb-0 text-sm sm:text-base leading-relaxed text-foreground/90 font-normal">{children}</p>
                           ),
 
                           strong: ({ children }) => (
@@ -287,19 +379,19 @@ export default function ChatBox() {
                           ),
 
                           ul: ({ children }) => (
-                            <ul className="mb-4 ml-5 list-disc space-y-1.5">
+                            <ul className="mb-4 ml-5 list-disc space-y-1.5 text-sm sm:text-base">
                               {children}
                             </ul>
                           ),
 
                           ol: ({ children }) => (
-                            <ol className="mb-4 ml-5 list-decimal space-y-1.5">
+                            <ol className="mb-4 ml-5 list-decimal space-y-1.5 text-sm sm:text-base">
                               {children}
                             </ol>
                           ),
 
                           li: ({ children }) => (
-                            <li className="pl-1">{children}</li>
+                            <li className="pl-1 text-sm sm:text-base leading-relaxed">{children}</li>
                           ),
 
                           blockquote: ({ children }) => (
@@ -326,7 +418,7 @@ export default function ChatBox() {
 
                             return (
                               <code
-                                className="rounded-md border border-border bg-card px-1.5 py-0.5 text-[0.85em] text-primary"
+                                className="rounded bg-primary/10 dark:bg-primary/25 px-1.5 py-0.5 text-xs sm:text-sm font-mono font-semibold text-primary"
                                 {...props}
                               >
                                 {children}
@@ -353,7 +445,7 @@ export default function ChatBox() {
 
                           table: ({ children }) => (
                             <div className="my-4 overflow-x-auto rounded-xl border border-border">
-                              <table className="w-full min-w-[520px] border-collapse text-left text-xs sm:text-sm">
+                              <table className="w-full text-left text-xs sm:text-sm">
                                 {children}
                               </table>
                             </div>
@@ -454,6 +546,27 @@ export default function ChatBox() {
             placeholder="Ask AI Pathar anything..."
             className="max-h-32 min-h-11 flex-1 resize-none bg-transparent px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground/50"
           />
+
+          {/* Direct Inline Voice Input Mic Button */}
+          <button
+            type="button"
+            onClick={toggleMic}
+            aria-label={isListening ? "Stop listening" : "Start speaking"}
+            title={isListening ? "Listening to your voice... (Click to stop)" : "Click to speak your message"}
+            className={`relative flex h-10 w-9 mb-0.5 md:h-11 md:w-11 md:m-0 shrink-0 items-center justify-center rounded-xl transition-all cursor-pointer opacity-100 border font-bold shadow-sm ${
+              isListening
+                ? "bg-rose-500 text-white border-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.8)] animate-pulse"
+                : isSpeaking
+                ? "bg-primary text-white border-primary-foreground/30 shadow-[0_0_12px_rgba(159,84,247,0.8)] animate-pulse"
+                : "bg-purple-600/20 text-purple-950 dark:text-purple-200 border-purple-500/40 hover:bg-purple-600/30"
+            }`}
+          >
+            {isListening ? (
+              <MicOff className="w-4 h-4 md:w-5 md:h-5 text-white" />
+            ) : (
+              <Mic className="w-4 h-4 md:w-5 md:h-5 text-purple-950 dark:text-purple-200 font-bold" />
+            )}
+          </button>
 
           {/* Send Button */}
           <button

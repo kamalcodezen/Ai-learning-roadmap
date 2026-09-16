@@ -49,3 +49,13 @@ export const getChatHistory = async (): Promise<ChatMessage[]> => {
   const res = await serverFetch("/api/chat/history");
   return res.data || [];
 };
+
+export const clearChatHistory = async (): Promise<boolean> => {
+  try {
+    const res = await serverMutation("/api/chat/history", undefined, "DELETE");
+    return res?.success ?? true;
+  } catch (err) {
+    console.error("Failed to clear remote chat history:", err);
+    return false;
+  }
+};
