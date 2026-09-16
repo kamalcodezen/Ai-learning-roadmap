@@ -12,7 +12,7 @@ import BrandLoader from "@/src/components/shared/BrandLoader";
  * ============================================================
  * Wraps paid pages and enforces tier access:
  * 1. Checks the user's active plan.
- * 2. If locked, shows an informative toast and redirects to /#pricing.
+ * 2. If locked, shows an informative toast and redirects to /pricing.
  * 3. Admins and paid tier users are granted full access.
  * ============================================================
  */
@@ -43,7 +43,7 @@ export default function PlanGuard({ requiredPlan, children }: PlanGuardProps) {
         message: `AI Pather ${requiredPlan} plan is required to access this feature.`,
         variant: "info",
       });
-      router.replace("/#pricing");
+      router.replace("/pricing");
     }
   }, [isPending, isLocked, requiredPlan, router]);
 

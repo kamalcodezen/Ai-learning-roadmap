@@ -1,5 +1,5 @@
 import { ResumeStudio } from "@/src/components/resume/ResumeStudio";
-import PlanGuard from "@/src/components/dashboard/shared/PlanGuard";
+import FeatureLockedOverlay from "@/src/components/dashboard/shared/FeatureLockedOverlay";
 
 export const metadata = {
   title: "AI Resume & ATS Optimizer",
@@ -8,11 +8,15 @@ export const metadata = {
 
 const ResumePage = () => {
   return (
-    <PlanGuard requiredPlan="PLUS">
+    <FeatureLockedOverlay
+      featureName="AI Resume & ATS Optimizer"
+      requiredPlan="PRO"
+      description="Build, optimize, and scan your resume against live ATS recruiter filters with AI bullet rewrites and job keyword alignment."
+    >
       <div className="flex flex-col min-h-[94vh]">
         <ResumeStudio />
       </div>
-    </PlanGuard>
+    </FeatureLockedOverlay>
   );
 };
 

@@ -170,7 +170,7 @@ export default function DashboardSidebar() {
               {userRole.toUpperCase() !== "ADMIN" && ((user as { plan?: string })?.plan || "FREE").toUpperCase() !== "PRO" && (
                 <div className="px-4 py-2">
                   <Link
-                    href="/#pricing"
+                    href="/pricing"
                     onClick={closeDrawer}
                     className="group relative flex flex-col gap-1.5 overflow-hidden rounded-xl border border-primary/30 bg-[linear-gradient(to_bottom,rgba(159,84,247,0.12)_0%,rgba(133,35,245,0.06)_100%)] p-3 text-left transition-all hover:border-primary/60"
                   >

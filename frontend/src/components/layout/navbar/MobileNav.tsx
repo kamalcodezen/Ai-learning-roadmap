@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
   FiChevronDown,
@@ -16,6 +16,7 @@ import {
   FiInfo,
   FiCreditCard,
   FiMoon,
+  FiHome,
 } from "react-icons/fi";
 import { Sparkles, Crown, Loader2 } from "lucide-react";
 import Logo from "./Logo";
@@ -25,6 +26,13 @@ import { authClient } from "@/src/lib/auth-client";
 import { getDropdownLinks, getPlanBadge } from "./profileDropdown";
 import { getNavLinks } from "./NavLinks";
 
+const subscribeToHash = (callback: () => void) => {
+  window.addEventListener("hashchange", callback);
+  return () => window.removeEventListener("hashchange", callback);
+};
+const getHashSnapshot = () => (typeof window !== "undefined" ? window.location.hash : "");
+const getHashServerSnapshot = () => "";
+
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [expandedSolutions, setExpandedSolutions] = useState(false);
@@ -32,6 +40,48 @@ export default function MobileNav() {
   const mobileNavRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const hashFromStore = useSyncExternalStore(subscribeToHash, getHashSnapshot, getHashServerSnapshot);
+  const [scrollSection, setScrollSection] = useState<string>("");
+
+  // Track active section on home page when scrolling
+  useEffect(() => {
+    if (pathname !== "/") return;
+    const comparisonSection = document.getElementById("comparison");
+    if (!comparisonSection) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setScrollSection("#comparison");
+          } else {
+            setScrollSection((prev) => (prev === "#comparison" ? "" : prev));
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(comparisonSection);
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  const activeHash = scrollSection || hashFromStore;
+
+  const checkIsActive = (link: { href: string }) => {
+    if (link.href === "/") {
+      return pathname === "/" && (!activeHash || activeHash === "" || activeHash === "#");
+    }
+    if (link.href.startsWith("/#")) {
+      const targetHash = link.href.replace("/", "");
+      return pathname === "/" && activeHash === targetHash;
+    }
+    if (link.href.startsWith("/")) {
+      return pathname === link.href || pathname.startsWith(`${link.href}/`);
+    }
+    return false;
+  };
 
   useEffect(() => {
     const el = scrollContainerRef.current;
@@ -130,14 +180,16 @@ export default function MobileNav() {
 
   const getNavLinkIcon = (label: string) => {
     switch (label) {
+      case "Home":
+        return <FiHome className="size-4 shrink-0" />;
       case "Solutions":
-        return <FiLayers className="size-4 text-primary" />;
+        return <FiLayers className="size-4 shrink-0" />;
       case "Why AI Pather":
-        return <FiCompass className="size-4 text-primary" />;
+        return <FiCompass className="size-4 shrink-0" />;
       case "About Us":
-        return <FiInfo className="size-4 text-primary" />;
+        return <FiInfo className="size-4 shrink-0" />;
       case "Pricing":
-        return <FiCreditCard className="size-4 text-primary" />;
+        return <FiCreditCard className="size-4 shrink-0" />;
       default:
         return null;
     }
@@ -147,15 +199,15 @@ export default function MobileNav() {
     switch (label) {
       case "Dashboard":
       case "Admin Dashboard":
-        return <FiLayout className="size-4 text-primary" />;
+        return <FiLayout className="size-4 shrink-0" />;
       case "Profile":
       case "My Profile":
-        return <FiUser className="size-4 text-primary" />;
+        return <FiUser className="size-4 shrink-0" />;
       case "Settings":
       case "Settings & Billing":
-        return <FiSettings className="size-4 text-primary" />;
+        return <FiSettings className="size-4 shrink-0" />;
       default:
-        return <FiUser className="size-4 text-primary" />;
+        return <FiUser className="size-4 shrink-0" />;
     }
   };
 
@@ -292,7 +344,7 @@ export default function MobileNav() {
                   <div className="px-0.5">
                     {userPlan === "FREE" && (
                       <Link
-                        href="/#pricing"
+                        href="/pricing"
                         onClick={() => setIsOpen(false)}
                         className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
                       >
@@ -308,7 +360,7 @@ export default function MobileNav() {
 
                     {userPlan === "PLUS" && (
                       <Link
-                        href="/#pricing"
+                        href="/pricing"
                         onClick={() => setIsOpen(false)}
                         className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
                       >
@@ -349,7 +401,7 @@ export default function MobileNav() {
                             className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
                           >
                             <div className="flex items-center gap-2.5">
-                              <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                              <span className="flex size-7 items-center justify-center rounded-lg bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300">
                                 {getNavLinkIcon(link.label)}
                               </span>
                               <span>{link.label}</span>
@@ -376,9 +428,9 @@ export default function MobileNav() {
                                       key={child.label}
                                       href={child.href}
                                       onClick={() => setIsOpen(false)}
-                                      className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-foreground/85 transition-colors hover:bg-card-soft dark:hover:bg-white/5 hover:text-primary"
+                                      className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-foreground/85 transition-colors hover:bg-card-soft dark:hover:bg-white/5 hover:text-primary"
                                     >
-                                      <span className="flex size-5 items-center justify-center rounded-md bg-primary/10 text-primary shrink-0">
+                                      <span className="flex size-6 items-center justify-center rounded-md bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 group-hover:bg-primary group-hover:text-white transition-all shrink-0">
                                         {child.icon}
                                       </span>
                                       <span className="truncate">{child.label}</span>
@@ -392,14 +444,30 @@ export default function MobileNav() {
                       );
                     }
 
+                    const isItemActive = checkIsActive(link);
                     return (
                       <Link
                         key={link.label}
                         href={link.href}
-                        onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-3.5 rounded-2xl px-2.5 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
+                        onClick={() => {
+                          setIsOpen(false);
+                          if (link.href.startsWith("/#")) {
+                            setScrollSection(link.href.replace("/", ""));
+                          } else {
+                            setScrollSection("");
+                          }
+                        }}
+                        className={`group flex items-center gap-3.5 rounded-2xl px-2.5 py-2.5 text-sm font-poppins font-medium transition-all ${
+                          isItemActive
+                            ? "bg-primary/10 text-primary font-semibold border border-primary/20 dark:border-primary/30"
+                            : "text-foreground hover:bg-muted/60 dark:hover:bg-white/5"
+                        }`}
                       >
-                        <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
+                        <span className={`flex size-8 items-center justify-center rounded-xl shrink-0 transition-all ${
+                          isItemActive
+                            ? "bg-primary text-white shadow-sm shadow-primary/30"
+                            : "bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 group-hover:bg-primary group-hover:text-white"
+                        }`}>
                           {getNavLinkIcon(link.label)}
                         </span>
                         <span className="text-[14px] font-medium">{link.label}</span>
@@ -408,10 +476,10 @@ export default function MobileNav() {
                   })}
 
                   {/* Appearance / Theme Toggle Row under Navigation */}
-                  <div className="flex items-center justify-between rounded-2xl px-2.5 py-2 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5">
+                  <div className="group flex items-center justify-between rounded-2xl px-2.5 py-2 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5">
                     <div className="flex items-center gap-3.5">
-                      <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
-                        <FiMoon className="size-4" />
+                      <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 group-hover:bg-primary group-hover:text-white transition-all shrink-0">
+                        <FiMoon className="size-4 shrink-0" />
                       </span>
                       <span className="text-[14px] font-medium">Appearance</span>
                     </div>
@@ -435,16 +503,20 @@ export default function MobileNav() {
                           type="button"
                           onClick={handleSignOut}
                           disabled={isSigningOut}
-                          className="flex items-center gap-2.5 w-full rounded-xl px-3 py-2.5 mt-1 text-sm font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all disabled:opacity-50 cursor-pointer"
+                          className="group flex items-center gap-2.5 w-full rounded-xl px-2.5 py-2.5 mt-1 text-sm font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all disabled:opacity-50 cursor-pointer"
                         >
                           {isSigningOut ? (
                             <>
-                              <Loader2 className="size-4 animate-spin text-red-500 shrink-0" />
+                              <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/20 text-red-500 shrink-0">
+                                <Loader2 className="size-4 animate-spin shrink-0" />
+                              </span>
                               <span>Signing out...</span>
                             </>
                           ) : (
                             <>
-                              <FiLogOut className="size-4 shrink-0" />
+                              <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/20 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all shrink-0">
+                                <FiLogOut className="size-4 shrink-0" />
+                              </span>
                               <span>{link.label}</span>
                             </>
                           )}
@@ -454,12 +526,12 @@ export default function MobileNav() {
                           key={link.label}
                           href={link.href}
                           onClick={() => setIsOpen(false)}
-                          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
+                          className="group flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
                         >
-                          <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                          <span className="flex size-7 items-center justify-center rounded-lg bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 group-hover:bg-primary group-hover:text-white transition-all shrink-0">
                             {getProfileIcon(link.label)}
                           </span>
-                          <span>{link.label}</span>
+                          <span className="group-hover:text-primary transition-colors">{link.label}</span>
                         </Link>
                       )
                     )}

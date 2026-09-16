@@ -38,7 +38,7 @@ import {
 } from "@/src/lib/actions/learner/resume";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { ResumeAtsScorecard } from "./ResumeAtsScorecard";
-import BrandLoader from "@/src/components/shared/BrandLoader";
+import ResumeSkeleton from "./ResumeSkeleton";
 import { ResumePreview } from "./ResumePreview";
 import { ResumeUploadScanner } from "./ResumeUploadScanner";
 
@@ -93,7 +93,59 @@ export function ResumeStudio() {
     enabled: !!session?.user?.id,
   });
 
-  const resumeState = localResume || resumeResponse || null;
+  const fallbackResume: ResumeData = {
+    fullName: session?.user?.name || "Candidate Name",
+    email: session?.user?.email || "candidate@example.com",
+    targetRole: "Full Stack Engineer",
+    phone: "+1 (555) 019-2834",
+    location: "Remote / Open to Relocation",
+    website: "https://portfolio.dev",
+    summary:
+      "Results-driven Software Engineer experienced in developing responsive web interfaces, architecting RESTful services, and optimizing distributed databases with modern engineering standards.",
+    skills: [
+      {
+        category: "Languages & Frameworks",
+        items: ["TypeScript", "JavaScript", "React", "Next.js", "Node.js", "Tailwind CSS"],
+      },
+      {
+        category: "Databases & Cloud Architecture",
+        items: ["PostgreSQL", "Prisma", "Redis", "Docker", "REST APIs", "Git"],
+      },
+    ],
+    experience: [
+      {
+        company: "Tech Systems Inc.",
+        role: "Software Engineer",
+        duration: "2023 - Present",
+        location: "San Francisco, CA (Remote)",
+        bullets: [
+          "Architected core web services and modernized full-stack APIs, improving throughput by 32%.",
+          "Collaborated in an agile squad to deploy cloud microservices with 99.9% uptime SLA.",
+        ],
+      },
+    ],
+    projects: [
+      {
+        title: "AI Career Acceleration Platform",
+        description: "Cloud-native platform delivering AI-powered roadmap analytics and diagnostics.",
+        techStack: ["Next.js", "TypeScript", "PostgreSQL", "Tailwind CSS"],
+        bullets: [
+          "Implemented real-time diagnostic engines and responsive user dashboards.",
+          "Integrated secure authentication with role-based access control and encrypted sessions.",
+        ],
+      },
+    ],
+    education: [
+      {
+        institution: "State University",
+        degree: "B.S. in Computer Science",
+        year: "2020 - 2024",
+      },
+    ],
+    atsScore: 78,
+  };
+
+  const resumeState = localResume || resumeResponse || fallbackResume;
   const setResumeState = (updated: ResumeData) => {
     setLocalResume(updated);
   };
@@ -260,8 +312,8 @@ export function ResumeStudio() {
     setResumeState({ ...resumeState, skills: updated });
   };
 
-  if (isResumeLoading || !resumeState) {
-    return <BrandLoader message="Loading Your AI Resume & ATS Studio..." />;
+  if (isResumeLoading) {
+    return <ResumeSkeleton />;
   }
 
   const targetRole = resumeState.targetRole || "Software Engineer";
