@@ -1,17 +1,23 @@
 import { serverFetch } from "../../core/server";
 
+export interface AdminAnalyticsOverview {
+  users: number;
+  roadmaps: number;
+  projects: number;
+  skills: number;
+  assessments: number;
+}
+
+export interface AdminAnalyticsTimeSeries {
+  users: Array<{ date: string; count: number }>;
+  roadmaps: Array<{ date: string; count: number }>;
+  projects: Array<{ date: string; count: number }>;
+  assessments: Array<{ date: string; count: number }>;
+}
+
 export interface AdminAnalyticsResponse {
-  overview?: {
-    totalUsers?: number;
-    activeLearners?: number;
-    totalRoadmaps?: number;
-    completedRoadmaps?: number;
-  };
-  charts?: {
-    userGrowth?: Array<{ date: string; users: number }>;
-    aiActivity?: Array<{ date: string; requests: number }>;
-    assessmentScores?: Array<{ category: string; averageScore: number }>;
-  };
+  overview: AdminAnalyticsOverview;
+  timeSeries: AdminAnalyticsTimeSeries;
 }
 
 /**
