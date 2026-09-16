@@ -7,13 +7,11 @@ import {
   Send,
   Users,
   AlertCircle,
-  CheckCircle2,
   Radio,
   Clock,
   ExternalLink,
   Loader2,
   Sparkles,
-  ShieldAlert,
   ChevronDown,
 } from "lucide-react";
 import { authClient } from "@/src/lib/auth-client";
