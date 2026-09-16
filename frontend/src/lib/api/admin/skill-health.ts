@@ -1,15 +1,15 @@
 import { serverFetch } from "../../core/server";
 
-export interface AdminSkillHealthCategory {
-  skillName: string;
+export interface AdminSkillHealthItem {
+  name: string;
   averageScore: number;
-  decayedCount: number;
-  totalLearners: number;
+  usersCount: number;
 }
 
 export interface AdminSkillHealthResponse {
-  skills: AdminSkillHealthCategory[];
-  overallHealthScore: number;
+  allSkills: AdminSkillHealthItem[];
+  strongSkills: AdminSkillHealthItem[];
+  weakSkills: AdminSkillHealthItem[];
 }
 
 /**
