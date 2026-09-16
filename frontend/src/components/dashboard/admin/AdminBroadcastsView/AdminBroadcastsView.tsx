@@ -181,6 +181,8 @@ export default function AdminBroadcastsView() {
                   Announcement Title
                 </label>
                 <input
+                  id="broadcast-title"
+                  aria-label="Announcement Title"
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -192,11 +194,13 @@ export default function AdminBroadcastsView() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
+                  <label htmlFor="broadcast-target" className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                     Target Audience
                   </label>
                   <div className="relative">
                     <select
+                      id="broadcast-target"
+                      aria-label="Target Audience Cohort"
                       value={targetCohort}
                       onChange={(e) => setTargetCohort(e.target.value as "ALL" | "FREE" | "PLUS" | "PRO")}
                       className="w-full appearance-none pl-3.5 pr-10 py-2.5 rounded-lg border border-border bg-card text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
@@ -211,11 +215,13 @@ export default function AdminBroadcastsView() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
+                  <label htmlFor="broadcast-priority" className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                     Priority Level
                   </label>
                   <div className="relative">
                     <select
+                      id="broadcast-priority"
+                      aria-label="Announcement Priority Level"
                       value={priority}
                       onChange={(e) => setPriority(e.target.value as "NORMAL" | "HIGH" | "URGENT")}
                       className="w-full appearance-none pl-3.5 pr-10 py-2.5 rounded-lg border border-border bg-card text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
@@ -230,10 +236,12 @@ export default function AdminBroadcastsView() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
+                <label htmlFor="broadcast-action-url" className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                   Action Link (Optional)
                 </label>
                 <input
+                  id="broadcast-action-url"
+                  aria-label="Deep Link Action URL"
                   type="text"
                   value={actionUrl}
                   onChange={(e) => setActionUrl(e.target.value)}
@@ -243,10 +251,12 @@ export default function AdminBroadcastsView() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
+                <label htmlFor="broadcast-message" className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                   Announcement Message
                 </label>
                 <textarea
+                  id="broadcast-message"
+                  aria-label="Announcement Message Content"
                   rows={4}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
