@@ -55,9 +55,9 @@ const MISTRAL_FALLBACK_MODEL = "open-mistral-7b";
 
 
 const OUTPUT_LIMITS: Record<QueryComplexity, number> = {
-  simple: 2000,
-  normal: 3000,
-  complex: 4000,
+  simple: 1200,
+  normal: 1800,
+  complex: 2200,
 };
 
 export function ensureCleanResponseCompletion(text: string): string {
@@ -86,7 +86,13 @@ export function ensureCleanResponseCompletion(text: string): string {
   }
 
   // Ensure there is always a clean closing call-to-action
-  if (!trimmed.includes("👉 **Next Step:**") && !trimmed.includes("**Next**") && !trimmed.includes("Next Step")) {
+  if (
+    !trimmed.includes("👉 **Next Step:**") &&
+    !trimmed.includes("👉 **Explore Deeper:**") &&
+    !trimmed.includes("**Next**") &&
+    !trimmed.includes("Next Step") &&
+    !trimmed.includes("Explore Deeper")
+  ) {
     trimmed += "\n\n---\n👉 **Next Step:**\nReply **\"Next\"** to proceed to the next step, or ask any question to dive deeper!";
   }
 
@@ -449,14 +455,22 @@ export class ChatService {
         }
       } catch (err: any) {
         console.warn(`[Groq failed]: ${err.message}`);
-        // If Rate limit 429 on primary model, try secondary high-capacity model on Groq
-        if (err.message?.includes("429") || err.message?.includes("Rate limit")) {
+        const isRateOrSizeLimit =
+          err.message?.includes("429") ||
+          err.message?.includes("413") ||
+          err.message?.toLowerCase().includes("rate limit") ||
+          err.message?.toLowerCase().includes("rate_limit") ||
+          err.message?.toLowerCase().includes("tokens per minute") ||
+          err.message?.toLowerCase().includes("request too large");
+
+        if (isRateOrSizeLimit) {
+          const fallbackMaxTokens = Math.min(maxTokens, 1500);
           try {
             const fallbackResp = await withTimeout(
               groq.chat.completions.create({
                 model: GROQ_FALLBACK_MODEL,
                 messages,
-                max_tokens: maxTokens as any,
+                max_tokens: fallbackMaxTokens as any,
                 temperature: 0.2,
               }),
             );
@@ -473,7 +487,7 @@ export class ChatService {
                 groq.chat.completions.create({
                   model: GROQ_TERTIARY_MODEL,
                   messages,
-                  max_tokens: maxTokens as any,
+                  max_tokens: fallbackMaxTokens as any,
                   temperature: 0.2,
                 }),
               );
@@ -512,13 +526,22 @@ export class ChatService {
         }
       } catch (err: any) {
         console.warn(`[Groq Secondary failed]: ${err.message}`);
-        if (err.message?.includes("429") || err.message?.includes("Rate limit")) {
+        const isRateOrSizeLimit =
+          err.message?.includes("429") ||
+          err.message?.includes("413") ||
+          err.message?.toLowerCase().includes("rate limit") ||
+          err.message?.toLowerCase().includes("rate_limit") ||
+          err.message?.toLowerCase().includes("tokens per minute") ||
+          err.message?.toLowerCase().includes("request too large");
+
+        if (isRateOrSizeLimit) {
+          const fallbackMaxTokens = Math.min(maxTokens, 1500);
           try {
             const fallbackResp = await withTimeout(
               groqSecondary.chat.completions.create({
                 model: GROQ_FALLBACK_MODEL,
                 messages,
-                max_tokens: maxTokens as any,
+                max_tokens: fallbackMaxTokens as any,
                 temperature: 0.2,
               }),
             );
@@ -535,7 +558,7 @@ export class ChatService {
                 groqSecondary.chat.completions.create({
                   model: GROQ_TERTIARY_MODEL,
                   messages,
-                  max_tokens: maxTokens as any,
+                  max_tokens: fallbackMaxTokens as any,
                   temperature: 0.2,
                 }),
               );
