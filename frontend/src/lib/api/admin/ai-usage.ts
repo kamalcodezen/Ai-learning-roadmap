@@ -11,9 +11,19 @@ export interface AdminAiUsageItem {
   metadata?: Record<string, unknown>;
 }
 
-export interface AdminAiUsageResponse {
-  usage: AdminAiUsageItem[];
+export interface AdminAiProviderStat {
+  provider: string;
   total: number;
+  success: number;
+  failure: number;
+}
+
+export interface AdminAiUsageResponse {
+  logs: AdminAiUsageItem[];
+  total: number;
+  successCount: number;
+  failureCount: number;
+  providerStats: AdminAiProviderStat[];
 }
 
 /**
