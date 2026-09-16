@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import * as broadcastService from "./broadcast.service.js";
 
+/**
+ * Retrieves broadcast transmission history and learner cohort statistics.
+ * @route GET /api/admin/broadcasts
+ */
 export const getBroadcasts = async (
   _req: Request,
   res: Response,
@@ -14,6 +18,10 @@ export const getBroadcasts = async (
   }
 };
 
+/**
+ * Dispatches a push notification broadcast to specified learner cohorts.
+ * @route POST /api/admin/broadcasts
+ */
 export const createBroadcast = async (
   req: Request,
   res: Response,
