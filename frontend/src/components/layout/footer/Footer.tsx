@@ -17,6 +17,7 @@ const guestLinks = [
   { title: "How It Works", href: "/#how-it-works" },
   { title: "Features", href: "/#features" },
   { title: "About Us", href: "/about" },
+  { title: "Contact Us", href: "/contact" },
   { title: "Login", href: "/signin" },
   { title: "Sign Up", href: "/signup" },
 ];
@@ -28,6 +29,7 @@ const learnerLinks = [
   { title: "Proof Graph", href: "/dashboard/learner/proof-graph" },
   { title: "Portfolio", href: "/dashboard/learner/portfolio" },
   { title: "About Us", href: "/about" },
+  { title: "Contact Us", href: "/contact" },
 ];
 
 const adminLinks = [
@@ -36,6 +38,7 @@ const adminLinks = [
   { title: "Skill Health", href: "/dashboard/admin/skill-health" },
   { title: "Analytics", href: "/dashboard/admin/analytics" },
   { title: "About Us", href: "/about" },
+  { title: "Contact Us", href: "/contact" },
 ];
 
 const socialLinks = [
