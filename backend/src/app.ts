@@ -114,6 +114,17 @@ app.use("/api/subscription", subscriptionRoutes);
 // Admin Routes
 app.use("/api/admin", adminRoutes);
 
+// Root welcome & status endpoint
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "AI Pather Backend API Server is running smoothly",
+    version: "1.0.0",
+    status: "online",
+    healthCheck: "/health",
+  });
+});
+
 // Health check
 app.get("/health", (_req, res) => {
   res.status(200).json({
