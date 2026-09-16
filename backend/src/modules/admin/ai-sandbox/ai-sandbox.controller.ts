@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import * as aiSandboxService from "./ai-sandbox.service.js";
 
+/**
+ * Retrieves the catalog of active LLM models available in the AI Sandbox.
+ * @route GET /api/admin/ai-sandbox/models
+ */
 export const getModels = async (
   _req: Request,
   res: Response,
@@ -16,6 +20,10 @@ export const getModels = async (
   }
 };
 
+/**
+ * Executes inference testing for custom prompt/system-prompt combinations with live telemetry.
+ * @route POST /api/admin/ai-sandbox/test
+ */
 export const testPrompt = async (
   req: Request,
   res: Response,
