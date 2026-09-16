@@ -1,15 +1,23 @@
 import { serverFetch } from "../../core/server";
 
-export interface AdminLearningDebtItem {
+export interface AdminLearningDebtRecord {
+  id: string;
+  userId: string;
   skillName: string;
-  overdueCount: number;
-  criticalLearnersCount: number;
-  averageDebtHours: number;
+  knowledgeScore: number;
+  practiceScore: number;
+  projectScore?: number;
+  evidenceScore?: number;
+  user: {
+    name: string;
+    email: string;
+  };
+  topic?: string;
+  [key: string]: unknown;
 }
 
 export interface AdminLearningDebtResponse {
-  debtItems: AdminLearningDebtItem[];
-  totalOverdueConcepts: number;
+  debtRecords: AdminLearningDebtRecord[];
 }
 
 /**
