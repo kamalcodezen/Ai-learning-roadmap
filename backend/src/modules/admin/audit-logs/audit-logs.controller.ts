@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import * as auditLogsService from "./audit-logs.service.js";
 
+/**
+ * Retrieves paginated administrative security audit logs.
+ * @route GET /api/admin/audit-logs
+ */
 export const getAuditLogs = async (
   req: Request,
   res: Response,
