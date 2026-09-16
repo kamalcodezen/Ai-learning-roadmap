@@ -12,7 +12,7 @@ export interface AdminErrorLogItem {
 }
 
 export interface AdminErrorLogsResponse {
-  logs: AdminErrorLogItem[];
+  errors: AdminErrorLogItem[];
   total: number;
 }
 
