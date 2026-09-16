@@ -2,20 +2,22 @@ import { serverFetch } from "../../core/server";
 
 export interface AdminSkillProofItem {
   id: string;
-  projectId: string;
   userId: string;
   skillName: string;
-  evidenceType: string;
-  url: string;
+  knowledgeScore: number;
+  practiceScore: number;
+  projectScore: number;
+  evidenceScore: number;
   createdAt: string;
-  user?: {
-    name?: string;
-    email?: string;
+  user: {
+    name: string;
+    email: string;
   };
+  [key: string]: unknown;
 }
 
 export interface AdminSkillProofResponse {
-  evidence: AdminSkillProofItem[];
+  proofs: AdminSkillProofItem[];
   total: number;
 }
 
