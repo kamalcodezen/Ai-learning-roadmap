@@ -6,7 +6,6 @@ import CareerTwinSection from "@/src/components/home/careerTwin/CareerTwinSectio
 import ProblemBreakdown from "@/src/components/home/problem-breakdown/ProblemBreakdown/ProblemBreakdown";
 import ProgressBridgeSection from "@/src/components/home/ProgressBridge/ProgressBridgeSection";
 import Pricing from "@/src/components/home/pricing/Pricing";
-import { HomeFloatingChat } from "@/src/components/chat/HomeFloatingChat";
 import { FloatingSocials } from "@/src/components/socials/FloatingSocials";
 import FeaturesSection from "@/src/components/home/features";
 import Comparison from "@/src/components/home/comparison/Comparison";
@@ -39,7 +38,6 @@ export default function HomePage() {
       <Pricing />
       <TestimonialSection />
       <CTASection />
-      <HomeFloatingChat />
       <FloatingSocials />
     </>
   );
