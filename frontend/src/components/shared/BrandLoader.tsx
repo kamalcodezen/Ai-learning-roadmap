@@ -214,7 +214,12 @@ export default function BrandLoader({
           --color-primary-light: #C084FC;
           --color-primary-dark: #6B21A8;
           --text-foreground: #ffffff;
-          background-color: #000000;
+          background: linear-gradient(
+            165deg,
+            #240349 0%,
+            #0d0715 55%,
+            #1a0e2e 100%
+          );
         }
 
         :root.dark .brand-loader-container:not(.brand-loader-light) .brand-loader-bar,
@@ -291,7 +296,12 @@ export default function BrandLoader({
             --color-primary-light: #C084FC;
             --color-primary-dark: #6B21A8;
             --text-foreground: #ffffff;
-            background-color: #000000;
+            background: linear-gradient(
+              165deg,
+              #240349 0%,
+              #0d0715 55%,
+              #1a0e2e 100%
+            );
           }
           :root:not(.light) .brand-loader-container:not(.brand-loader-light) .brand-loader-bar {
             background-color: #1a1a1a;
