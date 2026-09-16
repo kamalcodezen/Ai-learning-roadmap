@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminAssessments } from "@/src/lib/api/admin/assessments";
+import { getAdminAssessments, AdminAssessmentItem } from "@/src/lib/api/admin/assessments";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { ClipboardCheck, User } from "lucide-react";
@@ -13,16 +13,7 @@ import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-interface AssessmentRow {
-  id: string;
-  targetRole: string;
-  user: { name: string; email: string };
-  status: string;
-  score: number | null;
-  startedAt: string;
-}
-
-const columns: AdminDataTableColumn<AssessmentRow>[] = [
+const columns: AdminDataTableColumn<AdminAssessmentItem>[] = [
   {
     header: "Target Role",
     render: (a) => (
@@ -42,8 +33,8 @@ const columns: AdminDataTableColumn<AssessmentRow>[] = [
       <div className="flex items-center gap-2">
         <User className="h-4 w-4 text-muted-foreground" />
         <div>
-          <p className="font-medium text-foreground">{a.user.name}</p>
-          <p className="text-xs text-muted-foreground">{a.user.email}</p>
+          <p className="font-medium text-foreground">{a.user?.name || "Unknown"}</p>
+          <p className="text-xs text-muted-foreground">{a.user?.email || "No email"}</p>
         </div>
       </div>
     ),
@@ -66,7 +57,7 @@ const columns: AdminDataTableColumn<AssessmentRow>[] = [
     header: "Score",
     render: (a) => (
       <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary">
-        {a.score !== null ? `${a.score}%` : "-"}
+        {a.score !== null && a.score !== undefined ? `${a.score}%` : "-"}
       </span>
     ),
   },
