@@ -184,7 +184,10 @@ export default function AdminAssessmentsView() {
               }}
             >
               <Label>Status</Label>
-              <Select.Trigger>
+              <Select.Trigger
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
@@ -219,7 +222,10 @@ export default function AdminAssessmentsView() {
               }}
             >
               <Label>Time Range</Label>
-              <Select.Trigger>
+              <Select.Trigger
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
