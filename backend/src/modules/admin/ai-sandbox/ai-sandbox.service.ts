@@ -11,6 +11,28 @@ export interface AiSandboxPromptInput {
   adminId?: string;
 }
 
+export interface AiSandboxModel {
+  id: string;
+  name: string;
+  provider: string;
+  description: string;
+  speed: string;
+}
+
+export interface AiSandboxTelemetryResult {
+  reply: string;
+  model: string;
+  provider: string;
+  latency: number;
+  temperature: number;
+  isError?: boolean;
+  tokens: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+}
+
 const groq = env.GROQ_API_KEY ? new Groq({ apiKey: env.GROQ_API_KEY }) : null;
 const groqSecondary = env.GROQ_API_KEY_SECONDARY
   ? new Groq({ apiKey: env.GROQ_API_KEY_SECONDARY })
