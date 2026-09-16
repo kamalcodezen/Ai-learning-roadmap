@@ -1,17 +1,23 @@
 import { serverFetch } from "../../core/server";
 
+export interface AdminUserListItem {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  plan?: string;
+  createdAt: string;
+  image?: string | null;
+}
+
 export interface AdminUserListResult {
-    users: Array<{
-      id: string;
-      name: string;
-      email: string;
-      role: string;
-      createdAt: string;
-      image?: string | null;
-    }>;
+  users: AdminUserListItem[];
   total: number;
 }
 
+/**
+ * Retrieves paginated user profiles with filtering by search keywords, role, and registration date.
+ */
 export const getAdminUsers = async (
   userId: string,
   skip = 0,
