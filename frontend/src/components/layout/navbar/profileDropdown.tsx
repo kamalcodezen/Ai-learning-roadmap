@@ -254,7 +254,7 @@ export default function ProfileDropdown({
             <div className="mt-2 px-1">
               {userPlan === "FREE" && (
                 <Link
-                  href="/#pricing"
+                  href="/pricing"
                   onClick={() => setOpen(false)}
                   className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
                 >
@@ -270,7 +270,7 @@ export default function ProfileDropdown({
 
               {userPlan === "PLUS" && (
                 <Link
-                  href="/#pricing"
+                  href="/pricing"
                   onClick={() => setOpen(false)}
                   className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
                 >
@@ -301,9 +301,11 @@ export default function ProfileDropdown({
                     key={item.label}
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-foreground/80 transition-colors hover:bg-muted/70 hover:text-primary"
+                    className="group flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-semibold text-foreground/85 transition-colors hover:bg-muted/70 hover:text-primary"
                   >
-                    <ItemIcon className="size-4 text-primary shrink-0" />
+                    <span className="flex size-7 items-center justify-center rounded-lg bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 group-hover:bg-primary group-hover:text-white transition-all shrink-0">
+                      <ItemIcon className="size-3.5 shrink-0" />
+                    </span>
                     <span>{item.label}</span>
                   </Link>
                 );
@@ -316,16 +318,20 @@ export default function ProfileDropdown({
                 type="button"
                 onClick={handleSignOut}
                 disabled={isSigningOut}
-                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-semibold text-red-500 transition-colors hover:bg-red-500/10 disabled:pointer-events-none disabled:opacity-60 cursor-pointer"
+                className="group flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left text-xs font-semibold text-red-500 transition-colors hover:bg-red-500/10 disabled:pointer-events-none disabled:opacity-60 cursor-pointer"
               >
                 {isSigningOut ? (
                   <>
-                    <Loader2 className="size-4 animate-spin text-red-500 shrink-0" />
+                    <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/15 text-red-500 shrink-0">
+                      <Loader2 className="size-3.5 animate-spin shrink-0" />
+                    </span>
                     <span>Signing out...</span>
                   </>
                 ) : (
                   <>
-                    <LogOut className="size-4 text-red-500 shrink-0" />
+                    <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/15 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all shrink-0">
+                      <LogOut className="size-3.5 shrink-0" />
+                    </span>
                     <span>Sign out</span>
                   </>
                 )}
