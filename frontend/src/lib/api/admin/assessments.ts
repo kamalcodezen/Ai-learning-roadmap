@@ -15,8 +15,10 @@ export interface AdminAssessmentItem {
 }
 
 export interface AdminAssessmentsResponse {
-  assessments: AdminAssessmentItem[];
+  attempts: AdminAssessmentItem[];
   total: number;
+  completed: number;
+  averageScore: number;
 }
 
 /**
