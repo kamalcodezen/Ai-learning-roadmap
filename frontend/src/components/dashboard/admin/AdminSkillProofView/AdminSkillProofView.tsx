@@ -2,7 +2,7 @@
 import { StatusBadge } from "@/src/components/dashboard/shared/patterns";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminSkillProof } from "@/src/lib/api/admin/skill-proof";
+import { getAdminSkillProof, AdminSkillProofItem } from "@/src/lib/api/admin/skill-proof";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { Skeleton } from "@heroui/react";
@@ -11,21 +11,7 @@ import { useDebounce } from "use-debounce";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-interface SkillProofRow {
-  id: string;
-  user: { name: string; email: string };
-  skill: string;
-  skillName: string;
-  proofType: string;
-  status: string;
-  submittedAt: string;
-  knowledgeScore: number;
-  practiceScore: number;
-  projectScore: number;
-  evidenceScore: number;
-}
-
-const columns: AdminDataTableColumn<SkillProofRow>[] = [
+const columns: AdminDataTableColumn<AdminSkillProofItem>[] = [
   {
     header: "Learner",
     render: (p) => (
@@ -34,8 +20,8 @@ const columns: AdminDataTableColumn<SkillProofRow>[] = [
           <Award className="size-4" />
         </div>
         <div>
-          <div className="font-medium text-foreground">{p.user.name}</div>
-          <div className="text-xs text-muted-foreground">{p.user.email}</div>
+          <div className="font-medium text-foreground">{p.user?.name || "Unknown"}</div>
+          <div className="text-xs text-muted-foreground">{p.user?.email || "No email"}</div>
         </div>
       </div>
     ),

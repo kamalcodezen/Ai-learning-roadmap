@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminRoadmaps } from "@/src/lib/api/admin/roadmaps";
+import { getAdminRoadmaps, AdminRoadmapItem } from "@/src/lib/api/admin/roadmaps";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { Route, User } from "lucide-react";
@@ -11,16 +11,7 @@ import { Label, ListBox, Select, Skeleton } from "@heroui/react";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-interface RoadmapRow {
-  id: string;
-  targetRole: string;
-  status: string;
-  createdAt: string;
-  user: { name: string; email: string };
-  milestones?: Array<{ status: string }>;
-}
-
-const columns: AdminDataTableColumn<RoadmapRow>[] = [
+const columns: AdminDataTableColumn<AdminRoadmapItem>[] = [
   {
     header: "Target Role",
     render: (rm) => (
@@ -38,30 +29,34 @@ const columns: AdminDataTableColumn<RoadmapRow>[] = [
       <div className="flex items-center gap-2">
         <User className="h-4 w-4 text-muted-foreground" />
         <div>
-          <p className="font-medium text-foreground">{rm.user.name}</p>
-          <p className="text-xs text-muted-foreground">{rm.user.email}</p>
+          <p className="font-medium text-foreground">{rm.user?.name || "Unknown"}</p>
+          <p className="text-xs text-muted-foreground">{rm.user?.email || "No email"}</p>
         </div>
       </div>
     ),
   },
   {
     header: "Status",
+    align: "center",
     render: (rm) => (
-      <span
-        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-          rm.status === "ACTIVE"
-            ? "bg-green-500/10 text-green-500"
-            : rm.status === "COMPLETED"
-              ? "bg-blue-500/10 text-blue-500"
-              : "bg-[var(--color-muted)] text-[var(--color-text-primary)]"
-        }`}
-      >
-        {rm.status}
-      </span>
+      <div className="flex justify-center">
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+            rm.status === "ACTIVE"
+              ? "bg-green-500/10 text-green-500"
+              : rm.status === "COMPLETED"
+                ? "bg-blue-500/10 text-blue-500"
+                : "bg-[var(--color-muted)] text-[var(--color-text-primary)]"
+          }`}
+        >
+          {rm.status}
+        </span>
+      </div>
     ),
   },
   {
     header: "Progress",
+    align: "center",
     render: (rm) => {
       const totalMilestones = rm.milestones?.length || 0;
       const completedMilestones =
@@ -71,7 +66,7 @@ const columns: AdminDataTableColumn<RoadmapRow>[] = [
           ? Math.round((completedMilestones / totalMilestones) * 100)
           : 0;
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center gap-2">
           <div className="h-2 w-24 rounded-full bg-[var(--color-muted)] overflow-hidden">
             <div
               className="h-full bg-[var(--color-primary)]"
@@ -85,10 +80,13 @@ const columns: AdminDataTableColumn<RoadmapRow>[] = [
   },
   {
     header: "Created Date",
+    align: "center",
     render: (rm) => (
-      <span className="whitespace-nowrap text-muted-foreground">
-        {new Date(rm.createdAt).toLocaleDateString()}
-      </span>
+      <div className="flex justify-center">
+        <span className="whitespace-nowrap text-muted-foreground">
+          {new Date(rm.createdAt).toLocaleDateString()}
+        </span>
+      </div>
     ),
   },
 ];
@@ -156,7 +154,7 @@ export default function AdminRoadmapsView() {
       searchPlaceholder="Search by learner name or email..."
       toolbar={
         <Select
-          className="w-full sm:w-48"
+          className="w-full sm:w-48 "
           placeholder="All Statuses"
           value={statusFilter || null}
           onChange={(val) => {
@@ -165,11 +163,15 @@ export default function AdminRoadmapsView() {
           }}
         >
           <Label>Status</Label>
-          <Select.Trigger>
+          <Select.Trigger
+            className="rounded-lg! [border-radius:0.5rem]!"
+            style={{ borderRadius: "0.5rem" }}
+          >
             <Select.Value />
             <Select.Indicator />
           </Select.Trigger>
-          <Select.Popover>
+          <Select.Popover
+          className="rounded-lg! [border-radius:0.5rem]!">
             <ListBox>
               <ListBox.Item key="ACTIVE" id="ACTIVE" textValue="Active">
                 Active

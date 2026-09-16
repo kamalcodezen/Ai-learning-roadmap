@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import * as roadmapsService from "./roadmaps.service.js";
 
+/**
+ * Retrieves paginated learner curriculum roadmaps with status and role filtering.
+ * @route GET /api/admin/roadmaps
+ */
 export const getAdminRoadmaps = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const skip = parseInt(req.query.skip as string) || 0;

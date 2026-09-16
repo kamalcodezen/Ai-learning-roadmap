@@ -80,7 +80,7 @@ export default function ProfileCard({ name, email, plan, image }: ProfileCardPro
         ) : (
           <span
             aria-hidden="true"
-            className="flex size-full items-center justify-center rounded-full bg-primary/20 text-xl font-bold text-primary ring-1 ring-primary/40"
+            className="flex size-full items-center justify-center rounded-full bg-primary/20 text-2xl font-bold text-primary ring-1 ring-primary/40"
           >
             {initial}
           </span>
@@ -88,19 +88,19 @@ export default function ProfileCard({ name, email, plan, image }: ProfileCardPro
       </div>
 
       <div className="w-full min-w-0 px-2">
-        <p className="truncate text-sm font-bold tracking-wider text-foreground uppercase">
+        <p className="truncate text-base font-bold tracking-wide text-foreground uppercase">
           {name || "Guest User"}
         </p>
-        <p className="truncate text-xs text-muted-foreground mt-0.5">
+        <p className="truncate text-sm font-medium text-muted-foreground mt-1">
           {email || "—"}
         </p>
 
         {/* Dynamic Plan Badge */}
         <div className="mt-2.5 flex justify-center">
           <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold tracking-wider uppercase border shadow-xs ${badge.style}`}
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold tracking-wide uppercase border shadow-xs ${badge.style}`}
           >
-            <Icon className="size-3 shrink-0" />
+            <Icon className="size-3.5 shrink-0" />
             {badge.label}
           </span>
         </div>

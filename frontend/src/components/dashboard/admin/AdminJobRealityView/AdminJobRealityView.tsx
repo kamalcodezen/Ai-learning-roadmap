@@ -1,7 +1,7 @@
 "use client";
 import { StatusBadge } from "@/src/components/dashboard/shared/patterns";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminJobReality } from "@/src/lib/api/admin/job-reality";
+import { getAdminJobReality, AdminJobRealityRoleItem } from "@/src/lib/api/admin/job-reality";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { Skeleton } from "@heroui/react";
@@ -11,15 +11,7 @@ import { Briefcase } from "lucide-react";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-interface PopularRoleRow {
-  id: string;
-  role: string;
-  mismatchScore: number;
-  activeUsers: number;
-  count: number;
-}
-
-const columns: AdminDataTableColumn<PopularRoleRow>[] = [
+const columns: AdminDataTableColumn<AdminJobRealityRoleItem>[] = [
   {
     header: "Target Role",
     render: (r) => (

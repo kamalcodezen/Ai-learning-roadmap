@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminProjects } from "@/src/lib/api/admin/projects";
+import { getAdminProjects, AdminProjectItem } from "@/src/lib/api/admin/projects";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { FolderKanban, User, ExternalLink, GitBranch } from "lucide-react";
@@ -11,21 +11,7 @@ import { Key, Label, ListBox, Select, Skeleton } from "@heroui/react";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-interface ProjectRow {
-  id: string;
-  title: string;
-  difficulty: string;
-  completionRate: number;
-  activeUsers: number;
-  description: string;
-  user: { name: string; email: string };
-  score: number;
-  repositoryUrl: string;
-  liveUrl: string;
-  createdAt: string;
-}
-
-const columns: AdminDataTableColumn<ProjectRow>[] = [
+const columns: AdminDataTableColumn<AdminProjectItem>[] = [
   {
     header: "Project",
     render: (p) => (
@@ -50,27 +36,30 @@ const columns: AdminDataTableColumn<ProjectRow>[] = [
       <div className="flex items-center gap-2">
         <User className="h-4 w-4 text-muted-foreground" />
         <div>
-          <p className="font-medium text-foreground">{p.user.name}</p>
-          <p className="text-xs text-muted-foreground">{p.user.email}</p>
+          <p className="font-medium text-foreground">{p.user?.name || "Unknown"}</p>
+          <p className="text-xs text-muted-foreground">{p.user?.email || "No email"}</p>
         </div>
       </div>
     ),
   },
   {
     header: "Score",
-    render: (p) => (
-      <span
-        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-          p.score >= 80
-            ? "bg-green-500/10 text-green-500"
-            : p.score >= 50
-              ? "bg-orange-500/10 text-orange-500"
-              : "bg-red-500/10 text-red-500"
-        }`}
-      >
-        {p.score}%
-      </span>
-    ),
+    render: (p) => {
+      const score = p.score ?? 0;
+      return (
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+            score >= 80
+              ? "bg-green-500/10 text-green-500"
+              : score >= 50
+                ? "bg-orange-500/10 text-orange-500"
+                : "bg-red-500/10 text-red-500"
+          }`}
+        >
+          {score}%
+        </span>
+      );
+    },
   },
   {
     header: "Evidence",
@@ -194,7 +183,10 @@ export default function AdminProjectsView() {
             }}
           >
             <Label>Time Range</Label>
-            <Select.Trigger>
+            <Select.Trigger
+              className="rounded-lg! [border-radius:0.5rem]!"
+              style={{ borderRadius: "0.5rem" }}
+            >
               <Select.Value />
               <Select.Indicator />
             </Select.Trigger>

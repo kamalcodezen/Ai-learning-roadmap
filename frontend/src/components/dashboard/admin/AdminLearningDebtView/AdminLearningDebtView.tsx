@@ -90,15 +90,7 @@ export default function AdminLearningDebtView() {
                   </td>
                 </tr>
               ) : (
-                debtRecords.map(
-                  (r: {
-                    id: string;
-                    user: { name: string; email: string };
-                    topic: string;
-                    skillName: string;
-                    knowledgeScore: number;
-                    practiceScore: number;
-                  }) => (
+                debtRecords.map((r) => (
                     <tr
                       key={r.id}
                       className="border-t border-[var(--color-border)] hover:bg-muted/30 transition-colors"
@@ -118,10 +110,10 @@ export default function AdminLearningDebtView() {
                           <User className="h-4 w-4 text-muted-foreground" />
                           <div>
                             <p className="font-medium text-foreground">
-                              {r.user.name}
+                              {r.user?.name || "Unknown"}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              {r.user.email}
+                              {r.user?.email || "No email"}
                             </p>
                           </div>
                         </div>

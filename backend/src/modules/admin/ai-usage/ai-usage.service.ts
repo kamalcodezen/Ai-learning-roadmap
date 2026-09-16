@@ -1,5 +1,10 @@
 import prisma from "../../../lib/prisma.js";
 
+/**
+ * Aggregates AI token consumption logs, provider grouping metrics, and success/failure statistics.
+ * @param skip Offset pagination starting index
+ * @param take Number of log entries to retrieve
+ */
 export const getAdminAiUsage = async (skip: number, take: number) => {
   const [logs, total, successCount, failureCount] = await Promise.all([
     prisma.aiUsageLog.findMany({ skip, take, orderBy: { createdAt: 'desc' } }),

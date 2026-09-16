@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { authClient } from "@/src/lib/auth-client";
-import { getAdminErrorLogs } from "@/src/lib/api/admin/error-logs";
+import { getAdminErrorLogs, AdminErrorLogItem } from "@/src/lib/api/admin/error-logs";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { formatDistanceToNow } from "date-fns";
 import { AlertTriangle } from "lucide-react";
@@ -12,7 +12,7 @@ import { Skeleton } from "@heroui/react";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-function statusCodeColor(code: number | null) {
+function statusCodeColor(code?: number | null) {
   if (!code) return "bg-gray-500/10 text-gray-500";
   if (code >= 200 && code < 300) return "bg-green-500/10 text-green-500";
   if (code >= 400 && code < 500) return "bg-orange-500/10 text-orange-500";
@@ -20,18 +20,7 @@ function statusCodeColor(code: number | null) {
   return "bg-gray-500/10 text-gray-500";
 }
 
-interface ErrorLogRow {
-  id: string;
-  path: string;
-  message: string;
-  method: string;
-  createdAt: string;
-  endpoint: string;
-  statusCode: number | null;
-  errorType: string;
-}
-
-const columns: AdminDataTableColumn<ErrorLogRow>[] = [
+const columns: AdminDataTableColumn<AdminErrorLogItem>[] = [
   {
     header: "Type",
     render: (err) => (
@@ -57,7 +46,7 @@ const columns: AdminDataTableColumn<ErrorLogRow>[] = [
     header: "Endpoint",
     render: (err) => (
       <span className="font-mono text-xs">
-        {err.method} {err.endpoint}
+        {err.method || "GET"} {err.endpoint || "/"}
       </span>
     ),
   },
@@ -101,10 +90,10 @@ export default function AdminErrorLogsView() {
     if (!debouncedSearch) return data.errors;
     const q = debouncedSearch.toLowerCase();
     return data.errors.filter(
-      (err: ErrorLogRow) =>
-        err.message.toLowerCase().includes(q) ||
-        err.endpoint.toLowerCase().includes(q) ||
-        err.errorType.toLowerCase().includes(q),
+      (err) =>
+        (err.message?.toLowerCase().includes(q) ?? false) ||
+        (err.endpoint?.toLowerCase().includes(q) ?? false) ||
+        (err.errorType?.toLowerCase().includes(q) ?? false),
     );
   }, [data, debouncedSearch]);
 

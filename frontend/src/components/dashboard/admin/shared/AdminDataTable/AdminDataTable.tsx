@@ -10,6 +10,8 @@ import { DashboardCard } from "@/src/components/dashboard/shared/cards";
 export interface AdminDataTableColumn<T> {
   header: string;
   render: (row: T) => ReactNode;
+  align?: "left" | "center" | "right";
+  className?: string;
 }
 
 type RowKeyFunction<T> = (row: T, index?: number) => string | number;
@@ -53,7 +55,7 @@ export default function AdminDataTable<T>({
   return (
     <DashboardCard className="p-0!">
       <CardHeader className="border-b border-border gap-0 p-4">
-        <div className="flex flex-col sm:flex-row items-center gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end gap-4">
           {searchTerm !== undefined && onSearchChange !== undefined && (
             <SearchField
               className="flex-1 w-full max-w-md"
@@ -61,7 +63,10 @@ export default function AdminDataTable<T>({
               onChange={(val) => onSearchChange(val)}
             >
               <Label>Search</Label>
-              <SearchField.Group>
+              <SearchField.Group
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <SearchField.SearchIcon />
                 <SearchField.Input
                   className="w-full"
@@ -73,7 +78,11 @@ export default function AdminDataTable<T>({
           )}
           {toolbar}
           {exportCsv !== undefined && (
-            <DashboardButton text="Export CSV" onClick={exportCsv} />
+            <DashboardButton
+              text="Export CSV"
+              onClick={exportCsv}
+              className="shrink-0"
+            />
           )}
         </div>
       </CardHeader>
@@ -86,7 +95,13 @@ export default function AdminDataTable<T>({
                 {columns.map((col) => (
                   <th
                     key={col.header}
-                    className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider"
+                    className={`p-4 font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider ${
+                      col.align === "center"
+                        ? "text-center"
+                        : col.align === "right"
+                          ? "text-right"
+                          : "text-left"
+                    } ${col.className || ""}`}
                   >
                     {col.header}
                   </th>
@@ -109,7 +124,16 @@ export default function AdminDataTable<T>({
                     className="border-t border-[var(--color-border)] hover:bg-muted/30 transition-colors"
                   >
                     {columns.map((col) => (
-                      <td key={col.header} className="p-4">
+                      <td
+                        key={col.header}
+                        className={`p-4 ${
+                          col.align === "center"
+                            ? "text-center"
+                            : col.align === "right"
+                              ? "text-right"
+                              : "text-left"
+                        } ${col.className || ""}`}
+                      >
                         {col.render(row)}
                       </td>
                     ))}

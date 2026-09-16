@@ -34,7 +34,7 @@ export interface ProfileMetric {
 }
 
 export interface ProfileIntroItem {
-  icon: string;
+  icon: React.ReactNode | string;
   label: string;
   value: React.ReactNode;
 }
@@ -63,6 +63,9 @@ interface DashboardProfileProps {
   introItems?: ProfileIntroItem[];
   quickMetrics?: ProfileMetric[];
   chart?: ProfileChart;
+  leftColumnExtra?: React.ReactNode;
+  rightColumnExtra?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export default function DashboardProfile({
@@ -75,6 +78,9 @@ export default function DashboardProfile({
   introItems = [],
   quickMetrics = [],
   chart,
+  leftColumnExtra,
+  rightColumnExtra,
+  children,
 }: DashboardProfileProps) {
   const router = useRouter();
   const { data: session } = authClient.useSession();
@@ -225,9 +231,9 @@ export default function DashboardProfile({
   };
 
   return (
-    <div className="w-full font-urbanist text-foreground min-h-screen pb-12">
+    <div className="w-full font-urbanist text-foreground pb-6 animate-in fade-in duration-500">
       {/* ============ COVER & AVATAR ============ */}
-      <div className="dashboard-card relative !p-0 overflow-hidden max-w-6xl mx-auto">
+      <div className="dashboard-card relative !p-0 overflow-hidden w-full">
         <div className="h-48 md:h-64 w-full relative bg-gradient-to-r from-primary/40 via-secondary/20 to-primary/40">
           <Image
             src={coverImageDark ? (dark ? coverImageDark : coverImage) : coverImage}
@@ -239,7 +245,7 @@ export default function DashboardProfile({
           />
         </div>
 
-        <div className="max-w-6xl mx-auto px-4 pb-6 relative flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16 md:-mt-20">
+        <div className="w-full px-4 sm:px-6 pb-6 relative flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16 md:-mt-20">
           {/* avatar */}
           <div className="relative z-10">
             <Avatar className="w-32 h-32 md:w-40 md:h-40 rounded-full ring-4 ring-card bg-card shadow-xl text-3xl font-bold font-poppins relative overflow-hidden group">
@@ -367,16 +373,35 @@ export default function DashboardProfile({
       </div>
 
       {/* ============ TIMELINE LAYOUT ============ */}
-      <div className="max-w-6xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-2 items-start dashboard-card-gap">
+      <div className="w-full mt-6 grid grid-cols-1 lg:grid-cols-2 items-start dashboard-card-gap">
         {/* left column */}
         <div className="space-y-6">
           <GlowCard corner="top-left">
-            <h3 className="text-lg font-bold font-poppins mb-3">Intro</h3>
-            <div className="space-y-4 text-lg sm:text-base text-foreground/90 font-medium">
+            <div className="flex items-center justify-between mb-4 pb-2 border-b border-border/40">
+              <h3 className="text-base font-bold font-poppins text-foreground">Intro &amp; Profile Details</h3>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">Overview</span>
+            </div>
+            <div className="space-y-3 text-sm text-foreground/90 font-medium">
               {introItems.map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3">
-                  <span className="text-lg">{item.icon}</span>
-                  <span className="truncate">{item.value}</span>
+                <div
+                  key={idx}
+                  className="flex items-center gap-3.5 p-2.5 rounded-xl bg-muted/20 border border-border/40 hover:bg-muted/40 transition-colors"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold">
+                    {typeof item.icon === "string" ? (
+                      <span className="text-base">{item.icon}</span>
+                    ) : (
+                      item.icon
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="block text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                      {item.label}
+                    </span>
+                    <div className="truncate text-sm font-semibold text-foreground mt-0.5">
+                      {item.value}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -384,19 +409,24 @@ export default function DashboardProfile({
 
           {quickMetrics.length > 0 && (
             <GlowCard corner="bottom-left">
-              <h3 className="text-lg font-bold font-poppins mb-3">
-                Quick Metrics
-              </h3>
-              <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4">
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-border/40">
+                <h3 className="text-base font-bold font-poppins text-foreground">
+                  Quick Metrics
+                </h3>
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-500/10 text-green-500">
+                  Active
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
                 {quickMetrics.map((metric, idx) => (
                   <div
                     key={idx}
-                    className="p-3 bg-[var(--color-card-soft)] rounded-xl border border-border/40"
+                    className="group/metric relative overflow-hidden p-3.5 rounded-xl border border-border/60 bg-muted/20 hover:border-primary/40 hover:bg-primary/5 transition-all"
                   >
-                    <span className="block text-xl font-bold text-primary font-poppins">
+                    <span className="block text-2xl font-black text-foreground font-poppins tracking-tight group-hover/metric:text-primary transition-colors">
                       {metric.value}
                     </span>
-                    <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">
+                    <span className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider mt-1 block">
                       {metric.label}
                     </span>
                   </div>
@@ -404,19 +434,27 @@ export default function DashboardProfile({
               </div>
             </GlowCard>
           )}
+
+          {leftColumnExtra}
         </div>
 
         {/* right column */}
         <div className="lg:col-span-1 space-y-6">
           {chart && chart.data.length > 0 && (
-            <GlowCard corner="bottom-right">
-              <div className="pb-4 border-b border-border/50 mb-6">
-                <h3 className="font-sans text-xl font-semibold text-foreground tracking-tight">
-                  {chart.title}
-                </h3>
-                <p className="text-base sm:text-sm text-muted-foreground mt-0.5">
-                  {chart.subtitle}
-                </p>
+            <GlowCard corner="bottom-right" className="h-full">
+              <div className="flex items-center justify-between pb-4 border-b border-border/50 mb-4">
+                <div>
+                  <h3 className="text-base font-bold font-poppins text-foreground tracking-tight">
+                    {chart.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {chart.subtitle}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 text-xs font-semibold text-primary px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20">
+                  <TrendingUp size={13} />
+                  <span>Analytics</span>
+                </div>
               </div>
 
               <div className="w-full h-72">
@@ -479,14 +517,28 @@ export default function DashboardProfile({
                 </ResponsiveContainer>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-border/40 flex items-center gap-1 text-base sm:text-sm text-muted-foreground font-semibold">
-                <TrendingUp size={14} className="text-primary" />
-                <span>{chart.subtitle}</span>
+              <div className="mt-4 pt-3 border-t border-border/40 flex items-center justify-between text-xs text-muted-foreground font-semibold">
+                <span className="flex items-center gap-1.5">
+                  <TrendingUp size={14} className="text-primary" />
+                  {chart.subtitle}
+                </span>
+                <span className="text-primary font-bold">Platform Feed</span>
               </div>
             </GlowCard>
           )}
+
+          {rightColumnExtra}
         </div>
       </div>
+
+      {/* ============ OPTIONAL CHILDREN EXTENSIONS ============ */}
+      {children && (
+        <div className="w-full mt-6">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
+
+

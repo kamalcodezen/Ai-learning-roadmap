@@ -63,7 +63,7 @@ function getNotificationIcon(type: string) {
   }
 }
 
-export default function NotificationBell() {
+export default function NotificationBell({ className }: { className?: string } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<"all" | "unread">("all");
   const mounted = useIsClient();
@@ -193,11 +193,16 @@ export default function NotificationBell() {
         onClick={toggleDropdown}
         aria-label={unreadCount > 0 ? `Notifications (${unreadCount} unread)` : "Notifications"}
         aria-expanded={isOpen}
-        className="group relative flex size-9 items-center justify-center rounded-xl border border-border/80 bg-card/60 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-card hover:shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+        className={[
+          "relative flex items-center justify-center p-2 rounded-full text-foreground hover:bg-foreground/10 outline-none focus:outline-none active:outline-none focus:ring-0 cursor-pointer transition-colors",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
-        <Bell className="size-4.5 text-foreground/80 transition-transform duration-200 group-hover:scale-110 group-hover:text-primary" />
+        <Bell className="w-5 h-5 text-foreground" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white shadow-xs ring-2 ring-background animate-in zoom-in-50 duration-200">
+          <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white shadow-xs ring-2 ring-background animate-in zoom-in-50 duration-200">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}

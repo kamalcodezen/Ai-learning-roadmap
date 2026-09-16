@@ -1,8 +1,18 @@
 import prisma from "../../../lib/prisma.js";
 import { ChatService } from "../../learner/copilot/services/chat.service.js";
 
-export const getSystemHealth = async () => {
-  const health = {
+export interface SystemHealthStatus {
+  backend: string;
+  database: string;
+  auth: string;
+  ai: string;
+}
+
+/**
+ * Performs live ping and latency telemetry checks across Database, Auth, Backend, and AI gateways.
+ */
+export const getSystemHealth = async (): Promise<SystemHealthStatus> => {
+  const health: SystemHealthStatus = {
     backend: "✓",
     database: "✗",
     auth: "✗",
