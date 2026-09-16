@@ -195,7 +195,7 @@ export default function AdminProfilePage() {
                   No recent activity recorded.
                 </div>
               ) : (
-                data.recentActivity.slice(0, 3).map((act: { id: string; type: string; description?: string; createdAt: string; user?: { name?: string; email?: string } }) => (
+                data.recentActivity.slice(0, 3).map((act) => (
                   <div
                     key={act.id}
                     className="flex items-start gap-3 p-2.5 rounded-xl bg-muted/20 border border-border/40 hover:bg-muted/40 transition-colors"
