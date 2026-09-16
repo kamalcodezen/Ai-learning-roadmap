@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import * as projectsService from "./projects.service.js";
 
+/**
+ * Retrieves learner project capstone submissions, verification scores, and repository links.
+ * @route GET /api/admin/projects
+ */
 export const getAdminProjects = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const skip = parseInt(req.query.skip as string) || 0;
