@@ -1,15 +1,28 @@
 import { serverFetch } from "../../core/server";
 
-export interface AdminCareerReadinessTier {
-  role: string;
-  readyCount: number;
-  progressingCount: number;
-  averageScore: number;
+export interface AdminCareerReadinessProfileItem {
+  id: string;
+  userId: string;
+  targetRole: string;
+  score: number;
+  user: {
+    name: string;
+    email: string;
+  };
+  [key: string]: unknown;
+}
+
+export interface AdminCareerReadinessSummary {
+  ready: number;
+  almost: number;
+  needsWork: number;
+  early: number;
+  total: number;
 }
 
 export interface AdminCareerReadinessResponse {
-  tiers: AdminCareerReadinessTier[];
-  overallReadinessRate: number;
+  summary: AdminCareerReadinessSummary;
+  profiles: AdminCareerReadinessProfileItem[];
 }
 
 /**
