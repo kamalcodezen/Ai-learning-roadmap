@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import * as activityService from "./activity.service.js";
 
+/**
+ * Retrieves paginated platform activity and learner events stream.
+ * @route GET /api/admin/activity
+ */
 export const getAdminActivity = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const skip = parseInt(req.query.skip as string) || 0;
