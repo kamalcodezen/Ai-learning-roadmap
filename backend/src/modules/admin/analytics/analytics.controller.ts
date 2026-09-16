@@ -3,6 +3,25 @@ import * as adminAnalyticsService from "./analytics.service.js";
 import { jsonToCsv } from "../../../utils/csv.util.js";
 import prisma from "../../../lib/prisma.js";
 
+export type ExportableEntity =
+  | "users"
+  | "roadmaps"
+  | "assessments"
+  | "projects"
+  | "ai-usage"
+  | "audit-logs"
+  | "skill-proof"
+  | "error-logs"
+  | "learning-debt"
+  | "skill-health"
+  | "career-readiness"
+  | "job-reality"
+  | "activity";
+
+/**
+ * Retrieves aggregate platform analytics across learners, roadmaps, and AI usage.
+ * @route GET /api/admin/analytics
+ */
 export const getAdminAnalytics = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const days = parseInt(req.query.days as string) || 30;
@@ -11,6 +30,10 @@ export const getAdminAnalytics = async (req: Request, res: Response, next: NextF
   } catch (error) { next(error); }
 };
 
+/**
+ * Exports tabular platform data as CSV for auditing and external analysis.
+ * @route GET /api/admin/export/:entity
+ */
 export const exportData = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const entity = req.params.entity;
