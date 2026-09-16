@@ -14,7 +14,7 @@ export interface AdminActivityItem {
 }
 
 export interface AdminActivityResponse {
-  activity: AdminActivityItem[];
+  activities: AdminActivityItem[];
   total: number;
 }
 
