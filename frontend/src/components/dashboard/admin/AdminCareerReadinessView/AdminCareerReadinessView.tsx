@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminCareerReadiness } from "@/src/lib/api/admin/career-readiness";
+import { getAdminCareerReadiness, AdminCareerReadinessProfileItem } from "@/src/lib/api/admin/career-readiness";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { User } from "lucide-react";
@@ -13,21 +13,13 @@ import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-interface ProfileRow {
-  id: string;
-  user: { name: string; email: string };
-  matchRole: string;
-  score: number;
-  targetRole: string;
-}
-
 const getScoreColor = (score: number) => {
   if (score >= 80) return "bg-green-500/10 text-green-500";
   if (score >= 50) return "bg-orange-500/10 text-orange-500";
   return "bg-red-500/10 text-red-500";
 };
 
-const columns: AdminDataTableColumn<ProfileRow>[] = [
+const columns: AdminDataTableColumn<AdminCareerReadinessProfileItem>[] = [
   {
     header: "Learner",
     render: (p) => (
@@ -36,8 +28,8 @@ const columns: AdminDataTableColumn<ProfileRow>[] = [
           <User className="size-4" />
         </div>
         <div>
-          <p className="font-medium text-foreground">{p.user.name}</p>
-          <p className="text-xs text-muted-foreground">{p.user.email}</p>
+          <p className="font-medium text-foreground">{p.user?.name || "Unknown"}</p>
+          <p className="text-xs text-muted-foreground">{p.user?.email || "No email"}</p>
         </div>
       </div>
     ),
@@ -105,12 +97,12 @@ export default function AdminCareerReadinessView() {
     { label: "Early Stage", value: summary.early },
   ];
 
-  const filtered = profiles.filter((p: ProfileRow) => {
+  const filtered = profiles.filter((p) => {
     const q = debouncedSearch.toLowerCase();
     if (!q) return true;
     return (
-      p.user.name.toLowerCase().includes(q) ||
-      p.targetRole.toLowerCase().includes(q)
+      (p.user?.name?.toLowerCase().includes(q) ?? false) ||
+      (p.targetRole?.toLowerCase().includes(q) ?? false)
     );
   });
 
