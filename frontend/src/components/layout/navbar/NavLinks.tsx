@@ -18,6 +18,7 @@ import {
   FiMoon,
   FiX,
   FiHome,
+  FiMail,
 } from "react-icons/fi";
 import { Sparkles, Crown, Loader2 } from "lucide-react";
 import { authClient } from "@/src/lib/auth-client";
@@ -47,6 +48,10 @@ export const getNavLinks = (): NavLink[] => [
   {
     label: "Pricing",
     href: "/pricing",
+  },
+  {
+    label: "Contact Us",
+    href: "/contact",
   },
 ];
 
@@ -167,6 +172,8 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
         return <FiInfo className="size-4 shrink-0" />;
       case "Pricing":
         return <FiCreditCard className="size-4 shrink-0" />;
+      case "Contact Us":
+        return <FiMail className="size-4 shrink-0" />;
       default:
         return null;
     }

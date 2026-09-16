@@ -17,6 +17,7 @@ import {
   FiCreditCard,
   FiMoon,
   FiHome,
+  FiMail,
 } from "react-icons/fi";
 import { Sparkles, Crown, Loader2 } from "lucide-react";
 import Logo from "./Logo";
@@ -190,6 +191,8 @@ export default function MobileNav() {
         return <FiInfo className="size-4 shrink-0" />;
       case "Pricing":
         return <FiCreditCard className="size-4 shrink-0" />;
+      case "Contact Us":
+        return <FiMail className="size-4 shrink-0" />;
       default:
         return null;
     }
