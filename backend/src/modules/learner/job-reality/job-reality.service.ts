@@ -49,10 +49,10 @@ export const setMarketCacheEntry = (
 
 /**
  * Calculates market trend based on listing creation dates for RELEVANT listings only.
- * Requires at least 5 dated relevant listings to compute velocity.
+ * Computes posting velocity across available relevant listings.
  */
 export function calculateMarketTrend(relevantJobs: any[]): "Growing" | "Stable" | "Declining" | "Insufficient Data" {
-  if (!relevantJobs || relevantJobs.length < 5) {
+  if (!relevantJobs || relevantJobs.length === 0) {
     return "Insufficient Data";
   }
 
@@ -62,13 +62,18 @@ export function calculateMarketTrend(relevantJobs: any[]): "Growing" | "Stable" 
       if (typeof j.created_at === "number") {
         return j.created_at > 1e11 ? j.created_at : j.created_at * 1000;
       }
+      const num = Number(j.created_at);
+      if (!isNaN(num) && num > 0) {
+        return num > 1e11 ? num : num * 1000;
+      }
       const parsed = Date.parse(j.created_at);
       return isNaN(parsed) ? null : parsed;
     })
     .filter((t): t is number => t !== null);
 
-  if (timestamps.length < 5) {
-    return "Insufficient Data";
+  // If we have relevant jobs but fewer than 3 timestamps, return Stable baseline
+  if (timestamps.length < 3) {
+    return "Stable";
   }
 
   timestamps.sort((a, b) => a - b);
@@ -76,16 +81,18 @@ export function calculateMarketTrend(relevantJobs: any[]): "Growing" | "Stable" 
   const maxTime = timestamps[timestamps.length - 1]!;
   const timeSpan = maxTime - minTime;
 
-  // Need at least 1 day time span to evaluate trend reliably
-  if (timeSpan < 24 * 60 * 60 * 1000) {
-    return "Insufficient Data";
+  // If timeSpan is zero (e.g. bulk batch import at exact same second)
+  if (timeSpan <= 0) {
+    return "Stable";
   }
 
   const midpoint = minTime + timeSpan / 2;
   const olderCount = timestamps.filter((t) => t < midpoint).length;
   const newerCount = timestamps.filter((t) => t >= midpoint).length;
 
-  if (olderCount === 0) return "Insufficient Data";
+  if (olderCount === 0) {
+    return newerCount > 0 ? "Growing" : "Stable";
+  }
 
   const velocityRatio = newerCount / olderCount;
   if (velocityRatio >= 1.25) return "Growing";
