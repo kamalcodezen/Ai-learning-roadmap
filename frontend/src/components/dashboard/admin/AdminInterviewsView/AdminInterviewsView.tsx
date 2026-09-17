@@ -153,6 +153,7 @@ export default function AdminInterviewsView() {
     },
     {
       header: "Target Role",
+      align: "center",
       render: (item) => (
         <span className="inline-flex items-center text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-md border border-primary/20 max-w-[170px] truncate">
           {item.targetRole || "General Technical"}
@@ -161,6 +162,7 @@ export default function AdminInterviewsView() {
     },
     {
       header: "Status",
+      align: "center",
       render: (item) => (
         <span
           className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
@@ -180,6 +182,7 @@ export default function AdminInterviewsView() {
     },
     {
       header: "Score",
+      align: "center",
       render: (item) => {
         const score = item.score ?? 0;
         return (
@@ -199,6 +202,7 @@ export default function AdminInterviewsView() {
     },
     {
       header: "Q&A Count",
+      align: "center",
       render: (item) => (
         <span className="text-xs text-muted-foreground font-mono">
           {item._count.answers} / {item._count.questions} questions
@@ -207,6 +211,7 @@ export default function AdminInterviewsView() {
     },
     {
       header: "Started",
+      align: "center",
       render: (item) => (
         <span className="text-xs text-muted-foreground whitespace-nowrap">
           {new Date(item.startedAt).toLocaleDateString()}
@@ -215,6 +220,7 @@ export default function AdminInterviewsView() {
     },
     {
       header: "Action",
+      align: "center",
       render: (item) => (
         <button
           onClick={() => handleInspect(item.id)}
