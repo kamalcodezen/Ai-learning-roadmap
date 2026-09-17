@@ -95,22 +95,23 @@ export default function AdminSubscriptionsView() {
 
   return (
     <div className="flex flex-col dashboard-card-gap pb-8 animate-in fade-in duration-500">
-      {/* Header */}
-      <div>
-        <h1 className="section-title text-left">
-          Subscriptions &amp; <span className="text-brand">Pricing</span>
-        </h1>
-        <p className="section-subtitle mt-1 text-left">
-          Supervise recurring monetization tiers, tier entitlements, subscriber lifetime value, and user quotas.
-        </p>
-      </div>
+ {/* Header */}
+<div className="text-left ">
+  <h1 className="section-title !text-left ">
+    Subscriptions &amp; <span className="text-brand">Pricing</span>
+  </h1>
+
+  <p className="section-subtitle !mx-0 !text-left mt-1  inline">
+    Supervise recurring monetization tiers, tier entitlements, subscriber lifetime value, and user quotas.
+  </p>
+</div>
 
       {/* KPI Cards */}
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kpis.map((kpi) => {
           const Icon = kpi.icon;
           return (
-            <Card key={kpi.title} mouseGlow className={glowCardClass}>
+            <Card key={kpi.title} mouseGlow className={`${glowCardClass} rounded-lg`}>
               <CardContent className="relative z-10 flex items-start gap-4">
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${kpi.color}`}>
                   <Icon className="h-6 w-6" />
@@ -142,7 +143,7 @@ export default function AdminSubscriptionsView() {
             return (
               <Card
                 key={tier.tier}
-                className={`relative overflow-hidden border-2 rounded-xl p-6 ${
+                className={`relative overflow-hidden border-2 rounded-lg p-6 ${
                   isPro
                     ? "border-amber-500/40 bg-gradient-to-b from-amber-500/5 to-transparent"
                     : isPlus
@@ -210,7 +211,7 @@ export default function AdminSubscriptionsView() {
           </span>
         </div>
 
-        <Card className={`${glowCardClass} !p-0`}>
+        <Card className={`${glowCardClass} !p-0 rounded-lg`}>
           <CardContent>
             {recentSubscribers.length === 0 ? (
               <div className="p-8 text-center text-muted-foreground">
@@ -257,7 +258,7 @@ export default function AdminSubscriptionsView() {
                       </div>
 
                       <div className="flex items-center gap-4">
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-sm text-muted-foreground">
                           Updated: {new Date(u.updatedAt).toLocaleDateString()}
                         </span>
                         <Select
@@ -268,21 +269,21 @@ export default function AdminSubscriptionsView() {
                             updatePlanMutation.mutate({ targetId: u.id, newPlan: String(val) })
                           }
                         >
-                          <Select.Trigger className="h-8 text-xs">
+                          <Select.Trigger className="h-8 text-xs rounded-lg w-30">
                             <Select.Value />
                             <Select.Indicator />
                           </Select.Trigger>
-                          <Select.Popover>
-                            <ListBox>
-                              <ListBox.Item key="FREE" id="FREE" textValue="FREE">
+                          <Select.Popover className="rounded-lg">
+                            <ListBox className="rounded-lg p-1">
+                              <ListBox.Item key="FREE" id="FREE" textValue="FREE" className="rounded-lg text-xs">
                                 FREE
                                 <ListBox.ItemIndicator />
                               </ListBox.Item>
-                              <ListBox.Item key="PLUS" id="PLUS" textValue="PLUS">
+                              <ListBox.Item key="PLUS" id="PLUS" textValue="PLUS" className="rounded-lg text-xs">
                                 PLUS
                                 <ListBox.ItemIndicator />
                               </ListBox.Item>
-                              <ListBox.Item key="PRO" id="PRO" textValue="PRO">
+                              <ListBox.Item key="PRO" id="PRO" textValue="PRO" className="rounded-lg text-xs">
                                 PRO
                                 <ListBox.ItemIndicator />
                               </ListBox.Item>
@@ -290,6 +291,9 @@ export default function AdminSubscriptionsView() {
                           </Select.Popover>
                         </Select>
                       </div>
+
+
+                      
                     </div>
                   );
                 })}
