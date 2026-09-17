@@ -17,7 +17,6 @@ import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPage
 import { getAdminUsers } from "@/src/lib/api/admin/users";
 import {
   updateAdminUserRole,
-  updateAdminUserPlan,
   deleteAdminUser,
 } from "@/src/lib/actions/admin/users";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
