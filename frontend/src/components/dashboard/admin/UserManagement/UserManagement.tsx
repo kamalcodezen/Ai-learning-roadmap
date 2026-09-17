@@ -187,6 +187,7 @@ export default function UserManagement() {
     },
     {
       header: "Career Goal",
+      align: "center",
       render: (u) => {
         const target = u.careerProfile?.targetRoleName || u.careerProfile?.targetRole;
         return target ? (
@@ -200,56 +201,29 @@ export default function UserManagement() {
     },
     {
       header: "Plan",
+      align: "center",
       render: (u) => {
         const plan = u.plan || "FREE";
         return (
-          <div className="flex items-center gap-2">
-            <span
-              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${
-                plan === "PRO"
-                  ? "bg-amber-500/15 text-amber-500 border border-amber-500/30"
-                  : plan === "PLUS"
-                    ? "bg-blue-500/15 text-blue-500 border border-blue-500/30"
-                    : "bg-muted/60 text-muted-foreground border border-border/40"
-              }`}
-            >
-              {plan === "PRO" && <Crown className="size-3" />}
-              {plan === "PLUS" && <Sparkles className="size-3" />}
-              {plan}
-            </span>
-            <Select
-              className="w-24"
-              value={plan}
-              isDisabled={updatePlanMutation.isPending}
-              onChange={(val) => handlePlanChange(u.id, String(val))}
-            >
-              <Select.Trigger className="h-7 text-xs px-2 py-0">
-                <Select.Value />
-                <Select.Indicator />
-              </Select.Trigger>
-              <Select.Popover>
-                <ListBox>
-                  <ListBox.Item key="FREE" id="FREE" textValue="FREE">
-                    FREE
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
-                  <ListBox.Item key="PLUS" id="PLUS" textValue="PLUS">
-                    PLUS
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
-                  <ListBox.Item key="PRO" id="PRO" textValue="PRO">
-                    PRO
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
-                </ListBox>
-              </Select.Popover>
-            </Select>
-          </div>
+          <span
+            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${
+              plan === "PRO"
+                ? "bg-amber-500/15 text-amber-500 border border-amber-500/30"
+                : plan === "PLUS"
+                  ? "bg-blue-500/15 text-blue-500 border border-blue-500/30"
+                  : "bg-muted/60 text-muted-foreground border border-border/40"
+            }`}
+          >
+            {plan === "PRO" && <Crown className="size-3" />}
+            {plan === "PLUS" && <Sparkles className="size-3" />}
+            {plan}
+          </span>
         );
       },
     },
     {
       header: "Role",
+      align: "center",
       render: (u) => (
         <span
           className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${u.role === "ADMIN" ? "bg-purple-500/10 text-purple-500" : "bg-primary/10 text-primary"}`}
@@ -265,6 +239,7 @@ export default function UserManagement() {
     },
     {
       header: "Joined",
+      align: "center",
       render: (u) => (
         <span className="text-muted-foreground whitespace-nowrap">
           {new Date(u.createdAt).toLocaleDateString()}
@@ -273,19 +248,26 @@ export default function UserManagement() {
     },
     {
       header: "Actions",
+      align: "center",
       render: (u) => (
-        <div className="flex items-center justify-end gap-3">
+        <div className="inline-flex items-center justify-center gap-2.5">
           <Select
-            className="w-28"
+            className="w-28 text-left"
             value={u.role}
             isDisabled={updateRoleMutation.isPending || u.id === userId}
             onChange={(val) => handleRoleChange(u.id, String(val))}
           >
-            <Select.Trigger>
+            <Select.Trigger
+              className="rounded-lg! [border-radius:0.5rem]!"
+              style={{ borderRadius: "0.5rem" }}
+            >
               <Select.Value />
               <Select.Indicator />
             </Select.Trigger>
-            <Select.Popover>
+            <Select.Popover
+              className="rounded-lg! [border-radius:0.5rem]!"
+              style={{ borderRadius: "0.5rem" }}
+            >
               <ListBox>
                 <ListBox.Item key="LEARNER" id="LEARNER" textValue="LEARNER">
                   LEARNER
@@ -301,7 +283,7 @@ export default function UserManagement() {
           <button
             onClick={() => openDelete(u.id)}
             disabled={deleteUserMutation.isPending || u.id === userId}
-            className="p-1.5 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded transition-colors disabled:opacity-50"
+            className="p-1.5 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-lg transition-colors disabled:opacity-50 inline-flex items-center justify-center shrink-0 cursor-pointer"
             title="Delete User"
           >
             {deleteUserMutation.isPending &&
@@ -355,7 +337,10 @@ export default function UserManagement() {
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
-              <Select.Popover>
+              <Select.Popover
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <ListBox>
                   <ListBox.Item key="LEARNER" id="LEARNER" textValue="Learner">
                     Learner
@@ -385,7 +370,10 @@ export default function UserManagement() {
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
-              <Select.Popover>
+              <Select.Popover
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <ListBox>
                   <ListBox.Item key="FREE" id="FREE" textValue="Free">
                     Free
@@ -419,7 +407,10 @@ export default function UserManagement() {
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
-              <Select.Popover>
+              <Select.Popover
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <ListBox>
                   <ListBox.Item key="7" id="7" textValue="Last 7 Days">
                     Last 7 Days
