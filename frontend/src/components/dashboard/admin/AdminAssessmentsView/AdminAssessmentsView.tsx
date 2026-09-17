@@ -42,6 +42,7 @@ const columns: AdminDataTableColumn<AdminAssessmentItem>[] = [
   },
   {
     header: "Status",
+    align: "center",
     render: (a) => (
       <span
         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
@@ -56,6 +57,7 @@ const columns: AdminDataTableColumn<AdminAssessmentItem>[] = [
   },
   {
     header: "Score",
+    align: "center",
     render: (a) => (
       <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary">
         {a.score !== null && a.score !== undefined ? `${a.score}%` : "-"}
@@ -64,6 +66,7 @@ const columns: AdminDataTableColumn<AdminAssessmentItem>[] = [
   },
   {
     header: "Started At",
+    align: "center",
     render: (a) => (
       <span className="whitespace-nowrap text-muted-foreground">
         {new Date(a.startedAt).toLocaleDateString()}
