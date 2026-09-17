@@ -234,7 +234,7 @@ export default function AdminInterviewsView() {
         <h1 className="section-title text-left">
           Mock Interviews <span className="text-brand">Supervision</span>
         </h1>
-        <p className="section-subtitle mt-1 text-left">
+        <p className="section-subtitle mt-1 !text-left !mx-0 max-w-none">
           Monitor learner interview performances, voice/text dialogues, questions asked, and AI evaluation metrics.
         </p>
       </div>
