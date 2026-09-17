@@ -16,6 +16,7 @@ import {
   Eye,
   User,
   Sparkles,
+  X,
 } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import { Avatar, Modal, Button, Select, Label, ListBox, useOverlayState } from "@heroui/react";
@@ -352,19 +353,26 @@ export default function AdminInterviewsView() {
 
       {/* Details Inspection Modal */}
       <Modal state={inspectModal}>
-        <Modal.Backdrop>
+        <Modal.Backdrop className="bg-black/60 backdrop-blur-sm">
           <Modal.Container>
-            <Modal.Dialog className="sm:max-w-[720px] max-h-[90vh] flex flex-col">
-              <Modal.CloseTrigger />
-              <Modal.Header>
-                <Modal.Icon className="bg-primary/10 text-primary">
+            <Modal.Dialog className="sm:max-w-[720px] max-h-[90vh] flex flex-col rounded-2xl border border-border bg-card text-card-foreground shadow-2xl overflow-hidden relative">
+              <Modal.CloseTrigger className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white dark:text-black transition-all duration-200 cursor-pointer shadow-sm z-20">
+                <X className="size-4" />
+              </Modal.CloseTrigger>
+              <Modal.Header className="border-b border-border/40 p-5 flex items-center gap-3.5 relative z-10">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20">
                   <Mic className="size-5" />
-                </Modal.Icon>
-                <Modal.Heading>
-                  {sessionDetails?.targetRole || "Interview Session"} Performance
-                </Modal.Heading>
+                </div>
+                <div>
+                  <Modal.Heading className="text-lg font-bold text-foreground tracking-tight">
+                    {sessionDetails?.targetRole || "Interview Session"} <span className="text-brand">Performance</span>
+                  </Modal.Heading>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Detailed AI evaluation and response transcript
+                  </p>
+                </div>
               </Modal.Header>
-              <Modal.Body className="overflow-y-auto space-y-4">
+              <Modal.Body className="overflow-y-auto p-5 space-y-5 flex-1 min-h-0 [scrollbar-width:thin]">
                 {isDetailsLoading || !sessionDetails ? (
                   <div className="space-y-4 py-4 animate-pulse">
                     <div className="h-16 w-full rounded-xl bg-muted/40 border border-border/30" />
@@ -377,18 +385,21 @@ export default function AdminInterviewsView() {
                 ) : (
                   <div className="space-y-6">
                     {/* Candidate & Session Info */}
-                    <div className="flex items-center justify-between rounded-xl bg-muted/40 p-4 border border-border/40">
+                    <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-primary/5 via-muted/20 to-primary/5 p-4 border border-border/60">
                       <div>
-                        <p className="font-semibold text-foreground">
-                          {sessionDetails.user.name} ({sessionDetails.user.email})
+                        <p className="font-semibold text-foreground text-sm sm:text-base">
+                          {sessionDetails.user.name}{" "}
+                          <span className="text-xs text-muted-foreground font-normal">
+                            ({sessionDetails.user.email})
+                          </span>
                         </p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          Started: {new Date(sessionDetails.startedAt).toLocaleString()}
+                        <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
+                          <Clock className="size-3.5 text-primary" /> Started: {new Date(sessionDetails.startedAt).toLocaleString()}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <span className="text-xs text-muted-foreground">Session Score</span>
-                        <p className="text-2xl font-bold text-foreground">
+                      <div className="text-right pl-4 shrink-0">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Session Score</span>
+                        <p className="text-2xl font-black text-primary">
                           {sessionDetails.score ?? 0}%
                         </p>
                       </div>
@@ -396,31 +407,33 @@ export default function AdminInterviewsView() {
 
                     {/* Questions & Answers */}
                     <div className="space-y-4">
-                      <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                        Dialogue & Evaluation ({sessionDetails.answers.length} recorded answers)
-                      </h4>
+                      <div className="flex items-center justify-between pt-1">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                          Dialogue &amp; Evaluation ({sessionDetails.answers.length} recorded answers)
+                        </h4>
+                      </div>
 
                       {sessionDetails.answers.length === 0 ? (
-                        <p className="text-sm text-muted-foreground italic">
+                        <p className="text-sm text-muted-foreground italic py-2">
                           No answers recorded yet for this session.
                         </p>
                       ) : (
                         sessionDetails.answers.map((ans, idx) => (
                           <div
                             key={ans.id}
-                            className="rounded-xl border border-border/50 bg-card p-4 space-y-3"
+                            className="rounded-xl border border-border/60 bg-card/60 dark:bg-card/40 p-4 space-y-3.5 hover:border-primary/30 transition-colors shadow-xs"
                           >
-                            <div className="flex items-start gap-2">
-                              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                            <div className="flex items-start gap-2.5">
+                              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary border border-primary/20">
                                 Q{idx + 1}
                               </span>
-                              <p className="text-sm font-semibold text-foreground">
+                              <p className="text-sm font-semibold text-foreground pt-0.5 leading-snug">
                                 {ans.question?.question || "Interview Question"}
                               </p>
                             </div>
 
-                            <div className="rounded-lg bg-muted/30 p-3 border border-border/30">
-                              <p className="text-xs font-semibold text-muted-foreground mb-1">
+                            <div className="rounded-lg bg-muted/40 dark:bg-muted/20 p-3.5 border border-border/40">
+                              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                                 Candidate Answer:
                               </p>
                               <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
@@ -429,19 +442,19 @@ export default function AdminInterviewsView() {
                             </div>
 
                             {ans.evaluation && (
-                              <div className="rounded-lg bg-primary/5 p-3 border border-primary/20 space-y-2">
+                              <div className="rounded-lg bg-primary/5 dark:bg-primary/10 p-3.5 border border-primary/20 space-y-2">
                                 <div className="flex items-center justify-between">
-                                  <span className="text-xs font-bold text-primary flex items-center gap-1">
-                                    <Sparkles className="size-3" /> AI Evaluation
+                                  <span className="text-xs font-bold text-primary flex items-center gap-1.5">
+                                    <Sparkles className="size-3.5" /> AI Evaluation
                                   </span>
                                   {ans.evaluation.score !== undefined && (
-                                    <span className="text-xs font-bold text-foreground">
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/15 text-primary border border-primary/30">
                                       Score: {ans.evaluation.score}%
                                     </span>
                                   )}
                                 </div>
                                 {ans.evaluation.feedback && (
-                                  <p className="text-xs text-muted-foreground">
+                                  <p className="text-xs text-muted-foreground leading-relaxed">
                                     {ans.evaluation.feedback}
                                   </p>
                                 )}
@@ -454,8 +467,12 @@ export default function AdminInterviewsView() {
                   </div>
                 )}
               </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" slot="close" fullWidth>
+              <Modal.Footer className="border-t border-border/40 p-4 bg-muted/10">
+                <Button
+                  slot="close"
+                  fullWidth
+                  className="rounded-lg font-semibold py-2.5 text-sm transition-all duration-200 !bg-primary hover:!bg-primary/90 !text-white dark:!text-black shadow-sm cursor-pointer"
+                >
                   Close
                 </Button>
               </Modal.Footer>
