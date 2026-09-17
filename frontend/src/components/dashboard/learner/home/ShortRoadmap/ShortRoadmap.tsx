@@ -41,7 +41,7 @@ export default function ShortRoadmap({ data }: Props) {
   if (!data || !data.milestones || data.milestones.length === 0) {
     return (
       <Card
-        className="rounded-xl p-6 h-full lg:h-[365px] border-2 border-background shadow-none dashboard-card flex flex-col justify-between"
+        className="rounded-lg p-6 h-full lg:h-[365px] border-2 border-background shadow-none dashboard-card flex flex-col justify-between"
       >
         <CardHeader className="relative z-10 pb-2 shrink-0">
           <div className="flex items-center justify-between">
@@ -118,7 +118,7 @@ export default function ShortRoadmap({ data }: Props) {
 
   return (
     <Card
-      className="rounded-xl p-6 h-full lg:h-[365px] border-2 border-background shadow-none dashboard-card flex flex-col justify-between"
+      className="rounded-lg p-6 h-full lg:h-[365px] border-2 border-background shadow-none dashboard-card flex flex-col justify-between"
     >
       {/* ================================================================
           HEADER
