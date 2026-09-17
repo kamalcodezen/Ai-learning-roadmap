@@ -54,7 +54,7 @@ export default function NextBestActionCard({ data }: Props) {
 
   return (
     <Card
-      className="rounded-xl p-6 h-full lg:h-[365px] border-2 border-background shadow-none dashboard-card"
+      className="rounded-lg p-6 h-full lg:h-[365px] border-2 border-background shadow-none dashboard-card"
     >
       <CardHeader className="shrink-0">
         <CardTitle className="text-primary flex items-center gap-2">
