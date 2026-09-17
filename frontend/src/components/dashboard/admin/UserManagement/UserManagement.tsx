@@ -151,9 +151,6 @@ export default function UserManagement() {
     updateRoleMutation.mutate({ targetId: id, newRole });
   };
 
-  const handlePlanChange = (id: string, newPlan: string) => {
-    updatePlanMutation.mutate({ targetId: id, newPlan });
-  };
 
   const openDelete = (id: string) => {
     setDeleteTarget(id);

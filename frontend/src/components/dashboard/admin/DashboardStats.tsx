@@ -83,7 +83,7 @@ export default function DashboardStats() {
     );
   }
 
-  const { overview, systemHealth, recentActivity, userAnalytics } = data;
+  const { overview, systemHealth, recentActivity } = data;
 
   const kpis: Kpi[] = [
     { title: "Total Users", value: overview.totalUsers, icon: Users, color: "bg-blue-500/10 text-blue-500" },
