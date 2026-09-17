@@ -45,7 +45,7 @@ export default function DashboardBanner({
   }, []);
 
   return (
-    <section className="relative w-full overflow-hidden rounded-xl border border-border min-h-[200px] sm:min-h-[220px] lg:min-h-[250px]">
+    <section className="relative w-full overflow-hidden rounded-lg border border-border min-h-[200px] sm:min-h-[220px] lg:min-h-[250px]">
       <Image
         src={dark ? dashboardBannerDark : dashboardBanner}
         alt=""
@@ -72,7 +72,7 @@ export default function DashboardBanner({
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="group relative overflow-hidden rounded-2xl border border-white/70 bg-white/70 px-4 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.05)] transition-all duration-300 dark:border-white/10 dark:bg-[#111111]/70 dark:shadow-none backdrop-blur-xs"
+              className="group relative overflow-hidden rounded-lg border border-white/70 bg-white/70 px-4 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.05)] transition-all duration-300 dark:border-white/10 dark:bg-[#111111]/70 dark:shadow-none backdrop-blur-xs"
             >
               <div
                 className="pointer-events-none absolute -right-8 -top-8 h-20 w-20 rounded-full bg-primary/10 blur-2xl transition-all duration-500 group-hover:bg-primary/20"
