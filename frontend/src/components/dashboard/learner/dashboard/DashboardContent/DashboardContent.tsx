@@ -13,7 +13,7 @@ import AssessmentProgressCard from "../../AssessmentProgressCard";
 import dynamic from "next/dynamic";
 const ChatBox = dynamic(() => import("@/src/components/chat/ChatBox"), {
   ssr: false,
-  loading: () => <div className="h-64 animate-pulse bg-muted rounded-xl" />,
+  loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
 });
 import WelcomeStatsSection from "../../home/WelcomeStatsSection";
 import OverallProgress from "../../home/OverallProgress";
@@ -73,7 +73,7 @@ export default function DashboardContent() {
   return (
     <div className="flex flex-col dashboard-card-gap lg:pb-4 animate-in fade-in duration-500">
       {!hasAnyData && (
-        <div className="rounded-2xl border border-primary/30 bg-primary/5 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div className="rounded-lg border border-primary/30 bg-primary/5 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5" />
