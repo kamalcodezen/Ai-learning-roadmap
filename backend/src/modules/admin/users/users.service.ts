@@ -3,7 +3,7 @@ import prisma from "../../../lib/prisma.js";
 /**
  * Retrieves paginated list of users with search functionality.
  */
-export const getUsers = async (skip: number, take: number, search?: string, role?: string, days?: number) => {
+export const getUsers = async (skip: number, take: number, search?: string, role?: string, days?: number, plan?: string) => {
   const where: any = {};
   
   if (search) {
@@ -15,6 +15,10 @@ export const getUsers = async (skip: number, take: number, search?: string, role
 
   if (role) {
     where.role = role;
+  }
+
+  if (plan) {
+    where.plan = plan;
   }
 
   if (days) {
@@ -35,7 +39,14 @@ export const getUsers = async (skip: number, take: number, search?: string, role
         email: true,
         image: true,
         role: true,
+        plan: true,
         createdAt: true,
+        careerProfile: {
+          select: {
+            targetRole: true,
+            targetRoleName: true,
+          },
+        },
       },
     }),
     prisma.user.count({ where }),
@@ -102,3 +113,42 @@ export const deleteUser = async (adminId: string, targetUserId: string) => {
 
   return { success: true };
 };
+
+/**
+ * Updates a user's subscription tier (FREE, PLUS, PRO).
+ */
+export const updateUserPlan = async (adminId: string, targetUserId: string, newPlan: string) => {
+  const validPlans = ["FREE", "PLUS", "PRO"];
+  const upperPlan = newPlan.toUpperCase();
+  if (!validPlans.includes(upperPlan)) {
+    throw new Error(`Invalid plan specified. Valid plans are: ${validPlans.join(", ")}`);
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: targetUserId } });
+  if (!user) throw new Error("Target user not found.");
+
+  const updatedUser = await prisma.user.update({
+    where: { id: targetUserId },
+    data: { plan: upperPlan },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      plan: true,
+      updatedAt: true,
+    },
+  });
+
+  await prisma.adminAuditLog.create({
+    data: {
+      adminId,
+      action: "PLAN_CHANGED",
+      targetId: targetUserId,
+      details: { oldPlan: user.plan, newPlan: upperPlan },
+    },
+  });
+
+  return updatedUser;
+};
+

@@ -49,6 +49,7 @@ interface MilestoneDetailDrawerProps {
   projectId?: string | null;
   onSelectActive?: () => void;
   activeMilestoneTitle?: string | null;
+  targetSkillGap?: string | null;
 }
 
 export function MilestoneDetailDrawer({
@@ -62,6 +63,7 @@ export function MilestoneDetailDrawer({
   projectId,
   onSelectActive,
   activeMilestoneTitle,
+  targetSkillGap,
 }: MilestoneDetailDrawerProps) {
   const isClient = useSyncExternalStore(
     emptySubscribe,
@@ -169,6 +171,55 @@ export function MilestoneDetailDrawer({
           className="flex-1 min-h-0 overflow-y-auto px-6 py-5 space-y-5 overscroll-contain [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground"
           style={{ WebkitOverflowScrolling: "touch" }}
         >
+          {/* Target Skill Gap Resolution Card */}
+          {targetSkillGap && (
+            <div className="p-4 rounded-xl bg-primary/10 border border-primary/30 flex flex-col gap-3 shadow-sm animate-in fade-in duration-300">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-lg bg-primary/20 text-primary shrink-0">
+                    <Target className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-primary block">
+                      Target Skill Gap
+                    </span>
+                    <span className="text-sm font-extrabold text-foreground">
+                      {targetSkillGap}
+                    </span>
+                  </div>
+                </div>
+                <span
+                  className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                    isCompleted
+                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                      : isCurrent
+                        ? "bg-primary/20 text-primary border border-primary/30"
+                        : "bg-muted text-muted-foreground border border-border"
+                  }`}
+                >
+                  {isCompleted ? "Milestone Completed" : isCurrent ? "Active Stage" : "Upcoming"}
+                </span>
+              </div>
+
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {isCompleted
+                  ? "You have completed this stage. To evaluate your hands-on mastery and elevate your verified score for this specific competency, launch the targeted 4-stage Skill Mastery Simulation below."
+                  : isCurrent
+                    ? "This stage is active. Master the resources below, build the project, or launch the targeted 4-stage Skill Simulation to immediately verify proficiency."
+                    : "This competency is unlocked in an upcoming curriculum stage. You can preview the module details below or test your skills directly via simulation."}
+              </p>
+
+              <Link
+                href={`/dashboard/learner/assessments/simulation?skill=${encodeURIComponent(targetSkillGap)}`}
+                onClick={onClose}
+                className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                Launch Skill Mastery Simulation ({targetSkillGap}) &rarr;
+              </Link>
+            </div>
+          )}
+
           {/* Overview & Learning Objectives */}
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">

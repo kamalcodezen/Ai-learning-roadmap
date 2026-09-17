@@ -43,6 +43,14 @@ export default function LearnerProfilePage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
       queryClient.invalidateQueries({ queryKey: ["careerAnalysis"] });
+      queryClient.invalidateQueries({ queryKey: ["jobReality"] });
+      queryClient.invalidateQueries({ queryKey: ["careerAlignment"] });
+      queryClient.invalidateQueries({ queryKey: ["careerTwin"] });
+      queryClient.invalidateQueries({ queryKey: ["skillGaps"] });
+      queryClient.invalidateQueries({ queryKey: ["learningPath"] });
+      queryClient.invalidateQueries({ queryKey: ["applicationReadiness"] });
+      queryClient.invalidateQueries({ queryKey: ["careerDecision"] });
+      queryClient.invalidateQueries({ queryKey: ["proofGraph"] });
       showToast({ message: "Profile updated: Career target and study pace saved.", variant: "success" });
       setIsEditing(false);
     },

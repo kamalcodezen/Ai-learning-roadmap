@@ -19,7 +19,7 @@ import {
   HardDrive,
   Lock,
 } from "lucide-react";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import { GlowCard } from "@/src/components/dashboard/shared/cards";
 
 interface ServiceHealthMeta {
@@ -121,17 +121,7 @@ export default function AdminSystemHealthView() {
   });
 
   if (isLoading && !data) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-36 w-full rounded-xl" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 dashboard-card-gap">
-          {[0, 1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-56 w-full rounded-xl" />
-          ))}
-        </div>
-        <Skeleton className="h-64 w-full rounded-xl" />
-      </div>
-    );
+    return <AdminPageSkeleton variant="system-health" />;
   }
 
   if (!data) {
@@ -179,6 +169,13 @@ export default function AdminSystemHealthView() {
 
   return (
     <div className="flex flex-col dashboard-card-gap pb-4 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">System <span className="text-brand">Health</span></h1>
+          <p className="section-subtitle mt-1 text-left">Monitor the status of all platform services.</p>
+        </div>
+      </div>
+
       {/* ============================= SYSTEM STATUS BANNER ============================= */}
       <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-6 transition-all">
         <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-primary/10 blur-3xl" />

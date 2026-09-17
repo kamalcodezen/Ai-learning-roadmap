@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import prisma from "../../../../lib/prisma.js";
+import { isMatchingSkill } from "../../assessments/services/skill-simulation.service.js";
 
 export const getProofGraph = async (userId: string) => {
   const [
@@ -9,6 +10,7 @@ export const getProofGraph = async (userId: string) => {
     projects,
     diagnosticAttempts,
     interviewSessions,
+    assessmentLogs,
   ] = await Promise.all([
     prisma.skillState.findMany({ where: { userId } }),
     prisma.careerProfile.findUnique({ where: { userId } }),
@@ -33,6 +35,10 @@ export const getProofGraph = async (userId: string) => {
         answers: true,
       },
     }),
+    prisma.activityLog.findMany({
+      where: { userId, type: "ASSESSMENT" },
+      orderBy: { createdAt: "desc" },
+    }),
   ]);
 
   const safeSkillStates = skillStates || [];
@@ -40,18 +46,7 @@ export const getProofGraph = async (userId: string) => {
   const safeProjectEvidence = projectEvidence || [];
   const safeDiagnosticAttempts = diagnosticAttempts || [];
   const safeInterviewSessions = interviewSessions || [];
-
-  const totalScore = safeSkillStates.length
-    ? safeSkillStates.reduce(
-        (a, s) =>
-          a +
-          ((s.knowledgeScore || 0) * 0.35 +
-            (s.practiceScore || 0) * 0.3 +
-            (s.projectScore || 0) * 0.2 +
-            (s.evidenceScore || 0) * 0.15),
-        0,
-      ) / safeSkillStates.length
-    : 0;
+  const safeAssessmentLogs = assessmentLogs || [];
 
   const nodes: any[] = [];
   const edges: any[] = [];
@@ -59,96 +54,8 @@ export const getProofGraph = async (userId: string) => {
   safeSkillStates.forEach((s) => {
     if (!s || !s.skillName) return;
     const skillNodeId = `skill-${s.id}`;
-    const compositeScore = Math.round(
-      (s.knowledgeScore || 0) * 0.4 + (s.practiceScore || 0) * 0.3 + (s.projectScore || 0) * 0.3,
-    );
 
-    // SKILL NODE
-    nodes.push({
-      id: skillNodeId,
-      type: "skill",
-      title: s.skillName,
-      status: compositeScore >= 70 ? "verified" : compositeScore > 0 ? "pending" : "missing",
-      description: `Core skill node for ${s.skillName} (Mastery: ${compositeScore}%)`,
-      score: compositeScore,
-    });
-
-    // PROJECT EVIDENCE NODES (explicit join table)
-    const relatedEvidence = safeProjectEvidence.filter(
-      (e) => e && e.skillName && e.skillName.toLowerCase() === s.skillName.toLowerCase(),
-    );
-
-    relatedEvidence.forEach((evidence) => {
-      if (!evidence || !evidence.id || !evidence.project) return;
-      const evidenceNodeId = `evidence-${evidence.id}`;
-      const isProjectVerified = Boolean(evidence.project.isVerified);
-
-      nodes.push({
-        id: evidenceNodeId,
-        type: "evidence",
-        title: `${evidence.evidenceType || "Project"} Evidence`,
-        status: isProjectVerified ? "verified" : "pending",
-        description: isProjectVerified
-          ? `Verified via ${evidence.url || evidence.evidenceType || "project URL"}`
-          : `Unverified ${evidence.evidenceType || "evidence"}`,
-      });
-      edges.push({ source: skillNodeId, target: evidenceNodeId, label: "backed by" });
-
-      const projectNodeId = `project-${evidence.projectId}`;
-      if (!nodes.find((n) => n.id === projectNodeId)) {
-        nodes.push({
-          id: projectNodeId,
-          type: "project",
-          title: evidence.project.title || "Untitled Project",
-          status: isProjectVerified ? "verified" : "pending",
-          description: evidence.project.description || undefined,
-          score: typeof evidence.project.score === "number" ? evidence.project.score : undefined,
-          metadata: {
-            githubUrl: evidence.project.repositoryUrl || undefined,
-            liveUrl: evidence.project.liveUrl || undefined,
-          },
-        });
-      }
-      edges.push({ source: evidenceNodeId, target: projectNodeId, label: "from" });
-    });
-
-    // If no explicit evidence records, check standalone projects matching tech stack
-    if (relatedEvidence.length === 0) {
-      const matchingProjects = safeProjects.filter(
-        (p) =>
-          p &&
-          Array.isArray(p.techStack) &&
-          p.techStack.some(
-            (tech) =>
-              typeof tech === "string" &&
-              (tech.toLowerCase().includes(s.skillName.toLowerCase()) ||
-                s.skillName.toLowerCase().includes(tech.toLowerCase())),
-          ),
-      );
-
-      matchingProjects.forEach((proj) => {
-        if (!proj || !proj.id) return;
-        const projectNodeId = `project-${proj.id}`;
-        const isVerified = Boolean(proj.isVerified);
-        if (!nodes.find((n) => n.id === projectNodeId)) {
-          nodes.push({
-            id: projectNodeId,
-            type: "project",
-            title: proj.title || "Untitled Project",
-            status: isVerified ? "verified" : "pending",
-            description: proj.description || `Practical implementation using ${s.skillName}`,
-            score: typeof proj.score === "number" ? proj.score : undefined,
-            metadata: {
-              githubUrl: proj.repositoryUrl || undefined,
-              liveUrl: proj.liveUrl || undefined,
-            },
-          });
-        }
-        edges.push({ source: skillNodeId, target: projectNodeId, label: "applied in" });
-      });
-    }
-
-    // DIAGNOSTIC EVIDENCE NODES
+    // 1. DIAGNOSTIC EVIDENCE
     const relevantCorrectAnswers = safeDiagnosticAttempts.flatMap((attempt) =>
       (attempt?.answers || []).filter(
         (ans) =>
@@ -156,20 +63,170 @@ export const getProofGraph = async (userId: string) => {
           ans.isCorrect &&
           ans.question &&
           typeof ans.question.skill === "string" &&
-          ans.question.skill.toLowerCase() === s.skillName.toLowerCase(),
+          isMatchingSkill(ans.question.skill, s.skillName),
       ),
     );
 
+    // 2. SIMULATION EVIDENCE (from completed skill simulations)
+    const relevantSimulations = safeAssessmentLogs.filter((log) => {
+      const meta = log.metadata as any;
+      if (!meta || typeof meta !== "object") return false;
+      const isSim = meta.assessmentType === "skill_simulation" || meta.overallScore !== undefined;
+      const skill = meta.skill || "";
+      return Boolean(isSim && isMatchingSkill(skill, s.skillName));
+    });
+
+    // 3. PROJECT EVIDENCE (explicit join table)
+    const relatedEvidence = safeProjectEvidence.filter(
+      (e) => e && e.skillName && isMatchingSkill(e.skillName, s.skillName),
+    );
+
+    // 4. MATCHING PROJECTS (by tech stack)
+    const matchingProjects = safeProjects.filter(
+      (p) =>
+        p &&
+        Array.isArray(p.techStack) &&
+        p.techStack.some((tech) => isMatchingSkill(tech, s.skillName)),
+    );
+
+    // Dynamic Mastery Score calculation based on active evaluated components
+    const activeComps: number[] = [];
+    if ((s.knowledgeScore || 0) > 0) activeComps.push(s.knowledgeScore);
+    if ((s.practiceScore || 0) > 0) activeComps.push(s.practiceScore);
+    if ((s.projectScore || 0) > 0) activeComps.push(s.projectScore);
+    if ((s.evidenceScore || 0) > 0) activeComps.push(s.evidenceScore);
+
+    const compositeScore = Math.round(
+      (s.knowledgeScore || 0) * 0.4 + (s.practiceScore || 0) * 0.3 + (s.projectScore || 0) * 0.3,
+    );
+
+    const displayScore =
+      activeComps.length > 0
+        ? Math.round(activeComps.reduce((a, b) => a + b, 0) / activeComps.length)
+        : compositeScore;
+
+    const isVerified =
+      displayScore >= 60 ||
+      (s.knowledgeScore || 0) >= 70 ||
+      (s.practiceScore || 0) >= 60 ||
+      (s.evidenceScore || 0) >= 50 ||
+      relevantCorrectAnswers.length > 0 ||
+      relevantSimulations.length > 0 ||
+      relatedEvidence.some((e) => e.project?.isVerified) ||
+      matchingProjects.some((p) => p.isVerified);
+
+    // SKILL NODE
+    nodes.push({
+      id: skillNodeId,
+      type: "skill",
+      title: s.skillName,
+      status: isVerified ? "verified" : displayScore > 0 ? "pending" : "missing",
+      description: `Core skill node for ${s.skillName} (Mastery: ${displayScore}%)`,
+      score: displayScore,
+    });
+
+    // DIAGNOSTIC EVIDENCE NODES
     if (relevantCorrectAnswers.length > 0) {
       const diagNodeId = `diag-${s.id}`;
       nodes.push({
         id: diagNodeId,
         type: "diagnostic",
-        title: "Diagnostic Assessment",
+        title: `${s.skillName} Diagnostic`,
         status: "verified",
-        description: `${relevantCorrectAnswers.length} verified answers`,
+        description: `${relevantCorrectAnswers.length} verified diagnostic questions passed`,
       });
       edges.push({ source: skillNodeId, target: diagNodeId, label: "validated by" });
+    }
+
+    // SIMULATION ASSESSMENT NODES
+    relevantSimulations.forEach((sim, idx) => {
+      const meta = sim.metadata as any;
+      const simScore = Number(meta?.overallScore) || Number(meta?.score) || 0;
+      const simNodeId = `sim-${s.id}-${idx}`;
+      nodes.push({
+        id: simNodeId,
+        type: "assessment",
+        title: `${s.skillName} Simulation Assessment`,
+        status: simScore >= 60 ? "verified" : "pending",
+        description: `Hands-on simulation completed (${simScore}% telemetry score)`,
+        score: simScore,
+      });
+      edges.push({ source: skillNodeId, target: simNodeId, label: "simulated in" });
+    });
+
+    // PROJECT & EVIDENCE NODES
+    if (relatedEvidence.length > 0) {
+      relatedEvidence.forEach((evidence) => {
+        if (!evidence || !evidence.id || !evidence.project) return;
+        const evidenceNodeId = `evidence-${evidence.id}`;
+        const isProjectVerified = Boolean(evidence.project.isVerified);
+
+        nodes.push({
+          id: evidenceNodeId,
+          type: "evidence",
+          title: `${evidence.evidenceType || "Project"} Evidence`,
+          status: isProjectVerified ? "verified" : "pending",
+          description: isProjectVerified
+            ? `Verified via ${evidence.url || evidence.evidenceType || "project repository"}`
+            : `Unverified ${evidence.evidenceType || "evidence"}`,
+        });
+        edges.push({ source: skillNodeId, target: evidenceNodeId, label: "backed by" });
+
+        const projectNodeId = `project-${evidence.projectId}`;
+        if (!nodes.find((n) => n.id === projectNodeId)) {
+          nodes.push({
+            id: projectNodeId,
+            type: "project",
+            title: evidence.project.title || "Untitled Project",
+            status: isProjectVerified ? "verified" : "pending",
+            description: evidence.project.description || undefined,
+            score: typeof evidence.project.score === "number" ? evidence.project.score : undefined,
+            metadata: {
+              githubUrl: evidence.project.repositoryUrl || undefined,
+              liveUrl: evidence.project.liveUrl || undefined,
+            },
+          });
+        }
+        edges.push({ source: evidenceNodeId, target: projectNodeId, label: "from" });
+      });
+    } else if (matchingProjects.length > 0) {
+      matchingProjects.forEach((proj) => {
+        if (!proj || !proj.id) return;
+        const projectNodeId = `project-${proj.id}`;
+        const isVerified = Boolean(proj.isVerified);
+        const auditScore = typeof proj.score === "number" ? proj.score : undefined;
+
+        if (!nodes.find((n) => n.id === projectNodeId)) {
+          nodes.push({
+            id: projectNodeId,
+            type: "project",
+            title: proj.title || "Untitled Project",
+            status: isVerified ? "verified" : "pending",
+            description: proj.description || `Practical implementation using ${s.skillName}`,
+            score: auditScore,
+            metadata: {
+              githubUrl: proj.repositoryUrl || undefined,
+              liveUrl: proj.liveUrl || undefined,
+            },
+          });
+        }
+
+        const evidenceNodeId = `evidence-proj-${proj.id}-${s.id}`;
+        nodes.push({
+          id: evidenceNodeId,
+          type: "evidence",
+          title: proj.aiReview ? "AI Code & Architecture Audit" : "Project Evidence",
+          status: isVerified ? "verified" : "pending",
+          description: proj.aiReview
+            ? `Audited via AI Architectural Review (${auditScore || 0}% score)`
+            : isVerified
+              ? "Verified repository inspection"
+              : `Project implementation: ${proj.title}`,
+          score: auditScore,
+        });
+        edges.push({ source: skillNodeId, target: evidenceNodeId, label: "backed by" });
+        edges.push({ source: evidenceNodeId, target: projectNodeId, label: "from" });
+      });
     }
   });
 
@@ -199,9 +256,15 @@ export const getProofGraph = async (userId: string) => {
     });
   }
 
+  const skillNodes = nodes.filter((n) => n.type === "skill");
+  const overallProofScore =
+    skillNodes.length > 0
+      ? Math.round(skillNodes.reduce((a, s) => a + (s.score || 0), 0) / skillNodes.length)
+      : 0;
+
   return {
     primarySkill: profile?.targetRoleName || profile?.targetRole || "Software Engineering",
-    overallProofScore: Math.round(totalScore),
+    overallProofScore,
     nodes,
     edges,
   };

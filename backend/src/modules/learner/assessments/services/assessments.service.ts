@@ -16,6 +16,7 @@ export const getAssessments = async (userId: string) => {
     }),
     prisma.skillState.findMany({
       where: { userId },
+      orderBy: { lastReviewed: "desc" },
     }),
     prisma.activityLog.findMany({
       where: {
@@ -26,6 +27,8 @@ export const getAssessments = async (userId: string) => {
     }),
   ]);
 
+  const targetRole = profile?.targetRoleName || profile?.targetRole || "Full Stack Developer";
+
   // Helper to determine if an activity log represents a genuine completed skill simulation
   const isSkillSimulationLog = (l: any): boolean => {
     const meta = l.metadata as any;
@@ -35,7 +38,7 @@ export const getAssessments = async (userId: string) => {
     return Boolean(isSim && hasSkill);
   };
 
-  // 2. Compute completed counts and scores
+  // 2. Compute completed counts and real scores
   const completedDiagnostics = attempts.filter(
     (a) => a.status === "COMPLETED" && a.score !== null,
   );
@@ -59,62 +62,85 @@ export const getAssessments = async (userId: string) => {
       ? Math.round(allScores.reduce((a, b) => a + b, 0) / allScores.length)
       : 0;
 
+  const passedCount = allScores.filter((s) => s >= 70).length;
+
   // 3. Map real assessments
   const assessments: Array<{
     id: string;
     title: string;
-    type: string;
-    status: string;
+    type: "diagnostic" | "skill_test" | "interview";
+    status: "completed" | "in_progress" | "not_started";
     score?: number | undefined;
     description: string;
     href: string;
     skillAssociated?: string | undefined;
+    duration?: string | undefined;
+    attemptLabel?: string | undefined;
+    completedAt?: string | undefined;
   }> = [];
 
-  // Map Diagnostics
-  attempts.forEach((a) => {
+  // Map Diagnostics with Attempt Labels and Dates
+  attempts.forEach((a, index) => {
+    const attemptNum = attempts.length - index;
+    const isLatest = index === 0;
+    const isCompleted = a.status === "COMPLETED";
+    const dateFormatted = a.completedAt
+      ? new Date(a.completedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+      : undefined;
+
     assessments.push({
       id: `diag-${a.id}`,
       title: a.targetRole
         ? `${a.targetRole} Diagnostic Assessment`
-        : "Diagnostic Baseline Assessment",
+        : `${targetRole} Diagnostic Assessment`,
       type: "diagnostic",
-      status: a.status === "COMPLETED" ? "completed" : "in_progress",
+      status: isCompleted ? "completed" : "in_progress",
       score: a.score !== null ? a.score : undefined,
-      description: "Comprehensive evaluation of foundational role readiness and skill mastery.",
-      href: a.status === "COMPLETED" ? "/dashboard/learner/career-twin" : "/diagnostic",
+      description: isLatest
+        ? "Comprehensive evaluation of foundational role readiness, architecture knowledge, and core skills."
+        : `Diagnostic evaluation benchmark (Attempt #${attemptNum}).`,
+      href: isCompleted ? "/dashboard/learner/career-twin" : "/diagnostic",
+      attemptLabel: attempts.length > 1 ? (isLatest ? `Attempt #${attemptNum} (Latest)` : `Attempt #${attemptNum}`) : undefined,
+      completedAt: dateFormatted,
+      duration: "4 Stages • ~10m",
     });
   });
 
   // Map Mock Interviews
   interviews.forEach((inv) => {
+    const isCompleted = inv.status === "COMPLETED";
+    const invDate = inv.completedAt || inv.startedAt;
+    const dateFormatted = invDate
+      ? new Date(invDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+      : undefined;
+
     assessments.push({
       id: `inv-${inv.id}`,
       title: inv.targetRole
         ? `${inv.targetRole} AI Mock Interview`
-        : "Technical Mock Interview",
+        : `${targetRole} AI Mock Interview`,
       type: "interview",
-      status: inv.status === "COMPLETED" ? "completed" : "in_progress",
+      status: isCompleted ? "completed" : "in_progress",
       score: inv.score !== null ? Math.round(inv.score) : undefined,
-      description: "Interactive AI-driven technical evaluation with real-time feedback.",
+      description: "Interactive AI-driven technical evaluation with real-time feedback and rubric scoring.",
       href: "/dashboard/learner/interview",
+      completedAt: dateFormatted,
+      duration: "Voice & Text • ~15m",
     });
   });
 
   // Map Dynamic Skill Mastery Simulations
-  // Build a distinct list of candidate skills from skillStates, required role skills, and simulation logs
-  const targetRole = profile?.targetRoleName || profile?.targetRole || "Full Stack Developer";
   const requiredSkills = getRequiredSkillsForRole(targetRole);
 
   const candidateSkills: Array<{
     id: string;
     skillName: string;
-    sortPriority: number; // lower means higher priority (e.g. gaps first)
+    sortPriority: number;
   }> = [];
 
   const registeredSkills = new Set<string>();
 
-  // Add existing SkillStates first (prioritizing the learner's actual active skills)
+  // Add existing SkillStates first (prioritizing user's tracked skills and gaps)
   for (const state of skillStates) {
     const key = state.skillName.toLowerCase().trim();
     if (!registeredSkills.has(key)) {
@@ -128,7 +154,7 @@ export const getAssessments = async (userId: string) => {
     }
   }
 
-  // Ensure role required skills (e.g., HTML, SQL, Node.js) are also available
+  // Ensure role required skills (e.g., React, SQL, Node.js, System Design) are present
   for (const req of requiredSkills) {
     const key = req.skill.toLowerCase().trim();
     const alreadyPresent = Array.from(registeredSkills).some((k) => isMatchingSkill(k, req.skill));
@@ -137,14 +163,14 @@ export const getAssessments = async (userId: string) => {
       candidateSkills.push({
         id: `req-${req.skill.toLowerCase().replace(/[^a-z0-9]/g, "-")}`,
         skillName: req.skill,
-        sortPriority: 100, // Unseeded required skills follow active skills
+        sortPriority: 100,
       });
     }
   }
 
-  // Sort candidate skills (critical gaps first) and take up to 10 skills
+  // Sort candidate skills (gaps first) and display top skills
   candidateSkills.sort((a, b) => a.sortPriority - b.sortPriority);
-  const displaySkills = candidateSkills.slice(0, 10);
+  const displaySkills = candidateSkills.slice(0, 12);
 
   displaySkills.forEach((skill) => {
     // Check if this skill has an authentic completed simulation log
@@ -154,15 +180,16 @@ export const getAssessments = async (userId: string) => {
       return isMatchingSkill(meta.skill, skill.skillName);
     });
 
-    // CANONICAL RULE:
-    // A skill simulation is ONLY completed if a genuine persisted simulation result exists in ActivityLog.
-    // NEVER use skill.knowledgeScore >= 70 as proof of completion.
     const isCompleted = Boolean(matchingLog);
     const resolvedScore = matchingLog
       ? (Number((matchingLog.metadata as any)?.overallScore) || Number((matchingLog.metadata as any)?.score) || 0)
       : undefined;
 
-    const status = isCompleted ? "completed" : "not_started";
+    const completedDate = matchingLog?.createdAt
+      ? new Date(matchingLog.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+      : undefined;
+
+    const status: "completed" | "not_started" = isCompleted ? "completed" : "not_started";
     const href = isCompleted
       ? `/dashboard/learner/assessments/simulation?skill=${encodeURIComponent(skill.skillName)}&review=true`
       : `/dashboard/learner/assessments/simulation?skill=${encodeURIComponent(skill.skillName)}`;
@@ -178,25 +205,33 @@ export const getAssessments = async (userId: string) => {
         : `Targeted 4-stage simulation (Understand, Debug, Code, Explain) to validate ${skill.skillName}.`,
       skillAssociated: skill.skillName,
       href,
+      duration: "4 Stages • ~10m",
+      completedAt: completedDate,
     });
   });
 
-  // 4. Placeholder if empty
+  // Default placeholder if empty
   if (assessments.length === 0) {
     assessments.push({
       id: "placeholder-1",
-      title: "Initial Diagnostic Assessment",
+      title: `${targetRole} Diagnostic Assessment`,
       type: "diagnostic",
       status: "not_started",
       score: undefined,
-      description: "Baseline evaluation of your current development skills.",
+      description: "Baseline evaluation of your current development skills and foundational knowledge.",
       href: "/diagnostic",
+      duration: "4 Stages • ~10m",
     });
   }
+
+  const pendingCount = assessments.filter((a) => a.status !== "completed").length;
 
   return {
     completedCount,
     averageScore,
+    passedCount,
+    pendingCount,
+    targetRole,
     assessments,
   };
 };

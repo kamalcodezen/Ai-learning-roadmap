@@ -21,10 +21,19 @@ export interface ChatResult {
   complexity: QueryComplexity;
 }
 
-const groq = env.GROQ_API_KEY ? new Groq({ apiKey: env.GROQ_API_KEY }) : null;
-const groqSecondary = env.GROQ_API_KEY_SECONDARY
-  ? new Groq({ apiKey: env.GROQ_API_KEY_SECONDARY })
-  : null;
+const groqKeys = [
+  env.GROQ_API_KEY,
+  env.GROQ_API_KEY_SECONDARY,
+  env.GROQ_API_KEY_3 || (process.env.GROQ_API_KEY_TERTIARY || ""),
+  env.GROQ_API_KEY_4 || (process.env.GROQ_API_KEY_QUATERNARY || ""),
+].filter((k): k is string => Boolean(k && k.trim()));
+
+const groqClients = groqKeys.map((apiKey, idx) => ({
+  name: idx === 0 ? "Groq" : `Groq-${idx + 1}`,
+  key: `groq-${idx + 1}`,
+  client: new Groq({ apiKey }),
+}));
+
 const gemini = env.GEMINI_API_KEY
   ? new GoogleGenAI({ apiKey: env.GEMINI_API_KEY })
   : null;
@@ -33,12 +42,9 @@ const mistral = env.MISTRAL_API_KEY
   : null;
 
 // Models
-// এই ৪টি কিন্তু ৪টি আলাদা API Key নয়!
-// এগুলো সবই Groq-এর ভেতরের ৪টি আলাদা মডেল, যা একটিমাত্র GROQ_API_KEY দিয়েই চলে:
-const GROQ_SIMPLE_MODEL = "openai/gpt-oss-120b";
+const GROQ_SIMPLE_MODEL = "openai/gpt-oss-20b";
 const GROQ_COMPLEX_MODEL = "openai/gpt-oss-120b";
-const GROQ_FALLBACK_MODEL = "qwen/qwen3.8-27b";
-const GROQ_TERTIARY_MODEL = "openai/gpt-oss-20b";
+const GROQ_FALLBACK_MODEL = "openai/gpt-oss-20b";
 
 // এটি OpenRouter-এর মডেল ➔ OPENROUTER_API_KEY ও OPENROUTER_API_KEY_SECONDARY দিয়ে চলে
 const OPENROUTER_MODEL = "qwen/qwen-2.5-coder-32b-instruct";
@@ -46,13 +52,42 @@ const OPENROUTER_FALLBACK_MODEL = "qwen/qwen-2.5-72b-instruct";
 const OPENROUTER_TERTIARY_MODEL = "meta-llama/llama-3.1-8b-instruct";
 
 // এটি Google-এর মডেল ➔ GEMINI_API_KEY দিয়ে চলে
-const GEMINI_MODEL = "gemini-2.5-flash";
-const GEMINI_FALLBACK_MODEL = "gemini-2.0-flash";
+const GEMINI_MODEL = "gemini-3.6-flash";
+const GEMINI_FALLBACK_MODEL = "gemini-3.6-flash";
 
 // এটি Mistral-এর মডেল ➔ MISTRAL_API_KEY দিয়ে চলে
 const MISTRAL_MODEL = "mistral-small-latest";
 const MISTRAL_FALLBACK_MODEL = "open-mistral-7b";
 
+// Circuit Breaker / Cooldown tracker for models that hit 429 rate limit
+const modelCooldowns = new Map<string, number>();
+
+function isModelCoolingDown(modelKey: string): boolean {
+  const until = modelCooldowns.get(modelKey);
+  if (!until) return false;
+  if (Date.now() > until) {
+    modelCooldowns.delete(modelKey);
+    return false;
+  }
+  return true;
+}
+
+function setModelCooldown(modelKey: string, errMessage?: string) {
+  let durationMs = 5 * 60 * 1000; // default 5 minutes
+  if (errMessage) {
+    const matchMins = errMessage.match(/try again in (?:(\d+)m)?(?:([\d.]+)s)?/i);
+    if (matchMins) {
+      const minutes = matchMins[1] ? parseFloat(matchMins[1]) : 0;
+      const seconds = matchMins[2] ? parseFloat(matchMins[2]) : 0;
+      const parsedMs = (minutes * 60 + seconds) * 1000;
+      if (parsedMs > 0) {
+        durationMs = parsedMs + 3000;
+      }
+    }
+  }
+  modelCooldowns.set(modelKey, Date.now() + durationMs);
+  console.log(`[CircuitBreaker] Model "${modelKey}" cooling down for ${Math.round(durationMs / 1000)}s`);
+}
 
 const OUTPUT_LIMITS: Record<QueryComplexity, number> = {
   simple: 1200,
@@ -260,7 +295,25 @@ export class ChatService {
    */
   static async fetchUserContext(userId: string, message: string): Promise<string | undefined> {
     try {
-      // Layer A: Always fetch the lightweight baseline profile (single cheap query)
+      // Check if the message warrants career context (skills, roadmap, projects)
+      const normalized = message.toLowerCase();
+      const needsDeepContext = [
+        "learn", "roadmap", "progress", "skill", "gap", "career", "role", "target",
+        "project", "assessment", "study", "plan", "framework", "tech", "stack",
+        "build", "next", "milestone", "guidance", "guide", "status", "debt", "readiness",
+        "ready", "interview", "resume", "job", "evidence", "proof", "diagnostic",
+        "goal", "path", "profile", "score", "advice", "recommend", "suggestion",
+        "shikhbo", "shikhte", "kivabe", "ki vabe", "bujhiye", "korbo", "korte",
+        "amar", "amr", "ki ache", "ki achhe", "ki chai", "churanto", "porashuna",
+        "chakri", "pabo", "lagbe", "dekhao", "bolen", "bolo", "sahajjo", "focus"
+      ].some((kw) => normalized.includes(kw));
+
+      // If no career context needed (e.g. casual greeting), return undefined to save DB queries
+      if (!needsDeepContext) {
+        return undefined;
+      }
+
+      // Fetch the baseline profile
       const profile = await prisma.careerProfile.findUnique({ where: { userId } });
 
       if (!profile) {
@@ -270,29 +323,17 @@ export class ChatService {
       const roleName = profile.targetRoleName || profile.targetRole || "Unknown Role";
       const experience = profile.experienceLevel || "Unknown Experience";
 
-      // Layer B: Check if the message warrants full career context (skills, roadmap, projects)
-      const normalized = message.toLowerCase();
-      const needsDeepContext = [
-        "learn", "roadmap", "progress", "skill", "gap", "career", "role",
-        "project", "assessment", "study", "plan", "framework", "tech", "stack",
-        "build", "next", "milestone", "guidance", "status", "debt", "readiness",
-        "ready", "interview", "resume", "job", "evidence", "proof", "diagnostic",
-        "shikhbo", "shikhte", "kivabe", "ki vabe", "bujhiye", "korbo",
-      ].some((kw) => normalized.includes(kw));
-
       // Baseline context (always included — very low token cost)
       let contextStr = `USER CONTEXT:\n\nTarget Role: ${roleName}\nExperience Level: ${experience}\n`;
 
+      if (profile.weeklyAvailableHours) {
+        contextStr += `Weekly Study Hours: ${profile.weeklyAvailableHours} hrs/week\n`;
+      }
       if (profile.resumeScore !== null && profile.resumeScore !== undefined) {
         contextStr += `Resume Score: ${Math.round(profile.resumeScore)}%\n`;
       }
       if (profile.interviewScore !== null && profile.interviewScore !== undefined) {
         contextStr += `Interview Score: ${Math.round(profile.interviewScore)}%\n`;
-      }
-
-      // If no deep context needed, return just the lightweight baseline
-      if (!needsDeepContext) {
-        return contextStr;
       }
 
       // Layer B: Full career context (parallel queries for performance)
@@ -434,40 +475,42 @@ export class ChatService {
     let provider = "Fallback";
     let model = "none";
 
-    // 1. Groq
-    if (groq) {
+    // 1. Groq Multi-Key Cascade (Pool of all configured Groq Keys)
+    for (const { name, key, client } of groqClients) {
+      if (reply) break;
+      const preferredModel = complexity === "complex" ? GROQ_COMPLEX_MODEL : GROQ_SIMPLE_MODEL;
+      const groqModel = !isModelCoolingDown(`${key}:${preferredModel}`)
+        ? preferredModel
+        : (!isModelCoolingDown(`${key}:${GROQ_FALLBACK_MODEL}`) ? GROQ_FALLBACK_MODEL : null);
+
+      if (!groqModel) continue;
+
       try {
-        const groqModel =
-          complexity === "complex" ? GROQ_COMPLEX_MODEL : GROQ_SIMPLE_MODEL;
+        const groqMaxTokens = Math.min(maxTokens, 1200);
         const response = await withTimeout(
-          groq.chat.completions.create({
+          client.chat.completions.create({
             model: groqModel,
             messages,
-            max_tokens: maxTokens as any,
+            max_tokens: groqMaxTokens as any,
             temperature: 0.2,
           }),
         );
         const content = (response as any).choices[0]?.message?.content?.trim();
         if (content) {
           reply = content;
-          provider = "Groq";
+          provider = name;
           model = groqModel;
+          break;
         }
       } catch (err: any) {
-        console.warn(`[Groq failed]: ${err.message}`);
-        const isRateOrSizeLimit =
-          err.message?.includes("429") ||
-          err.message?.includes("413") ||
-          err.message?.toLowerCase().includes("rate limit") ||
-          err.message?.toLowerCase().includes("rate_limit") ||
-          err.message?.toLowerCase().includes("tokens per minute") ||
-          err.message?.toLowerCase().includes("request too large");
+        console.warn(`[${name} failed for ${groqModel}]: ${err.message}`);
+        setModelCooldown(`${key}:${groqModel}`, err.message);
 
-        if (isRateOrSizeLimit) {
-          const fallbackMaxTokens = Math.min(maxTokens, 1500);
+        if (groqModel !== GROQ_FALLBACK_MODEL && !isModelCoolingDown(`${key}:${GROQ_FALLBACK_MODEL}`)) {
+          const fallbackMaxTokens = Math.min(maxTokens, 800);
           try {
             const fallbackResp = await withTimeout(
-              groq.chat.completions.create({
+              client.chat.completions.create({
                 model: GROQ_FALLBACK_MODEL,
                 messages,
                 max_tokens: fallbackMaxTokens as any,
@@ -477,100 +520,13 @@ export class ChatService {
             const content = (fallbackResp as any).choices[0]?.message?.content?.trim();
             if (content) {
               reply = content;
-              provider = "Groq";
+              provider = name;
               model = GROQ_FALLBACK_MODEL;
+              break;
             }
           } catch (fbErr: any) {
-            console.warn(`[Groq fallback model failed]: ${fbErr.message}`);
-            try {
-              const tertResp = await withTimeout(
-                groq.chat.completions.create({
-                  model: GROQ_TERTIARY_MODEL,
-                  messages,
-                  max_tokens: fallbackMaxTokens as any,
-                  temperature: 0.2,
-                }),
-              );
-              const tertContent = (tertResp as any).choices[0]?.message?.content?.trim();
-              if (tertContent) {
-                reply = tertContent;
-                provider = "Groq";
-                model = GROQ_TERTIARY_MODEL;
-              }
-            } catch (tertErr: any) {
-              console.warn(`[Groq tertiary model failed]: ${tertErr.message}`);
-            }
-          }
-        }
-      }
-    }
-
-    // 1b. Groq Secondary Key (if configured)
-    if (!reply && groqSecondary) {
-      try {
-        const groqModel =
-          complexity === "complex" ? GROQ_COMPLEX_MODEL : GROQ_SIMPLE_MODEL;
-        const response = await withTimeout(
-          groqSecondary.chat.completions.create({
-            model: groqModel,
-            messages,
-            max_tokens: maxTokens as any,
-            temperature: 0.2,
-          }),
-        );
-        const content = (response as any).choices[0]?.message?.content?.trim();
-        if (content) {
-          reply = content;
-          provider = "Groq-Secondary";
-          model = groqModel;
-        }
-      } catch (err: any) {
-        console.warn(`[Groq Secondary failed]: ${err.message}`);
-        const isRateOrSizeLimit =
-          err.message?.includes("429") ||
-          err.message?.includes("413") ||
-          err.message?.toLowerCase().includes("rate limit") ||
-          err.message?.toLowerCase().includes("rate_limit") ||
-          err.message?.toLowerCase().includes("tokens per minute") ||
-          err.message?.toLowerCase().includes("request too large");
-
-        if (isRateOrSizeLimit) {
-          const fallbackMaxTokens = Math.min(maxTokens, 1500);
-          try {
-            const fallbackResp = await withTimeout(
-              groqSecondary.chat.completions.create({
-                model: GROQ_FALLBACK_MODEL,
-                messages,
-                max_tokens: fallbackMaxTokens as any,
-                temperature: 0.2,
-              }),
-            );
-            const content = (fallbackResp as any).choices[0]?.message?.content?.trim();
-            if (content) {
-              reply = content;
-              provider = "Groq-Secondary";
-              model = GROQ_FALLBACK_MODEL;
-            }
-          } catch (fbErr: any) {
-            console.warn(`[Groq Secondary fallback model failed]: ${fbErr.message}`);
-            try {
-              const tertResp = await withTimeout(
-                groqSecondary.chat.completions.create({
-                  model: GROQ_TERTIARY_MODEL,
-                  messages,
-                  max_tokens: fallbackMaxTokens as any,
-                  temperature: 0.2,
-                }),
-              );
-              const tertContent = (tertResp as any).choices[0]?.message?.content?.trim();
-              if (tertContent) {
-                reply = tertContent;
-                provider = "Groq-Secondary";
-                model = GROQ_TERTIARY_MODEL;
-              }
-            } catch (tertErr: any) {
-              console.warn(`[Groq Secondary tertiary model failed]: ${tertErr.message}`);
-            }
+            console.warn(`[${name} fallback model failed]: ${fbErr.message}`);
+            setModelCooldown(`${key}:${GROQ_FALLBACK_MODEL}`, fbErr.message);
           }
         }
       }
@@ -721,13 +677,20 @@ export class ChatService {
     let provider = "Fallback";
     let model = "none";
 
-    // 1. Groq (Force complex model for reasoning)
+    // 1. Groq Multi-Key Cascade
     const attemptTimeout = Math.min(timeoutMs, 6000);
-    if (groq) {
+    for (const { name, key, client } of groqClients) {
+      if (reply) break;
+      const modelToTry = !isModelCoolingDown(`${key}:${GROQ_COMPLEX_MODEL}`)
+        ? GROQ_COMPLEX_MODEL
+        : (!isModelCoolingDown(`${key}:${GROQ_FALLBACK_MODEL}`) ? GROQ_FALLBACK_MODEL : null);
+
+      if (!modelToTry) continue;
+
       try {
         const response = await withTimeout(
-          groq.chat.completions.create({
-            model: GROQ_COMPLEX_MODEL,
+          client.chat.completions.create({
+            model: modelToTry,
             messages,
             max_tokens: maxTokens as any,
             temperature: 0.1,
@@ -738,24 +701,21 @@ export class ChatService {
         const content = (response as any).choices[0]?.message?.content?.trim();
         if (content) {
           reply = extractValidJsonString(content);
-          provider = "Groq";
-          model = GROQ_COMPLEX_MODEL;
+          provider = name;
+          model = modelToTry;
+          break;
         }
       } catch (err: any) {
-        console.warn(`[Groq JSON failed]: ${err.message}`);
-        // If rate limit (429), token limit, or timeout on primary model, immediately try fallback models on Groq!
-        if (
-          err.message?.includes("429") ||
-          err.message?.includes("Rate limit") ||
-          err.message?.includes("tokens") ||
-          err.message?.includes("Timeout")
-        ) {
+        console.warn(`[${name} JSON failed for ${modelToTry}]: ${err.message}`);
+        setModelCooldown(`${key}:${modelToTry}`, err.message);
+
+        if (modelToTry === GROQ_COMPLEX_MODEL && !isModelCoolingDown(`${key}:${GROQ_FALLBACK_MODEL}`)) {
           try {
             const fallbackResp = await withTimeout(
-              groq.chat.completions.create({
+              client.chat.completions.create({
                 model: GROQ_FALLBACK_MODEL,
                 messages,
-                max_tokens: Math.min(maxTokens, 950) as any,
+                max_tokens: maxTokens as any,
                 temperature: 0.1,
                 response_format: { type: "json_object" },
               }),
@@ -764,97 +724,13 @@ export class ChatService {
             const fbContent = (fallbackResp as any).choices[0]?.message?.content?.trim();
             if (fbContent) {
               reply = extractValidJsonString(fbContent);
-              provider = "Groq";
+              provider = name;
               model = GROQ_FALLBACK_MODEL;
+              break;
             }
           } catch (fbErr: any) {
-            console.warn(`[Groq fallback model JSON failed]: ${fbErr.message}`);
-            try {
-              const tertResp = await withTimeout(
-                groq.chat.completions.create({
-                  model: GROQ_TERTIARY_MODEL,
-                  messages,
-                  max_tokens: maxTokens as any,
-                  temperature: 0.1,
-                  response_format: { type: "json_object" },
-                }),
-                timeoutMs
-              );
-              const tertContent = (tertResp as any).choices[0]?.message?.content?.trim();
-              if (tertContent) {
-                reply = extractValidJsonString(tertContent);
-                provider = "Groq";
-                model = GROQ_TERTIARY_MODEL;
-              }
-            } catch (tertErr: any) {
-              console.warn(`[Groq tertiary model JSON failed]: ${tertErr.message}`);
-            }
-          }
-        }
-      }
-    }
-
-    // 1b. Groq Secondary Key (if configured)
-    if (!reply && groqSecondary) {
-      try {
-        const response = await withTimeout(
-          groqSecondary.chat.completions.create({
-            model: GROQ_COMPLEX_MODEL,
-            messages,
-            max_tokens: maxTokens as any,
-            temperature: 0.1,
-            response_format: { type: "json_object" },
-          }),
-          timeoutMs
-        );
-        const content = (response as any).choices[0]?.message?.content?.trim();
-        if (content) {
-          reply = extractValidJsonString(content);
-          provider = "Groq-Secondary";
-          model = GROQ_COMPLEX_MODEL;
-        }
-      } catch (err: any) {
-        console.warn(`[Groq Secondary JSON failed]: ${err.message}`);
-        if (err.message?.includes("429") || err.message?.includes("Rate limit") || err.message?.includes("tokens")) {
-          try {
-            const fallbackResp = await withTimeout(
-              groqSecondary.chat.completions.create({
-                model: GROQ_FALLBACK_MODEL,
-                messages,
-                max_tokens: Math.min(maxTokens, 950) as any,
-                temperature: 0.1,
-                response_format: { type: "json_object" },
-              }),
-              timeoutMs
-            );
-            const fbContent = (fallbackResp as any).choices[0]?.message?.content?.trim();
-            if (fbContent) {
-              reply = extractValidJsonString(fbContent);
-              provider = "Groq-Secondary";
-              model = GROQ_FALLBACK_MODEL;
-            }
-          } catch (fbErr: any) {
-            console.warn(`[Groq Secondary fallback model JSON failed]: ${fbErr.message}`);
-            try {
-              const tertResp = await withTimeout(
-                groqSecondary.chat.completions.create({
-                  model: GROQ_TERTIARY_MODEL,
-                  messages,
-                  max_tokens: maxTokens as any,
-                  temperature: 0.1,
-                  response_format: { type: "json_object" },
-                }),
-                timeoutMs
-              );
-              const tertContent = (tertResp as any).choices[0]?.message?.content?.trim();
-              if (tertContent) {
-                reply = extractValidJsonString(tertContent);
-                provider = "Groq-Secondary";
-                model = GROQ_TERTIARY_MODEL;
-              }
-            } catch (tertErr: any) {
-              console.warn(`[Groq Secondary tertiary model JSON failed]: ${tertErr.message}`);
-            }
+            console.warn(`[${name} fallback model JSON failed]: ${fbErr.message}`);
+            setModelCooldown(`${key}:${GROQ_FALLBACK_MODEL}`, fbErr.message);
           }
         }
       }

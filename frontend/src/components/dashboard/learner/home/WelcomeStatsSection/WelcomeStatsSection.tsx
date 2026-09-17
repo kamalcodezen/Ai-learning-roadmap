@@ -2,7 +2,7 @@
 
 import { Target } from "lucide-react";
 
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import {
   DashboardBanner,
   type DashboardBannerStat,
@@ -24,7 +24,7 @@ export default function WelcomeStatsSection({
   roadmap,
   proof,
 }: WelcomeStatsSectionProps) {
-  const { data: session } = authClient.useSession();
+  const { data: session } = useDashboardSession();
 
   const firstName = session?.user?.name?.trim().split(" ")[0] || "there";
 

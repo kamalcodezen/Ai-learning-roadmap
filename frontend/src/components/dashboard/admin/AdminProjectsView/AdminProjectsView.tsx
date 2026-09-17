@@ -1,110 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAdminProjects, AdminProjectItem } from "@/src/lib/api/admin/projects";
+import { verifyAdminProject } from "@/src/lib/actions/admin/projects";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
-import { FolderKanban, User, ExternalLink, GitBranch } from "lucide-react";
+import {
+  FolderKanban,
+  User,
+  ExternalLink,
+  GitBranch,
+  CheckCircle2,
+  Sparkles,
+  ShieldCheck,
+  ShieldAlert,
+  Loader2,
+  Eye,
+} from "lucide-react";
 import { useDebounce } from "use-debounce";
-import { Key, Label, ListBox, Select, Skeleton } from "@heroui/react";
-import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
-import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
-
-const columns: AdminDataTableColumn<AdminProjectItem>[] = [
-  {
-    header: "Project",
-    render: (p) => (
-      <div className="flex items-center gap-3">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          <FolderKanban className="size-4" />
-        </div>
-        <div>
-          <p className="font-medium text-foreground">{p.title}</p>
-          {p.description && (
-            <p className="text-xs text-muted-foreground truncate max-w-[200px]">
-              {p.description}
-            </p>
-          )}
-        </div>
-      </div>
-    ),
-  },
-  {
-    header: "Learner",
-    render: (p) => (
-      <div className="flex items-center gap-2">
-        <User className="h-4 w-4 text-muted-foreground" />
-        <div>
-          <p className="font-medium text-foreground">{p.user?.name || "Unknown"}</p>
-          <p className="text-xs text-muted-foreground">{p.user?.email || "No email"}</p>
-        </div>
-      </div>
-    ),
-  },
-  {
-    header: "Score",
-    render: (p) => {
-      const score = p.score ?? 0;
-      return (
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-            score >= 80
-              ? "bg-green-500/10 text-green-500"
-              : score >= 50
-                ? "bg-orange-500/10 text-orange-500"
-                : "bg-red-500/10 text-red-500"
-          }`}
-        >
-          {score}%
-        </span>
-      );
-    },
-  },
-  {
-    header: "Evidence",
-    render: (p) => (
-      <div className="flex items-center gap-3">
-        {p.repositoryUrl ? (
-          <a
-            href={p.repositoryUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors"
-            title="Git Repository"
-          >
-            <GitBranch className="h-4 w-4" />
-          </a>
-        ) : (
-          <GitBranch className="h-4 w-4 opacity-20" />
-        )}
-        {p.liveUrl ? (
-          <a
-            href={p.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors"
-            title="Live Deployment"
-          >
-            <ExternalLink className="h-4 w-4" />
-          </a>
-        ) : (
-          <ExternalLink className="h-4 w-4 opacity-20" />
-        )}
-      </div>
-    ),
-  },
-  {
-    header: "Date",
-    render: (p) => (
-      <span className="whitespace-nowrap text-muted-foreground">
-        {new Date(p.createdAt).toLocaleDateString()}
-      </span>
-    ),
-  },
-];
+import {
+  Key,
+  Label,
+  ListBox,
+  Select,
+  Modal,
+  Button,
+  useOverlayState,
+} from "@heroui/react";
+import AdminDataTable, { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 
 export default function AdminProjectsView() {
+  const queryClient = useQueryClient();
   const { data: session } = authClient.useSession();
   const userId = session?.user?.id;
 
@@ -114,6 +42,9 @@ export default function AdminProjectsView() {
   const [debouncedSearch] = useDebounce(searchTerm, 500);
   const take = 20;
   const skip = (page - 1) * take;
+
+  const detailModal = useOverlayState();
+  const [selectedProject, setSelectedProject] = useState<AdminProjectItem | null>(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: [
@@ -130,29 +61,228 @@ export default function AdminProjectsView() {
         skip,
         take,
         debouncedSearch,
-        daysFilter ? Number(daysFilter) : undefined,
+        daysFilter ? Number(daysFilter) : undefined
       ),
     enabled: !!userId,
   });
 
+  const verifyMutation = useMutation({
+    mutationFn: ({
+      projectId,
+      isVerified,
+      score,
+    }: {
+      projectId: string;
+      isVerified: boolean;
+      score?: number;
+    }) => verifyAdminProject(userId!, projectId, isVerified, score),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminProjects"] });
+    },
+    onError: (err: Error | { message?: string }) => {
+      alert(err.message || "Failed to update project verification");
+    },
+  });
+
+  const handleToggleVerification = (p: AdminProjectItem) => {
+    verifyMutation.mutate({
+      projectId: p.id,
+      isVerified: !p.isVerified,
+    });
+  };
+
+  const handleInspect = (p: AdminProjectItem) => {
+    setSelectedProject(p);
+    detailModal.open();
+  };
+
+  const columns: AdminDataTableColumn<AdminProjectItem>[] = [
+    {
+      header: "Project",
+      render: (p) => (
+        <div className="flex items-start gap-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary mt-0.5">
+            <FolderKanban className="size-4" />
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="font-medium text-foreground">{p.title}</p>
+              <span
+                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.2 text-[10px] font-semibold ${
+                  p.projectType === "IMPORTED"
+                    ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30"
+                    : "bg-purple-500/15 text-purple-400 border border-purple-500/30"
+                }`}
+              >
+                {p.projectType === "IMPORTED" ? (
+                  <GitBranch className="size-2.5" />
+                ) : (
+                  <Sparkles className="size-2.5" />
+                )}
+                {p.projectType === "IMPORTED" ? "Imported Repo" : "AI Specification"}
+              </span>
+              {p.isVerified ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-500/15 text-green-400 border border-green-500/30 px-2 py-0.2 text-[10px] font-semibold">
+                  <CheckCircle2 className="size-2.5" /> Verified Proof
+                </span>
+              ) : null}
+            </div>
+            {p.description && (
+              <p className="text-xs text-muted-foreground truncate max-w-[280px] mt-0.5">
+                {p.description}
+              </p>
+            )}
+            {p.techStack && p.techStack.length > 0 && (
+              <div className="flex items-center gap-1 mt-1.5 flex-wrap">
+                {p.techStack.slice(0, 3).map((tech) => (
+                  <span
+                    key={tech}
+                    className="rounded bg-muted/60 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground"
+                  >
+                    {tech}
+                  </span>
+                ))}
+                {p.techStack.length > 3 && (
+                  <span className="text-[10px] text-muted-foreground font-mono">
+                    +{p.techStack.length - 3}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "Learner",
+      render: (p) => (
+        <div className="flex items-center gap-2">
+          <User className="h-4 w-4 text-muted-foreground" />
+          <div>
+            <p className="font-medium text-foreground">{p.user?.name || "Unknown"}</p>
+            <p className="text-xs text-muted-foreground">{p.user?.email || "No email"}</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "Score",
+      render: (p) => {
+        const score = p.score ?? 0;
+        return (
+          <span
+            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+              score >= 80
+                ? "bg-green-500/10 text-green-500"
+                : score >= 50
+                  ? "bg-orange-500/10 text-orange-500"
+                  : "bg-red-500/10 text-red-500"
+            }`}
+          >
+            {score}%
+          </span>
+        );
+      },
+    },
+    {
+      header: "Evidence",
+      render: (p) => (
+        <div className="flex items-center gap-3">
+          {p.repositoryUrl ? (
+            <a
+              href={p.repositoryUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              title="Git Repository"
+            >
+              <GitBranch className="h-4 w-4" />
+            </a>
+          ) : (
+            <GitBranch className="h-4 w-4 opacity-20" />
+          )}
+          {p.liveUrl ? (
+            <a
+              href={p.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              title="Live Deployment"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          ) : (
+            <ExternalLink className="h-4 w-4 opacity-20" />
+          )}
+        </div>
+      ),
+    },
+    {
+      header: "Date",
+      render: (p) => (
+        <span className="whitespace-nowrap text-muted-foreground text-xs">
+          {new Date(p.createdAt).toLocaleDateString()}
+        </span>
+      ),
+    },
+    {
+      header: "Verification Action",
+      render: (p) => {
+        const isPending =
+          verifyMutation.isPending && verifyMutation.variables?.projectId === p.id;
+        return (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleToggleVerification(p)}
+              disabled={isPending}
+              className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors disabled:opacity-50 ${
+                p.isVerified
+                  ? "bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20"
+                  : "bg-emerald-500/15 text-emerald-500 hover:bg-emerald-500/25 border border-emerald-500/30"
+              }`}
+              title={p.isVerified ? "Revoke Verification" : "Approve & Verify Project"}
+            >
+              {isPending ? (
+                <Loader2 className="size-3 animate-spin" />
+              ) : p.isVerified ? (
+                <>
+                  <ShieldAlert className="size-3" /> Revoke
+                </>
+              ) : (
+                <>
+                  <ShieldCheck className="size-3" /> Verify
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => handleInspect(p)}
+              className="p-1 text-muted-foreground hover:text-foreground rounded transition-colors"
+              title="Inspect Project"
+            >
+              <Eye className="size-4" />
+            </button>
+          </div>
+        );
+      },
+    },
+  ];
+
   if (isLoading && !data) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-[400px] w-full rounded-xl" />
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-5 w-44 rounded-md" />
-          <Skeleton className="h-9 w-40 rounded-md" />
-        </div>
-      </div>
+      <AdminPageSkeleton
+        variant="table"
+        hasKpis={false}
+        hasSearch={true}
+        hasToolbar={true}
+        dropdownCount={1}
+      />
     );
   }
 
   if (error || !data) {
     return (
       <div className="flex h-[400px] items-center justify-center rounded-xl bg-red-500/10 border border-red-500/20">
-        <p className="text-red-500 font-medium">
-          Unable to load projects. Please try again.
-        </p>
+        <p className="text-red-500 font-medium">Unable to load projects. Please try again.</p>
       </div>
     );
   }
@@ -160,7 +290,14 @@ export default function AdminProjectsView() {
   const { projects, total } = data;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Submitted <span className="text-brand">Projects</span></h1>
+          <p className="section-subtitle mt-1 text-left">Inspect, evaluate, and verify learner projects submitted from roadmaps.</p>
+        </div>
+      </div>
+
       <AdminDataTable
         columns={columns}
         rows={projects}
@@ -218,6 +355,112 @@ export default function AdminProjectsView() {
         total={total}
         onPageChange={setPage}
       />
+
+      {/* Project Detail Modal */}
+      <Modal state={detailModal}>
+        <Modal.Backdrop>
+          <Modal.Container>
+            <Modal.Dialog className="sm:max-w-[640px]">
+              <Modal.CloseTrigger />
+              <Modal.Header>
+                <Modal.Icon className="bg-primary/10 text-primary">
+                  <FolderKanban className="size-5" />
+                </Modal.Icon>
+                <Modal.Heading>{selectedProject?.title}</Modal.Heading>
+              </Modal.Header>
+              <Modal.Body className="space-y-4">
+                {selectedProject && (
+                  <>
+                    <div className="rounded-xl bg-muted/40 p-4 border border-border/40 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Learner</span>
+                        <span className="text-xs font-semibold text-foreground">
+                          {selectedProject.user?.name} ({selectedProject.user?.email})
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Project Type</span>
+                        <span className="text-xs font-semibold text-foreground">
+                          {selectedProject.projectType === "IMPORTED"
+                            ? "Imported GitHub Repository"
+                            : "AI Generated Build Specification"}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Verification Status</span>
+                        <span
+                          className={`text-xs font-bold ${
+                            selectedProject.isVerified ? "text-emerald-500" : "text-amber-500"
+                          }`}
+                        >
+                          {selectedProject.isVerified ? "Verified Proof" : "Pending Verification"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {selectedProject.description && (
+                      <div>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">
+                          Description
+                        </h4>
+                        <p className="text-xs text-foreground leading-relaxed">
+                          {selectedProject.description}
+                        </p>
+                      </div>
+                    )}
+
+                    {selectedProject.techStack && selectedProject.techStack.length > 0 && (
+                      <div>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                          Technologies Used
+                        </h4>
+                        <div className="flex flex-wrap gap-1.5">
+                          {selectedProject.techStack.map((tech) => (
+                            <span
+                              key={tech}
+                              className="rounded bg-muted px-2 py-0.5 text-xs font-mono text-foreground"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-3 pt-2">
+                      {selectedProject.repositoryUrl && (
+                        <a
+                          href={selectedProject.repositoryUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                        >
+                          <GitBranch className="size-3.5" /> View Git Repo
+                        </a>
+                      )}
+                      {selectedProject.liveUrl && (
+                        <a
+                          href={selectedProject.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-500 hover:underline"
+                        >
+                          <ExternalLink className="size-3.5" /> View Live Deployment
+                        </a>
+                      )}
+                    </div>
+                  </>
+                )}
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" slot="close" fullWidth>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
+      </Modal>
     </div>
   );
 }

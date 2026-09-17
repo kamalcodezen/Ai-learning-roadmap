@@ -10,6 +10,10 @@ export interface SkillGap {
   relatedAssessment: string;
   recommendedAction: string;
   href: string;
+  simulationHref?: string;
+  learningPathHref?: string;
+  isMilestoneCompleted?: boolean;
+  milestoneTitle?: string | null;
 }
 
 export interface SkillGapsData {

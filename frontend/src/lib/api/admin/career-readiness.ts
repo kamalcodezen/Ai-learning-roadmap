@@ -5,6 +5,8 @@ export interface AdminCareerReadinessProfileItem {
   userId: string;
   targetRole: string;
   score: number;
+  readinessScore?: number;
+  assessmentsPassed?: number;
   user: {
     name: string;
     email: string;

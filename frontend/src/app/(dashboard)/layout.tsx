@@ -8,8 +8,8 @@ import { HomeFloatingChat } from "@/src/components/chat/HomeFloatingChat";
 
 export const metadata: Metadata = {
   title: {
-    default: "Dashboard",
-    template: "%s | Dashboard | AI Pather",
+    default: "Dashboard | AI Pather",
+    template: "%s | AI Pather",
   },
   robots: { index: false, follow: false },
 };

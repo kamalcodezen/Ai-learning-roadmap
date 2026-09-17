@@ -49,24 +49,29 @@ function isMatchingSkillFrontend(aRaw: string, bRaw: string): boolean {
     (b === "react" && a === "react native")
   )
     return false;
-  const aClean = a.replace(/[^a-z0-9]/g, "");
-  const bClean = b.replace(/[^a-z0-9]/g, "");
+
+  const normA = a.replace(/command\s*line\s*interface/gi, "cli").replace(/command\s*line/gi, "cli");
+  const normB = b.replace(/command\s*line\s*interface/gi, "cli").replace(/command\s*line/gi, "cli");
+
+  const aClean = normA.replace(/[^a-z0-9]/g, "");
+  const bClean = normB.replace(/[^a-z0-9]/g, "");
   if (aClean && bClean && aClean === bClean) return true;
-  if (a.startsWith("node.js") && (b === "node.js" || b === "node")) return true;
-  if (b.startsWith("node.js") && (a === "node.js" || a === "node")) return true;
-  if (a.startsWith("html") && (b === "html" || b === "html5")) return true;
-  if (b.startsWith("html") && (a === "html" || a === "html5")) return true;
-  if (a.startsWith("css") && (b === "css" || b === "css3")) return true;
-  if (b.startsWith("css") && (a === "css" || a === "css3")) return true;
-  if (a.length >= 3 && b.length >= 3 && (a.includes(b) || b.includes(a)))
+  if (normA.startsWith("node.js") && (normB === "node.js" || normB === "node")) return true;
+  if (normB.startsWith("node.js") && (normA === "node.js" || normA === "node")) return true;
+  if (normA.startsWith("html") && (normB === "html" || normB === "html5")) return true;
+  if (normB.startsWith("html") && (normA === "html" || normA === "html5")) return true;
+  if (normA.startsWith("css") && (normB === "css" || normB === "css3")) return true;
+  if (normB.startsWith("css") && (normA === "css" || normA === "css3")) return true;
+  if (normA.length >= 3 && normB.length >= 3 && (normA.includes(normB) || normB.includes(normA)))
     return true;
 
-  const aParts = a
-    .split(/[/,]/)
+  const splitRegex = /[/,–—|()]|\s+or\s+/;
+  const aParts = normA
+    .split(splitRegex)
     .map((p) => p.trim())
     .filter(Boolean);
-  const bParts = b
-    .split(/[/,]/)
+  const bParts = normB
+    .split(splitRegex)
     .map((p) => p.trim())
     .filter(Boolean);
   if (aParts.length > 1 || bParts.length > 1) {
@@ -115,13 +120,18 @@ export default function LearningPathContent() {
     queryKey: ["learningPath", session?.user?.id],
     queryFn: () => getLearningPath(),
     enabled: !!session?.user?.id,
+    refetchInterval: 12000,
+    staleTime: 5000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
   });
 
   const { data: portfolioData } = useQuery<PortfolioData>({
     queryKey: ["portfolio", session?.user?.id],
     queryFn: () => getPortfolio(),
     enabled: !!session?.user?.id,
-    staleTime: 1000 * 60 * 5,
+    refetchInterval: 12000,
+    staleTime: 5000,
   });
 
   const getProjectForMilestone = useCallback(
@@ -176,11 +186,14 @@ export default function LearningPathContent() {
       if (explicitMatch) return explicitMatch;
     }
 
-    // Direct match by skillParam in skillsCovered or title
+    // Secondary match: match by skillParam (from Skill Gaps "Fix Gap" button)
     if (skillParam) {
       const skillMatch = data.milestones.find(
         (m) =>
           m.skillsCovered.some((s) => isMatchingSkillFrontend(s, skillParam)) ||
+          (m.unlocks || []).some((unlockedSkill) =>
+            isMatchingSkillFrontend(unlockedSkill, skillParam),
+          ) ||
           isMatchingSkillFrontend(m.title, skillParam),
       );
       if (skillMatch) return skillMatch;
@@ -222,7 +235,16 @@ export default function LearningPathContent() {
         queryKey: ["learningPath"],
       });
       queryClient.invalidateQueries({
+        queryKey: ["careerAlignment"],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["dashboardData"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["progress"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["assessments"],
       });
       queryClient.invalidateQueries({
         queryKey: ["careerTwin"],
@@ -232,6 +254,24 @@ export default function LearningPathContent() {
       });
       queryClient.invalidateQueries({
         queryKey: ["portfolio"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["applicationReadiness"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["proofGraph"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["readiness"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["careerDecision"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["evidenceVerification"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["skillTree"],
       });
       refetch();
     },
@@ -452,10 +492,10 @@ export default function LearningPathContent() {
 
           <div className="flex items-center gap-2 shrink-0">
             <Link
-              href={`/dashboard/learner/assessments?skill=${encodeURIComponent(skillParam)}`}
-              className="px-3 py-1.5 rounded-lg bg-card hover:bg-card-soft text-foreground text-xs font-semibold border border-border transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+              href={`/dashboard/learner/assessments/simulation?skill=${encodeURIComponent(skillParam)}`}
+              className="px-3.5 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-primary" /> Test Out in Quiz
+              <Sparkles className="w-3.5 h-3.5" /> Launch Skill Simulation &rarr;
             </Link>
           </div>
         </div>
@@ -470,6 +510,7 @@ export default function LearningPathContent() {
           targetMilestoneId={targetMilestoneId}
           autoOpenDrawer={autoOpenDrawer}
           getProjectForMilestone={getProjectForMilestone}
+          targetSkillGap={skillParam}
           onCompleteMilestone={(id, onSuccess) =>
             completeMutation.mutate(id, {
               onSuccess: () => {

@@ -7,6 +7,9 @@ export interface AdminProjectItem {
   score?: number | null;
   repositoryUrl?: string | null;
   liveUrl?: string | null;
+  projectType?: string; // GENERATED | IMPORTED
+  isVerified?: boolean;
+  techStack?: string[];
   userId: string;
   createdAt: string;
   user?: {

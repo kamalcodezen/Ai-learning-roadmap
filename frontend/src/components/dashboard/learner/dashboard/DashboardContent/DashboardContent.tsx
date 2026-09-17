@@ -33,7 +33,10 @@ export default function DashboardContent() {
     queryKey: ["dashboardData", session?.user?.id],
     queryFn: () => getDashboardOverview(),
     enabled: !!session?.user?.id,
-    staleTime: 1000 * 60 * 2,
+    staleTime: 5000,
+    refetchInterval: 30000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
   });
 
   if (isSessionLoading) {
@@ -118,12 +121,12 @@ export default function DashboardContent() {
         </div>
         <div className="col-auto lg:col-span-1 h-full flex">
           <div className="w-full h-full flex-1">
-            {d.nextAction && <NextBestActionCard data={d.nextAction} />}
+            <NextBestActionCard data={d.nextAction} />
           </div>
         </div>
         <div className="col-auto lg:col-span-1 h-full flex">
           <div className="w-full h-full flex-1">
-            {d.roadmap && <ShortRoadmap data={d.roadmap} />}
+            <ShortRoadmap data={d.roadmap} />
           </div>
         </div>
       </div>

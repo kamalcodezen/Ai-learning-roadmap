@@ -14,15 +14,21 @@ import {
   AlertCircle,
   ArrowRight,
   Activity,
+  Sparkles,
+  RefreshCw,
 } from "lucide-react";
 
 export default function SkillGapsPage() {
   const { data: session, isPending: isSessionLoading } = useDashboardSession();
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ["skillGaps", session?.user?.id],
     queryFn: () => getSkillGaps(),
     enabled: !!session?.user?.id,
+    staleTime: 5000,
+    refetchInterval: 12000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
   });
 
   if (isSessionLoading) {
@@ -49,10 +55,28 @@ export default function SkillGapsPage() {
 
   return (
     <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
-      <PageHeader
-        title="Skill Gaps Analysis"
-        description="Identify and fix the weaknesses holding back your career."
-      />
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <PageHeader
+          title="Skill Gaps Analysis"
+          description="Identify and fix the weaknesses holding back your career."
+        />
+
+        <div className="flex items-center gap-2.5 self-start md:self-auto">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card border border-border text-xs font-medium text-muted-foreground shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Live Sync</span>
+          </div>
+          <button
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card hover:bg-muted border border-border text-xs font-semibold text-foreground transition-all shadow-sm cursor-pointer disabled:opacity-50"
+            title="Refresh skill gaps"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-primary ${isFetching ? "animate-spin" : ""}`} />
+            <span>Sync</span>
+          </button>
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
         <div className="dashboard-card-secondary">
@@ -158,15 +182,26 @@ export default function SkillGapsPage() {
                     <p className="text-sm text-muted-foreground mb-4">
                       {gap.recommendedAction}
                     </p>
-                    <DashboardButton
-                      href={gap.href}
-                      text={
-                        <>
-                          Fix Gap <ArrowRight className="w-4 h-4" />
-                        </>
-                      }
-                      fullWidth
-                    />
+                    <div className="flex flex-col gap-2">
+                      <DashboardButton
+                        href={gap.href}
+                        text={
+                          <>
+                            {gap.isMilestoneCompleted ? "Verify via Simulation" : "Fix in Learning Path"}{" "}
+                            <ArrowRight className="w-4 h-4" />
+                          </>
+                        }
+                        fullWidth
+                      />
+                      {gap.simulationHref && !gap.isMilestoneCompleted && (
+                        <a
+                          href={gap.simulationHref}
+                          className="text-xs text-center text-primary hover:underline font-semibold flex items-center justify-center gap-1 py-1"
+                        >
+                          <Sparkles className="w-3.5 h-3.5" /> Quick Verify (Simulation)
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
               </CardContent>

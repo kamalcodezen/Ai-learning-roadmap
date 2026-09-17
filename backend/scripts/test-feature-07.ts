@@ -109,7 +109,7 @@ async function runFeature07Tests() {
 
     assert.ok(normalResult, "Chat result should be returned");
     assert.ok(normalResult.reply.length > 0, "Reply must not be empty");
-    assert.ok(["Groq", "OpenRouter", "Gemini", "Mistral", "Fallback"].includes(normalResult.provider), "Provider must be valid");
+    assert.ok(["Groq", "Groq-Secondary", "OpenRouter", "OpenRouter-Secondary", "Gemini", "Mistral", "Fallback"].includes(normalResult.provider), `Provider must be valid, got: ${normalResult.provider}`);
     console.log(`✓ Test 3 Passed: Technical response generated via provider: ${normalResult.provider} (${normalResult.model})`);
 
     // ------------------------------------------------------------

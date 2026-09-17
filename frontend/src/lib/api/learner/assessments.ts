@@ -10,11 +10,16 @@ export interface AssessmentItem {
   duration?: string;
   description: string;
   href: string;
+  attemptLabel?: string;
+  completedAt?: string;
 }
 
 export interface AssessmentsData {
   completedCount: number;
   averageScore: number;
+  passedCount?: number;
+  pendingCount?: number;
+  targetRole?: string;
   assessments: AssessmentItem[];
 }
 

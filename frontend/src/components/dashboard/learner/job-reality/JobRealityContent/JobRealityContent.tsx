@@ -17,7 +17,6 @@ import {
   CardTitle,
 } from "@/src/components/ui/Card";
 import { DashboardCard } from "@/src/components/dashboard/shared/cards";
-import Button from "@/src/components/ui/button";
 import {
   Briefcase,
   AlertCircle,
@@ -30,6 +29,7 @@ import {
   RefreshCw,
   Info,
   Wrench,
+  ArrowUpRight,
 } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
@@ -43,7 +43,7 @@ export default function JobRealityContent() {
     queryKey: ["jobReality", userId, selectedLocation],
     queryFn: () => getJobReality(selectedLocation === "all" ? undefined : selectedLocation),
     enabled: !!userId,
-    staleTime: 15 * 60 * 1000, // 15 mins
+    staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
 
@@ -63,8 +63,12 @@ export default function JobRealityContent() {
           <p className="text-muted-foreground max-w-md mb-6">
             We need to know your target career before we can analyze real job market demand.
           </p>
-          <Link href="/dashboard/learner/profile">
-            <Button text="Complete Profile" />
+          <Link
+            href="/dashboard/learner/profile"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 hover:border-primary/50 transition-all shadow-xs cursor-pointer"
+          >
+            <span>Complete Profile</span>
+            <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>
       );
@@ -78,11 +82,15 @@ export default function JobRealityContent() {
           Could not connect to the live job-market provider at this moment.
         </p>
         <div className="flex gap-2 justify-center">
-          <Button
-            text={isRefetching ? "Retrying..." : "Retry Connection"}
+          <button
+            type="button"
             onClick={() => refetch()}
-            variant="soft"
-          />
+            disabled={isRefetching}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-muted hover:bg-muted/80 text-foreground border border-border transition-all shadow-xs cursor-pointer disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 text-primary ${isRefetching ? "animate-spin" : ""}`} />
+            <span>{isRefetching ? "Retrying..." : "Retry Connection"}</span>
+          </button>
         </div>
       </div>
     );
@@ -127,34 +135,44 @@ export default function JobRealityContent() {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 bg-muted/40 px-3 py-1.5 rounded-lg border border-border">
-            <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
-            <select
-              value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-              className="bg-transparent text-xs font-medium text-foreground outline-none cursor-pointer"
-              aria-label="Filter job market location"
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => refetch()}
+              disabled={isRefetching}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-card hover:bg-muted border border-border text-xs font-semibold text-foreground transition-all shadow-sm cursor-pointer disabled:opacity-50"
+              title="Refresh job market data"
             >
-              <option value="all" className="bg-popover text-popover-foreground">All Locations</option>
-              <option value="remote" className="bg-popover text-popover-foreground">Remote Only</option>
-              <option value="europe" className="bg-popover text-popover-foreground">Europe / UK</option>
-              <option value="us" className="bg-popover text-popover-foreground">United States</option>
-              <option value="apac" className="bg-popover text-popover-foreground">Asia-Pacific</option>
-            </select>
-          </div>
+              <RefreshCw className={`w-3.5 h-3.5 text-primary ${isRefetching ? "animate-spin" : ""}`} />
+              <span>Sync Market</span>
+            </button>
 
-          <div className="text-xs text-muted-foreground flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
-            <Database className="w-3.5 h-3.5 text-primary" />
-            Data via {source.provider} • Updated{" "}
-            {formatDistanceToNow(new Date(source.fetchedAt))} ago
-            {source.cached && (
-              <span className="ml-1 text-[10px] bg-muted px-1.5 py-0.5 rounded border border-border">
-                cached
-              </span>
-            )}
+            <div className="flex items-center gap-2 bg-muted/40 px-3 py-1.5 rounded-lg border border-border">
+              <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
+              <select
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                className="bg-transparent text-xs font-medium text-foreground outline-none cursor-pointer"
+                aria-label="Filter job market location"
+              >
+                <option value="all" className="bg-popover text-popover-foreground">All Locations</option>
+                <option value="remote" className="bg-popover text-popover-foreground">Remote Only</option>
+                <option value="europe" className="bg-popover text-popover-foreground">Europe / UK</option>
+                <option value="us" className="bg-popover text-popover-foreground">United States</option>
+                <option value="apac" className="bg-popover text-popover-foreground">Asia-Pacific</option>
+              </select>
+            </div>
+
+            <div className="text-xs text-muted-foreground flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
+              <Database className="w-3.5 h-3.5 text-primary" />
+              Data via {source.provider} • Updated{" "}
+              {formatDistanceToNow(new Date(source.fetchedAt))} ago
+              {source.cached && (
+                <span className="ml-1 text-[10px] bg-muted px-1.5 py-0.5 rounded border border-border">
+                  cached
+                </span>
+              )}
+            </div>
           </div>
-        </div>
       </div>
 
       {/* Low Sample Warning Banner */}
@@ -223,12 +241,14 @@ export default function JobRealityContent() {
                     ? "text-emerald-500"
                     : market.trend === "Declining"
                     ? "text-rose-500"
+                    : market.trend === "Stable"
+                    ? "text-blue-500"
                     : "text-muted-foreground"
                 }`}
               />
             </div>
             <h3 className="text-3xl font-bold">
-              {market.trend || "Insufficient Data"}
+              {market.trend || (market.jobCount > 0 ? "Stable" : "Insufficient Data")}
             </h3>
             <p className="text-xs text-muted-foreground mt-2">
               Derived from relevant listing velocity
@@ -430,42 +450,37 @@ export default function JobRealityContent() {
                     </div>
 
                     {rec.href && (
-                      <Link href={rec.href} className="self-end mt-1">
-                        <Button
-                          text={
-                            rec.actionType === "GENERATE_PROJECT"
-                              ? "Generate Project"
-                              : "Go to Learning Path"
-                          }
-                          variant="soft"
-                          className="text-xs py-1 px-2.5 flex items-center gap-1"
-                        />
+                      <Link
+                        href={rec.href}
+                        className="self-end mt-1 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-muted/50 hover:bg-muted text-foreground border border-border transition-all shadow-xs group cursor-pointer"
+                      >
+                        <span>
+                          {rec.actionType === "GENERATE_PROJECT"
+                            ? "Generate Project"
+                            : "Go to Learning Path"}
+                        </span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-all shrink-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                       </Link>
                     )}
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6 flex flex-col gap-2">
+              <div className="mt-6 flex flex-col gap-2.5 w-full">
                 <Link
                   href="/dashboard/learner/learning-path"
-                  className="w-full"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 hover:border-primary/50 transition-all shadow-xs cursor-pointer text-center group"
                 >
-                  <Button
-                    text="Continue Learning Path"
-                    className="w-full flex items-center justify-center gap-1.5"
-                  />
+                  <span>Continue Learning Path</span>
+                  <ArrowUpRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </Link>
 
                 <Link
                   href="/dashboard/learner/portfolio"
-                  className="w-full"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-muted/60 hover:bg-muted text-foreground border border-border transition-all shadow-xs cursor-pointer text-center group"
                 >
-                  <Button
-                    text="Generate Project Gap Skill"
-                    variant="soft"
-                    className="w-full flex items-center justify-center gap-1.5"
-                  />
+                  <span>Generate Project Gap Skill</span>
+                  <ArrowUpRight className="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </Link>
               </div>
             </CardContent>

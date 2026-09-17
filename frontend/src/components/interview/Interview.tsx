@@ -212,11 +212,17 @@ export default function Interview() {
 
         // Invalidate relevant query caches
         if (session?.user?.id) {
-          queryClient.invalidateQueries({ queryKey: ["dashboardData", session.user.id] });
-          queryClient.invalidateQueries({ queryKey: ["careerTwin", session.user.id] });
-          queryClient.invalidateQueries({ queryKey: ["interviewHistory", session.user.id] });
-          queryClient.invalidateQueries({ queryKey: ["applicationReadiness", session.user.id] });
-          queryClient.invalidateQueries({ queryKey: ["readiness", session.user.id] });
+          queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
+          queryClient.invalidateQueries({ queryKey: ["assessments"] });
+          queryClient.invalidateQueries({ queryKey: ["progress"] });
+          queryClient.invalidateQueries({ queryKey: ["careerTwin"] });
+          queryClient.invalidateQueries({ queryKey: ["interviewHistory"] });
+          queryClient.invalidateQueries({ queryKey: ["applicationReadiness"] });
+          queryClient.invalidateQueries({ queryKey: ["readiness"] });
+          queryClient.invalidateQueries({ queryKey: ["skillGaps"] });
+          queryClient.invalidateQueries({ queryKey: ["proofGraph"] });
+          queryClient.invalidateQueries({ queryKey: ["careerDecision"] });
+          queryClient.invalidateQueries({ queryKey: ["evidenceVerification"] });
         }
 
         // Build QuestionAnswerPair list

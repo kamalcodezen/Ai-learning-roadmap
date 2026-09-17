@@ -56,17 +56,33 @@ export interface AiSummaryData {
   evidenceNote?: string | null;
 }
 
+export interface PrReviewResult {
+  prUrl?: string;
+  prSummary?: string;
+  qualityScore?: number;
+  verdict?: string;
+  positives?: string[];
+  concerns?: string[];
+  actionableSuggestions?: string[];
+  [key: string]: unknown;
+}
+
 export interface ProjectData {
   id: string;
   name: string;
   description: string;
-  projectType: "GENERATED" | "IMPORTED";
+  techStack: string[];
+  githubUrl?: string | null;
+  liveUrl?: string | null;
+  liveDemoUrl?: string | null;
+  stars?: number;
+  forks?: number;
+  languages?: string[];
+  projectType?: "GENERATED" | "IMPORTED";
+  spec?: ProjectSpecification | null;
   specification?: ProjectSpecification | null;
   aiSummary?: AiSummaryData | null;
   plannedVsActual?: PlannedVsActualItem[] | null;
-  techStack: string[];
-  githubUrl?: string;
-  liveDemoUrl?: string;
   aiReview?: {
     reviewSource?: string;
     projectType?: "GENERATED" | "IMPORTED";
@@ -82,6 +98,7 @@ export interface ProjectData {
     strengths?: string[];
     weaknesses?: string[];
     recommendations?: string[];
+    latestPrReview?: PrReviewResult | null;
     [key: string]: unknown;
   } | null;
   metrics: {

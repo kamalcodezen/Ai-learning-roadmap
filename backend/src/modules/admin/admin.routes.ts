@@ -21,6 +21,9 @@ import * as learningDebtController from "./learning-debt/learning-debt.controlle
 import * as careerReadinessController from "./career-readiness/career-readiness.controller.js";
 import * as jobRealityController from "./job-reality/job-reality.controller.js";
 import * as skillProofController from "./skill-proof/skill-proof.controller.js";
+import * as subscriptionsController from "./subscriptions/subscriptions.controller.js";
+import * as interviewsController from "./interviews/interviews.controller.js";
+import * as resumesController from "./resumes/resumes.controller.js";
 
 const router = Router();
 
@@ -30,10 +33,12 @@ router.use(requireAdmin);
 // Dashboard routes
 router.get("/dashboard", dashboardController.getDashboardOverview);
 
-// User Management routes
+// User Management & Subscriptions routes
 router.get("/users", usersController.getUsers);
 router.patch("/users/:id/role", usersController.updateUserRole);
+router.patch("/users/:id/plan", usersController.updateUserPlan);
 router.delete("/users/:id", usersController.deleteUser);
+router.get("/subscriptions", subscriptionsController.getAdminSubscriptions);
 
 // System routes
 router.get("/system-health", systemHealthController.getSystemHealth);
@@ -53,7 +58,12 @@ router.post("/ai-sandbox/test", aiSandboxController.testPrompt);
 // Learning routes
 router.get('/roadmaps', roadmapsController.getAdminRoadmaps);
 router.get('/assessments', assessmentsController.getAdminAssessments);
+router.get('/interviews', interviewsController.getAdminInterviews);
+router.get('/interviews/:id', interviewsController.getAdminInterviewDetails);
 router.get('/projects', projectsController.getAdminProjects);
+router.patch('/projects/:id/verify', projectsController.verifyProject);
+router.get('/resumes', resumesController.getAdminResumes);
+router.get('/resumes/:id', resumesController.getAdminResumeDetails);
 router.get('/skill-health', skillHealthController.getAdminSkillHealth);
 router.get('/learning-debt', learningDebtController.getAdminLearningDebt);
 router.get('/career-readiness', careerReadinessController.getAdminCareerReadiness);

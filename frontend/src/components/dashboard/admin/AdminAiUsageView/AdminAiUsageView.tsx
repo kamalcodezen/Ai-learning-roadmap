@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAdminAiUsage } from "@/src/lib/api/admin/ai-usage";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import { GlowCard } from "@/src/components/dashboard/shared/cards";
 import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import { Cpu } from "lucide-react";
@@ -68,17 +68,8 @@ export default function AdminAiUsageView() {
     enabled: !!userId,
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
-          {[0, 1, 2].map((i) => (
-            <Skeleton key={i} className="h-28 w-full rounded-xl" />
-          ))}
-        </div>
-        <Skeleton className="h-[400px] w-full rounded-xl" />
-      </div>
-    );
+  if (isLoading && !data) {
+    return <AdminPageSkeleton variant="ai-usage" />;
   }
 
   if (error || !data) {
@@ -94,7 +85,18 @@ export default function AdminAiUsageView() {
   const total = data.total;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">
+            AI <span className="text-brand">Usage</span>
+          </h1>
+          <p className="section-subtitle mt-1 text-left">
+            Monitor AI call volume, success rates, and provider breakdowns.
+          </p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-3 dashboard-card-gap">
         <GlowCard>
           <p className="text-sm text-muted-foreground">Total AI Calls</p>

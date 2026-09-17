@@ -1,19 +1,22 @@
 import prisma from "../../../../lib/prisma.js";
 import { getCareerReadiness } from "../../readiness/services/readiness.service.js";
 
-export const getCareerTwin = async (userId: string) => {
+export const getCareerTwin = async (userId: string, targetRoleOverride?: string) => {
   const [profile, activeRoadmap, readinessResult] = await Promise.all([
     prisma.careerProfile.findUnique({ where: { userId } }),
     prisma.roadmap.findFirst({
       where: { userId, status: "ACTIVE" },
       include: { milestones: { orderBy: { order: "asc" } } },
     }),
-    getCareerReadiness(userId),
+    getCareerReadiness(userId, undefined, targetRoleOverride),
   ]);
 
   const targetRole =
-    profile?.targetRoleName || profile?.targetRole || "Unknown Role";
-  const experienceLevel = profile?.experienceLevel || "Beginner";
+    targetRoleOverride ||
+    profile?.targetRoleName ||
+    profile?.targetRole ||
+    "Full Stack Developer";
+  const experienceLevel = profile?.experienceLevel || "BEGINNER";
 
   const toNumeric = (val: number | string): number =>
     typeof val === "number" ? val : 0;
@@ -22,6 +25,13 @@ export const getCareerTwin = async (userId: string) => {
     activeRoadmap?.milestones.find((m) => m.status === "CURRENT") ||
     activeRoadmap?.milestones.find((m) => m.status === "UPCOMING") ||
     activeRoadmap?.milestones[0];
+
+  const careerGaps = readinessResult.weakSkills.map((w) => {
+    if (w.includes("(Needs Practice)")) {
+      return `Lacks practical hands-on application in ${w.replace(" (Needs Practice)", "")}`;
+    }
+    return `Missing required core competency in ${w}`;
+  });
 
   return {
     targetRole,
@@ -39,15 +49,12 @@ export const getCareerTwin = async (userId: string) => {
     strongSkills: readinessResult.strongSkills,
     weakSkills: readinessResult.weakSkills,
     currentFocus:
-      readinessResult.weakSkills.length > 0
-        ? `Improve ${readinessResult.weakSkills[0]}`
+      readinessResult.weakSkills.length > 0 && readinessResult.weakSkills[0]
+        ? `Bridge gap in ${readinessResult.weakSkills[0].replace(" (Needs Practice)", "")}`
         : currentMilestone
           ? `Master ${currentMilestone.title}`
           : null,
-    careerGaps:
-      readinessResult.weakSkills.length > 0
-        ? readinessResult.weakSkills.map((w) => `Missing deep knowledge in ${w}`)
-        : [],
+    careerGaps,
     recommendedAction: currentMilestone
       ? {
           title: currentMilestone.title,
@@ -68,4 +75,5 @@ export const getCareerTwin = async (userId: string) => {
         : null,
   };
 };
+
 

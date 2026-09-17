@@ -13,11 +13,13 @@ import {
   CheckCircle2,
   XCircle,
   ArrowRight,
+  Headphones,
+  FileText,
+  type LucideIcon,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { getAdminDashboardStats } from "@/src/lib/api/admin/dashboard";
 import { authClient } from "@/src/lib/auth-client";
-import GenericPageSkeleton from "../shared/GenericPageSkeleton";
+import AdminPageSkeleton from "./shared/AdminPageSkeleton";
 import { Card, CardContent } from "@/src/components/ui/Card";
 import DashboardBanner from "@/src/components/dashboard/shared/banner/DashboardBanner/DashboardBanner";
 
@@ -45,8 +47,8 @@ export default function DashboardStats() {
     enabled: !!userId,
   });
 
-  if (isLoading) {
-    return <GenericPageSkeleton />;
+  if (isLoading && !data) {
+    return <AdminPageSkeleton variant="dashboard" />;
   }
 
   if (error || !data) {
@@ -57,7 +59,7 @@ export default function DashboardStats() {
     );
   }
 
-  const { overview, systemHealth, recentUsers, recentActivity } = data;
+  const { overview, systemHealth, recentUsers, recentActivity, userAnalytics } = data;
 
   const kpis: Kpi[] = [
     { title: "Total Users", value: overview.totalUsers, icon: Users, color: "bg-blue-500/10 text-blue-500" },
@@ -65,14 +67,16 @@ export default function DashboardStats() {
     { title: "Total Roadmaps", value: overview.totalRoadmaps, icon: Route, color: "bg-purple-500/10 text-purple-500" },
     { title: "Assessments", value: overview.totalAssessments, icon: ClipboardCheck, color: "bg-amber-500/10 text-amber-500" },
     { title: "Projects", value: overview.totalProjects, icon: FolderKanban, color: "bg-indigo-500/10 text-indigo-500" },
+    { title: "Mock Interviews", value: overview.totalInterviews ?? 0, icon: Headphones, color: "bg-cyan-500/10 text-cyan-500" },
+    { title: "AI Resumes", value: overview.totalResumes ?? 0, icon: FileText, color: "bg-emerald-500/10 text-emerald-500" },
     { title: "AI Requests", value: overview.aiRequests, icon: Sparkles, color: "bg-pink-500/10 text-pink-500" },
   ];
 
   const adminBannerStats = [
     { value: overview.totalUsers, label: "Total Users", suffix: "" },
     { value: overview.activeLearners, label: "Active Learners", suffix: "" },
-    { value: overview.totalRoadmaps, label: "Roadmaps", suffix: "" },
-    { value: overview.totalAssessments + overview.totalProjects, label: "Assessments + Projects", suffix: "" },
+    { value: `${userAnalytics?.plusUsers ?? 0} Plus · ${userAnalytics?.proUsers ?? 0} Pro`, label: "Paid Subscribers", suffix: "" },
+    { value: (overview.totalInterviews ?? 0) + (overview.totalResumes ?? 0), label: "Career Assets", suffix: "" },
   ];
 
   return (
@@ -92,7 +96,7 @@ export default function DashboardStats() {
       {/* ============================= KPI GRID ============================= */}
       <section>
         <h2 className="mb-4 text-xl font-bold tracking-tight text-foreground">Platform Overview</h2>
-        <div className="grid grid-cols-2 dashboard-card-gap sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 dashboard-card-gap sm:grid-cols-2 lg:grid-cols-4">
           {kpis.map((kpi) => {
             const Icon = kpi.icon;
             return (
@@ -141,8 +145,24 @@ export default function DashboardStats() {
                   recentUsers.map((u) => (
                     <div key={u.id} className="flex items-center justify-between p-4 hover:bg-muted/40 transition-colors">
                       <div>
-                        <p className="font-medium text-foreground">{u.name}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-foreground">{u.name}</p>
+                          {u.plan && (
+                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                              u.plan === 'PRO' ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30' :
+                              u.plan === 'PLUS' ? 'bg-blue-500/15 text-blue-500 border border-blue-500/30' :
+                              'bg-muted/50 text-muted-foreground border border-border/40'
+                            }`}>
+                              {u.plan}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-muted-foreground">{u.email}</p>
+                        {(u.careerProfile?.targetRoleName || u.careerProfile?.targetRole) && (
+                          <p className="text-[11px] font-medium text-primary mt-0.5">
+                            Target: {u.careerProfile.targetRoleName || u.careerProfile.targetRole}
+                          </p>
+                        )}
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">

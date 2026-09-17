@@ -6,6 +6,7 @@ export interface Milestone {
   status: "completed" | "current" | "upcoming";
   progress?: number;
   skillsCovered: string[];
+  unlocks?: string[];
   estimatedTime: string;
   description: string;
   whyItMatters: string;
