@@ -238,7 +238,7 @@ function DashboardSkeleton() {
         {/* System Health widget */}
         <div className="space-y-4">
           <div className="h-6 w-36 rounded-lg bg-muted/60 animate-pulse" />
-          <div className="rounded-xl border border-border/50 bg-card/40 p-6 space-y-4">
+          <div className="rounded-lg border border-border/50 bg-card/40 p-6 space-y-4 h-[240px] flex flex-col justify-center">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="flex items-center justify-between pb-3 border-b border-border/30 last:border-0 last:pb-0">
                 <div className="h-4 w-28 rounded bg-muted/50 animate-pulse" />
@@ -251,8 +251,8 @@ function DashboardSkeleton() {
         {/* Recent Users widget */}
         <div className="space-y-4">
           <div className="h-6 w-36 rounded-lg bg-muted/60 animate-pulse" />
-          <div className="rounded-xl border border-border/50 bg-card/40 divide-y divide-border/40 overflow-hidden">
-            {Array.from({ length: 4 }).map((_, i) => (
+          <div className="rounded-lg border border-border/50 bg-card/40 divide-y divide-border/40 overflow-hidden h-[240px]">
+            {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="p-4 flex items-center justify-between">
                 <div className="space-y-1.5">
                   <div className="h-4 w-32 rounded bg-muted/60 animate-pulse" />
