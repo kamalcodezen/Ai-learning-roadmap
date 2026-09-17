@@ -47,8 +47,8 @@ export function GlowCard({
           )}
         />
       )}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
+      <div className="pointer-events-none absolute inset-0">
         <BorderBeam
           size={60}
           duration={4}
