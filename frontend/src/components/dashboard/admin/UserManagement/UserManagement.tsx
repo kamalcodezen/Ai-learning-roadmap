@@ -97,21 +97,6 @@ export default function UserManagement() {
     },
   });
 
-  const updatePlanMutation = useMutation({
-    mutationFn: ({
-      targetId,
-      newPlan,
-    }: {
-      targetId: string;
-      newPlan: string;
-    }) => updateAdminUserPlan(userId!, targetId, newPlan),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
-    },
-    onError: (err: Error | { message?: string }) => {
-      alert(err.message || "Failed to update subscription tier");
-    },
-  });
 
   const deleteUserMutation = useMutation({
     mutationFn: (targetId: string) => deleteAdminUser(userId!, targetId),
