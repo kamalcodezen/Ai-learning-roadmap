@@ -18,7 +18,7 @@ import {
 import { authClient } from "@/src/lib/auth-client";
 import { getAiSandboxModels, testAiSandboxPrompt } from "@/src/lib/api/admin/ai-sandbox";
 import { showToast } from "@/src/components/ui/toast";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 
 const PROMPT_TEMPLATES = [
   {
@@ -102,18 +102,24 @@ export default function AdminAiSandboxView() {
   };
 
   if (isModelsLoading) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-28 w-full rounded-xl" />
-        <Skeleton className="h-[500px] w-full rounded-xl" />
-      </div>
-    );
+    return <AdminPageSkeleton variant="sandbox" />;
   }
 
   const result = testMutation.data;
 
   return (
     <div className="flex flex-col dashboard-card-gap pb-8 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">
+            AI Prompt &amp; Model <span className="text-brand">Sandbox</span>
+          </h1>
+          <p className="section-subtitle mt-1 text-left">
+            Test LLM prompts, model configurations, and reasoning token telemetry in real-time.
+          </p>
+        </div>
+      </div>
+
       {/* ============================= MODEL PARAMETERS & CONSOLE ============================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 dashboard-card-gap">
         {/* Left Column: Parameters & Settings */}

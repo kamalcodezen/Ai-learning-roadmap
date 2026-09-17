@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAdminSkillProof, AdminSkillProofItem } from "@/src/lib/api/admin/skill-proof";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import { Award } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
@@ -65,11 +65,15 @@ export default function AdminSkillProofView() {
     enabled: !!userId,
   });
 
-  if (isLoading) {
+  if (isLoading && !data) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-[400px] w-full rounded-xl" />
-      </div>
+      <AdminPageSkeleton
+        variant="table"
+        hasKpis={false}
+        hasSearch={true}
+        hasToolbar={true}
+        dropdownCount={0}
+      />
     );
   }
 
@@ -86,8 +90,20 @@ export default function AdminSkillProofView() {
   const { proofs, total } = data;
 
   return (
-    <AdminDataTable
-      columns={columns}
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">
+            Skill <span className="text-brand">Proof</span>
+          </h1>
+          <p className="section-subtitle mt-1 text-left">
+            Review submitted skill proofs and scores across the platform.
+          </p>
+        </div>
+      </div>
+
+      <AdminDataTable
+        columns={columns}
       rows={proofs}
       rowKey={(p) => p.id}
       emptyMessage="No skill proofs found matching your search."
@@ -103,5 +119,6 @@ export default function AdminSkillProofView() {
       total={total}
       onPageChange={setPage}
     />
+    </div>
   );
 }

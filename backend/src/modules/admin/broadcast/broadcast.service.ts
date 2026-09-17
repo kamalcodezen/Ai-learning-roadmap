@@ -16,7 +16,7 @@ export interface BroadcastRecord {
   message: string;
   targetCohort: string;
   priority: string;
-  actionUrl?: string;
+  actionUrl?: string | undefined;
   recipientsCount: number;
   sentAt: string;
   senderName: string;

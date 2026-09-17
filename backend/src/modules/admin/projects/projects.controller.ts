@@ -15,3 +15,30 @@ export const getAdminProjects = async (req: Request, res: Response, next: NextFu
     res.json(result);
   } catch (error) { next(error); }
 };
+
+/**
+ * Verifies or revokes verification for a learner capstone project and optionally updates score.
+ * @route PATCH /api/admin/projects/:id/verify
+ */
+export const verifyProject = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const adminId = req.adminId!;
+    const projectId = req.params.id as string;
+    const { isVerified, score } = req.body;
+
+    const project = await projectsService.verifyProject(
+      adminId,
+      projectId,
+      Boolean(isVerified),
+      score !== undefined ? Number(score) : undefined
+    );
+
+    res.json({ success: true, project });
+  } catch (error: any) {
+    if (error.message.includes("not found")) {
+      return res.status(404).json({ success: false, message: error.message });
+    }
+    next(error);
+  }
+};
+

@@ -7,7 +7,7 @@ import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { User } from "lucide-react";
 import { useDebounce } from "use-debounce";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
@@ -72,9 +72,13 @@ export default function AdminActivityView() {
 
   if (isLoading && !data) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-[400px] w-full rounded-xl" />
-      </div>
+      <AdminPageSkeleton
+        variant="table"
+        hasKpis={false}
+        hasSearch={true}
+        hasToolbar={true}
+        dropdownCount={0}
+      />
     );
   }
 
@@ -111,7 +115,14 @@ export default function AdminActivityView() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">System <span className="text-brand">Activity</span></h1>
+          <p className="section-subtitle mt-1 text-left">Monitor user actions and system events across the platform.</p>
+        </div>
+      </div>
+
       <AdminDataTable
         columns={columns}
         rows={filtered}

@@ -17,7 +17,7 @@ export const getAdminAssessments = async (skip: number, take: number, search?: s
     where.startedAt = { gte: startDate };
   }
 
-  const [attempts, total, stats] = await Promise.all([
+  const [attempts, total, stats, completed, totalInterviews, completedInterviews, interviewStats] = await Promise.all([
     prisma.diagnosticAttempt.findMany({
       where,
       skip, take,
@@ -29,8 +29,23 @@ export const getAdminAssessments = async (skip: number, take: number, search?: s
       where,
       _avg: { score: true },
     }),
+    prisma.diagnosticAttempt.count({ where: { ...where, status: 'COMPLETED' } }),
+    prisma.interviewSession.count(),
+    prisma.interviewSession.count({ where: { status: 'COMPLETED' } }),
+    prisma.interviewSession.aggregate({
+      _avg: { score: true },
+    }),
   ]);
-  const completed = await prisma.diagnosticAttempt.count({ where: { ...where, status: 'COMPLETED' } });
   
-  return { attempts, total, completed, averageScore: stats._avg.score || 0 };
+  return {
+    attempts,
+    total,
+    completed,
+    averageScore: stats._avg.score || 0,
+    interviewStats: {
+      total: totalInterviews,
+      completed: completedInterviews,
+      averageScore: interviewStats._avg.score || 0,
+    },
+  };
 };

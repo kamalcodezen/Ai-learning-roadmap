@@ -8,6 +8,10 @@ export interface AdminUserListItem {
   plan?: string;
   createdAt: string;
   image?: string | null;
+  careerProfile?: {
+    targetRole?: string;
+    targetRoleName?: string;
+  } | null;
 }
 
 export interface AdminUserListResult {
@@ -16,7 +20,7 @@ export interface AdminUserListResult {
 }
 
 /**
- * Retrieves paginated user profiles with filtering by search keywords, role, and registration date.
+ * Retrieves paginated user profiles with filtering by search keywords, role, plan, and registration date.
  */
 export const getAdminUsers = async (
   userId: string,
@@ -24,7 +28,8 @@ export const getAdminUsers = async (
   take = 10,
   search = "",
   role = "",
-  days?: number
+  days?: number,
+  plan = ""
 ): Promise<AdminUserListResult> => {
   const query = new URLSearchParams({
     userId,
@@ -33,6 +38,7 @@ export const getAdminUsers = async (
   });
   if (search) query.append("search", search);
   if (role) query.append("role", role);
+  if (plan) query.append("plan", plan);
   if (days) query.append("days", days.toString());
 
   return await serverFetch(`/api/admin/users?${query.toString()}`);

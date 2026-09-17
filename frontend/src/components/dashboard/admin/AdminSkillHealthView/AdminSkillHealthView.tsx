@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAdminSkillHealth } from "@/src/lib/api/admin/skill-health";
 import { authClient } from "@/src/lib/auth-client";
 import { Zap, TrendingDown } from "lucide-react";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import { CardContent, CardHeader } from "@/src/components/ui/Card";
 import { DashboardCard } from "@/src/components/dashboard/shared/cards";
 
@@ -19,14 +19,7 @@ export default function AdminSkillHealthView() {
   });
 
   if (isLoading && !data) {
-    return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
-          <Skeleton className="h-[300px] w-full rounded-xl" />
-          <Skeleton className="h-[300px] w-full rounded-xl" />
-        </div>
-      </div>
-    );
+    return <AdminPageSkeleton variant="split-cards" />;
   }
 
   if (!data) {
@@ -67,56 +60,66 @@ export default function AdminSkillHealthView() {
           </div>
           <div>
             <div className="font-medium text-foreground">{s.name}</div>
-            <div className="text-xs text-muted-foreground">
-              {s.category || (s.usersCount !== undefined ? `${s.usersCount} learner${s.usersCount === 1 ? "" : "s"}` : variant === "strong" ? "High Mastery" : "Skill Debt")}
-            </div>
+            <div className="text-xs text-muted-foreground">{s.category || "Skill"}</div>
           </div>
         </div>
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${variant === "strong" ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"}`}
-        >
-          {s.averageScore}%
-        </span>
+        <div className="text-right">
+          <div className="font-bold text-foreground">{Math.round(s.averageScore)}%</div>
+          <div className="text-xs text-muted-foreground">{s.usersCount || s.activeLearners || 0} learners</div>
+        </div>
       </div>
     ));
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
-      <DashboardCard className="p-0!">
-        <CardHeader className="border-b border-border gap-0 p-4">
-          <div className="flex items-center gap-2">
-            <Zap className="size-4 text-green-500" />
-            <h2 className="text-sm font-medium">Strong Skills</h2>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          {data.strongSkills.length === 0 ? (
-            <p className="p-4 text-sm text-muted-foreground">
-              No strong skills found.
-            </p>
-          ) : (
-            renderSkillRows(data.strongSkills, "strong")
-          )}
-        </CardContent>
-      </DashboardCard>
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">
+            Skill <span className="text-brand">Health</span>
+          </h1>
+          <p className="section-subtitle mt-1 text-left">
+            Identify strengths and learning debt across competencies and learner cohorts.
+          </p>
+        </div>
+      </div>
 
-      <DashboardCard className="p-0!">
-        <CardHeader className="border-b border-border gap-0 p-4">
-          <div className="flex items-center gap-2">
-            <TrendingDown className="size-4 text-red-500" />
-            <h2 className="text-sm font-medium">Weak Skills / Learning Debt</h2>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          {data.weakSkills.length === 0 ? (
-            <p className="p-4 text-sm text-muted-foreground">
-              No weak skills found.
-            </p>
-          ) : (
-            renderSkillRows(data.weakSkills, "weak")
-          )}
-        </CardContent>
-      </DashboardCard>
+      <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
+        <DashboardCard className="p-0!">
+          <CardHeader className="border-b border-border gap-0 p-4">
+            <div className="flex items-center gap-2">
+              <Zap className="size-4 text-green-500" />
+              <h2 className="text-sm font-medium">Strong Skills</h2>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            {data.strongSkills.length === 0 ? (
+              <p className="p-4 text-sm text-muted-foreground">
+                No strong skills found.
+              </p>
+            ) : (
+              renderSkillRows(data.strongSkills, "strong")
+            )}
+          </CardContent>
+        </DashboardCard>
+
+        <DashboardCard className="p-0!">
+          <CardHeader className="border-b border-border gap-0 p-4">
+            <div className="flex items-center gap-2">
+              <TrendingDown className="size-4 text-red-500" />
+              <h2 className="text-sm font-medium">Weak Skills / Learning Debt</h2>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            {data.weakSkills.length === 0 ? (
+              <p className="p-4 text-sm text-muted-foreground">
+                No weak skills found.
+              </p>
+            ) : (
+              renderSkillRows(data.weakSkills, "weak")
+            )}
+          </CardContent>
+        </DashboardCard>
+      </div>
     </div>
   );
 }

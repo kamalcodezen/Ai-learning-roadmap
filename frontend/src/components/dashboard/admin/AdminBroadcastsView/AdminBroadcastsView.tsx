@@ -18,7 +18,7 @@ import { authClient } from "@/src/lib/auth-client";
 import { getAdminBroadcasts, createAdminBroadcast } from "@/src/lib/api/admin/broadcasts";
 import { GlowCard } from "@/src/components/dashboard/shared/cards";
 import { showToast } from "@/src/components/ui/toast";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 
 export default function AdminBroadcastsView() {
   const queryClient = useQueryClient();
@@ -71,17 +71,8 @@ export default function AdminBroadcastsView() {
     });
   };
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
-          {[0, 1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-28 w-full rounded-xl" />
-          ))}
-        </div>
-        <Skeleton className="h-96 w-full rounded-xl" />
-      </div>
-    );
+  if (isLoading && !data) {
+    return <AdminPageSkeleton variant="broadcasts" />;
   }
 
   if (error || !data) {
@@ -98,6 +89,17 @@ export default function AdminBroadcastsView() {
 
   return (
     <div className="flex flex-col dashboard-card-gap pb-8 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">
+            Broadcast &amp; <span className="text-brand">Announcements</span>
+          </h1>
+          <p className="section-subtitle mt-1 text-left">
+            Dispatch announcements, push notifications, and release updates to learner cohorts.
+          </p>
+        </div>
+      </div>
+
       {/* ============================= STATS SUMMARY ============================= */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 dashboard-card-gap">
         <GlowCard corner="top-left">

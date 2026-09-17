@@ -5,7 +5,12 @@ export interface AdminRecentUser {
   name: string;
   email: string;
   role: string;
+  plan?: string;
   createdAt: string;
+  careerProfile?: {
+    targetRole?: string;
+    targetRoleName?: string;
+  } | null;
 }
 
 export interface AdminRecentActivityItem {
@@ -26,6 +31,8 @@ export interface AdminDashboardOverview {
     totalRoadmaps: number;
     totalAssessments: number;
     totalProjects: number;
+    totalInterviews?: number;
+    totalResumes?: number;
     aiRequests: string | number;
   };
   userAnalytics: {
@@ -33,6 +40,9 @@ export interface AdminDashboardOverview {
     learners: number;
     admins: number;
     newUsers: number;
+    freeUsers?: number;
+    plusUsers?: number;
+    proUsers?: number;
   };
   roadmapManagement: {
     totalRoadmaps: number;

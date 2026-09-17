@@ -21,3 +21,39 @@ export const getAdminProjects = async (skip: number, take: number, search?: stri
   ]);
   return { projects, total };
 };
+
+export const verifyProject = async (
+  adminId: string,
+  projectId: string,
+  isVerified: boolean,
+  score?: number
+) => {
+  const project = await prisma.project.findUnique({ where: { id: projectId } });
+  if (!project) throw new Error("Project not found.");
+
+  const updatedProject = await prisma.project.update({
+    where: { id: projectId },
+    data: {
+      isVerified,
+      ...(score !== undefined ? { score } : {}),
+    },
+    include: { user: { select: { name: true, email: true } } },
+  });
+
+  await prisma.adminAuditLog.create({
+    data: {
+      adminId,
+      action: isVerified ? "PROJECT_VERIFIED" : "PROJECT_UNVERIFIED",
+      targetId: projectId,
+      details: {
+        previousVerified: project.isVerified,
+        newVerified: isVerified,
+        projectTitle: project.title,
+        score,
+      },
+    },
+  });
+
+  return updatedProject;
+};
+

@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { getAdminDashboardStats } from "@/src/lib/api/admin/dashboard";
 import { authClient } from "@/src/lib/auth-client";
-import GenericPageSkeleton from "@/src/components/dashboard/shared/GenericPageSkeleton";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import DashboardProfile from "@/src/components/dashboard/shared/profile/DashboardProfile";
 import type { ProfileChart } from "@/src/components/dashboard/shared/profile/DashboardProfile";
 import { GlowCard } from "@/src/components/dashboard/shared/cards";
@@ -70,8 +70,8 @@ export default function AdminProfilePage() {
     };
   }, [data]);
 
-  if (isSessionLoading || isLoading) {
-    return <GenericPageSkeleton />;
+  if (isSessionLoading || (isLoading && !data)) {
+    return <AdminPageSkeleton variant="profile" />;
   }
 
   const email = session?.user?.email || "admin@aipather.com";

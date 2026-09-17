@@ -4,11 +4,11 @@ import prisma from "../../../lib/prisma.js";
 
 export interface AiSandboxPromptInput {
   prompt: string;
-  systemPrompt?: string;
-  model?: string;
-  temperature?: number;
-  maxTokens?: number;
-  adminId?: string;
+  systemPrompt?: string | undefined;
+  model?: string | undefined;
+  temperature?: number | undefined;
+  maxTokens?: number | undefined;
+  adminId?: string | undefined;
 }
 
 export interface AiSandboxModel {

@@ -7,7 +7,8 @@ import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { Route, User } from "lucide-react";
 import { useDebounce } from "use-debounce";
-import { Label, ListBox, Select, Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
+import { Label, ListBox, Select } from "@heroui/react";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
@@ -118,13 +119,13 @@ export default function AdminRoadmapsView() {
 
   if (isLoading && !data) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-[400px] w-full rounded-xl" />
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-5 w-44 rounded-md" />
-          <Skeleton className="h-9 w-40 rounded-md" />
-        </div>
-      </div>
+      <AdminPageSkeleton
+        variant="table"
+        hasKpis={false}
+        hasSearch={true}
+        hasToolbar={true}
+        dropdownCount={1}
+      />
     );
   }
 
@@ -141,7 +142,15 @@ export default function AdminRoadmapsView() {
   const { roadmaps, total } = data;
 
   return (
-    <AdminDataTable
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Learners <span className="text-brand">Roadmaps</span></h1>
+          <p className="section-subtitle mt-1 text-left">Manage and track learner roadmaps across the platform.</p>
+        </div>
+      </div>
+
+      <AdminDataTable
       columns={columns}
       rows={roadmaps}
       rowKey={(rm) => rm.id}
@@ -195,5 +204,6 @@ export default function AdminRoadmapsView() {
       total={total}
       onPageChange={setPage}
     />
+    </div>
   );
 }

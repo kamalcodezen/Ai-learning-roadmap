@@ -8,7 +8,7 @@ import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { User } from "lucide-react";
 import { useDebounce } from "use-debounce";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
@@ -99,13 +99,13 @@ export default function AuditLogsView() {
 
   if (isLoading && !data) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-[400px] w-full rounded-xl" />
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-5 w-44 rounded-md" />
-          <Skeleton className="h-9 w-40 rounded-md" />
-        </div>
-      </div>
+      <AdminPageSkeleton
+        variant="table"
+        hasKpis={false}
+        hasSearch={true}
+        hasToolbar={true}
+        dropdownCount={0}
+      />
     );
   }
 
@@ -122,22 +122,31 @@ export default function AuditLogsView() {
   const { total } = data;
 
   return (
-    <AdminDataTable
-      columns={columns}
-      rows={filteredLogs}
-      rowKey={(log) => log.id}
-      emptyMessage="No audit logs found matching your search."
-      searchTerm={search}
-      onSearchChange={(val) => {
-        setSearch(val);
-        setPage(1);
-      }}
-      searchPlaceholder="Search by action, admin name or target..."
-      exportCsv={() => exportAdminData(userId!, "audit-logs")}
-      page={page}
-      take={take}
-      total={total}
-      onPageChange={setPage}
-    />
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Audit <span className="text-brand">Logs</span></h1>
+          <p className="section-subtitle mt-1 text-left">View security and administrative actions taken across the platform.</p>
+        </div>
+      </div>
+
+      <AdminDataTable
+        columns={columns}
+        rows={filteredLogs}
+        rowKey={(log) => log.id}
+        emptyMessage="No audit logs found matching your search."
+        searchTerm={search}
+        onSearchChange={(val) => {
+          setSearch(val);
+          setPage(1);
+        }}
+        searchPlaceholder="Search by action, admin name or target..."
+        exportCsv={() => exportAdminData(userId!, "audit-logs")}
+        page={page}
+        take={take}
+        total={total}
+        onPageChange={setPage}
+      />
+    </div>
   );
 }
