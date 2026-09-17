@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import Lenis from "lenis";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -31,7 +33,7 @@ interface Kpi {
 }
 
 const glowCardClass =
-  "group relative overflow-hidden rounded-xl p-6 transition-all duration-300 border-2 border-background shadow-none proof-card";
+  "group relative overflow-hidden rounded-lg p-6 transition-all duration-300 border-2 border-background shadow-none proof-card";
 
 export default function DashboardStats() {
   const { data: session } = authClient.useSession();
@@ -41,11 +43,33 @@ export default function DashboardStats() {
 
   const userId = session?.user?.id;
 
+  const usersScrollRef = useRef<HTMLDivElement>(null);
+  const usersContentRef = useRef<HTMLDivElement>(null);
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["adminDashboardStats", userId],
     queryFn: () => getAdminDashboardStats(userId!),
     enabled: !!userId,
   });
+
+  const recentUsers = data?.recentUsers;
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    if (!usersScrollRef.current || !usersContentRef.current) return;
+
+    const lenis = new Lenis({
+      wrapper: usersScrollRef.current,
+      content: usersContentRef.current,
+      autoRaf: true,
+    });
+
+    return () => {
+      lenis.destroy();
+    };
+  }, [recentUsers]);
 
   if (isLoading && !data) {
     return <AdminPageSkeleton variant="dashboard" />;
@@ -53,13 +77,13 @@ export default function DashboardStats() {
 
   if (error || !data) {
     return (
-      <div className="flex h-[400px] items-center justify-center rounded-xl bg-red-500/10 border border-red-500/20">
+      <div className="flex h-[400px] items-center justify-center rounded-lg bg-red-500/10 border border-red-500/20">
         <p className="text-red-500 font-medium">Unable to load dashboard stats. Please try again.</p>
       </div>
     );
   }
 
-  const { overview, systemHealth, recentUsers, recentActivity, userAnalytics } = data;
+  const { overview, systemHealth, recentActivity, userAnalytics } = data;
 
   const kpis: Kpi[] = [
     { title: "Total Users", value: overview.totalUsers, icon: Users, color: "bg-blue-500/10 text-blue-500" },
@@ -73,10 +97,30 @@ export default function DashboardStats() {
   ];
 
   const adminBannerStats = [
-    { value: overview.totalUsers, label: "Total Users", suffix: "" },
-    { value: overview.activeLearners, label: "Active Learners", suffix: "" },
-    { value: `${userAnalytics?.plusUsers ?? 0} Plus · ${userAnalytics?.proUsers ?? 0} Pro`, label: "Paid Subscribers", suffix: "" },
-    { value: (overview.totalInterviews ?? 0) + (overview.totalResumes ?? 0), label: "Career Assets", suffix: "" },
+    {
+      value: overview.totalUsers,
+      label: "Total Users",
+      subtext: "Registered on platform",
+      suffix: "",
+    },
+    {
+      value: overview.activeLearners,
+      label: "Active Learners",
+      subtext: "Currently enrolled & active",
+      suffix: "",
+    },
+    {
+      value: overview.totalRoadmaps,
+      label: "Total Roadmaps",
+      subtext: "Generated career paths",
+      suffix: "",
+    },
+    {
+      value: overview.totalAssessments,
+      label: "Assessments",
+      subtext: "Completed by learners",
+      suffix: "",
+    },
   ];
 
   return (
@@ -102,7 +146,7 @@ export default function DashboardStats() {
             return (
               <Card key={kpi.title} mouseGlow className={glowCardClass}>
                 <CardContent className="relative z-10 flex items-start gap-4">
-                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${kpi.color}`}>
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ${kpi.color}`}>
                     <Icon className="h-6 w-6" />
                   </div>
                   <div className="min-w-0">
@@ -121,9 +165,9 @@ export default function DashboardStats() {
       {/* ============================= HEALTH + RECENT USERS ============================= */}
       <div className="grid grid-cols-1 lg:grid-cols-2 dashboard-card-gap">
         {/* System Health */}
-        <section>
+        <section className="flex flex-col">
           <h2 className="mb-4 text-xl font-bold tracking-tight text-foreground">System Health</h2>
-          <Card className={glowCardClass}>
+          <Card className={`${glowCardClass} h-[240px] flex flex-col justify-center`}>
             <CardContent className="space-y-4">
               <HealthRow label="Backend API" status={systemHealth.backend} />
               <HealthRow label="Database" status={systemHealth.database} />
@@ -134,47 +178,52 @@ export default function DashboardStats() {
         </section>
 
         {/* Recent Users */}
-        <section>
+        <section className="flex flex-col">
           <h2 className="mb-4 text-xl font-bold tracking-tight text-foreground">Recent Users</h2>
-          <Card className={`${glowCardClass} !p-0`}>
-            <CardContent>
-              <div className="divide-y divide-border/50">
-                {recentUsers.length === 0 ? (
-                  <div className="p-6 text-center text-muted-foreground">No recent users.</div>
-                ) : (
-                  recentUsers.map((u) => (
-                    <div key={u.id} className="flex items-center justify-between p-4 hover:bg-muted/40 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="font-medium text-foreground">{u.name}</p>
-                          {u.plan && (
-                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                              u.plan === 'PRO' ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30' :
-                              u.plan === 'PLUS' ? 'bg-blue-500/15 text-blue-500 border border-blue-500/30' :
-                              'bg-muted/50 text-muted-foreground border border-border/40'
-                            }`}>
-                              {u.plan}
-                            </span>
+          <Card className={`${glowCardClass} !p-0 h-[240px] flex flex-col`}>
+            <CardContent className="flex flex-col h-full min-h-0 !p-0">
+              <div
+                ref={usersScrollRef}
+                className="min-h-0 flex-1 overflow-y-scroll"
+              >
+                <div ref={usersContentRef} className="divide-y divide-border/50 min-h-full">
+                  {recentUsers && recentUsers.length === 0 ? (
+                    <div className="p-6 text-center text-muted-foreground">No recent users.</div>
+                  ) : (
+                    recentUsers?.map((u) => (
+                      <div key={u.id} className="flex items-center justify-between p-4 hover:bg-muted/40 transition-colors">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium text-foreground">{u.name}</p>
+                            {u.plan && (
+                              <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                                u.plan === 'PRO' ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30' :
+                                u.plan === 'PLUS' ? 'bg-blue-500/15 text-blue-500 border border-blue-500/30' :
+                                'bg-muted/50 text-muted-foreground border border-border/40'
+                              }`}>
+                                {u.plan}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground">{u.email}</p>
+                          {(u.careerProfile?.targetRoleName || u.careerProfile?.targetRole) && (
+                            <p className="text-[11px] font-medium text-primary mt-0.5">
+                              Target: {u.careerProfile.targetRoleName || u.careerProfile.targetRole}
+                            </p>
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground">{u.email}</p>
-                        {(u.careerProfile?.targetRoleName || u.careerProfile?.targetRole) && (
-                          <p className="text-[11px] font-medium text-primary mt-0.5">
-                            Target: {u.careerProfile.targetRoleName || u.careerProfile.targetRole}
-                          </p>
-                        )}
+                        <div className="flex items-center gap-3">
+                          <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+                            {u.role}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(u.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-                          {u.role}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {new Date(u.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
-                  ))
-                )}
+                    ))
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
