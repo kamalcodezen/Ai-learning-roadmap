@@ -26,3 +26,14 @@
     transform: translateY(0) scale(1);
   }
 }
+
+/* Dropdown popover cards border radius */
+.popover,
+.select__popover,
+.dropdown__popover,
+.autocomplete__popover,
+[data-slot="popover"],
+[data-slot="select-popover"],
+[data-slot="popover-dialog"] {
+  border-radius: 0.5rem !important;
+}
