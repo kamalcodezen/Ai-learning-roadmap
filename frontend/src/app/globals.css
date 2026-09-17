@@ -414,7 +414,7 @@ button {
   }
 
   .dashboard-card {
-  @apply relative overflow-hidden rounded-md border p-6 backdrop-blur-md
+  @apply relative overflow-hidden rounded-lg border p-6 backdrop-blur-md
     transition-all duration-300;
 
   background: linear-gradient(
@@ -484,7 +484,7 @@ button {
 }
 
 .dashboard-card-secondary { 
-  @apply rounded-xl border p-6 backdrop-blur-md transition-all duration-300; 
+  @apply rounded-lg border p-6 backdrop-blur-md transition-all duration-300; 
   background: var(--gradient-proof-card); 
   border-color: #E6E9EE; 
 }
@@ -500,7 +500,7 @@ button {
   }
 
   .soft-card {
-    @apply rounded-xl border p-6;
+    @apply rounded-lg border p-6;
     background: rgb(var(--card-soft));
     border-color: rgb(var(--border));
   }
@@ -557,7 +557,7 @@ button {
   }
 
   .skeleton-card {
-    @apply rounded-xl border flex flex-col overflow-hidden bg-card/60;
+    @apply rounded-lg border flex flex-col overflow-hidden bg-card/60;
     border-color: rgb(159 84 247 / 0.22);
   }
 }
