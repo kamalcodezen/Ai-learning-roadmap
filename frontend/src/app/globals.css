@@ -17,7 +17,7 @@
   --color-text-primary: #1E1E1E;
   --color-text-secondary: #4D4D4D;
   --color-border: #E6E9EE;
-  --color-muted: #F5F5F5;
+  --color-muted: #E2E5EB;
   --color-muted-foreground: #6B6B6B;
   --gradient-primary: linear-gradient(135deg, #9F54F7 0%, #8523F5 100%);
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
@@ -61,7 +61,7 @@
 
   --border: 230 233 238;
 
-  --muted: 245 245 245;
+  --muted: 226 229 235;
   --muted-foreground: 107 107 107;
 
   --sidebar: 255 255 255;
@@ -82,7 +82,7 @@
   --color-text-primary: #E5E5E5;
   --color-text-secondary: #A8A8A8;
   --color-border: #292929;
-  --color-muted: #141414;
+  --color-muted: #262030;
   --color-muted-foreground: #8B8B8B;
   --gradient-primary: linear-gradient(135deg, #B978FF 0%, #A855F7 100%);
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -101,7 +101,7 @@
 
   --border: 41 41 41;
 
-  --muted: 20 20 20;
+  --muted: 38 32 48;
   --muted-foreground: 139 139 139;
 
   --sidebar: 0 0 0;
@@ -324,17 +324,27 @@ button {
 /* =========================================
    CUSTOM SCROLLBAR SYSTEM
 ========================================= */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--primary)) transparent;
+}
+
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgb(var(--muted));
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   background: rgb(var(--primary));
   border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--primary) / 0.8);
 }
 
 /* =========================================
@@ -518,6 +528,17 @@ button {
     border-color: rgb(var(--border));
   }
 
+  /* Popover / Select Dropdown Card border radius */
+  .popover,
+  .select__popover,
+  .dropdown__popover,
+  .autocomplete__popover,
+  [data-slot="popover"],
+  [data-slot="select-popover"],
+  [data-slot="popover-dialog"] {
+    border-radius: 0.5rem !important;
+  }
+
   .input-field {
     @apply h-12 w-full rounded-xl border px-4 outline-none transition-all;
     background: rgb(var(--card));
@@ -557,8 +578,8 @@ button {
   }
 
   .skeleton-card {
-    @apply rounded-lg border flex flex-col overflow-hidden bg-card/60;
-    border-color: rgb(159 84 247 / 0.22);
+    @apply rounded-lg border flex flex-col overflow-hidden bg-card/75;
+    border-color: rgb(159 84 247 / 0.28);
   }
 }
 
@@ -568,11 +589,11 @@ button {
 @keyframes skeleton-deep-pulse {
   0%, 100% {
     opacity: 1;
-    filter: brightness(1.05);
+    filter: brightness(0.92);
   }
   50% {
-    opacity: 0.22;
-    filter: brightness(1.25);
+    opacity: 0.5;
+    filter: brightness(0.82);
   }
 }
 
