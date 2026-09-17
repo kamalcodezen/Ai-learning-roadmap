@@ -216,10 +216,22 @@ export const completeInterviewSession = async (userId: string) => {
       for (const skill of existingSkills) {
         const currentPractice = skill.practiceScore || 0;
         const boostedPractice = Math.min(100, Math.max(currentPractice, Math.round(currentPractice + (finalScore * 0.1))));
-        await tx.skillState.update({
+        const updated = await tx.skillState.update({
           where: { id: skill.id },
           data: {
             practiceScore: boostedPractice,
+            lastReviewed: new Date(),
+          },
+        });
+
+        await tx.skillStateHistory.create({
+          data: {
+            userId,
+            skillName: skill.skillName,
+            knowledgeScore: updated.knowledgeScore,
+            practiceScore: updated.practiceScore,
+            projectScore: updated.projectScore,
+            evidenceScore: updated.evidenceScore,
           },
         });
       }
@@ -253,7 +265,7 @@ export const completeInterviewSession = async (userId: string) => {
         userId,
         type: "PRACTICE",
         description: `Completed mock interview with score ${finalScore}%`,
-        metadata: { sessionId: session.id, finalScore },
+        metadata: { sessionId: session.id, finalScore, interviewScore: finalScore, durationMinutes: 20 },
       },
     });
   } catch (err) {

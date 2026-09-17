@@ -14,7 +14,7 @@ interface SidebarHeaderProps {
 
 export default function SidebarHeader({ onClose }: SidebarHeaderProps) {
   return (
-    <div className="flex shrink-0 items-center justify-between border-b border-border px-5 py-2">
+    <div className="flex shrink-0 items-center justify-between border-b border-border pl-4 pr-3 py-2">
       <Link
         href="/"
         className="flex shrink-0 items-center gap-2"
@@ -38,7 +38,7 @@ export default function SidebarHeader({ onClose }: SidebarHeaderProps) {
         </span>
       </Link>
 
-      <div className="hidden lg:flex items-center gap-1">
+      <div className="hidden lg:flex items-center ml-auto">
         <NotificationBell />
         <AnimatedThemeToggler className="hover:bg-foreground/10" />
       </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import AuthInput from "./AuthInput";
 import AuthOtpInput from "./AuthOtpInput";
 import AuthSocialButton from "./AuthSocialButton";
+import DemoAdminButton from "./DemoAdminButton";
 import LightRays from "./LightRays";
 import type { AuthMode } from "./auth.types";
 
@@ -58,10 +59,11 @@ export default function AuthForm({
         w-full
         flex-col
         justify-center
-        overflow-hidden
-        px-6
-        py-8
+        overflow-y-auto
+        px-4
+        py-6
         sm:px-8
+        sm:py-8
         md:px-10
         lg:px-14
         xl:px-16
@@ -211,6 +213,13 @@ export default function AuthForm({
             </>
           )}
         </p>
+
+        {/* ============================================================ */}
+        {/* TEMPORARY DEMO ADMIN LOGIN (Remove anytime by deleting this) */}
+        {/* ============================================================ */}
+        <div className="mt-4 pt-3 border-t border-white/10">
+          <DemoAdminButton />
+        </div>
       </div>
     </form>
   );

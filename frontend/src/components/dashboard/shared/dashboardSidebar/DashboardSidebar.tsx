@@ -111,6 +111,7 @@ export default function DashboardSidebar() {
         <SidebarContent
           userName={user?.name}
           userEmail={user?.email}
+          userImage={user?.image}
           indicatorId="sidebar-nav-active-desktop"
         />
       </aside>
@@ -150,7 +151,7 @@ export default function DashboardSidebar() {
 
               {/* Fixed profile card */}
               <div className="shrink-0 px-4 pt-2 pb-2">
-                <ProfileCard name={user?.name} email={user?.email} plan={(user as { plan?: string })?.plan} />
+                <ProfileCard name={user?.name} email={user?.email} plan={(user as { plan?: string })?.plan} image={user?.image} />
               </div>
 
               {/* Scrollable navigation — independent scroll zone */}
@@ -169,7 +170,7 @@ export default function DashboardSidebar() {
               {userRole.toUpperCase() !== "ADMIN" && ((user as { plan?: string })?.plan || "FREE").toUpperCase() !== "PRO" && (
                 <div className="px-4 py-2">
                   <Link
-                    href="/#pricing"
+                    href="/pricing"
                     onClick={closeDrawer}
                     className="group relative flex flex-col gap-1.5 overflow-hidden rounded-xl border border-primary/30 bg-[linear-gradient(to_bottom,rgba(159,84,247,0.12)_0%,rgba(133,35,245,0.06)_100%)] p-3 text-left transition-all hover:border-primary/60"
                   >

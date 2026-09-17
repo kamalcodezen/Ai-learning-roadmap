@@ -11,6 +11,7 @@ import { useDashboardSession } from "../sessionGuard/SessionGuard";
 interface SidebarContentProps {
   userName?: string | null;
   userEmail?: string | null;
+  userImage?: string | null;
   indicatorId: string;
   onClose?: () => void;
   onNavigate?: () => void;
@@ -19,12 +20,13 @@ interface SidebarContentProps {
 export default function SidebarContent({
   userName,
   userEmail,
+  userImage,
   indicatorId,
   onClose,
   onNavigate,
 }: SidebarContentProps) {
   const { data: session } = useDashboardSession();
-  const user = session?.user as { role?: string; plan?: string } | undefined;
+  const user = session?.user as { role?: string; plan?: string; image?: string | null } | undefined;
   const userRole = (user?.role || "LEARNER").toUpperCase();
   const userPlan = (user?.plan || "FREE").toUpperCase();
   const isPro = userPlan === "PRO";
@@ -35,7 +37,7 @@ export default function SidebarContent({
       <SidebarHeader onClose={onClose} />
 
       <div className="px-4 pt-2 pb-2">
-        <ProfileCard name={userName} email={userEmail} plan={userPlan} />
+        <ProfileCard name={userName} email={userEmail} plan={userPlan} image={userImage || user?.image} />
       </div>
 
       <div className="mt-1 flex min-h-0 flex-1 flex-col overflow-y-auto">
@@ -46,7 +48,7 @@ export default function SidebarContent({
       {!isAdmin && !isPro && (
         <div className="px-4 py-2">
           <Link
-            href="/#pricing"
+            href="/pricing"
             onClick={onNavigate}
             className="group relative flex flex-col gap-1.5 overflow-hidden rounded-xl border border-primary/30 bg-[linear-gradient(to_bottom,rgba(159,84,247,0.12)_0%,rgba(133,35,245,0.06)_100%)] p-3 text-left transition-all hover:border-primary/60 hover:shadow-[0_0_20px_rgba(159,84,247,0.2)]"
           >
@@ -70,8 +72,8 @@ export default function SidebarContent({
             </div>
             <p className="text-[10px] text-muted-foreground leading-tight">
               {userPlan === "PLUS"
-                ? "Get enterprise candidate verification & team roadmaps."
-                : "Unlock Job Reality, Resume AI, and Mock Interviews."}
+                ? "Unlock AI Resume, Proof Graph & Career Intelligence."
+                : "Unlock Job Reality, Assessments, and Mock Interviews."}
             </p>
           </Link>
         </div>

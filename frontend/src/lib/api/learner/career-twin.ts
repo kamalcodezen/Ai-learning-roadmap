@@ -28,6 +28,7 @@ export interface CareerTwinData {
 /**
  * Retrieves the Career Twin profile data.
  */
-export const getCareerTwin = async (): Promise<CareerTwinData> => {
-  return await serverFetch(`/api/career-twin`);
+export const getCareerTwin = async (targetRole?: string): Promise<CareerTwinData> => {
+  const query = targetRole ? `?role=${encodeURIComponent(targetRole)}` : "";
+  return await serverFetch(`/api/career-twin${query}`);
 };

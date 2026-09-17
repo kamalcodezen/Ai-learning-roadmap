@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import * as systemHealthService from "./system-health.service.js";
 
+/**
+ * Retrieves platform infrastructure health, database connection status, and service latency.
+ * @route GET /api/admin/system-health
+ */
 export const getSystemHealth = async (
   _req: Request,
   res: Response,

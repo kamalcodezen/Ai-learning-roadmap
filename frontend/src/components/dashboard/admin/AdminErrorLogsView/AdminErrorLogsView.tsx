@@ -3,16 +3,16 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { authClient } from "@/src/lib/auth-client";
-import { getAdminErrorLogs } from "@/src/lib/api/admin/error-logs";
+import { getAdminErrorLogs, AdminErrorLogItem } from "@/src/lib/api/admin/error-logs";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { formatDistanceToNow } from "date-fns";
 import { AlertTriangle } from "lucide-react";
 import { useDebounce } from "use-debounce";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-function statusCodeColor(code: number | null) {
+function statusCodeColor(code?: number | null) {
   if (!code) return "bg-gray-500/10 text-gray-500";
   if (code >= 200 && code < 300) return "bg-green-500/10 text-green-500";
   if (code >= 400 && code < 500) return "bg-orange-500/10 text-orange-500";
@@ -20,18 +20,7 @@ function statusCodeColor(code: number | null) {
   return "bg-gray-500/10 text-gray-500";
 }
 
-interface ErrorLogRow {
-  id: string;
-  path: string;
-  message: string;
-  method: string;
-  createdAt: string;
-  endpoint: string;
-  statusCode: number | null;
-  errorType: string;
-}
-
-const columns: AdminDataTableColumn<ErrorLogRow>[] = [
+const columns: AdminDataTableColumn<AdminErrorLogItem>[] = [
   {
     header: "Type",
     render: (err) => (
@@ -57,7 +46,7 @@ const columns: AdminDataTableColumn<ErrorLogRow>[] = [
     header: "Endpoint",
     render: (err) => (
       <span className="font-mono text-xs">
-        {err.method} {err.endpoint}
+        {err.method || "GET"} {err.endpoint || "/"}
       </span>
     ),
   },
@@ -101,22 +90,22 @@ export default function AdminErrorLogsView() {
     if (!debouncedSearch) return data.errors;
     const q = debouncedSearch.toLowerCase();
     return data.errors.filter(
-      (err: ErrorLogRow) =>
-        err.message.toLowerCase().includes(q) ||
-        err.endpoint.toLowerCase().includes(q) ||
-        err.errorType.toLowerCase().includes(q),
+      (err) =>
+        (err.message?.toLowerCase().includes(q) ?? false) ||
+        (err.endpoint?.toLowerCase().includes(q) ?? false) ||
+        (err.errorType?.toLowerCase().includes(q) ?? false),
     );
   }, [data, debouncedSearch]);
 
   if (isLoading && !data) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-[400px] w-full rounded-xl" />
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-5 w-44 rounded-md" />
-          <Skeleton className="h-9 w-40 rounded-md" />
-        </div>
-      </div>
+      <AdminPageSkeleton
+        variant="table"
+        hasKpis={false}
+        hasSearch={true}
+        hasToolbar={true}
+        dropdownCount={0}
+      />
     );
   }
 
@@ -133,22 +122,31 @@ export default function AdminErrorLogsView() {
   const { total } = data;
 
   return (
-    <AdminDataTable
-      columns={columns}
-      rows={filteredErrors}
-      rowKey={(err) => err.id}
-      emptyMessage="No errors found matching your search."
-      searchTerm={search}
-      onSearchChange={(val) => {
-        setSearch(val);
-        setPage(1);
-      }}
-      searchPlaceholder="Search by message, endpoint or type..."
-      exportCsv={() => exportAdminData(userId!, "error-logs")}
-      page={page}
-      take={take}
-      total={total}
-      onPageChange={setPage}
-    />
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Error <span className="text-brand">Logs</span></h1>
+          <p className="section-subtitle mt-1 text-left">Track and investigate system errors across the platform.</p>
+        </div>
+      </div>
+
+      <AdminDataTable
+        columns={columns}
+        rows={filteredErrors}
+        rowKey={(err) => err.id}
+        emptyMessage="No errors found matching your search."
+        searchTerm={search}
+        onSearchChange={(val) => {
+          setSearch(val);
+          setPage(1);
+        }}
+        searchPlaceholder="Search by message, endpoint or type..."
+        exportCsv={() => exportAdminData(userId!, "error-logs")}
+        page={page}
+        take={take}
+        total={total}
+        onPageChange={setPage}
+      />
+    </div>
   );
 }

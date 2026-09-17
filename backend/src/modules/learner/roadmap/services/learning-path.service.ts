@@ -643,7 +643,8 @@ export const completeMilestone = async (userId: string, milestoneId: string) => 
     data: {
       userId,
       type: "LEARNING",
-      description: `Completed milestone: ${milestone.title}`
+      description: `Completed milestone: ${milestone.title}`,
+      metadata: { milestoneId: milestone.id, title: milestone.title, durationMinutes: 30 },
     }
   }).catch((err) => console.error("Failed to log activity:", err));
 

@@ -4,11 +4,12 @@ import type { ReactNode } from "react";
 import DashboardSidebar from "@/src/components/dashboard/shared/dashboardSidebar/DashboardSidebar";
 import SessionGuard from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import DashboardScrollProvider from "@/src/components/dashboard/shared/DashboardScrollProvider";
+import { HomeFloatingChat } from "@/src/components/chat/HomeFloatingChat";
 
 export const metadata: Metadata = {
   title: {
-    default: "Dashboard",
-    template: "%s | Dashboard | AI Pather",
+    default: "Dashboard | AI Pather",
+    template: "%s | AI Pather",
   },
   robots: { index: false, follow: false },
 };
@@ -22,6 +23,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <DashboardScrollProvider>{children}</DashboardScrollProvider>
         </div>
       </div>
+      <HomeFloatingChat hideTriggerOnMobile />
     </SessionGuard>
   );
 }

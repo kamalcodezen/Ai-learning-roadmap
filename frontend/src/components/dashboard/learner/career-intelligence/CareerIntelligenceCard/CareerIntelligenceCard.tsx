@@ -61,7 +61,10 @@ export default function CareerIntelligenceCard() {
     queryKey: ["careerDecision", session?.user?.id],
     queryFn: () => getCareerDecision(),
     enabled: !!session?.user?.id,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 5000,
+    refetchInterval: 15000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
   });
 
   const {
@@ -73,21 +76,28 @@ export default function CareerIntelligenceCard() {
     queryKey: ["evidenceVerification", session?.user?.id],
     queryFn: () => getEvidenceVerification(),
     enabled: !!session?.user?.id,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 5000,
+    refetchInterval: 15000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
   });
 
   const { data: readinessData } = useQuery({
     queryKey: ["applicationReadiness", session?.user?.id],
     queryFn: () => getApplicationReadiness(),
     enabled: !!session?.user?.id,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 5000,
+    refetchInterval: 15000,
+    refetchOnWindowFocus: true,
   });
 
   const { data: alignmentData } = useQuery({
     queryKey: ["careerAlignment", session?.user?.id],
     queryFn: () => getCareerAlignment(),
     enabled: !!session?.user?.id,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 5000,
+    refetchInterval: 15000,
+    refetchOnWindowFocus: true,
   });
 
   /* =========================================================

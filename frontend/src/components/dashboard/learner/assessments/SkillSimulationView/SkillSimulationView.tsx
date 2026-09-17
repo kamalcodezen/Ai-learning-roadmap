@@ -128,6 +128,9 @@ export default function SkillSimulationView({
         queryKey: ["jobReality", session?.user?.id],
       });
       queryClient.invalidateQueries({
+        queryKey: ["learningPath", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["skillTree", session?.user?.id],
       });
     },

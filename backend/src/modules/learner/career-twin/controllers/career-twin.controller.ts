@@ -9,7 +9,8 @@ const getUserId = (req: Request) => {
 
 export const getCareerTwin = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await careertwinService.getCareerTwin(getUserId(req));
+    const role = (req.query.role as string) || undefined;
+    const data = await careertwinService.getCareerTwin(getUserId(req), role);
     res.json(data);
   } catch (error) {
     next(error);

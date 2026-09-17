@@ -83,10 +83,23 @@ export default function ProfileDropdown({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { data: session } = authClient.useSession();
+  const [liveImage, setLiveImage] = useState<string | null>(null);
   const user = session?.user as { role?: string; plan?: string; image?: string | null } | undefined;
+  const userImage = liveImage || user?.image;
   const userRole = user?.role?.toUpperCase() || "LEARNER";
   const userPlan = user?.plan?.toUpperCase() || "FREE";
   const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
+
+  useEffect(() => {
+    const handleAvatarUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ image?: string }>;
+      if (customEvent.detail?.image) {
+        setLiveImage(customEvent.detail.image);
+      }
+    };
+    window.addEventListener("user-avatar-updated", handleAvatarUpdate);
+    return () => window.removeEventListener("user-avatar-updated", handleAvatarUpdate);
+  }, []);
 
   const desktopNavItems = [
     {
@@ -157,11 +170,12 @@ export default function ProfileDropdown({
       >
         {/* User Avatar Circle */}
         <div className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-tr from-primary to-secondary text-xs font-bold text-white shadow-xs">
-          {user?.image ? (
+          {userImage ? (
             <Image
-              src={user.image}
+              src={userImage}
               alt={name || "User"}
               fill
+              unoptimized
               className="object-cover"
               sizes="32px"
             />
@@ -200,11 +214,12 @@ export default function ProfileDropdown({
               <div className="flex items-center gap-3">
                 {/* Avatar with active indicator */}
                 <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-tr from-primary to-secondary text-sm font-bold text-white shadow-xs">
-                  {user?.image ? (
+                  {userImage ? (
                     <Image
-                      src={user.image}
+                      src={userImage}
                       alt={name || "User"}
                       fill
+                      unoptimized
                       className="object-cover"
                       sizes="40px"
                     />
@@ -239,7 +254,7 @@ export default function ProfileDropdown({
             <div className="mt-2 px-1">
               {userPlan === "FREE" && (
                 <Link
-                  href="/#pricing"
+                  href="/pricing"
                   onClick={() => setOpen(false)}
                   className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
                 >
@@ -255,7 +270,7 @@ export default function ProfileDropdown({
 
               {userPlan === "PLUS" && (
                 <Link
-                  href="/#pricing"
+                  href="/pricing"
                   onClick={() => setOpen(false)}
                   className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
                 >
@@ -286,9 +301,11 @@ export default function ProfileDropdown({
                     key={item.label}
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-foreground/80 transition-colors hover:bg-muted/70 hover:text-primary"
+                    className="group flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-semibold text-foreground/85 transition-colors hover:bg-muted/70 hover:text-primary"
                   >
-                    <ItemIcon className="size-4 text-primary shrink-0" />
+                    <span className="flex size-7 items-center justify-center rounded-lg bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 group-hover:bg-primary group-hover:text-white transition-all shrink-0">
+                      <ItemIcon className="size-3.5 shrink-0" />
+                    </span>
                     <span>{item.label}</span>
                   </Link>
                 );
@@ -301,16 +318,20 @@ export default function ProfileDropdown({
                 type="button"
                 onClick={handleSignOut}
                 disabled={isSigningOut}
-                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-semibold text-red-500 transition-colors hover:bg-red-500/10 disabled:pointer-events-none disabled:opacity-60 cursor-pointer"
+                className="group flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left text-xs font-semibold text-red-500 transition-colors hover:bg-red-500/10 disabled:pointer-events-none disabled:opacity-60 cursor-pointer"
               >
                 {isSigningOut ? (
                   <>
-                    <Loader2 className="size-4 animate-spin text-red-500 shrink-0" />
+                    <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/15 text-red-500 shrink-0">
+                      <Loader2 className="size-3.5 animate-spin shrink-0" />
+                    </span>
                     <span>Signing out...</span>
                   </>
                 ) : (
                   <>
-                    <LogOut className="size-4 text-red-500 shrink-0" />
+                    <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/15 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all shrink-0">
+                      <LogOut className="size-3.5 shrink-0" />
+                    </span>
                     <span>Sign out</span>
                   </>
                 )}

@@ -47,12 +47,14 @@ export const getSkillGaps = async (userId: string) => {
   const allAnalysisSkills = [...analysisCoreSkills, ...analysisSupportingSkills];
 
   // Find mapped skills
-  // If multiple skillStates match a required skill, pick the most recently reviewed one
+  // Find mapped skills
+  // If multiple skillStates match a required skill, pick the highest verified knowledge score
   const mappedSkillStates = requiredSkills.map(reqSkill => {
     const matchingStates = skillStates.filter(s => isMatchingSkill(s.skillName, reqSkill.skill));
-    matchingStates.sort((a, b) => new Date(b.lastReviewed).getTime() - new Date(a.lastReviewed).getTime());
-    const state = matchingStates[0];
-    const score = state ? state.knowledgeScore : 0;
+    const maxScore = matchingStates.length > 0
+      ? Math.max(...matchingStates.map(s => s.knowledgeScore))
+      : 0;
+    const state = matchingStates.find(s => s.knowledgeScore === maxScore) || matchingStates[0];
     const aiSkillMatch = allAnalysisSkills.find(
       as => isMatchingSkill(as.name, reqSkill.skill)
     );
@@ -60,7 +62,7 @@ export const getSkillGaps = async (userId: string) => {
     return {
       skillName: reqSkill.skill,
       isCritical: reqSkill.critical,
-      knowledgeScore: score,
+      knowledgeScore: maxScore,
       id: state ? state.id : null,
       isMissing: !state,
       aiReason: aiSkillMatch?.reason || null
@@ -72,12 +74,16 @@ export const getSkillGaps = async (userId: string) => {
     s => !requiredSkills.some(req => isMatchingSkill(s.skillName, req.skill))
   );
 
-  // Deduplicate unmapped states if any aliases exist, keeping most recent
+  // Deduplicate unmapped states if any aliases exist, keeping highest verified score
   const seenUnmapped = new Set<string>();
   for (const extraState of unmappedStates) {
     const isAlreadyCovered = Array.from(seenUnmapped).some(seen => isMatchingSkill(seen, extraState.skillName));
     if (isAlreadyCovered) continue;
     seenUnmapped.add(extraState.skillName);
+
+    const allMatching = skillStates.filter(s => isMatchingSkill(s.skillName, extraState.skillName));
+    const bestScore = Math.max(...allMatching.map(s => s.knowledgeScore));
+    const bestState = allMatching.find(s => s.knowledgeScore === bestScore) || extraState;
 
     const aiSkillMatch = allAnalysisSkills.find(
       as => isMatchingSkill(as.name, extraState.skillName)
@@ -85,12 +91,28 @@ export const getSkillGaps = async (userId: string) => {
 
     mappedSkillStates.push({
       skillName: extraState.skillName,
-      isCritical: extraState.knowledgeScore < 40,
-      knowledgeScore: extraState.knowledgeScore,
-      id: extraState.id,
+      isCritical: bestScore < 40,
+      knowledgeScore: bestScore,
+      id: bestState.id,
       isMissing: false,
       aiReason: aiSkillMatch?.reason || null
     });
+  }
+
+  // Reconcile completed milestones: if a milestone on an active roadmap is COMPLETED,
+  // ensure its covered skills reflect at least 75% verified proficiency
+  if (activeRoadmap?.milestones) {
+    const completedMilestones = activeRoadmap.milestones.filter(m => m.status === "COMPLETED");
+    for (const cm of completedMilestones) {
+      const covered = cm.unlocks || [];
+      for (const cov of covered) {
+        const existing = mappedSkillStates.find(ms => isMatchingSkill(ms.skillName, cov));
+        if (existing && existing.knowledgeScore < 75) {
+          existing.knowledgeScore = 75;
+          existing.isMissing = false;
+        }
+      }
+    }
   }
 
   const criticalGaps = mappedSkillStates.filter(s => s.knowledgeScore < 40 && s.isCritical).length;
@@ -162,17 +184,24 @@ export const getSkillGaps = async (userId: string) => {
 
     const targetMilestone = matchingMilestone || activeRoadmap?.milestones[0];
     const isTargetLocked = targetMilestone && targetMilestone.status === "UPCOMING";
+    const isTargetCompleted = targetMilestone && targetMilestone.status === "COMPLETED";
     const activeFrontier = activeRoadmap?.milestones.find((m) => m.status === "CURRENT") || activeRoadmap?.milestones[0];
 
-    const recommendedAction = targetMilestone
-      ? isTargetLocked
-        ? `Unlock via ${activeFrontier?.title || "Stage 1"}`
-        : `Master in ${targetMilestone.title}`
-      : `Start ${s.skillName} Learning Path`;
+    const simulationHref = `/dashboard/learner/assessments/simulation?skill=${encodeURIComponent(s.skillName)}`;
 
-    const href = targetMilestone
+    const recommendedAction = targetMilestone
+      ? isTargetCompleted
+        ? `Verify proficiency via Skill Simulation`
+        : isTargetLocked
+          ? `Unlock via ${activeFrontier?.title || "Stage 1"}`
+          : `Master in ${targetMilestone.title}`
+      : `Verify via Skill Simulation`;
+
+    const learningPathHref = targetMilestone
       ? `/dashboard/learner/learning-path?skill=${encodeURIComponent(s.skillName)}&milestone=${encodeURIComponent(targetMilestone.id)}&source=fix-gap`
       : `/dashboard/learner/learning-path?skill=${encodeURIComponent(s.skillName)}&source=fix-gap`;
+
+    const href = isTargetCompleted ? simulationHref : learningPathHref;
 
     const slug = normSkill.replace(/[^a-z0-9]/g, "-");
     deduplicatedGaps.push({
@@ -184,7 +213,11 @@ export const getSkillGaps = async (userId: string) => {
       evidence,
       relatedAssessment: "Domain Assessment & Diagnostic",
       recommendedAction,
-      href
+      href,
+      simulationHref,
+      learningPathHref,
+      isMilestoneCompleted: Boolean(isTargetCompleted),
+      milestoneTitle: targetMilestone?.title || null,
     });
   }
 

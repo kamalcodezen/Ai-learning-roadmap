@@ -19,6 +19,7 @@ import { Card, CardContent } from "@/src/components/ui/Card";
 import { DashboardCard } from "@/src/components/dashboard/shared/cards";
 import { ProofGraphCanvas } from "../ProofGraphCanvas/ProofGraphCanvas";
 import { SkillPassportStream } from "../SkillPassport/SkillPassportStream";
+import { showToast } from "@/src/components/ui/toast";
 import {
   CheckCircle2,
   Circle,
@@ -64,9 +65,19 @@ export default function ProofGraphPage() {
       const res = await generateProofGraphShareLink();
       const url = `${window.location.origin}/verify/proof/${res.shareToken}`;
       setShareUrl(url);
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      showToast({
+        message: "Recruiter verification link copied to clipboard!",
+        variant: "success",
+      });
+      setTimeout(() => setCopied(false), 3000);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to generate share link.";
-      alert(msg);
+      showToast({
+        message: msg,
+        variant: "error",
+      });
     } finally {
       setIsSharing(false);
     }
@@ -76,18 +87,29 @@ export default function ProofGraphPage() {
     queryKey: ["proofGraph", session?.user?.id],
     queryFn: () => getProofGraph(),
     enabled: !!session?.user?.id,
+    staleTime: 5000,
+    refetchInterval: 12000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
   });
 
   const { data: gamificationData } = useQuery({
     queryKey: ["gamificationProfile", session?.user?.id],
     queryFn: () => getGamificationProfile(),
     enabled: !!session?.user?.id,
+    staleTime: 10000,
+    refetchInterval: 15000,
+    refetchOnWindowFocus: true,
   });
 
   const { data: skillTreeData } = useQuery({
     queryKey: ["skillTree", session?.user?.id],
     queryFn: () => getSkillTree(),
     enabled: !!session?.user?.id,
+    staleTime: 5000,
+    refetchInterval: 12000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
   });
 
   if (isSessionLoading) {
@@ -324,8 +346,14 @@ export default function ProofGraphPage() {
             disabled={isSharing}
             className="flex items-center gap-2 px-3.5 py-1.5 text-sm font-semibold rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
           >
-            {isSharing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Share2 className="w-4 h-4" />}
-            {isSharing ? "Generating..." : "Share Proof Graph"}
+            {isSharing ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : copied ? (
+              <Check className="w-4 h-4 text-emerald-300" />
+            ) : (
+              <Share2 className="w-4 h-4" />
+            )}
+            {isSharing ? "Generating..." : copied ? "Link Copied!" : "Share Proof Graph"}
           </button>
 
           {/* View Tabs */}

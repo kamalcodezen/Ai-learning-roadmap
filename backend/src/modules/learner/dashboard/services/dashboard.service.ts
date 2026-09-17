@@ -4,6 +4,7 @@ import { getAdaptiveLearningDecision } from "../../roadmap/services/adaptive-lea
 import { getOrGenerateLearningPath } from "../../roadmap/services/learning-path.service.js";
 import { getSkillEvidenceVerification } from "../../career-intelligence/services/skill-evidence-verifier.service.js";
 import { isMatchingSkill } from "../../assessments/services/skill-simulation.service.js";
+import { getCanonicalRoleDefinition, resolveTargetRoleKey } from "../../career-alignment/services/career-skills.map.js";
 
 export const getDashboardOverview = async (userId: string) => {
   const oneWeekAgo = new Date();
@@ -77,21 +78,27 @@ export const getDashboardOverview = async (userId: string) => {
   const targetRole = profile?.targetRoleName || profile?.targetRole || "Unknown Role";
   const experienceLevel = profile?.experienceLevel || "BEGINNER";
   
-  // Flexible normalized role matcher (handles "fullstack" slug vs "Full Stack Developer" name)
+  // Flexible normalized role matcher (handles canonical roles, aliases, and dynamic titles)
   const roleSlug = (profile?.targetRole || "").toLowerCase().trim();
   const roleName = (profile?.targetRoleName || "").toLowerCase().trim();
+  const canonicalTarget = resolveTargetRoleKey(targetRole).toLowerCase().trim();
+
   const isRoleMatch = (r?: string | null) => {
     if (!r) return true;
     const norm = r.toLowerCase().trim();
-    return (
+    if (
       norm === roleSlug ||
       norm === roleName ||
       norm.replace(/[\s-_]/g, "") === roleSlug.replace(/[\s-_]/g, "")
-    );
+    ) {
+      return true;
+    }
+    const canonicalR = resolveTargetRoleKey(r).toLowerCase().trim();
+    return canonicalR === canonicalTarget;
   };
 
-  const validDiagnosticResult = isRoleMatch(diagnosticResult?.targetRole) ? diagnosticResult : null;
-  const validRoadmap = isRoleMatch(roadmap?.targetRole) ? roadmap : null;
+  const validDiagnosticResult = (diagnosticResult && isRoleMatch(diagnosticResult?.targetRole)) ? diagnosticResult : (diagnosticResult || null);
+  const validRoadmap = (roadmap && isRoleMatch(roadmap?.targetRole)) ? roadmap : (roadmap || null);
 
   if (!validRoadmap && profile) {
     // Fire off async canonical roadmap generation without blocking the dashboard load
@@ -157,6 +164,17 @@ export const getDashboardOverview = async (userId: string) => {
       milestones: validRoadmap.milestones.map((m) => ({
         name: m.title,
         status: m.status === "CURRENT" ? "IN_PROGRESS" : m.status === "UPCOMING" ? "PENDING" : m.status
+      })),
+    };
+  } else if (profile) {
+    const canonical = getCanonicalRoleDefinition(targetRole);
+    roadmapDetails = {
+      currentMilestone: canonical.milestones[0]?.title || "Stage 1: Core Foundations",
+      blockingPrerequisite: null,
+      progress: 0,
+      milestones: canonical.milestones.map((m, idx) => ({
+        name: m.title,
+        status: (idx === 0 ? "IN_PROGRESS" : "PENDING") as "IN_PROGRESS" | "PENDING",
       })),
     };
   }
@@ -304,11 +322,21 @@ export const getDashboardOverview = async (userId: string) => {
     careerReadiness: careerReadinessDelta,
   };
 
-  // 8. Assessments (minimal summary)
-  const pendingAssessments = (!validDiagnosticResult ? 1 : 0) + (currentMilestone ? 1 : 0);
+  // 8. Assessments (authentic summary from real attempts, simulations & interviews)
+  const completedDiagnosticsCount = await prisma.diagnosticAttempt.count({
+    where: { userId, status: "COMPLETED" },
+  });
+  const completedInterviewsCount = interviewSessions.filter(s => s.status === "COMPLETED").length;
+  const completedSimulationsCount = await prisma.activityLog.count({
+    where: { userId, type: "ASSESSMENT" },
+  });
+
+  const totalCompletedAssessments = completedDiagnosticsCount + completedInterviewsCount + completedSimulationsCount;
+  const pendingAssessments = (completedDiagnosticsCount === 0 ? 1 : 0) + (currentMilestone ? 1 : 0);
+
   const assessmentsSummary = {
-    pendingCount: pendingAssessments,
-    completedCount: validDiagnosticResult ? 1 : 0,
+    pendingCount: Math.max(1, pendingAssessments),
+    completedCount: totalCompletedAssessments,
   };
 
   // 9. Proof (summary with verified scores)

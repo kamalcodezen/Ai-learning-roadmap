@@ -36,12 +36,11 @@ export interface CareerDecisionOutput {
 }
 
 export const getCareerDecision = async (userId: string): Promise<CareerDecisionOutput> => {
-  const [profile, evidenceVerification, readiness, skillStates, diagnosticAttempts, interviewSessions] =
+  const [profile, evidenceVerification, readiness, diagnosticAttempts, interviewSessions] =
     await Promise.all([
       prisma.careerProfile.findUnique({ where: { userId } }),
       getSkillEvidenceVerification(userId),
       getCareerReadiness(userId),
-      prisma.skillState.findMany({ where: { userId } }),
       prisma.diagnosticAttempt.findMany({ where: { userId, status: "COMPLETED" } }),
       prisma.interviewSession.findMany({ where: { userId, status: "COMPLETED" } }),
     ]);
@@ -97,8 +96,8 @@ export const getCareerDecision = async (userId: string): Promise<CareerDecisionO
   if (evidenceVerification.staleEvidenceSkillsCount > 0) {
     why.push(`${evidenceVerification.staleEvidenceSkillsCount} skill(s) have stale evidence older than 6 months.`);
   }
-  if (overallSkill > overallProof + 20) {
-    why.push(`Your claimed skill score (${overallSkill}%) exceeds your verified proof score (${overallProof}%).`);
+  if (overallSkill > overallProof + 25) {
+    why.push(`Your assessed skill score (${overallSkill}%) is ahead of verified portfolio evidence (${overallProof}%). Build project artifacts to close this gap.`);
   }
   if (diagnosticAttempts.length === 0) {
     why.push("Diagnostic assessment has not yet been completed to establish baseline competence.");
@@ -115,10 +114,7 @@ export const getCareerDecision = async (userId: string): Promise<CareerDecisionO
   // Determine Next Best Action
   let nextBestAction: NextBestActionItem;
 
-  const weakestSkill = (skillStates || []).sort(
-    (a: { knowledgeScore?: number }, b: { knowledgeScore?: number }) =>
-      (a.knowledgeScore || 0) - (b.knowledgeScore || 0)
-  )[0];
+  const criticalRoleGap = readiness.weakSkills && readiness.weakSkills.length > 0 ? readiness.weakSkills[0] : null;
 
   const staleSkill = evidenceVerification.skills.find((s: SkillEvidenceItem) => s.freshness === "STALE");
   const lowProofSkill = evidenceVerification.skills.find(
@@ -145,30 +141,25 @@ export const getCareerDecision = async (userId: string): Promise<CareerDecisionO
       estimatedEffortHours: 1,
       actionUrl: "/diagnostic",
     };
-  } else if (weakestSkill && (weakestSkill.knowledgeScore || 0) < 40) {
+  } else if (criticalRoleGap) {
     nextBestAction = {
       type: "LEARN_SKILL",
-      title: `Master ${weakestSkill.skillName} Fundamentals`,
-      skillName: weakestSkill.skillName,
-      currentScore: Math.round(weakestSkill.knowledgeScore || 0),
+      title: `Close Critical Role Gap: Master ${criticalRoleGap}`,
+      skillName: criticalRoleGap,
+      currentScore: 0,
       expectedImpact: "HIGH",
       estimatedEffortHours: 12,
-      actionUrl: "/dashboard/learner/skill-gaps",
+      actionUrl: "/dashboard/learner/learning-path",
     };
-  } else if (decision === "BUILD_MORE_EVIDENCE") {
-    const targetEvidenceSkill =
-      lowProofSkill ||
-      evidenceVerification.skills.find((s: SkillEvidenceItem) => s.proofScore < 40) ||
-      weakestSkill;
-    const skillName = targetEvidenceSkill?.skillName || targetRole;
+  } else if (avgInterviewScore !== null && avgInterviewScore < 70) {
     nextBestAction = {
-      type: "BUILD_PROJECT",
-      title: `Build a Verified Project with ${skillName}`,
-      skillName,
-      currentScore: targetEvidenceSkill ? ("proofScore" in targetEvidenceSkill ? targetEvidenceSkill.proofScore : 0) : overallProof,
+      type: "PRACTICE_INTERVIEW",
+      title: `Improve Technical Interview Score for ${targetRole}`,
+      skillName: "Technical Interview",
+      currentScore: avgInterviewScore,
       expectedImpact: "HIGH",
-      estimatedEffortHours: 15,
-      actionUrl: "/dashboard/learner/portfolio",
+      estimatedEffortHours: 3,
+      actionUrl: "/dashboard/learner/interview",
     };
   } else if (lowProofSkill) {
     nextBestAction = {
@@ -190,26 +181,6 @@ export const getCareerDecision = async (userId: string): Promise<CareerDecisionO
       estimatedEffortHours: 8,
       actionUrl: "/dashboard/learner/proof-graph",
     };
-  } else if (weakestSkill && (weakestSkill.knowledgeScore || 0) < 60) {
-    nextBestAction = {
-      type: "LEARN_SKILL",
-      title: `Strengthen ${weakestSkill.skillName} Knowledge`,
-      skillName: weakestSkill.skillName,
-      currentScore: Math.round(weakestSkill.knowledgeScore || 0),
-      expectedImpact: "HIGH",
-      estimatedEffortHours: 10,
-      actionUrl: "/dashboard/learner/learning-path",
-    };
-  } else if (avgInterviewScore !== null && avgInterviewScore < 70) {
-    nextBestAction = {
-      type: "PRACTICE_INTERVIEW",
-      title: `Improve Technical Interview Score for ${targetRole}`,
-      skillName: "Technical Interview",
-      currentScore: avgInterviewScore,
-      expectedImpact: "HIGH",
-      estimatedEffortHours: 3,
-      actionUrl: "/dashboard/learner/interview",
-    };
   } else if (interviewSessions.length === 0 && overallSkill >= 50) {
     nextBestAction = {
       type: "PRACTICE_INTERVIEW",
@@ -223,7 +194,7 @@ export const getCareerDecision = async (userId: string): Promise<CareerDecisionO
   } else {
     nextBestAction = {
       type: "BUILD_PROJECT",
-      title: "Build Capstone Project",
+      title: `Build a Showcase Portfolio Project for ${targetRole}`,
       skillName: targetRole,
       currentScore: overallProof,
       expectedImpact: "HIGH",

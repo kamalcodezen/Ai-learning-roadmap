@@ -17,6 +17,7 @@ const guestLinks = [
   { title: "How It Works", href: "/#how-it-works" },
   { title: "Features", href: "/#features" },
   { title: "About Us", href: "/about" },
+  { title: "Contact Us", href: "/contact" },
   { title: "Login", href: "/signin" },
   { title: "Sign Up", href: "/signup" },
 ];
@@ -28,6 +29,7 @@ const learnerLinks = [
   { title: "Proof Graph", href: "/dashboard/learner/proof-graph" },
   { title: "Portfolio", href: "/dashboard/learner/portfolio" },
   { title: "About Us", href: "/about" },
+  { title: "Contact Us", href: "/contact" },
 ];
 
 const adminLinks = [
@@ -36,6 +38,7 @@ const adminLinks = [
   { title: "Skill Health", href: "/dashboard/admin/skill-health" },
   { title: "Analytics", href: "/dashboard/admin/analytics" },
   { title: "About Us", href: "/about" },
+  { title: "Contact Us", href: "/contact" },
 ];
 
 const socialLinks = [
@@ -108,17 +111,17 @@ export default function Footer() {
           <div className="flex flex-col items-center">
             <Link
               href="/"
-              className="flex items-center mt-20 space-x-3 md:space-x-4"
+              className="flex items-center justify-center mt-20 space-x-3 md:space-x-4"
             >
               <Image
                 src="/brand/logo-p-purple.png"
                 alt="AI Pather"
-                width={70}
-                height={70}
-                className="w-10 h-10 md:w-[70px] md:h-[70px] object-contain"
+                width={52}
+                height={52}
+                className="w-8 h-8 md:w-[52px] md:h-[52px] object-contain shrink-0"
               />
 
-              <span className="font-bold text-display tracking-tight text-white">
+              <span className="font-bold text-display leading-none tracking-tight text-white translate-y-[2px] md:translate-y-[3px]">
                 AI <span className="text-[var(--color-primary)]">Pather</span>
               </span>
             </Link>

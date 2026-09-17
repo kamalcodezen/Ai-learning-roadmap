@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Lenis from "lenis";
 import {
   CheckCircle2,
   ChevronRight,
@@ -35,6 +36,8 @@ import {
 } from "@/src/lib/api/learner/diagnostic";
 import BrandLoader from "@/src/components/shared/BrandLoader";
 import DiagnosticResultView from "./DiagnosticResultView";
+import Image from "next/image";
+import brandLogo from "../../../public/brand/AI-Pather-blue.png";
 
 type DiagnosticStatus =
   | "idle"
@@ -60,17 +63,19 @@ export default function Diagnostic() {
     authClient.useSession();
 
   const activeUser = session?.user;
-  const userRole = ((activeUser as { role?: string })?.role || "").toUpperCase();
+  const userRole = (
+    (activeUser as { role?: string })?.role || ""
+  ).toUpperCase();
   const isAdmin = userRole === "ADMIN";
+  const firstName = session?.user?.name?.trim().split(" ")[0] || "there";
 
   // Check onboarding & diagnostic routing state for non-admin learners
-  const {
-    data: routingState,
-    isLoading: isRoutingLoading,
-  } = useQuery({
+  const { data: routingState, isLoading: isRoutingLoading } = useQuery({
     queryKey: ["routingState", activeUser?.id],
     queryFn: async () => {
-      const res = (await serverFetch("/api/career-profile/routing-state")) as RoutingStateResponse;
+      const res = (await serverFetch(
+        "/api/career-profile/routing-state",
+      )) as RoutingStateResponse;
       return res?.data;
     },
     enabled: !!activeUser && !isAdmin,
@@ -91,10 +96,21 @@ export default function Diagnostic() {
       router.replace("/dashboard/admin/dashboard");
       return;
     }
-    if (!isRoutingLoading && routingState && !routingState.onboardingCompleted) {
+    if (
+      !isRoutingLoading &&
+      routingState &&
+      !routingState.onboardingCompleted
+    ) {
       router.replace("/onboarding");
     }
-  }, [isSessionLoading, activeUser, isAdmin, isRoutingLoading, routingState, router]);
+  }, [
+    isSessionLoading,
+    activeUser,
+    isAdmin,
+    isRoutingLoading,
+    routingState,
+    router,
+  ]);
 
   const [questions, setQuestions] = useState<DiagnosticQuestion[]>([]);
 
@@ -132,6 +148,9 @@ export default function Diagnostic() {
   const [isRecording, setIsRecording] = useState(false);
   const recognitionRef = useRef<{ stop: () => void } | null>(null);
 
+  const reviewScrollRef = useRef<HTMLDivElement>(null);
+  const reviewContentRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     // Cleanup speech recognition on unmount
     return () => {
@@ -141,6 +160,28 @@ export default function Diagnostic() {
     };
   }, []);
 
+  // Lenis smooth scroll for the review questions container
+  useEffect(() => {
+    if (!isReviewing) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    if (!reviewScrollRef.current || !reviewContentRef.current) return;
+
+    const lenis = new Lenis({
+      wrapper: reviewScrollRef.current,
+      content: reviewContentRef.current,
+      autoRaf: true,
+    });
+
+    return () => {
+      lenis.destroy();
+    };
+  }, [isReviewing]);
+
   const toggleRecording = () => {
     if (isRecording) {
       recognitionRef.current?.stop();
@@ -149,13 +190,23 @@ export default function Diagnostic() {
     }
 
     const SpeechRecognition =
-      (window as unknown as { SpeechRecognition?: new () => unknown; webkitSpeechRecognition?: new () => unknown })
-        .SpeechRecognition ||
-      (window as unknown as { SpeechRecognition?: new () => unknown; webkitSpeechRecognition?: new () => unknown })
-        .webkitSpeechRecognition;
+      (
+        window as unknown as {
+          SpeechRecognition?: new () => unknown;
+          webkitSpeechRecognition?: new () => unknown;
+        }
+      ).SpeechRecognition ||
+      (
+        window as unknown as {
+          SpeechRecognition?: new () => unknown;
+          webkitSpeechRecognition?: new () => unknown;
+        }
+      ).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      setErrorMessage("Speech recognition is not supported in this browser. Please type your answer.");
+      setErrorMessage(
+        "Speech recognition is not supported in this browser. Please type your answer.",
+      );
       return;
     }
 
@@ -165,7 +216,9 @@ export default function Diagnostic() {
         interimResults: boolean;
         onresult: (event: {
           results: {
-            [index: number]: { [index: number]: { transcript: string } | undefined } | undefined;
+            [index: number]:
+              | { [index: number]: { transcript: string } | undefined }
+              | undefined;
             length: number;
           };
         }) => void;
@@ -192,7 +245,8 @@ export default function Diagnostic() {
           }
         }
 
-        const separator = initialText && transcript && !initialText.endsWith(" ") ? " " : "";
+        const separator =
+          initialText && transcript && !initialText.endsWith(" ") ? " " : "";
         setSelectedAnswer(initialText + separator + transcript);
       };
 
@@ -203,7 +257,9 @@ export default function Diagnostic() {
         }
 
         if (event.error === "not-allowed") {
-          setErrorMessage("Microphone access denied. Please allow it in your browser settings.");
+          setErrorMessage(
+            "Microphone access denied. Please allow it in your browser settings.",
+          );
           setIsRecording(false);
         } else if (event.error === "network") {
           setErrorMessage("Network error with speech recognition.");
@@ -233,11 +289,6 @@ export default function Diagnostic() {
 
   const isLastQuestion =
     questions.length > 0 && currentQuestionIndex === questions.length - 1;
-
-  const progress =
-    questions.length > 0
-      ? Math.round(((currentQuestionIndex + 1) / questions.length) * 100)
-      : 0;
 
   // ============================================================
   // START DIAGNOSTIC
@@ -346,11 +397,21 @@ export default function Diagnostic() {
 
       if (session?.user?.id) {
         queryClient.invalidateQueries({ queryKey: ["routingState"] });
-        queryClient.invalidateQueries({ queryKey: ["dashboardData", session.user.id] });
-        queryClient.invalidateQueries({ queryKey: ["careerTwin", session.user.id] });
-        queryClient.invalidateQueries({ queryKey: ["skillGaps", session.user.id] });
-        queryClient.invalidateQueries({ queryKey: ["learningPath", session.user.id] });
-        queryClient.invalidateQueries({ queryKey: ["proofGraph", session.user.id] });
+        queryClient.invalidateQueries({
+          queryKey: ["dashboardData", session.user.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["careerTwin", session.user.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["skillGaps", session.user.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["learningPath", session.user.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["proofGraph", session.user.id],
+        });
       }
 
       setResult(completeResponse.data);
@@ -359,7 +420,9 @@ export default function Diagnostic() {
     } catch (error: unknown) {
       console.error("Failed to complete diagnostic:", error);
       setErrorMessage(
-        error instanceof Error ? error.message : "Failed to complete diagnostic.",
+        error instanceof Error
+          ? error.message
+          : "Failed to complete diagnostic.",
       );
       setStatus("ready");
     }
@@ -443,7 +506,11 @@ export default function Diagnostic() {
   }
 
   // Prevent UI flashing while redirects are taking effect
-  if (!activeUser || isAdmin || (!isAdmin && routingState && !routingState.onboardingCompleted)) {
+  if (
+    !activeUser ||
+    isAdmin ||
+    (!isAdmin && routingState && !routingState.onboardingCompleted)
+  ) {
     return null;
   }
 
@@ -459,10 +526,13 @@ export default function Diagnostic() {
             <Target className="h-6 w-6 text-destructive" />
           </div>
 
-          <h1 className="text-xl font-semibold">Unable to generate your diagnostic right now.</h1>
+          <h1 className="text-xl font-semibold">
+            Unable to generate your diagnostic right now.
+          </h1>
 
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            {errorMessage || "An unexpected issue occurred while preparing your personalized questions. Please retry."}
+            {errorMessage ||
+              "An unexpected issue occurred while preparing your personalized questions. Please retry."}
           </p>
 
           <button
@@ -510,9 +580,17 @@ export default function Diagnostic() {
           <div className="absolute -right-64 bottom-[10%] h-[500px] w-[500px] rounded-full bg-primary/[0.025] blur-[100px]" />
         </div>
 
-        <section className={`relative z-10 w-full max-w-2xl ${glowCardClass} p-8 text-center sm:p-12`}>
+        <section
+          className={`relative z-10 w-full max-w-2xl ${glowCardClass} p-8 text-center sm:p-12`}
+        >
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-            <Target className="h-8 w-8 text-primary" />
+            <Image
+              src={brandLogo}
+              alt="AI Pather"
+              className="ml-1 h-8 w-8 brightness-0 dark:invert"
+              height={32}
+              width={32}
+            />
           </div>
 
           <p className="mt-6 text-xs font-medium uppercase tracking-[0.18em] text-primary">
@@ -524,8 +602,9 @@ export default function Diagnostic() {
           </h1>
 
           <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
-            Answer 5 multiple-choice questions and 1 open-ended communication question based on your current knowledge. Your result will
-            help AI Pather understand your starting point.
+            Answer 5 multiple-choice questions and 1 open-ended communication
+            question based on your current knowledge. Your result will help AI
+            Pather understand your starting point.
           </p>
 
           {/* Previous result shortcut if available */}
@@ -536,7 +615,11 @@ export default function Diagnostic() {
                   Previous Assessment
                 </span>
                 <p className="text-sm font-bold text-foreground">
-                  Score: {latestResultResponse.overallScore ?? latestResultResponse.score}% ({latestResultResponse.correctAnswers ?? 0}/{latestResultResponse.mcqCount ?? 5} MCQ correct)
+                  Score:{" "}
+                  {latestResultResponse.overallScore ??
+                    latestResultResponse.score}
+                  % ({latestResultResponse.correctAnswers ?? 0}/
+                  {latestResultResponse.mcqCount ?? 5} MCQ correct)
                 </p>
               </div>
               <button
@@ -580,7 +663,9 @@ export default function Diagnostic() {
               onClick={() => void handleStartDiagnostic()}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-semibold text-white transition hover:opacity-90 active:scale-[0.98] w-full sm:w-auto"
             >
-              {latestResultResponse ? "Start New Diagnostic" : "Start Diagnostic"}
+              {latestResultResponse
+                ? "Start New Diagnostic"
+                : "Start Diagnostic"}
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
@@ -604,7 +689,7 @@ export default function Diagnostic() {
   if (isReviewing) {
     return (
       <main className="relative min-h-screen overflow-hidden bg-background text-foreground">
-        <div className="relative z-10 mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:py-12">
+        <div className="relative z-10 mx-auto flex h-screen w-full max-w-6xl flex-col justify-center px-4 py-8 sm:px-6 lg:py-12">
           <header className="mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -631,64 +716,81 @@ export default function Diagnostic() {
               </button>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              Review your responses below. You can jump back to any question to adjust your answers or manage bookmarks before finalizing.
+              Review your responses below. You can jump back to any question to
+              adjust your answers or manage bookmarks before finalizing.
             </p>
           </header>
 
-          <div className="space-y-4">
-            {questions.map((q, idx) => {
-              const ans = answersMap[idx];
-              const isBookmarked = bookmarkedQuestions.includes(idx);
-              return (
-                <div
-                  key={q.id || idx}
-                  className={`${glowCardClass} p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4`}
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-xs font-bold text-primary">
-                        Question {idx + 1} ({q.category})
-                      </span>
-                      {isBookmarked && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
-                          <Bookmark className="w-2.5 h-2.5" /> Bookmarked
+          <div
+            ref={reviewScrollRef}
+            data-lenis-prevent-wheel
+            className="max-h-[370px] overflow-y-auto space-y-4 pr-1"
+          >
+            <div ref={reviewContentRef}>
+              {questions.map((q, idx) => {
+                const ans = answersMap[idx];
+                const isBookmarked = bookmarkedQuestions.includes(idx);
+                return (
+                  <div
+                    key={q.id || idx}
+                    className={`${glowCardClass} p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4`}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-xs font-bold text-primary">
+                          Question {idx + 1} ({q.category})
                         </span>
-                      )}
+                        {isBookmarked && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                            <Bookmark className="w-2.5 h-2.5" /> Bookmarked
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm font-semibold text-foreground line-clamp-2">
+                        {q.question}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-2 truncate">
+                        <span className="font-semibold text-foreground/80">
+                          Your Response:{" "}
+                        </span>
+                        {ans ? (
+                          ans
+                        ) : (
+                          <span className="text-amber-500 italic">
+                            Not yet answered
+                          </span>
+                        )}
+                      </p>
                     </div>
-                    <p className="text-sm font-semibold text-foreground line-clamp-2">
-                      {q.question}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-2 truncate">
-                      <span className="font-semibold text-foreground/80">Your Response: </span>
-                      {ans ? ans : <span className="text-amber-500 italic">Not yet answered</span>}
-                    </p>
-                  </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => toggleBookmark(idx)}
-                      className={`p-2 rounded-xl border transition ${
-                        isBookmarked
-                          ? "border-amber-500/30 bg-amber-500/10 text-amber-600"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      }`}
-                      title={isBookmarked ? "Remove Bookmark" : "Bookmark Question"}
-                    >
-                      <Bookmark className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleJumpToQuestion(idx)}
-                      className="flex items-center gap-1 px-3 py-2 text-xs font-semibold rounded-xl bg-card-soft border border-border hover:bg-muted text-foreground transition"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span>Edit</span>
-                    </button>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => toggleBookmark(idx)}
+                        className={`p-2 rounded-xl border transition ${
+                          isBookmarked
+                            ? "border-amber-500/30 bg-amber-500/10 text-amber-600"
+                            : "border-border text-muted-foreground hover:text-foreground"
+                        }`}
+                        title={
+                          isBookmarked ? "Remove Bookmark" : "Bookmark Question"
+                        }
+                      >
+                        <Bookmark className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleJumpToQuestion(idx)}
+                        className="flex items-center gap-1 px-3 py-2 text-xs font-semibold rounded-xl bg-card-soft border border-border hover:bg-muted text-foreground transition"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Edit</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
           {errorMessage && (
@@ -699,9 +801,12 @@ export default function Diagnostic() {
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl border border-primary/20 bg-primary/[0.04]">
             <div>
-              <p className="text-sm font-bold text-foreground">Ready to calculate your skill profile?</p>
+              <p className="text-sm font-bold text-foreground">
+                Ready to calculate your skill profile?
+              </p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {Object.keys(answersMap).length} of {questions.length} questions answered.
+                {Object.keys(answersMap).length} of {questions.length} questions
+                answered.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -749,131 +854,145 @@ export default function Diagnostic() {
         <div className="absolute inset-0 opacity-[0.025] [background-image:linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] [background-size:64px_64px]" />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:py-12">
-        {/* Header */}
-
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-4 py-8 sm:px-6 lg:py-12">
         <header className="mb-8">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-              <Target className="h-5 w-5 text-primary" />
+              <Image
+                src={brandLogo}
+                alt="AI Pather"
+                className="ml-1 h-5 w-5 brightness-0 dark:invert"
+                height={20}
+                width={20}
+              />
             </div>
 
             <div>
-              <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
-                AI Pather Diagnostic
-              </p>
-
+              <span className="text-lg font-semibold text-primary">
+                Hi {firstName}!
+              </span>
               <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
                 Let&apos;s understand where you are.
               </h1>
             </div>
           </div>
-
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Answer these questions based on what you know today. There are no
-            tricks—this helps AI Pather understand your starting point.
-          </p>
         </header>
 
-        {/* Progress & Navigation Strip */}
-
-        <div className={`mb-6 ${glowCardClass} p-4 space-y-3`}>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              {questions.map((q, idx) => {
-                const isCurrent = idx === currentQuestionIndex;
-                const isAnswered = !!answersMap[idx];
-                const isBookmarked = bookmarkedQuestions.includes(idx);
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => handleJumpToQuestion(idx)}
-                    className={`relative w-8 h-8 rounded-lg text-xs font-bold transition flex items-center justify-center cursor-pointer ${
-                      isCurrent
-                        ? "bg-primary text-primary-foreground ring-2 ring-primary/40 shadow-sm"
-                        : isAnswered
-                        ? "bg-primary/15 text-primary border border-primary/30"
-                        : "bg-muted/60 text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {idx + 1}
-                    {isBookmarked && (
-                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-background" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => toggleBookmark(currentQuestionIndex)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition cursor-pointer ${
-                  bookmarkedQuestions.includes(currentQuestionIndex)
-                    ? "bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400"
-                    : "bg-muted/40 border-border text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Bookmark className="w-3.5 h-3.5" />
-                <span>{bookmarkedQuestions.includes(currentQuestionIndex) ? "Bookmarked" : "Bookmark"}</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleOpenReview}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-border bg-muted/40 hover:bg-muted text-foreground transition cursor-pointer"
-              >
-                <ListChecks className="w-3.5 h-3.5" />
-                <span>Review ({Object.keys(answersMap).length}/6)</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-medium text-muted-foreground">
-              Question {currentQuestionIndex + 1} of {questions.length}
-            </span>
-
-            <span className="text-muted-foreground">{progress}%</span>
-          </div>
-
-          <div className="h-2 overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full rounded-full bg-primary transition-all duration-500"
-              style={{
-                width: `${progress}%`,
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Question */}
-
         <section className={`${glowCardClass} p-6 sm:p-8`}>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1 text-xs font-medium text-primary">
-              {currentQuestion.category}
-            </span>
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  Question
+                </span>
+                <div className="flex items-center gap-2">
+                  {questions.map((q, idx) => {
+                    const isCurrent = idx === currentQuestionIndex;
+                    const isAnswered = !!answersMap[idx];
+                    const isBookmarked = bookmarkedQuestions.includes(idx);
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => handleJumpToQuestion(idx)}
+                        className={`relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-xs font-bold transition ${
+                          isCurrent
+                            ? "bg-primary text-white ring-2 ring-primary/40 shadow-sm"
+                            : isAnswered
+                              ? "bg-primary/15 text-primary border border-primary/30"
+                              : "bg-muted/60 text-muted-foreground hover:bg-muted"
+                        }`}
+                      >
+                        {idx + 1}
+                        {isBookmarked && (
+                          <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-amber-500 ring-2 ring-background" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-            <span className="rounded-full border border-border bg-card-soft px-3 py-1 text-xs font-medium text-muted-foreground">
-              {currentQuestion.difficulty}
-            </span>
-
-            <span className="rounded-full border border-border bg-card-soft px-3 py-1 text-xs font-medium text-muted-foreground">
-              {currentQuestion.skill}
-            </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => toggleBookmark(currentQuestionIndex)}
+                  className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${
+                    bookmarkedQuestions.includes(currentQuestionIndex)
+                      ? "border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                      : "border-border bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  <Bookmark className="h-3.5 w-3.5" />
+                  <span>
+                    {bookmarkedQuestions.includes(currentQuestionIndex)
+                      ? "Bookmarked"
+                      : "Bookmark"}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleOpenReview}
+                  className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-1.5 text-xs font-semibold text-foreground transition hover:bg-muted"
+                >
+                  <ListChecks className="h-3.5 w-3.5" />
+                  <span>Review ({Object.keys(answersMap).length}/6)</span>
+                </button>
+              </div>
+            </div>
           </div>
 
-          <h2 className="mt-6 text-xl font-semibold leading-8 sm:text-2xl">
-            {currentQuestion.question}
-          </h2>
+          <div className="mt-6 flex items-end justify-between gap-4 border-t border-border/50 pt-5">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1 text-xs font-medium text-primary">
+                  {currentQuestion.category}
+                </span>
 
-          <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            {currentQuestion.description}
-          </p>
+                <span className="rounded-full border border-border bg-card-soft px-3 py-1 text-xs font-medium text-muted-foreground">
+                  {currentQuestion.difficulty}
+                </span>
 
-          <div className="mt-8 space-y-3">
+                <span className="rounded-full border border-border bg-card-soft px-3 py-1 text-xs font-medium text-muted-foreground">
+                  {currentQuestion.skill}
+                </span>
+              </div>
+
+              <h2 className="mt-6 text-xl font-semibold leading-8 sm:text-2xl">
+                {currentQuestion.question}
+              </h2>
+
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                {currentQuestion.description}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              disabled={!selectedAnswer || status === "submitting"}
+              onClick={() => void handleNext()}
+              className="hidden lg:inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-3 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {status === "submitting" ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Saving...
+                </>
+              ) : isLastQuestion ? (
+                <>
+                  Review & Submit
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                </>
+              ) : (
+                <>
+                  Next Question
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-3">
             {currentQuestion.options && currentQuestion.options.length > 0 ? (
               currentQuestion.options.map((option) => {
                 const selected = selectedAnswer === option;
@@ -918,31 +1037,39 @@ export default function Diagnostic() {
                       {selected && <CheckCircle2 className="h-4 w-4" />}
                     </span>
 
-                    <span className="text-sm font-medium leading-6">
-                      {option}
-                    </span>
+                    <div className="flex-1 min-w-0 overflow-x-auto py-1 overscroll-x-contain [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-primary/30 dark:[&::-webkit-scrollbar-thumb]:bg-primary/40 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-primary/60">
+                      <span className="whitespace-nowrap text-sm font-medium leading-6 block select-text">
+                        {option}
+                      </span>
+                    </div>
                   </button>
                 );
               })
             ) : (
-              <div className="flex flex-col gap-4">
-                <div className="flex justify-between items-center bg-card-soft rounded-t-xl border border-b-0 border-border p-4">
-                   <p className="text-sm font-medium text-foreground">Record your answer, or type it below.</p>
-                   <button
-                     type="button"
-                     onClick={toggleRecording}
-                     className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${isRecording ? 'bg-destructive/10 text-destructive hover:bg-destructive/20' : 'bg-primary/10 text-primary hover:bg-primary/20'}`}
-                   >
-                     {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                     {isRecording ? "Stop Recording" : "Start Recording"}
-                   </button>
+              <div className="flex min-w-full flex-col">
+                <div className="flex items-center justify-between rounded-t-xl border border-b-0 border-border bg-card-soft px-4 py-2">
+                  <p className="text-sm font-medium text-foreground">
+                    Record your answer, or type it below.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={toggleRecording}
+                    className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all ${isRecording ? "bg-destructive/10 text-destructive hover:bg-destructive/20" : "bg-primary/10 text-primary hover:bg-primary/20"}`}
+                  >
+                    {isRecording ? (
+                      <MicOff className="h-4 w-4" />
+                    ) : (
+                      <Mic className="h-4 w-4" />
+                    )}
+                    {isRecording ? "Stop Recording" : "Start Recording"}
+                  </button>
                 </div>
                 <textarea
                   value={selectedAnswer}
                   onChange={(e) => setSelectedAnswer(e.target.value)}
                   placeholder="Your answer will appear here..."
                   disabled={status === "submitting"}
-                  className="min-h-[200px] w-full resize-y rounded-b-xl rounded-t-none border border-border bg-background p-4 text-sm leading-relaxed focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
+                  className="min-h-[100px] w-full resize-y rounded-b-xl rounded-t-none border border-border bg-background p-4 text-sm leading-relaxed focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
                 />
               </div>
             )}
@@ -956,37 +1083,12 @@ export default function Diagnostic() {
             </p>
           )}
 
-          {/* Action */}
-
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border/50">
-            <div className="flex items-center gap-2">
-              {currentQuestionIndex > 0 ? (
-                <button
-                  type="button"
-                  disabled={status === "submitting"}
-                  onClick={() => handleJumpToQuestion(currentQuestionIndex - 1)}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card-soft px-4 py-2.5 text-xs font-semibold text-foreground transition hover:bg-muted cursor-pointer"
-                >
-                  <ArrowLeft className="h-3.5 w-3.5" />
-                  Previous
-                </button>
-              ) : null}
-
-              <button
-                type="button"
-                onClick={handleOpenReview}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card-soft px-4 py-2.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition hover:bg-muted cursor-pointer"
-              >
-                <ListChecks className="h-3.5 w-3.5" />
-                Review Sheet
-              </button>
-            </div>
-
+          <div className="mt-6 flex justify-end lg:hidden">
             <button
               type="button"
               disabled={!selectedAnswer || status === "submitting"}
               onClick={() => void handleNext()}
-              className="inline-flex min-w-[140px] items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-xs font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer shadow-sm"
+              className="inline-flex min-w-[140px] cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {status === "submitting" ? (
                 <>

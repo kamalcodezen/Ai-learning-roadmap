@@ -1,25 +1,17 @@
 "use client";
 import { StatusBadge } from "@/src/components/dashboard/shared/patterns";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminJobReality } from "@/src/lib/api/admin/job-reality";
+import { getAdminJobReality, AdminJobRealityRoleItem } from "@/src/lib/api/admin/job-reality";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import { GlowCard } from "@/src/components/dashboard/shared/cards";
 import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import { Briefcase } from "lucide-react";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-interface PopularRoleRow {
-  id: string;
-  role: string;
-  mismatchScore: number;
-  activeUsers: number;
-  count: number;
-}
-
-const columns: AdminDataTableColumn<PopularRoleRow>[] = [
+const columns: AdminDataTableColumn<AdminJobRealityRoleItem>[] = [
   {
     header: "Target Role",
     render: (r) => (
@@ -50,12 +42,16 @@ export default function AdminJobRealityView() {
     enabled: !!userId,
   });
 
-  if (isLoading) {
+  if (isLoading && !data) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-28 w-64 rounded-xl" />
-        <Skeleton className="h-[300px] w-full rounded-xl" />
-      </div>
+      <AdminPageSkeleton
+        variant="table"
+        hasKpis={true}
+        kpiCount={1}
+        hasSearch={false}
+        hasToolbar={true}
+        dropdownCount={0}
+      />
     );
   }
 
@@ -70,7 +66,18 @@ export default function AdminJobRealityView() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">
+            Job <span className="text-brand">Reality</span>
+          </h1>
+          <p className="section-subtitle mt-1 text-left">
+            Explore popular roles and job-market alignment for learners.
+          </p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
         <GlowCard>
           <p className="text-sm text-muted-foreground">Total Job Checks</p>

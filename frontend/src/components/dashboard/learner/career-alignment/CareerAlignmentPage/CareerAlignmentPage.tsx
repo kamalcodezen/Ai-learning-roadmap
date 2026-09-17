@@ -3,12 +3,11 @@
 import { useState } from "react";
 import { redirect } from "next/navigation";
 import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
-import { getCareerAlignment } from "@/src/lib/api/learner/career-alignment";
-import { useQuery } from "@tanstack/react-query";
+import { getCareerAlignment, type AlignmentData } from "@/src/lib/api/learner/career-alignment";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../../shared/GenericPageSkeleton";
 import {
   DashboardButton,
-  PageHeader,
   StatusBadge,
 } from "@/src/components/dashboard/shared/patterns";
 import { CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
@@ -21,63 +20,72 @@ import {
   Lightbulb,
   Compass,
   CircleDot,
+  RefreshCw,
 } from "lucide-react";
 
-const alignmentMeta = (percentage: number) => {
-  if (percentage >= 70) {
-    return { tone: "green" as const, label: "Strong Alignment" };
-  }
-  if (percentage >= 40) {
-    return { tone: "blue" as const, label: "Developing" };
-  }
-  return { tone: "orange" as const, label: "Needs Work" };
-};
-
-const importanceTone: Record<
-  "High" | "Medium" | "Low",
-  "red" | "orange" | "gray"
-> = {
+const importanceTone = {
   High: "red",
   Medium: "orange",
-  Low: "gray",
-};
+  Low: "blue",
+} as const;
 
-const statusBadges: Record<
-  "acquired" | "learning" | "missing",
-  { tone: "green" | "blue" | "red"; label: string }
-> = {
-  acquired: { tone: "green", label: "Acquired" },
-  learning: { tone: "blue", label: "In Progress" },
-  missing: { tone: "red", label: "Not Started" },
-};
+const statusBadges = {
+  acquired: { label: "Strong Match", tone: "green" },
+  learning: { label: "Developing", tone: "blue" },
+  missing: { label: "Missing", tone: "red" },
+} as const;
 
-const skillSections = (
-  data: NonNullable<Awaited<ReturnType<typeof getCareerAlignment>>>,
-) => [
+function alignmentMeta(pct: number) {
+  if (pct >= 80)
+    return {
+      tone: "green" as const,
+      label: "Job Ready",
+      color: "#10b981",
+    };
+  if (pct >= 60)
+    return {
+      tone: "blue" as const,
+      label: "On Track",
+      color: "#3b82f6",
+    };
+  if (pct >= 40)
+    return {
+      tone: "orange" as const,
+      label: "Developing",
+      color: "#f59e0b",
+    };
+  return {
+    tone: "red" as const,
+    label: "Needs Focus",
+    color: "#ef4444",
+  };
+}
+
+const skillSections = (data: AlignmentData) => [
   {
     title: "Strong Match",
-    icon: <CheckCircle2 className="w-5 h-5 text-green-500" />,
+    icon: <CheckCircle2 className="w-5 h-5 text-emerald-400" />,
     tone: "green" as const,
     skills: data.strongSkills,
-    empty: "None matched yet.",
+    empty: "None yet — complete milestones to acquire skills.",
   },
   {
     title: "Developing",
-    icon: <CircleDot className="w-5 h-5 text-blue-500" />,
+    icon: <CircleDot className="w-5 h-5 text-blue-400" />,
     tone: "blue" as const,
     skills: data.developingSkills,
-    empty: "None developing yet.",
+    empty: "None in progress.",
   },
   {
     title: "Missing Skills",
-    icon: <AlertTriangle className="w-5 h-5 text-amber-500" />,
+    icon: <AlertTriangle className="w-5 h-5 text-amber-400" />,
     tone: "orange" as const,
     skills: data.missingSkills,
     empty: "None missing.",
   },
   {
     title: "Critical Gaps",
-    icon: <AlertTriangle className="w-5 h-5 text-red-500" />,
+    icon: <AlertTriangle className="w-5 h-5 text-rose-400" />,
     tone: "red" as const,
     skills: data.criticalGaps,
     empty: "No critical gaps.",
@@ -86,13 +94,29 @@ const skillSections = (
 
 export default function CareerAlignmentPage() {
   const { data: session, isPending: isSessionLoading } = useDashboardSession();
-  const [seniority, setSeniority] = useState<"junior" | "mid" | "senior">("mid");
+  const queryClient = useQueryClient();
+  const [seniority, setSeniority] = useState<"junior" | "mid" | "senior">("junior");
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ["careerAlignment", session?.user?.id],
     queryFn: () => getCareerAlignment(),
     enabled: !!session?.user?.id,
+    refetchInterval: 12000,
+    staleTime: 5000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
   });
+
+  // Sync seniority default from API response without triggering cascading renders
+  const effectiveSeniority: "junior" | "mid" | "senior" =
+    seniority !== "junior"
+      ? seniority
+      : (data?.defaultSeniority as "junior" | "mid" | "senior" | undefined) ?? seniority;
+
+  const handleSync = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["careerAlignment"] });
+    refetch();
+  };
 
   if (isSessionLoading) {
     return <GenericPageSkeleton />;
@@ -109,29 +133,39 @@ export default function CareerAlignmentPage() {
   if (isError || !data) {
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-4 text-center">
-        <h3 className="text-xl font-bold text-destructive">Error</h3>
-        <p className="text-muted-foreground">
-          Failed to load career alignment. Please refresh.
+        <h3 className="text-xl font-bold text-destructive">Error Loading Career Alignment</h3>
+        <p className="text-muted-foreground text-sm max-w-md">
+          Failed to load real-time career alignment metrics. Please refresh and try again.
         </p>
-        <DashboardButton text="Retry" radius="md" onClick={() => refetch()} />
+        <button
+          onClick={() => refetch()}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Retry
+        </button>
       </div>
     );
   }
 
   if (data.targetRole === "NO_TARGET_ROLE") {
     return (
-<div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
-        <PageHeader
-          title="Career Alignment"
-          description="See how your current skills match up against your target role requirements."
-        />
+      <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Career Alignment</h1>
+            <p className="text-muted-foreground text-sm">
+              See how your current skills match up against your target role requirements.
+            </p>
+          </div>
+        </div>
+
         <DashboardCard className="max-w-xl mx-auto mt-10">
           <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <Target className="w-12 h-12 text-muted-foreground mb-4" />
-            <h3 className="text-xl font-bold mb-2">No target career set.</h3>
-            <p className="text-muted-foreground mb-6">
-              Complete your onboarding to set a target career and see your
-              alignment.
+            <Target className="w-12 h-12 text-muted-foreground mb-4 opacity-60" />
+            <h3 className="text-xl font-bold mb-2 text-foreground">No Target Role Set</h3>
+            <p className="text-muted-foreground text-sm mb-6 max-w-md">
+              Complete your onboarding assessment to set your target role and unlock your custom alignment radar.
             </p>
             <DashboardButton href={data.href} text={data.nextAction} size="lg" />
           </CardContent>
@@ -140,53 +174,90 @@ export default function CareerAlignmentPage() {
     );
   }
 
-  const matchScore = seniority === "junior"
-    ? Math.min(100, Math.round(data.matchPercentage * 1.15))
-    : seniority === "senior"
-      ? Math.round(data.matchPercentage * 0.85)
-      : data.matchPercentage;
+  const matchScore =
+    effectiveSeniority === "junior"
+      ? (data.seniorityBenchmarks?.junior ?? Math.min(100, Math.round(data.matchPercentage * 1.15)))
+      : effectiveSeniority === "senior"
+        ? (data.seniorityBenchmarks?.senior ?? Math.round(data.matchPercentage * 0.85))
+        : (data.seniorityBenchmarks?.mid ?? data.matchPercentage);
 
   const meta = alignmentMeta(matchScore);
   const totalRequired = data.requirements.length;
 
   return (
     <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
-      <PageHeader
-        title="Career Alignment"
-        description="See how your current skills match up against your target role requirements."
-      />
+      {/* Page Header & Live Status */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Career Alignment</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            See how your current skills match up against your target role requirements.
+          </p>
+        </div>
+
+        {/* Live sync controls */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>Live Sync Active</span>
+          </div>
+
+          <button
+            onClick={handleSync}
+            disabled={isFetching}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card/60 hover:bg-card text-xs font-semibold text-foreground transition-all hover:border-border/80 disabled:opacity-50"
+            title="Refresh latest career alignment"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? "animate-spin text-primary" : "text-muted-foreground"}`} />
+            <span>{isFetching ? "Syncing..." : "Sync"}</span>
+          </button>
+        </div>
+      </div>
 
       {/* Hero: match ring + target role + next action */}
       <DashboardCard className="border-primary/20">
-        <CardContent className="flex flex-col lg:flex-row items-center gap-8">
+        <CardContent className="flex flex-col lg:flex-row items-center gap-8 p-6 sm:p-8">
           <div className="flex-1 space-y-5 text-center lg:text-left">
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground uppercase tracking-wider font-semibold">
+            <div className="space-y-1.5">
+              <p className="text-xs text-primary uppercase tracking-wider font-bold">
                 Target Role
               </p>
-              <h2 className="text-4xl font-extrabold tracking-tight text-foreground">
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
                 {data.targetRole}
               </h2>
+              {data.roleDescription && (
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-xl">
+                  {data.roleDescription}
+                </p>
+              )}
             </div>
-            <div className="flex flex-wrap items-center gap-3 justify-center lg:justify-start">
+
+            <div className="flex flex-wrap items-center gap-2.5 justify-center lg:justify-start">
               <StatusBadge tone={meta.tone} icon={<Target className="w-3.5 h-3.5" />}>
                 {meta.label}
               </StatusBadge>
               <StatusBadge tone="purple">
-                {data.strongSkills.length} strong · {data.developingSkills.length}{" "}
-                developing
+                {data.strongSkills.length} strong · {data.developingSkills.length} developing
               </StatusBadge>
+              {data.criticalGaps.length > 0 && (
+                <StatusBadge tone="red" icon={<AlertTriangle className="w-3.5 h-3.5" />}>
+                  {data.criticalGaps.length} critical gap{data.criticalGaps.length === 1 ? "" : "s"}
+                </StatusBadge>
+              )}
             </div>
 
             {/* Seniority Selector */}
-            <div className="flex flex-wrap items-center gap-2 pt-1 justify-center lg:justify-start">
+            <div className="flex flex-wrap items-center gap-2.5 pt-1 justify-center lg:justify-start">
               <span className="text-xs text-muted-foreground font-medium">Benchmark Level:</span>
               <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-card border border-border">
                 <button
                   type="button"
                   onClick={() => setSeniority("junior")}
                   className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
-                    seniority === "junior" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
+                    effectiveSeniority === "junior" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   Junior
@@ -195,7 +266,7 @@ export default function CareerAlignmentPage() {
                   type="button"
                   onClick={() => setSeniority("mid")}
                   className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
-                    seniority === "mid" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
+                    effectiveSeniority === "mid" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   Mid-Level
@@ -204,7 +275,7 @@ export default function CareerAlignmentPage() {
                   type="button"
                   onClick={() => setSeniority("senior")}
                   className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
-                    seniority === "senior" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
+                    effectiveSeniority === "senior" ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   Senior
@@ -212,23 +283,26 @@ export default function CareerAlignmentPage() {
               </div>
             </div>
 
-            <p className="text-sm text-muted-foreground max-w-md">
-              Baseline computed against {totalRequired} required skill
-              {totalRequired === 1 ? "" : "s"} calibrated for {seniority} level expectations.
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-md">
+              Baseline computed against {totalRequired} required skill{totalRequired === 1 ? "" : "s"} calibrated for {effectiveSeniority} level expectations.
             </p>
-            <DashboardButton
-              href={data.href}
-              text={
-                <>
-                  {data.nextAction} <ArrowRight className="w-4 h-4" />
-                </>
-              }
-              size="lg"
-            />
+
+            <div className="pt-1">
+              <DashboardButton
+                href={data.href}
+                text={
+                  <span className="flex items-center gap-2">
+                    {data.nextAction} <ArrowRight className="w-4 h-4" />
+                  </span>
+                }
+                size="lg"
+              />
+            </div>
           </div>
 
+          {/* Circular Match Gauge */}
           <div className="flex flex-col items-center shrink-0">
-            <div className="relative w-40 h-40 flex items-center justify-center">
+            <div className="relative w-44 h-44 flex items-center justify-center">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                 <defs>
                   <linearGradient id="alignment-ring" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -241,20 +315,20 @@ export default function CareerAlignmentPage() {
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="4"
+                  strokeWidth="3.8"
                 />
                 <path
                   stroke="url(#alignment-ring)"
                   strokeDasharray={`${matchScore}, 100`}
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
-                  strokeWidth="4"
+                  strokeWidth="3.8"
                   strokeLinecap="round"
                   className="transition-all duration-1000 ease-out"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-4xl font-extrabold text-foreground">
+                <span className="text-4xl font-black text-foreground">
                   {matchScore}%
                 </span>
                 <span className="text-xs font-semibold text-muted-foreground mt-0.5">
@@ -266,12 +340,12 @@ export default function CareerAlignmentPage() {
         </CardContent>
       </DashboardCard>
 
-      {/* Skill breakdown */}
+      {/* Skill Breakdown Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
         {skillSections(data).map((section) => (
           <DashboardCard key={section.title}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base font-bold flex items-center gap-2">
                 {section.icon} {section.title}
               </CardTitle>
             </CardHeader>
@@ -281,19 +355,18 @@ export default function CareerAlignmentPage() {
                   {section.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="px-2.5 py-1 rounded-md bg-muted text-foreground text-xs font-medium border border-border"
+                      className="px-3 py-1.5 rounded-lg bg-card border border-border text-foreground text-xs font-semibold shadow-sm hover:border-primary/40 transition-colors"
                     >
                       {skill}
                     </span>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">{section.empty}</p>
+                <p className="text-xs text-muted-foreground">{section.empty}</p>
               )}
-              {section.tone === "red" && (
-                <p className="mt-3 text-xs text-muted-foreground">
-                  Critical gaps block your match score the most — prioritize
-                  these skills first.
+              {section.tone === "red" && section.skills.length > 0 && (
+                <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
+                  Critical gaps block your match score the most — prioritize these skills first.
                 </p>
               )}
             </CardContent>
@@ -301,23 +374,37 @@ export default function CareerAlignmentPage() {
         ))}
       </div>
 
-      {/* Detailed requirements */}
+      {/* Detailed Requirements with Score Verification */}
       <DashboardCard>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-primary">
-            <Compass className="w-5 h-5" /> Detailed Requirements
+          <CardTitle className="flex items-center gap-2 text-primary text-base font-bold">
+            <Compass className="w-5 h-5" /> Detailed Requirements & Progress
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="divide-y divide-border rounded-xl border border-border">
+          <div className="divide-y divide-border/60 rounded-xl border border-border overflow-hidden">
             {data.requirements.map((req, idx) => (
               <div
                 key={req.skill + idx}
-                className="flex items-center flex-wrap justify-between gap-4 p-4 bg-card-soft first:rounded-t-xl last:rounded-b-xl"
+                className="flex items-center flex-wrap justify-between gap-4 p-4 bg-card/40 hover:bg-card/70 transition-colors"
               >
-                <span className="font-semibold text-sm text-foreground">
-                  {req.skill}
-                </span>
+                <div className="flex flex-col gap-1 min-w-[180px]">
+                  <span className="font-bold text-sm text-foreground">
+                    {req.skill}
+                  </span>
+                  {req.score !== undefined && req.score > 0 && (
+                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                      <span>Score: {req.score}%</span>
+                      {req.knowledgeScore !== undefined && req.knowledgeScore > 0 && (
+                        <span>• Knowledge: {req.knowledgeScore}%</span>
+                      )}
+                      {req.practiceScore !== undefined && req.practiceScore > 0 && (
+                        <span>• Practice: {req.practiceScore}%</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex flex-wrap items-center gap-2 shrink-0">
                   <StatusBadge tone={importanceTone[req.importance]}>
                     {req.importance} Priority
@@ -343,19 +430,19 @@ export default function CareerAlignmentPage() {
         </CardContent>
       </DashboardCard>
 
-      {/* Recommendations */}
+      {/* Strategic Recommendations */}
       <DashboardCard className="border-primary/20">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-primary">
+          <CardTitle className="flex items-center gap-2 text-primary text-base font-bold">
             <Lightbulb className="w-5 h-5" /> Strategic Recommendations
           </CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="space-y-3">
             {data.recommendations.map((rec, i) => (
-              <li key={i} className="flex gap-3 text-sm text-foreground">
-                <span className="mt-0.5 w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                {rec}
+              <li key={i} className="flex items-start gap-3 text-xs sm:text-sm text-foreground">
+                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                <span className="leading-relaxed">{rec}</span>
               </li>
             ))}
           </ul>

@@ -2,27 +2,19 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminAssessments } from "@/src/lib/api/admin/assessments";
+import { getAdminAssessments, AdminAssessmentItem } from "@/src/lib/api/admin/assessments";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { ClipboardCheck, User } from "lucide-react";
 import { useDebounce } from "use-debounce";
-import { Key, Label, ListBox, Select, Skeleton } from "@heroui/react";
+import { Key, Label, ListBox, Select } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import { GlowCard } from "@/src/components/dashboard/shared/cards";
 import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 
-interface AssessmentRow {
-  id: string;
-  targetRole: string;
-  user: { name: string; email: string };
-  status: string;
-  score: number | null;
-  startedAt: string;
-}
-
-const columns: AdminDataTableColumn<AssessmentRow>[] = [
+const columns: AdminDataTableColumn<AdminAssessmentItem>[] = [
   {
     header: "Target Role",
     render: (a) => (
@@ -42,8 +34,8 @@ const columns: AdminDataTableColumn<AssessmentRow>[] = [
       <div className="flex items-center gap-2">
         <User className="h-4 w-4 text-muted-foreground" />
         <div>
-          <p className="font-medium text-foreground">{a.user.name}</p>
-          <p className="text-xs text-muted-foreground">{a.user.email}</p>
+          <p className="font-medium text-foreground">{a.user?.name || "Unknown"}</p>
+          <p className="text-xs text-muted-foreground">{a.user?.email || "No email"}</p>
         </div>
       </div>
     ),
@@ -66,7 +58,7 @@ const columns: AdminDataTableColumn<AssessmentRow>[] = [
     header: "Score",
     render: (a) => (
       <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary">
-        {a.score !== null ? `${a.score}%` : "-"}
+        {a.score !== null && a.score !== undefined ? `${a.score}%` : "-"}
       </span>
     ),
   },
@@ -116,14 +108,14 @@ export default function AdminAssessmentsView() {
 
   if (isLoading && !data) {
     return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
-          {[0, 1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-28 w-full rounded-xl" />
-          ))}
-        </div>
-        <Skeleton className="h-[400px] w-full rounded-xl" />
-      </div>
+      <AdminPageSkeleton
+        variant="table"
+        hasKpis={true}
+        kpiCount={4}
+        hasSearch={true}
+        hasToolbar={true}
+        dropdownCount={2}
+      />
     );
   }
 
@@ -148,7 +140,14 @@ export default function AdminAssessmentsView() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Assessment <span className="text-brand">Analytics</span></h1>
+          <p className="section-subtitle mt-1 text-left">Review platform-wide assessment attempts, completion and performance.</p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
         {stats.map((s) => (
           <GlowCard key={s.label}>
@@ -184,7 +183,10 @@ export default function AdminAssessmentsView() {
               }}
             >
               <Label>Status</Label>
-              <Select.Trigger>
+              <Select.Trigger
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
@@ -219,7 +221,10 @@ export default function AdminAssessmentsView() {
               }}
             >
               <Label>Time Range</Label>
-              <Select.Trigger>
+              <Select.Trigger
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>

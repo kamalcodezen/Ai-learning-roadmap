@@ -7,21 +7,22 @@ import "../admin.css";
 
 import {
   Avatar,
-  Skeleton,
   Modal,
   Button,
   Select,
   Label,
   ListBox,
 } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import { getAdminUsers } from "@/src/lib/api/admin/users";
 import {
   updateAdminUserRole,
+  updateAdminUserPlan,
   deleteAdminUser,
 } from "@/src/lib/actions/admin/users";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
-import { Loader2, Trash2, Shield, User } from "lucide-react";
+import { Loader2, Trash2, Shield, User, Crown, Sparkles } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import { useOverlayState } from "@heroui/react";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
@@ -33,7 +34,12 @@ interface UserRow {
   email: string;
   image?: string | null;
   role: string;
+  plan?: string;
   createdAt: string;
+  careerProfile?: {
+    targetRole?: string;
+    targetRoleName?: string;
+  } | null;
 }
 
 export default function UserManagement() {
@@ -43,6 +49,7 @@ export default function UserManagement() {
 
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<Key | null>(null);
+  const [planFilter, setPlanFilter] = useState<Key | null>(null);
   const [daysFilter, setDaysFilter] = useState<Key | null>(null);
   const [debouncedSearch] = useDebounce(search, 500);
   const [page, setPage] = useState(1);
@@ -58,6 +65,7 @@ export default function UserManagement() {
       page,
       debouncedSearch,
       roleFilter,
+      planFilter,
       daysFilter,
     ],
     queryFn: () =>
@@ -68,6 +76,7 @@ export default function UserManagement() {
         debouncedSearch,
         roleFilter ? String(roleFilter) : "",
         daysFilter ? Number(daysFilter) : undefined,
+        planFilter ? String(planFilter) : "",
       ),
     enabled: !!userId,
   });
@@ -88,6 +97,22 @@ export default function UserManagement() {
     },
   });
 
+  const updatePlanMutation = useMutation({
+    mutationFn: ({
+      targetId,
+      newPlan,
+    }: {
+      targetId: string;
+      newPlan: string;
+    }) => updateAdminUserPlan(userId!, targetId, newPlan),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+    },
+    onError: (err: Error | { message?: string }) => {
+      alert(err.message || "Failed to update subscription tier");
+    },
+  });
+
   const deleteUserMutation = useMutation({
     mutationFn: (targetId: string) => deleteAdminUser(userId!, targetId),
     onSuccess: () => {
@@ -100,13 +125,13 @@ export default function UserManagement() {
 
   if (isLoading && !data) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-[400px] w-full rounded-xl" />
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-5 w-44 rounded-md" />
-          <Skeleton className="h-9 w-40 rounded-md" />
-        </div>
-      </div>
+      <AdminPageSkeleton
+        variant="table"
+        hasKpis={false}
+        hasSearch={true}
+        hasToolbar={true}
+        dropdownCount={3}
+      />
     );
   }
 
@@ -124,6 +149,10 @@ export default function UserManagement() {
 
   const handleRoleChange = (id: string, newRole: string) => {
     updateRoleMutation.mutate({ targetId: id, newRole });
+  };
+
+  const handlePlanChange = (id: string, newPlan: string) => {
+    updatePlanMutation.mutate({ targetId: id, newPlan });
   };
 
   const openDelete = (id: string) => {
@@ -155,6 +184,69 @@ export default function UserManagement() {
           </div>
         </div>
       ),
+    },
+    {
+      header: "Career Goal",
+      render: (u) => {
+        const target = u.careerProfile?.targetRoleName || u.careerProfile?.targetRole;
+        return target ? (
+          <span className="inline-flex items-center text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-md border border-primary/20 max-w-[170px] truncate">
+            {target}
+          </span>
+        ) : (
+          <span className="text-xs text-muted-foreground italic">Not chosen</span>
+        );
+      },
+    },
+    {
+      header: "Plan",
+      render: (u) => {
+        const plan = u.plan || "FREE";
+        return (
+          <div className="flex items-center gap-2">
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${
+                plan === "PRO"
+                  ? "bg-amber-500/15 text-amber-500 border border-amber-500/30"
+                  : plan === "PLUS"
+                    ? "bg-blue-500/15 text-blue-500 border border-blue-500/30"
+                    : "bg-muted/60 text-muted-foreground border border-border/40"
+              }`}
+            >
+              {plan === "PRO" && <Crown className="size-3" />}
+              {plan === "PLUS" && <Sparkles className="size-3" />}
+              {plan}
+            </span>
+            <Select
+              className="w-24"
+              value={plan}
+              isDisabled={updatePlanMutation.isPending}
+              onChange={(val) => handlePlanChange(u.id, String(val))}
+            >
+              <Select.Trigger className="h-7 text-xs px-2 py-0">
+                <Select.Value />
+                <Select.Indicator />
+              </Select.Trigger>
+              <Select.Popover>
+                <ListBox>
+                  <ListBox.Item key="FREE" id="FREE" textValue="FREE">
+                    FREE
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                  <ListBox.Item key="PLUS" id="PLUS" textValue="PLUS">
+                    PLUS
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                  <ListBox.Item key="PRO" id="PRO" textValue="PRO">
+                    PRO
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                </ListBox>
+              </Select.Popover>
+            </Select>
+          </div>
+        );
+      },
     },
     {
       header: "Role",
@@ -225,7 +317,14 @@ export default function UserManagement() {
   ];
 
   return (
-    <>
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">User <span className="text-brand">Management</span></h1>
+          <p className="section-subtitle mt-1 text-left">Manage roles, permissions, and accounts across the platform.</p>
+        </div>
+      </div>
+
       <AdminDataTable
         columns={columns}
         rows={users}
@@ -240,7 +339,7 @@ export default function UserManagement() {
         toolbar={
           <>
             <Select
-              className="w-full sm:w-40"
+              className="w-full sm:w-36"
               placeholder="All Roles"
               value={roleFilter}
               onChange={(val) => {
@@ -249,7 +348,10 @@ export default function UserManagement() {
               }}
             >
               <Label>Role</Label>
-              <Select.Trigger>
+              <Select.Trigger
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
@@ -267,6 +369,40 @@ export default function UserManagement() {
               </Select.Popover>
             </Select>
             <Select
+              className="w-full sm:w-36"
+              placeholder="All Plans"
+              value={planFilter}
+              onChange={(val) => {
+                setPlanFilter(val);
+                setPage(1);
+              }}
+            >
+              <Label>Plan</Label>
+              <Select.Trigger
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
+                <Select.Value />
+                <Select.Indicator />
+              </Select.Trigger>
+              <Select.Popover>
+                <ListBox>
+                  <ListBox.Item key="FREE" id="FREE" textValue="Free">
+                    Free
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                  <ListBox.Item key="PLUS" id="PLUS" textValue="Plus">
+                    Plus
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                  <ListBox.Item key="PRO" id="PRO" textValue="Pro">
+                    Pro
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                </ListBox>
+              </Select.Popover>
+            </Select>
+            <Select
               className="w-full sm:w-40"
               placeholder="Any Time"
               value={daysFilter}
@@ -276,7 +412,10 @@ export default function UserManagement() {
               }}
             >
               <Label>Time Range</Label>
-              <Select.Trigger>
+              <Select.Trigger
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
@@ -339,6 +478,6 @@ export default function UserManagement() {
           </Modal.Container>
         </Modal.Backdrop>
       </Modal>
-    </>
+    </div>
   );
 }

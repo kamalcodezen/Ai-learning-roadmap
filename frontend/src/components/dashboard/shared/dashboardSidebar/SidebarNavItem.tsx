@@ -7,7 +7,6 @@ import { Lock } from "lucide-react";
 import type { NavLink } from "../navigation";
 import { cn } from "@/src/utils/cn";
 import { useDashboardSession } from "../sessionGuard/SessionGuard";
-import { showToast } from "@/src/components/ui/toast";
 
 interface SidebarNavItemProps {
   item: NavLink;
@@ -38,18 +37,12 @@ export default function SidebarNavItem({
   );
 
   const handleClick = () => {
-    if (isLocked) {
-      showToast({
-        message: `Upgrade to AI Pather ${item.requiredPlan} to unlock ${item.label}!`,
-        variant: "info",
-      });
-    }
     onClick?.();
   };
 
   return (
     <Link
-      href={isLocked ? "/#pricing" : item.href}
+      href={item.href}
       onClick={handleClick}
       aria-current={active ? "page" : undefined}
       className={cn(

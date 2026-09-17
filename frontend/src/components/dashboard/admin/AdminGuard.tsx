@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
-import GenericPageSkeleton from "../shared/GenericPageSkeleton";
+import AdminPageSkeleton from "./shared/AdminPageSkeleton";
 
 export default function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
   }, [session, isPending, router]);
 
   if (isPending || !session?.user || ((session.user as { role?: string }).role || "").toUpperCase() !== "ADMIN") {
-    return <GenericPageSkeleton />;
+    return <AdminPageSkeleton variant="dashboard" />;
   }
 
   return <>{children}</>;

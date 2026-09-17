@@ -5,7 +5,7 @@ import { getAdminLearningDebt } from "@/src/lib/api/admin/learning-debt";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
 import { AlertTriangle, Download, GraduationCap, User } from "lucide-react";
-import { Skeleton } from "@heroui/react";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import { CardContent, CardHeader } from "@/src/components/ui/Card";
 import { DashboardCard } from "@/src/components/dashboard/shared/cards";
 
@@ -20,13 +20,13 @@ export default function AdminLearningDebtView() {
 
   if (isLoading && !data) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-10 flex-1 rounded-md" />
-          <Skeleton className="h-10 w-28 rounded-md" />
-        </div>
-        <Skeleton className="h-[400px] w-full rounded-xl" />
-      </div>
+      <AdminPageSkeleton
+        variant="table"
+        hasKpis={false}
+        hasSearch={false}
+        hasToolbar={true}
+        dropdownCount={0}
+      />
     );
   }
 
@@ -43,8 +43,16 @@ export default function AdminLearningDebtView() {
   const { debtRecords } = data;
 
   return (
-    <DashboardCard className="p-0!">
-      <CardHeader className="border-b border-border gap-0 p-4">
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="section-title text-left">Learning <span className="text-brand">Debt</span></h1>
+          <p className="section-subtitle mt-1 text-left">Surface where learners fall behind so interventions can be targeted.</p>
+        </div>
+      </div>
+
+      <DashboardCard className="p-0!">
+        <CardHeader className="border-b border-border gap-0 p-4">
         <div className="flex items-center">
           <p className="flex-1 text-sm text-muted-foreground">
             Learners ranked by debt across skills.
@@ -90,15 +98,7 @@ export default function AdminLearningDebtView() {
                   </td>
                 </tr>
               ) : (
-                debtRecords.map(
-                  (r: {
-                    id: string;
-                    user: { name: string; email: string };
-                    topic: string;
-                    skillName: string;
-                    knowledgeScore: number;
-                    practiceScore: number;
-                  }) => (
+                debtRecords.map((r) => (
                     <tr
                       key={r.id}
                       className="border-t border-[var(--color-border)] hover:bg-muted/30 transition-colors"
@@ -118,10 +118,10 @@ export default function AdminLearningDebtView() {
                           <User className="h-4 w-4 text-muted-foreground" />
                           <div>
                             <p className="font-medium text-foreground">
-                              {r.user.name}
+                              {r.user?.name || "Unknown"}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              {r.user.email}
+                              {r.user?.email || "No email"}
                             </p>
                           </div>
                         </div>
@@ -143,5 +143,6 @@ export default function AdminLearningDebtView() {
         </div>
       </CardContent>
     </DashboardCard>
+    </div>
   );
 }

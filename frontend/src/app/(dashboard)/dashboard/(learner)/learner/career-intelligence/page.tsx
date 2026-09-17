@@ -1,15 +1,19 @@
 import CareerIntelligenceCard from "@/src/components/dashboard/learner/career-intelligence/CareerIntelligenceCard";
-import PlanGuard from "@/src/components/dashboard/shared/PlanGuard";
+import FeatureLockedOverlay from "@/src/components/dashboard/shared/FeatureLockedOverlay";
 
 export const metadata = {
-  title: "Career Intelligence | AI Learning Roadmap",
+  title: "Career Intelligence",
   description:
     "AI-powered Career Decision Engine — data-driven decision analytics for your target career.",
 };
 
 export default function CareerIntelligencePage() {
   return (
-    <PlanGuard requiredPlan="PRO">
+    <FeatureLockedOverlay
+      featureName="AI Career Intelligence Engine"
+      requiredPlan="PRO"
+      description="Data-driven career decision analytics, readiness scoring, trajectory forecasting, and real-time market alignment tailored to your evidence."
+    >
       <div className="flex flex-col gap-6 pb-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Career Intelligence</h1>
@@ -19,6 +23,6 @@ export default function CareerIntelligencePage() {
         </div>
         <CareerIntelligenceCard />
       </div>
-    </PlanGuard>
+    </FeatureLockedOverlay>
   );
 }

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAdminAnalytics } from "@/src/lib/api/admin/analytics";
 import { authClient } from "@/src/lib/auth-client";
 import { useTheme } from "next-themes";
-import GenericPageSkeleton from "../../shared/GenericPageSkeleton";
+import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import { GlowCard, DashboardCard } from "@/src/components/dashboard/shared/cards";
 import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import {
@@ -43,7 +43,7 @@ export default function AdminAnalyticsView() {
     enabled: !!userId,
   });
 
-  if (isLoading) return <GenericPageSkeleton />;
+  if (isLoading && !data) return <AdminPageSkeleton variant="analytics" />;
   if (isError || !data)
     return <p className="text-red-500">Error loading analytics.</p>;
 
@@ -88,17 +88,27 @@ export default function AdminAnalyticsView() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-end space-x-2 mb-4">
-        {[7, 30, 90, 365].map((d) => (
-          <button
-            key={d}
-            onClick={() => setDays(d)}
-            className={`px-3 py-1 rounded text-sm ${days === d ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}
-          >
-            {d} Days
-          </button>
-        ))}
+    <div className="space-y-6 animate-in fade-in duration-300">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="section-title text-left">
+            Platform <span className="text-brand">Analytics</span>
+          </h1>
+          <p className="section-subtitle mt-1 text-left">
+            Track platform-wide activity, growth, and engagement across learners, roadmaps, projects, and assessments.
+          </p>
+        </div>
+        <div className="flex space-x-2 shrink-0">
+          {[7, 30, 90, 365].map((d) => (
+            <button
+              key={d}
+              onClick={() => setDays(d)}
+              className={`px-3 py-1 rounded text-sm transition-colors ${days === d ? "bg-primary text-white" : "bg-muted text-muted-foreground hover:text-foreground"}`}
+            >
+              {d} Days
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 dashboard-card-gap">
