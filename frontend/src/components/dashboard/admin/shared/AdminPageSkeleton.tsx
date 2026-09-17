@@ -664,12 +664,12 @@ function SplitCardsSkeleton() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
         {/* Strong Skills */}
-        <div className="rounded-xl border border-border/50 bg-card/40 divide-y divide-border/40 overflow-hidden">
+        <div className="rounded-lg border border-border/50 bg-card/40 divide-y divide-border/40 overflow-hidden h-[calc(100vh-210px)] min-h-[540px]">
           <div className="p-4 flex items-center gap-2 border-b border-border/40 bg-muted/20">
             <div className="size-4 rounded-full bg-green-500/20 animate-pulse" />
             <div className="h-4 w-28 rounded bg-muted/60 animate-pulse" />
           </div>
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: 7 }).map((_, i) => (
             <div key={i} className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="size-9 rounded-lg bg-green-500/10 animate-pulse shrink-0" />
@@ -687,12 +687,12 @@ function SplitCardsSkeleton() {
         </div>
 
         {/* Weak Skills */}
-        <div className="rounded-xl border border-border/50 bg-card/40 divide-y divide-border/40 overflow-hidden">
+        <div className="rounded-lg border border-border/50 bg-card/40 divide-y divide-border/40 overflow-hidden h-[calc(100vh-210px)] min-h-[540px]">
           <div className="p-4 flex items-center gap-2 border-b border-border/40 bg-muted/20">
             <div className="size-4 rounded-full bg-red-500/20 animate-pulse" />
             <div className="h-4 w-44 rounded bg-muted/60 animate-pulse" />
           </div>
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: 7 }).map((_, i) => (
             <div key={i} className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="size-9 rounded-lg bg-red-500/10 animate-pulse shrink-0" />
