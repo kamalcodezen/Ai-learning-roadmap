@@ -105,10 +105,10 @@ export default function AdminLearningDebtView() {
                     <th className="p-4 text-left font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">
                       Learner
                     </th>
-                    <th className="p-4 text-right font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">
+                    <th className="p-4 text-center font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">
                       Knowledge Score
                     </th>
-                    <th className="p-4 text-right font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">
+                    <th className="p-4 text-center font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider">
                       Practice Score
                     </th>
                   </tr>
@@ -152,12 +152,12 @@ export default function AdminLearningDebtView() {
                             </div>
                           </div>
                         </td>
-                        <td className="p-4 text-right">
+                        <td className="p-4 text-center">
                           <StatusBadge tone="red">
                             {r.knowledgeScore}%
                           </StatusBadge>
                         </td>
-                        <td className="p-4 text-right">
+                        <td className="p-4 text-center">
                           <StatusBadge tone="red">{r.practiceScore}%</StatusBadge>
                         </td>
                       </tr>
