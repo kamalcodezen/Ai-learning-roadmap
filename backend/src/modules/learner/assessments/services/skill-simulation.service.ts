@@ -693,6 +693,7 @@ export async function submitSkillSimulation(
         needsPractice,
         feedback,
         completedAt,
+        durationMinutes: 15,
       },
     },
   });
@@ -766,28 +767,32 @@ export function isMatchingSkill(metaSkillRaw: unknown, targetSkillRaw: string): 
     return false;
   }
 
+  // Normalized CLI alias helper (CLI <-> Command Line Interface)
+  const normA = a.replace(/command\s*line\s*interface/gi, "cli").replace(/command\s*line/gi, "cli");
+  const normB = b.replace(/command\s*line\s*interface/gi, "cli").replace(/command\s*line/gi, "cli");
+
   // Normalized alphanumeric match (e.g. "nodejs" vs "node.js", "html5" vs "html")
-  const aClean = a.replace(/[^a-z0-9]/g, "");
-  const bClean = b.replace(/[^a-z0-9]/g, "");
+  const aClean = normA.replace(/[^a-z0-9]/g, "");
+  const bClean = normB.replace(/[^a-z0-9]/g, "");
   if (aClean && bClean && aClean === bClean) return true;
 
   // Canonical skill compounds
-  if (a.startsWith("node.js") && (b === "node.js" || b === "node")) return true;
-  if (b.startsWith("node.js") && (a === "node.js" || a === "node")) return true;
-  if (a.startsWith("html") && (b === "html" || b === "html5")) return true;
-  if (b.startsWith("html") && (a === "html" || a === "html5")) return true;
-  if (a.startsWith("css") && (b === "css" || b === "css3")) return true;
-  if (b.startsWith("css") && (a === "css" || a === "css3")) return true;
+  if (normA.startsWith("node.js") && (normB === "node.js" || normB === "node")) return true;
+  if (normB.startsWith("node.js") && (normA === "node.js" || normA === "node")) return true;
+  if (normA.startsWith("html") && (normB === "html" || normB === "html5")) return true;
+  if (normB.startsWith("html") && (normA === "html" || normA === "html5")) return true;
+  if (normA.startsWith("css") && (normB === "css" || normB === "css3")) return true;
+  if (normB.startsWith("css") && (normA === "css" || normA === "css3")) return true;
 
   // Substring / containment matching for skill names (e.g. "Architecture" vs "System Architecture", "AWS / Cloud" vs "AWS")
-  if (a.length >= 3 && b.length >= 3 && (a.includes(b) || b.includes(a))) {
+  if (normA.length >= 3 && normB.length >= 3 && (normA.includes(normB) || normB.includes(normA))) {
     return true;
   }
 
-  // Compound skills separated by "/" or "," (e.g., "Node.js / Architecture" or "Docker, PostgreSQL")
-  // Only match if a distinct component matches or contains the target skill
-  const aParts = a.split(/[/,]/).map((p) => p.trim()).filter(Boolean);
-  const bParts = b.split(/[/,]/).map((p) => p.trim()).filter(Boolean);
+  // Compound skills separated by "/", ",", "–", "—", "-", "|", "(", ")", or " or "
+  const splitRegex = /[/,–—|()]|\s+or\s+/;
+  const aParts = normA.split(splitRegex).map((p) => p.trim()).filter(Boolean);
+  const bParts = normB.split(splitRegex).map((p) => p.trim()).filter(Boolean);
 
   if (aParts.length > 1 || bParts.length > 1) {
     for (const pA of aParts) {

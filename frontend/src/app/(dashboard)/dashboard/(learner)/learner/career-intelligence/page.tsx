@@ -2,7 +2,7 @@ import CareerIntelligenceCard from "@/src/components/dashboard/learner/career-in
 import FeatureLockedOverlay from "@/src/components/dashboard/shared/FeatureLockedOverlay";
 
 export const metadata = {
-  title: "Career Intelligence | AI Learning Roadmap",
+  title: "Career Intelligence",
   description:
     "AI-powered Career Decision Engine — data-driven decision analytics for your target career.",
 };

@@ -20,6 +20,7 @@ import {
   Briefcase,
   Megaphone,
   Sparkles,
+  CreditCard,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -48,9 +49,10 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
         ],
       },
       {
-        title: "USERS",
+        title: "USERS & REVENUE",
         items: [
           { href: `${prefix}/users`, label: "All Users", icon: Users },
+          { href: `${prefix}/subscriptions`, label: "Subscriptions & Pricing", icon: CreditCard },
         ],
       },
       {
@@ -60,18 +62,15 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
           { href: `${prefix}/skill-health`, label: "Skill Health", icon: Target },
           { href: `${prefix}/learning-debt`, label: "Learning Debt", icon: BookOpen },
           { href: `${prefix}/assessments`, label: "Assessments", icon: ClipboardCheck },
-          { href: `${prefix}/projects`, label: "Projects", icon: FolderKanban },
+          { href: `${prefix}/interviews`, label: "Mock Interviews", icon: Mic },
+          { href: `${prefix}/projects`, label: "Projects & Verification", icon: FolderKanban },
         ],
       },
       {
-        title: "PROOF",
+        title: "CAREER & PROOF",
         items: [
+          { href: `${prefix}/resumes`, label: "Learner Resumes", icon: FileText },
           { href: `${prefix}/skill-proof`, label: "Skill Proof", icon: GitMerge },
-        ],
-      },
-      {
-        title: "CAREER",
-        items: [
           { href: `${prefix}/career-readiness`, label: "Career Readiness", icon: Target },
           { href: `${prefix}/job-reality`, label: "Job Reality", icon: Map },
         ],

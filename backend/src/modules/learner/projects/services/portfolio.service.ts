@@ -70,6 +70,16 @@ export const normalizeGithubUrl = (rawUrl: string | null | undefined): string | 
   }
 };
 
+export const sanitizeUrl = (rawUrl: string | null | undefined): string | null => {
+  if (!rawUrl || typeof rawUrl !== "string") return null;
+  let cleaned = rawUrl.trim();
+  if (!cleaned) return null;
+  if (!cleaned.startsWith("http://") && !cleaned.startsWith("https://")) {
+    cleaned = "https://" + cleaned;
+  }
+  return cleaned;
+};
+
 const verifyGithubUrl = async (
   url: string | null | undefined
 ): Promise<{ verified: boolean; message: string; normalizedUrl?: string }> => {
@@ -257,22 +267,25 @@ export const syncProjectEvidence = async (projectId: string, userId: string) => 
 };
 
 export const createProject = async (userId: string, data: any) => {
-  const score = calculateProjectScore(!!data.repositoryUrl, !!data.liveUrl, data.techStack?.length || 0);
+  const cleanRepoUrl = normalizeGithubUrl(data.repositoryUrl) || sanitizeUrl(data.repositoryUrl);
+  const cleanLiveUrl = sanitizeUrl(data.liveUrl);
 
-  const githubStatus = await verifyGithubUrl(data.repositoryUrl);
-  const liveStatus = await verifyLiveUrl(data.liveUrl);
+  const githubStatus = await verifyGithubUrl(cleanRepoUrl);
+  const liveStatus = await verifyLiveUrl(cleanLiveUrl);
+
+  const score = calculateProjectScore(githubStatus.verified, liveStatus.verified, data.techStack?.length || 0);
 
   const project = await prisma.project.create({
     data: {
       userId,
       title: data.title,
       description: data.description,
-      repositoryUrl: data.repositoryUrl,
-      liveUrl: data.liveUrl,
+      repositoryUrl: cleanRepoUrl,
+      liveUrl: cleanLiveUrl,
       techStack: data.techStack || [],
       projectType: data.projectType || "GENERATED",
       score,
-      isVerified: githubStatus.verified || liveStatus.verified,
+      isVerified: Boolean(githubStatus.verified || liveStatus.verified),
     }
   });
 
@@ -315,7 +328,7 @@ export const createProject = async (userId: string, data: any) => {
     console.error("Failed to create project notification:", err);
   }
 
-  return project;
+  return formatProjectResponse(project);
 };
 
 // FLOW B: IMPORT EXISTING GITHUB PROJECT
@@ -484,24 +497,55 @@ Synthesize this repository evidence into an objective AI Project Summary.`;
     console.error("Failed to create activity log for imported project:", err);
   }
 
-  return prisma.project.findUnique({ where: { id: project.id } });
+  const reloaded = await prisma.project.findUnique({ where: { id: project.id } });
+  return formatProjectResponse(reloaded || project);
 };
+
+export const formatProjectResponse = (p: any) => ({
+  id: p.id,
+  name: p.title,
+  description: p.description,
+  projectType: p.projectType || "GENERATED",
+  specification: p.specification,
+  aiSummary: p.aiSummary,
+  plannedVsActual: p.plannedVsActual,
+  techStack: p.techStack || [],
+  githubUrl: p.repositoryUrl,
+  liveDemoUrl: p.liveUrl,
+  aiReview: p.aiReview,
+  metrics: {
+    technicalDepth: p.score || 0,
+    explanationQuality: p.explanationQuality || 0,
+    evidence: p.isVerified ? "verified" : (p.repositoryUrl || p.liveUrl ? "unverified" : "missing"),
+  }
+});
 
 export const updateProject = async (userId: string, projectId: string, data: any) => {
   const project = await prisma.project.findUnique({ where: { id: projectId, userId } });
   if (!project) throw new Error("Project not found");
 
-  const newRepoUrl = data.repositoryUrl !== undefined ? data.repositoryUrl : project.repositoryUrl;
-  const newLiveUrl = data.liveUrl !== undefined ? data.liveUrl : project.liveUrl;
-
-  const score = calculateProjectScore(
-    !!newRepoUrl, 
-    !!newLiveUrl, 
-    data.techStack ? data.techStack.length : project.techStack.length
-  );
+  const newRepoUrl = data.repositoryUrl !== undefined
+    ? (normalizeGithubUrl(data.repositoryUrl) || sanitizeUrl(data.repositoryUrl))
+    : project.repositoryUrl;
+  const newLiveUrl = data.liveUrl !== undefined
+    ? sanitizeUrl(data.liveUrl)
+    : project.liveUrl;
 
   const githubStatus = await verifyGithubUrl(newRepoUrl);
   const liveStatus = await verifyLiveUrl(newLiveUrl);
+
+  const isVerified = Boolean(githubStatus.verified || liveStatus.verified);
+
+  const baseScore = calculateProjectScore(
+    githubStatus.verified,
+    liveStatus.verified,
+    data.techStack ? data.techStack.length : project.techStack.length
+  );
+
+  let newScore = baseScore;
+  if (project.aiReview && typeof (project.aiReview as any).overallScore === "number") {
+    newScore = Math.round(((project.aiReview as any).overallScore * 0.6) + (baseScore * 0.4));
+  }
 
   const updated = await prisma.project.update({
     where: { id: projectId },
@@ -511,14 +555,24 @@ export const updateProject = async (userId: string, projectId: string, data: any
       repositoryUrl: newRepoUrl,
       liveUrl: newLiveUrl,
       techStack: data.techStack !== undefined ? data.techStack : undefined,
-      score,
-      isVerified: githubStatus.verified || liveStatus.verified,
+      score: newScore,
+      isVerified,
     }
   });
 
   await syncProjectEvidence(projectId, userId);
 
-  return updated;
+  // If a repository URL was newly attached or changed and is reachable, auto-run review
+  if (newRepoUrl && newRepoUrl !== project.repositoryUrl && githubStatus.verified) {
+    try {
+      await generateProjectReview(userId, projectId);
+    } catch (reviewErr) {
+      console.warn("Auto project review on repository update failed non-critically:", reviewErr);
+    }
+  }
+
+  const refreshed = await prisma.project.findUnique({ where: { id: projectId } });
+  return formatProjectResponse(refreshed || updated);
 };
 
 export const deleteProject = async (userId: string, projectId: string) => {
@@ -565,11 +619,27 @@ export const verifyProjectUrls = async (userId: string, projectId: string) => {
   const githubStatus = await verifyGithubUrl(project.repositoryUrl);
   const liveStatus = await verifyLiveUrl(project.liveUrl);
 
-  const isVerified = githubStatus.verified || liveStatus.verified;
+  const isVerified = Boolean(githubStatus.verified || liveStatus.verified);
+
+  const baseScore = calculateProjectScore(
+    githubStatus.verified,
+    liveStatus.verified,
+    project.techStack?.length || 0
+  );
+
+  let newScore = project.score;
+  if (project.aiReview && typeof (project.aiReview as any).overallScore === "number") {
+    newScore = Math.round(((project.aiReview as any).overallScore * 0.6) + (baseScore * 0.4));
+  } else if (isVerified) {
+    newScore = Math.max(project.score, baseScore);
+  }
 
   await prisma.project.update({
     where: { id: projectId },
-    data: { isVerified }
+    data: { 
+      isVerified,
+      score: newScore,
+    }
   });
 
   await syncProjectEvidence(projectId, userId);
@@ -595,24 +665,7 @@ export const getPortfolio = async (userId: string) => {
 
   return {
     overallStrength: technicalDepth,
-    projects: projects.map(p => ({
-      id: p.id,
-      name: p.title,
-      description: p.description,
-      projectType: p.projectType || "GENERATED",
-      specification: p.specification,
-      aiSummary: p.aiSummary,
-      plannedVsActual: p.plannedVsActual,
-      techStack: p.techStack,
-      githubUrl: p.repositoryUrl,
-      liveDemoUrl: p.liveUrl,
-      aiReview: p.aiReview,
-      metrics: {
-        technicalDepth: p.score,
-        explanationQuality: p.explanationQuality || 0,
-        evidence: p.isVerified ? "verified" : (p.repositoryUrl || p.liveUrl ? "unverified" : "missing"),
-      }
-    }))
+    projects: projects.map(formatProjectResponse)
   };
 };
 
@@ -621,7 +674,7 @@ export const getProject = async (userId: string, projectId: string) => {
     where: { id: projectId, userId }
   });
   if (!project) throw new Error("Project not found");
-  return project;
+  return formatProjectResponse(project);
 };
 
 // DYNAMIC PLANNED VS ACTUAL EVALUATION FOR FLOW A GENERATED PROJECTS
@@ -1112,7 +1165,7 @@ export const generateMilestoneProject = async (
     return {
       created: false,
       duplicate: true,
-      project: duplicateProject,
+      project: formatProjectResponse(duplicateProject),
     };
   }
 
@@ -1261,7 +1314,7 @@ The project should be appropriately scoped for the learner's current stage.`;
   return {
     created: true,
     duplicate: false,
-    project,
+    project: formatProjectResponse(project),
   };
 };
 

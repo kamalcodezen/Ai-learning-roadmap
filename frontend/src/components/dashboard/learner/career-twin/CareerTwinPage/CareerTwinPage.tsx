@@ -2,13 +2,12 @@
 import { PageHeader, DashboardButton } from "@/src/components/dashboard/shared/patterns";
 
 import { redirect } from "next/navigation";
-import { authClient } from "@/src/lib/auth-client";
+import { useDashboardSession } from "@/src/components/dashboard/shared/sessionGuard/SessionGuard";
 import { getCareerTwin } from "@/src/lib/api/learner/career-twin";
 import { useQuery } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../../shared/GenericPageSkeleton";
 import { CardContent, CardHeader, CardTitle } from "@/src/components/ui/Card";
 import { DashboardCard } from "@/src/components/dashboard/shared/cards";
-import { useState } from "react";
 import {
   Bot,
   Target,
@@ -17,20 +16,20 @@ import {
   CheckCircle2,
   ArrowRight,
   Printer,
-  Compass,
-  Sparkles,
+  RefreshCw,
 } from "lucide-react";
 
 export default function CareerTwinPage() {
-  const { data: session, isPending: isSessionLoading } =
-    authClient.useSession();
+  const { data: session, isPending: isSessionLoading } = useDashboardSession();
 
-  const [simulatedRole, setSimulatedRole] = useState<string>("");
-
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ["careerTwin", session?.user?.id],
     queryFn: () => getCareerTwin(),
     enabled: !!session?.user?.id,
+    staleTime: 5000,
+    refetchInterval: 15000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
   });
 
   if (isSessionLoading) {
@@ -63,22 +62,22 @@ export default function CareerTwinPage() {
           description="Your AI-generated professional profile and readiness analysis."
         />
         <div className="flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-card/80">
-            <Compass className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs text-muted-foreground font-medium">Simulate:</span>
-            <select
-              value={simulatedRole || data.targetRole}
-              onChange={(e) => setSimulatedRole(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-foreground outline-none cursor-pointer"
-            >
-              <option value={data.targetRole} className="bg-card text-foreground">{data.targetRole} (Current Target)</option>
-              <option value="Full Stack Developer" className="bg-card text-foreground">Full Stack Developer</option>
-              <option value="Frontend Developer" className="bg-card text-foreground">Frontend Developer</option>
-              <option value="Backend Developer" className="bg-card text-foreground">Backend Developer</option>
-              <option value="AI Engineer" className="bg-card text-foreground">AI Engineer</option>
-              <option value="DevOps Engineer" className="bg-card text-foreground">DevOps Engineer</option>
-            </select>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-card/80 text-xs font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-muted-foreground">Target Role:</span>
+            <span className="text-foreground font-semibold">{data.targetRole}</span>
           </div>
+
+          <button
+            type="button"
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-card hover:bg-muted text-xs font-semibold text-foreground transition-all shadow-sm cursor-pointer disabled:opacity-50"
+            title="Refresh career twin analysis"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-primary ${isFetching ? "animate-spin" : ""}`} />
+            <span>Sync</span>
+          </button>
 
           <button
             type="button"
@@ -90,22 +89,6 @@ export default function CareerTwinPage() {
           </button>
         </div>
       </div>
-
-      {simulatedRole && simulatedRole !== data.targetRole && (
-        <div className="flex items-center gap-3 p-4 rounded-xl border border-primary/20 bg-primary/5 text-xs text-muted-foreground animate-in fade-in">
-          <Sparkles className="w-4 h-4 text-primary shrink-0" />
-          <span>
-            <strong>What-If Simulation Active:</strong> Evaluating your verified competencies against the benchmark criteria for <strong>{simulatedRole}</strong>.
-          </span>
-          <button
-            type="button"
-            onClick={() => setSimulatedRole("")}
-            className="ml-auto text-primary hover:underline font-semibold"
-          >
-            Reset to Target
-          </button>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 dashboard-card-gap">
         <DashboardCard className="col-span-1 lg:col-span-2 border-primary/20">

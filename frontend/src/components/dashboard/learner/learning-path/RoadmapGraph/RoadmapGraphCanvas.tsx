@@ -17,7 +17,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { RoadmapMilestoneNode } from "./RoadmapMilestoneNode";
 import { MilestoneDetailDrawer } from "./MilestoneDetailDrawer";
-import { Target, CheckCircle2, Clock, List } from "lucide-react";
+import { Target, CheckCircle2, Clock, List, X, ChevronDown } from "lucide-react";
 
 const nodeTypes = {
   milestoneNode: RoadmapMilestoneNode,
@@ -50,6 +50,7 @@ interface RoadmapGraphCanvasProps {
   isGeneratingProject: boolean;
   onToggleView?: () => void;
   getProjectForMilestone?: (milestoneId: string, milestoneTitle: string) => { id: string; name: string } | null;
+  targetSkillGap?: string | null;
 }
 
 export function RoadmapGraphCanvas({
@@ -65,7 +66,9 @@ export function RoadmapGraphCanvas({
   isGeneratingProject,
   onToggleView,
   getProjectForMilestone,
+  targetSkillGap,
 }: RoadmapGraphCanvasProps) {
+  const [isOverviewOpen, setIsOverviewOpen] = useState(true);
   const [userSelectedMilestoneId, setUserSelectedMilestoneId] = useState<string | null>(
     autoOpenDrawer ? targetMilestoneId || null : null
   );
@@ -279,47 +282,87 @@ export function RoadmapGraphCanvas({
       ref={containerRef}
       className="relative w-full h-[760px] md:h-[840px] rounded-2xl overflow-hidden border border-border dashboard-card !p-0 nowheel"
     >
-      {/* Top Left Title Card Overlay (Matching the reference screenshot) */}
-      <div className="absolute top-6 left-6 z-10 max-w-sm md:max-w-md p-5 rounded-2xl bg-card/95 border border-border backdrop-blur-xl space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
-            <Target className="w-4 h-4" /> {targetRole} Roadmap
+      {/* Top Left Title Card Overlay (Toggleable Collapse / Expand) */}
+      {isOverviewOpen ? (
+        <div className="absolute top-6 left-6 z-10 max-w-sm md:max-w-md p-5 rounded-2xl bg-card/95 border border-border shadow-2xl backdrop-blur-xl space-y-3 animate-in fade-in zoom-in-95 duration-200">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
+              <Target className="w-4 h-4" /> {targetRole} Roadmap
+            </div>
+            <div className="flex items-center gap-1.5">
+              {onToggleView && (
+                <button
+                  onClick={onToggleView}
+                  className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-lg bg-muted hover:bg-muted/80 text-foreground transition-all border border-border cursor-pointer"
+                  title="Switch to List View"
+                >
+                  <List className="w-3.5 h-3.5" /> List View
+                </button>
+              )}
+              <button
+                onClick={() => setIsOverviewOpen(false)}
+                className="p-1.5 rounded-lg bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground transition-all border border-border/80 cursor-pointer"
+                title="Hide Overview (Expand canvas space)"
+                aria-label="Hide Overview"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
+
+          <h3 className="text-xl md:text-2xl font-black text-foreground tracking-tight leading-snug">
+            {roadmapTitle}
+          </h3>
+
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            <strong className="text-primary">Description:</strong> Master the complete curriculum for {targetRole}, from core foundations and architectural systems to production capstone delivery.
+          </p>
+
+          <div className="flex items-center justify-between pt-2 border-t border-border text-xs">
+            <span className="text-muted-foreground flex items-center gap-1 font-medium">
+              <Clock className="w-3.5 h-3.5 text-primary" />
+              Duration: <strong className="text-foreground">6–9 months</strong>
+            </span>
+            <span className="text-emerald-500 dark:text-emerald-400 font-bold flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5" /> {overallProgress}% Mastered
+            </span>
+          </div>
+
+          <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-emerald-500 to-primary rounded-full transition-all duration-700"
+              style={{ width: `${overallProgress}%` }}
+            />
+          </div>
+        </div>
+      ) : (
+        /* Top Left Collapsed Badge / Toggle Button */
+        <div className="absolute top-6 left-6 z-10 flex items-center gap-2 animate-in fade-in zoom-in-95 duration-200">
+          <button
+            onClick={() => setIsOverviewOpen(true)}
+            className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-card/95 border border-border hover:border-primary/50 shadow-xl backdrop-blur-xl text-foreground text-xs font-semibold transition-all hover:scale-[1.02] cursor-pointer group"
+            title="Click to view Roadmap Overview"
+          >
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="flex items-center gap-1.5 text-primary font-bold uppercase tracking-wider">
+              <Target className="w-3.5 h-3.5" /> {targetRole} Roadmap
+            </span>
+            <span className="text-muted-foreground font-normal">|</span>
+            <span className="text-emerald-500 font-bold">{overallProgress}% Mastered</span>
+            <ChevronDown className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-transform ml-1" />
+          </button>
+
           {onToggleView && (
             <button
               onClick={onToggleView}
-              className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-lg bg-muted hover:bg-muted/80 text-foreground transition-all border border-border cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold rounded-2xl bg-card/95 hover:bg-muted border border-border shadow-xl backdrop-blur-xl text-foreground transition-all cursor-pointer"
+              title="Switch to List View"
             >
               <List className="w-3.5 h-3.5" /> List View
             </button>
           )}
         </div>
-
-        <h3 className="text-xl md:text-2xl font-black text-foreground tracking-tight leading-snug">
-          {roadmapTitle}
-        </h3>
-
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          <strong className="text-primary">Description:</strong> Master the complete curriculum for {targetRole}, from core foundations and architectural systems to production capstone delivery.
-        </p>
-
-        <div className="flex items-center justify-between pt-2 border-t border-border text-xs">
-          <span className="text-muted-foreground flex items-center gap-1 font-medium">
-            <Clock className="w-3.5 h-3.5 text-primary" />
-            Duration: <strong className="text-foreground">6–9 months</strong>
-          </span>
-          <span className="text-emerald-500 dark:text-emerald-400 font-bold flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5" /> {overallProgress}% Mastered
-          </span>
-        </div>
-
-        <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-emerald-500 to-primary rounded-full transition-all duration-700"
-            style={{ width: `${overallProgress}%` }}
-          />
-        </div>
-      </div>
+      )}
 
       {/* React Flow Graph Engine */}
       <ReactFlow
@@ -395,6 +438,7 @@ export function RoadmapGraphCanvas({
           if (activeM) handleSelectNode(activeM.id);
         }}
         activeMilestoneTitle={(milestones.find((m) => m.status === "current") || milestones[0])?.title}
+        targetSkillGap={targetSkillGap}
       />
     </div>
   );

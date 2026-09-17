@@ -19,9 +19,11 @@ import {
   reviewProjectPullRequest,
   generateMilestoneProject,
   ProjectData,
+  PrReviewResult,
 } from "@/src/lib/api/learner/portfolio";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../../shared/GenericPageSkeleton";
+import { showToast } from "@/src/components/ui/toast";
 import {
   Card,
   CardContent,
@@ -135,14 +137,7 @@ export default function PortfolioPage() {
     repoUrl?: string | null;
   } | null>(null);
   const [prUrlInput, setPrUrlInput] = useState("");
-  const [prReviewData, setPrReviewData] = useState<{
-    prSummary?: string;
-    qualityScore?: number;
-    verdict?: string;
-    positives?: string[];
-    concerns?: string[];
-    actionableSuggestions?: string[];
-  } | null>(null);
+  const [prReviewData, setPrReviewData] = useState<PrReviewResult | null>(null);
   const [prReviewError, setPrReviewError] = useState("");
 
   const [formData, setFormData] = useState({
@@ -168,6 +163,10 @@ export default function PortfolioPage() {
     queryKey: ["portfolio", session?.user?.id],
     queryFn: () => getPortfolio(),
     enabled: !!session?.user?.id,
+    refetchInterval: 12000,
+    staleTime: 5000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
   });
 
   useEffect(() => {
@@ -206,19 +205,28 @@ export default function PortfolioPage() {
         });
       }
       queryClient.invalidateQueries({
-        queryKey: ["portfolio", session?.user?.id],
+        queryKey: ["portfolio"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["careerTwin", session?.user?.id],
+        queryKey: ["careerAlignment"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["dashboardData", session?.user?.id],
+        queryKey: ["progress"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["proofGraph", session?.user?.id],
+        queryKey: ["careerTwin"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["skillGaps", session?.user?.id],
+        queryKey: ["dashboardData"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["proofGraph"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["skillTree"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["skillGaps"],
       });
     },
     onError: (err: Error) => {
@@ -232,25 +240,37 @@ export default function PortfolioPage() {
     mutationFn: createProject,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["portfolio", session?.user?.id],
+        queryKey: ["portfolio"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["careerTwin", session?.user?.id],
+        queryKey: ["careerAlignment"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["dashboardData", session?.user?.id],
+        queryKey: ["progress"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["proofGraph", session?.user?.id],
+        queryKey: ["careerTwin"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["skillGaps", session?.user?.id],
+        queryKey: ["dashboardData"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["proofGraph"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["skillTree"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["skillGaps"],
       });
       setIsModalOpen(false);
       resetForm();
+      showToast({ message: "Project created successfully!", variant: "success" });
     },
-    onError: (err: Error) =>
-      setErrorMsg(err.message || "Failed to create project"),
+    onError: (err: Error) => {
+      setErrorMsg(err.message || "Failed to create project");
+      showToast({ message: err.message || "Failed to create project", variant: "error" });
+    },
   });
 
   const importMut = useMutation({
@@ -269,14 +289,20 @@ export default function PortfolioPage() {
         queryKey: ["proofGraph", session?.user?.id],
       });
       queryClient.invalidateQueries({
+        queryKey: ["skillTree", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["skillGaps", session?.user?.id],
       });
       setIsImportModalOpen(false);
       resetImportForm();
       setActiveFilter("ALL");
+      showToast({ message: "GitHub project imported and audited successfully!", variant: "success" });
     },
-    onError: (err: Error) =>
-      setImportErrorMsg(err.message || "Failed to import GitHub project"),
+    onError: (err: Error) => {
+      setImportErrorMsg(err.message || "Failed to import GitHub project");
+      showToast({ message: err.message || "Failed to import GitHub project", variant: "error" });
+    },
   });
 
   const updateMut = useMutation({
@@ -295,11 +321,20 @@ export default function PortfolioPage() {
       queryClient.invalidateQueries({
         queryKey: ["proofGraph", session?.user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["skillTree", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["skillGaps", session?.user?.id],
+      });
       setIsModalOpen(false);
       resetForm();
+      showToast({ message: "Project updated successfully!", variant: "success" });
     },
-    onError: (err: Error) =>
-      setErrorMsg(err.message || "Failed to update project"),
+    onError: (err: Error) => {
+      setErrorMsg(err.message || "Failed to update project");
+      showToast({ message: err.message || "Failed to update project", variant: "error" });
+    },
   });
 
   const [deletingProject, setDeletingProject] = useState<ProjectData | null>(
@@ -322,19 +357,26 @@ export default function PortfolioPage() {
       queryClient.invalidateQueries({
         queryKey: ["proofGraph", session?.user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["skillTree", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["skillGaps", session?.user?.id],
+      });
       setDeletingProject(null);
       setDeleteErrorMsg(null);
+      showToast({ message: "Project deleted successfully.", variant: "success" });
     },
     onError: (err: Error) => {
-      setDeleteErrorMsg(
-        err.message || "Failed to delete project. Please try again.",
-      );
+      const msg = err.message || "Failed to delete project. Please try again.";
+      setDeleteErrorMsg(msg);
+      showToast({ message: msg, variant: "error" });
     },
   });
 
   const reviewMut = useMutation({
     mutationFn: generateProjectReview,
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["portfolio", session?.user?.id],
       });
@@ -347,8 +389,19 @@ export default function PortfolioPage() {
       queryClient.invalidateQueries({
         queryKey: ["proofGraph", session?.user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["skillTree", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["skillGaps", session?.user?.id],
+      });
+      if (variables) {
+        setExpandedReviews((prev) => ({ ...prev, [variables]: true }));
+      }
+      showToast({ message: "AI Project Review completed successfully!", variant: "success" });
     },
-    onError: (err: Error) => alert(err.message || "Unable to review project."),
+    onError: (err: Error) =>
+      showToast({ message: err.message || "Unable to review project.", variant: "error" }),
   });
 
   const reanalyzeMut = useMutation({
@@ -367,11 +420,15 @@ export default function PortfolioPage() {
         queryKey: ["proofGraph", session?.user?.id],
       });
       queryClient.invalidateQueries({
+        queryKey: ["skillTree", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["skillGaps", session?.user?.id],
       });
+      showToast({ message: "Repository re-analyzed and evidence synchronized!", variant: "success" });
     },
     onError: (err: Error) =>
-      alert(err.message || "Failed to re-analyze project."),
+      showToast({ message: err.message || "Failed to re-analyze project.", variant: "error" }),
   });
 
   const verifyMut = useMutation({
@@ -386,9 +443,19 @@ export default function PortfolioPage() {
       queryClient.invalidateQueries({
         queryKey: ["dashboardData", session?.user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["proofGraph", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["skillTree", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["skillGaps", session?.user?.id],
+      });
+      showToast({ message: "Project links verified successfully!", variant: "success" });
     },
     onError: (err: Error) =>
-      alert(err.message || "Failed to verify project links"),
+      showToast({ message: err.message || "Failed to verify project links.", variant: "error" }),
   });
 
   const prReviewMut = useMutation({
@@ -400,9 +467,19 @@ export default function PortfolioPage() {
       queryClient.invalidateQueries({
         queryKey: ["portfolio", session?.user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["careerTwin", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboardData", session?.user?.id],
+      });
+      showToast({ message: "Pull Request reviewed successfully!", variant: "success" });
     },
-    onError: (err: Error) =>
-      setPrReviewError(err.message || "Failed to review Pull Request"),
+    onError: (err: Error) => {
+      const msg = err.message || "Failed to review Pull Request";
+      setPrReviewError(msg);
+      showToast({ message: msg, variant: "error" });
+    },
   });
 
   const toggleReview = (id: string) => {
@@ -481,15 +558,24 @@ export default function PortfolioPage() {
       return;
     }
 
+    let cleanRepo = formData.repositoryUrl?.trim();
+    if (cleanRepo && !cleanRepo.startsWith("http://") && !cleanRepo.startsWith("https://")) {
+      cleanRepo = "https://" + cleanRepo;
+    }
+    let cleanLive = formData.liveUrl?.trim();
+    if (cleanLive && !cleanLive.startsWith("http://") && !cleanLive.startsWith("https://")) {
+      cleanLive = "https://" + cleanLive;
+    }
+
     const payload = {
-      title: formData.title,
-      description: formData.description,
+      title: formData.title.trim(),
+      description: formData.description.trim(),
       techStack: formData.techStack
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean),
-      repositoryUrl: formData.repositoryUrl || undefined,
-      liveUrl: formData.liveUrl || undefined,
+      repositoryUrl: cleanRepo || undefined,
+      liveUrl: cleanLive || undefined,
       projectType: "GENERATED" as const,
     };
 
@@ -1303,13 +1389,14 @@ export default function PortfolioPage() {
                               <button
                                 type="button"
                                 onClick={() => {
+                                  const existingPr = project.aiReview?.latestPrReview;
                                   setPrModalProject({
                                     id: project.id,
                                     name: project.name,
                                     repoUrl: project.githubUrl,
                                   });
-                                  setPrUrlInput("");
-                                  setPrReviewData(null);
+                                  setPrUrlInput(existingPr?.prUrl || "");
+                                  setPrReviewData(existingPr || null);
                                   setPrReviewError("");
                                 }}
                                 className="text-xs font-semibold px-2.5 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center gap-1"

@@ -35,19 +35,40 @@ export const getSkillTree = async (userId: string) => {
     const projectScore = state?.projectScore ?? 0;
     const evidenceScore = state?.evidenceScore ?? 0;
 
-    const masteryScore = Math.round(
+    const activeComps: number[] = [];
+    if (knowledgeScore > 0) activeComps.push(knowledgeScore);
+    if (practiceScore > 0) activeComps.push(practiceScore);
+    if (projectScore > 0) activeComps.push(projectScore);
+    if (evidenceScore > 0) activeComps.push(evidenceScore);
+
+    const compositeScore = Math.round(
       knowledgeScore * 0.4 + practiceScore * 0.3 + projectScore * 0.3,
     );
 
-    const hasVerifiedEvidence = projectEvidences.some(
-      (e) => e.skillName.toLowerCase() === skillNameLower,
+    const effectiveMasteryScore =
+      activeComps.length > 0
+        ? Math.round(activeComps.reduce((a, b) => a + b, 0) / activeComps.length)
+        : compositeScore;
+
+    const hasVerifiedEvidence = projectEvidences.some((e) =>
+      isMatchingSkill(e.skillName, req.skill),
     );
 
     let status: SkillTreeNodeStatus = "LOCKED";
 
-    if (masteryScore >= 70 || (completedMilestoneSkills.has(skillNameLower) && hasVerifiedEvidence)) {
+    if (
+      effectiveMasteryScore >= 70 ||
+      knowledgeScore >= 75 ||
+      practiceScore >= 65 ||
+      (completedMilestoneSkills.has(skillNameLower) && hasVerifiedEvidence)
+    ) {
       status = "MASTERED";
-    } else if (masteryScore > 0 || completedMilestoneSkills.has(skillNameLower)) {
+    } else if (
+      effectiveMasteryScore > 0 ||
+      knowledgeScore > 0 ||
+      practiceScore > 0 ||
+      completedMilestoneSkills.has(skillNameLower)
+    ) {
       status = "IN_PROGRESS";
     } else if (index < 3 || req.critical) {
       // Foundational or critical skills start available
@@ -68,7 +89,7 @@ export const getSkillTree = async (userId: string) => {
       name: req.skill,
       category: req.critical ? "Core Competency" : "Supporting Proficiency",
       status,
-      masteryScore,
+      masteryScore: effectiveMasteryScore,
       knowledgeScore,
       practiceScore,
       projectScore,
