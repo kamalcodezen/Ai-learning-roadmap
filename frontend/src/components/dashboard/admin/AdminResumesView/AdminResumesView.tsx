@@ -277,7 +277,7 @@ export default function AdminResumesView() {
           >
             <Label>Time Range</Label>
             <Select.Trigger
-              className="rounded-lg! [border-radius:0.5rem]! transition-none! hover:border-border! hover:bg-transparent! hover:shadow-none!"
+              className="rounded-lg! [border-radius:0.5rem]! transition-none!"
               style={{ borderRadius: "0.5rem", transition: "none" }}
             >
               <Select.Value />
