@@ -207,7 +207,7 @@ export default function ProfileDropdown({
             transition={{ duration: 0.18, ease: "easeOut" }}
             data-lenis-prevent="true"
             data-lenis-prevent-wheel="true"
-            className="absolute right-0 top-[calc(100%+6px)] z-50 w-72 origin-top-right max-h-[85vh] overflow-y-auto overscroll-contain rounded-2xl border border-border/80 bg-card/95 p-2 shadow-[0_16px_40px_rgba(0,0,0,0.14)] backdrop-blur-2xl dark:border-primary/20 dark:bg-[#120722]/95 dark:shadow-[0_20px_50px_rgba(0,0,0,0.55)]"
+            className="absolute right-0 top-[calc(100%+6px)] z-50 w-72 origin-top-right max-h-[85vh] overflow-y-auto overscroll-contain rounded-lg border border-border/80 bg-card/95 p-2 shadow-[0_16px_40px_rgba(0,0,0,0.14)] backdrop-blur-2xl dark:border-primary/20 dark:bg-[#120722]/95 dark:shadow-[0_20px_50px_rgba(0,0,0,0.55)]"
           >
             {/* Header: User Profile Info */}
             <div className="rounded-xl border border-border/50 bg-muted/40 p-3.5">
