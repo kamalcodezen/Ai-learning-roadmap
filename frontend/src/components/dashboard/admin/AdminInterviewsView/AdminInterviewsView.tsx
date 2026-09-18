@@ -361,7 +361,12 @@ export default function AdminInterviewsView() {
       <Modal state={inspectModal}>
         <Modal.Backdrop className="bg-black/60 backdrop-blur-sm">
           <Modal.Container>
-            <Modal.Dialog className="sm:max-w-[720px] max-h-[90vh] flex flex-col rounded-2xl border border-border bg-card text-card-foreground shadow-2xl overflow-hidden relative">
+            <Modal.Dialog
+              data-lenis-prevent="true"
+              data-lenis-prevent-wheel="true"
+              data-lenis-prevent-touch="true"
+              className="sm:max-w-[720px] max-h-[90vh] flex flex-col rounded-2xl border border-border bg-card text-card-foreground shadow-2xl overflow-hidden relative"
+            >
               <Modal.CloseTrigger className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white dark:text-black transition-all duration-200 cursor-pointer shadow-sm z-20">
                 <X className="size-4" />
               </Modal.CloseTrigger>
@@ -378,7 +383,14 @@ export default function AdminInterviewsView() {
                   </p>
                 </div>
               </Modal.Header>
-              <Modal.Body className="overflow-y-auto p-5 space-y-5 flex-1 min-h-0 [scrollbar-width:thin]">
+              <Modal.Body
+                data-lenis-prevent="true"
+                data-lenis-prevent-wheel="true"
+                data-lenis-prevent-touch="true"
+                onWheel={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+                className="overflow-y-auto overscroll-contain p-5 space-y-5 flex-1 min-h-0 [scrollbar-width:thin]"
+              >
                 {isDetailsLoading || !sessionDetails ? (
                   <div className="space-y-4 py-4 animate-pulse">
                     <div className="h-16 w-full rounded-xl bg-muted/40 border border-border/30" />
