@@ -149,15 +149,16 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
         )}
       </AnimatePresence>
 
-      <div
-        className={cn(
-          "pointer-events-auto font-sans z-50 ",
-          isExpanded
+      <div className="pointer-events-auto font-sans">
+        {/* Plasma Animated Chat Window */}
+        <div
+          className={cn(
+            "fixed z-50",
+            isExpanded
             ? "fixed inset-3 sm:inset-6 md:inset-8 flex flex-col"
             : "fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center sm:left-auto sm:right-6 sm:translate-x-0 sm:items-end"
-        )}
-       >
-        {/* Plasma Animated Chat Window */}
+          )}
+        >
         <AnimatePresence>
           {open && (
             <motion.div
@@ -548,9 +549,16 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
           </motion.div>
         )}
        </AnimatePresence>
+        </div>
 
         {/* Floating Trigger Button */}
-        <div className={cn(hideTriggerOnMobile && "hidden lg:block")}>
+        <div
+          className={cn(
+            "fixed bottom-6 right-6 z-50",
+            hideTriggerOnMobile && "hidden lg:block",
+            isExpanded && "hidden"
+          )}
+        >
           <PlasmaTriggerButton
             size={60}
             logo={logoSrc}
