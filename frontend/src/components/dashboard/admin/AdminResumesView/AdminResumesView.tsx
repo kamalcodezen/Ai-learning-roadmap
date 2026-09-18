@@ -25,6 +25,7 @@ import type { Key } from "@heroui/react";
 import AdminPageSkeleton from "../shared/AdminPageSkeleton";
 import AdminDataTable, { AdminDataTableColumn } from "../shared/AdminDataTable";
 import { Card, CardContent } from "@/src/components/ui/Card";
+import "../admin.css";
 
 const glowCardClass =
   "group relative overflow-hidden rounded-xl p-6 transition-all duration-300 border-2 border-background shadow-none proof-card";
@@ -275,7 +276,10 @@ export default function AdminResumesView() {
             }}
           >
             <Label>Time Range</Label>
-            <Select.Trigger className="rounded-lg! [border-radius:0.5rem]! hover:border-border! hover:bg-transparent! hover:shadow-none!">
+            <Select.Trigger
+              className="rounded-lg! [border-radius:0.5rem]! transition-none! hover:border-border! hover:bg-transparent! hover:shadow-none!"
+              style={{ borderRadius: "0.5rem", transition: "none" }}
+            >
               <Select.Value />
               <Select.Indicator />
             </Select.Trigger>
