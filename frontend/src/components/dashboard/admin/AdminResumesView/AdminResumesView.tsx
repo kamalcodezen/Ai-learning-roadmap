@@ -140,63 +140,78 @@ export default function AdminResumesView() {
     },
     {
       header: "Target Role",
+      align: "center",
       render: (item) => (
-        <span className="inline-flex items-center text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-md border border-primary/20 max-w-[170px] truncate">
-          {item.targetRole}
-        </span>
+        <div className="flex justify-center">
+          <span className="inline-flex items-center text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-md border border-primary/20 max-w-[170px] truncate">
+            {item.targetRole}
+          </span>
+        </div>
       ),
     },
     {
       header: "ATS Score",
+      align: "center",
       render: (item) => {
         const score = item.atsScore ?? 0;
         return (
-          <span
-            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold ${
-              score >= 80
-                ? "bg-emerald-500/15 text-emerald-500 border border-emerald-500/30"
-                : score >= 60
-                  ? "bg-amber-500/15 text-amber-500 border border-amber-500/30"
-                  : "bg-red-500/15 text-red-500 border border-red-500/30"
-            }`}
-          >
-            <Sparkles className="size-3" />
-            {score}%
-          </span>
+          <div className="flex justify-center">
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                score >= 80
+                  ? "bg-emerald-500/15 text-emerald-500 border border-emerald-500/30"
+                  : score >= 60
+                    ? "bg-amber-500/15 text-amber-500 border border-amber-500/30"
+                    : "bg-red-500/15 text-red-500 border border-red-500/30"
+              }`}
+            >
+              <Sparkles className="size-3" />
+              {score}%
+            </span>
+          </div>
         );
       },
     },
     {
       header: "Sections",
+      align: "center",
       render: (item) => {
         const skillsLen = Array.isArray(item.skills) ? item.skills.length : 0;
         const expLen = Array.isArray(item.experience) ? item.experience.length : 0;
         const projLen = Array.isArray(item.projects) ? item.projects.length : 0;
         return (
-          <span className="text-xs text-muted-foreground font-mono">
-            {skillsLen} skills · {expLen} jobs · {projLen} projects
-          </span>
+          <div className="flex justify-center text-center">
+            <span className="text-xs text-muted-foreground font-mono">
+              {skillsLen} skills · {expLen} jobs · {projLen} projects
+            </span>
+          </div>
         );
       },
     },
     {
       header: "Created",
+      align: "center",
       render: (item) => (
-        <span className="text-xs text-muted-foreground whitespace-nowrap">
-          {new Date(item.createdAt).toLocaleDateString()}
-        </span>
+        <div className="flex justify-center text-center">
+          <span className="text-xs text-muted-foreground whitespace-nowrap">
+            {new Date(item.createdAt).toLocaleDateString()}
+          </span>
+        </div>
       ),
     },
     {
       header: "Action",
+      align: "center",
       render: (item) => (
-        <button
-          onClick={() => handleInspect(item.id)}
-          className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-          title="Inspect Resume & ATS Feedback"
-        >
-          <Eye className="size-3.5" /> Inspect
-        </button>
+        <div className="flex justify-center">
+          <button
+            onClick={() => handleInspect(item.id)}
+            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+            title="Inspect Resume & ATS Feedback"
+          >
+            <Eye className="size-3.5" /> Inspect
+          </button>
+        </div>
       ),
     },
   ];
@@ -260,7 +275,7 @@ export default function AdminResumesView() {
             }}
           >
             <Label>Time Range</Label>
-            <Select.Trigger className="rounded-lg! [border-radius:0.5rem]!">
+            <Select.Trigger className="rounded-lg! [border-radius:0.5rem]! hover:border-border! hover:bg-transparent! hover:shadow-none!">
               <Select.Value />
               <Select.Indicator />
             </Select.Trigger>
