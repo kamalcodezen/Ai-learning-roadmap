@@ -117,7 +117,7 @@ export default function AdminSkillProofView() {
             Skill <span className="text-brand">Proof</span>
           </h1>
           <p className="section-subtitle mt-1 text-left">
-            Review submitted skill proofs and scores across the platform.
+            Review submitted skill proofs and scores across the platform
           </p>
         </div>
       </div>
