@@ -390,7 +390,7 @@ export default function AdminAiSandboxView() {
               ) : (
                 <div className="flex flex-col items-center justify-center h-36 gap-1 text-muted-foreground">
                   <Sparkles className="h-6 w-6 text-primary/40" />
-                  <span className="text-xs font-medium">Run a prompt test above to view live inference telemetry.</span>
+                  <span className="text-xs font-medium">Run a prompt test above to view live inference telemetry</span>
                 </div>
               )}
             </div>
