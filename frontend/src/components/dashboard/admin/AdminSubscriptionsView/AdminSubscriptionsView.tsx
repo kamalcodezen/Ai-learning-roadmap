@@ -273,7 +273,10 @@ export default function AdminSubscriptionsView() {
                             <Select.Value />
                             <Select.Indicator />
                           </Select.Trigger>
-                          <Select.Popover className="rounded-lg">
+                          <Select.Popover
+                            className="rounded-lg! [border-radius:0.5rem]!"
+                            style={{ borderRadius: "0.5rem" }}
+                          >
                             <ListBox className="rounded-lg p-1">
                               <ListBox.Item key="FREE" id="FREE" textValue="FREE" className="rounded-lg text-xs">
                                 FREE
