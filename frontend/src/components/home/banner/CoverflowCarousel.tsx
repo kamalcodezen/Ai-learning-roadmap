@@ -17,6 +17,7 @@ export interface CoverflowSlide {
   title?: string;
   subtitle?: string;
   meta?: { label: string; value: string }[];
+  video?: string;
 }
 
 export interface CoverflowCarouselProps {

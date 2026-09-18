@@ -6,6 +6,7 @@ export interface CarouselItem {
   description: string;
   image: string;
   source: string;
+  video?: string;
 }
 
 export const carouselItems: CarouselItem[] = [
@@ -37,6 +38,7 @@ export const carouselItems: CarouselItem[] = [
       "Learning becomes more valuable when you *build* with it.",
     source: "https://pin.it/7JvmuYcXg",
     image: "/images/learning/practice.jpg",
+    video: "/video/banner.mp4",
   },
   {
     id: 5,
@@ -69,4 +71,5 @@ export const slides: CoverflowSlide[] = carouselItems.map((item) => ({
   alt: item.title.replace(/\*/g, ""),
   title: item.title,
   subtitle: item.description,
+  video: item.video,
 }));
