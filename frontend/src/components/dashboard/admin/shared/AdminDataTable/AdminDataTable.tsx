@@ -6,6 +6,7 @@ import { DashboardButton } from "@/src/components/dashboard/shared/patterns";
 import { Label, SearchField } from "@heroui/react";
 import { CardContent, CardHeader } from "@/src/components/ui/Card";
 import { DashboardCard } from "@/src/components/dashboard/shared/cards";
+import "../../admin.css";
 
 export interface AdminDataTableColumn<T> {
   header: string;
@@ -64,8 +65,8 @@ export default function AdminDataTable<T>({
             >
               <Label>Search</Label>
               <SearchField.Group
-                className="rounded-lg! [border-radius:0.5rem]! hover:border-border! hover:bg-transparent! hover:shadow-none!"
-                style={{ borderRadius: "0.5rem" }}
+                className="rounded-lg! [border-radius:0.5rem]! transition-none! hover:border-border! hover:bg-transparent! hover:shadow-none!"
+                style={{ borderRadius: "0.5rem", transition: "none" }}
               >
                 <SearchField.SearchIcon />
                 <SearchField.Input
