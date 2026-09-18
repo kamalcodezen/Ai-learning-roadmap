@@ -114,7 +114,7 @@ export default function AdminAiSandboxView() {
           <h1 className="section-title text-left">
             AI Prompt &amp; Model <span className="text-brand">Sandbox</span>
           </h1>
-          <p className="section-subtitle mt-1 text-left">
+          <p className="section-subtitle mt-1 !text-left !mx-0 max-w-none">
             Test LLM prompts, model configurations, and reasoning token telemetry in real-time
           </p>
         </div>
