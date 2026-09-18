@@ -533,9 +533,13 @@ button {
   .select__popover,
   .dropdown__popover,
   .autocomplete__popover,
+  .neural-dropdown,
   [data-slot="popover"],
   [data-slot="select-popover"],
-  [data-slot="popover-dialog"] {
+  [data-slot="popover-dialog"],
+  [data-slot="dropdown-menu"],
+  [data-slot="menu"],
+  [data-slot="listbox"] {
     border-radius: 0.5rem !important;
   }
 
