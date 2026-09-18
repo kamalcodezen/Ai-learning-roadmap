@@ -147,6 +147,7 @@ export default function AdminCareerReadinessView() {
       </div>
 
       <AdminDataTable
+        scrollable
         columns={columns}
         rows={filtered}
         rowKey={(p) => p.id}
