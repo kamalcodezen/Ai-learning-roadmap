@@ -16,6 +16,8 @@ import {
   Eye,
   User,
   Sparkles,
+  X,
+  Clock,
 } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import { Avatar, Modal, Button, Select, Label, ListBox, useOverlayState } from "@heroui/react";
@@ -291,49 +293,67 @@ export default function AdminResumesView() {
 
       {/* Resume & ATS Details Inspection Modal */}
       <Modal state={inspectModal}>
-        <Modal.Backdrop>
+        <Modal.Backdrop className="bg-black/60 backdrop-blur-sm">
           <Modal.Container>
-            <Modal.Dialog className="sm:max-w-[760px] max-h-[90vh] flex flex-col">
-              <Modal.CloseTrigger />
-              <Modal.Header>
-                <Modal.Icon className="bg-primary/10 text-primary">
+            <Modal.Dialog
+              data-lenis-prevent="true"
+              data-lenis-prevent-wheel="true"
+              data-lenis-prevent-touch="true"
+              className="sm:max-w-[720px] max-h-[90vh] flex flex-col rounded-lg border border-border bg-card text-card-foreground shadow-2xl overflow-hidden relative"
+            >
+              <Modal.CloseTrigger className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white dark:text-black transition-all duration-200 cursor-pointer shadow-sm z-20">
+                <X className="size-4" />
+              </Modal.CloseTrigger>
+              <Modal.Header className="border-b border-border/40 p-5 flex items-center gap-3.5 relative z-10">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20">
                   <FileText className="size-5" />
-                </Modal.Icon>
-                <Modal.Heading>
-                  {resumeDetails?.fullName}&apos;s ATS Resume Review
-                </Modal.Heading>
+                </div>
+                <div>
+                  <Modal.Heading className="text-lg font-bold text-foreground tracking-tight">
+                    {resumeDetails?.fullName ? `${resumeDetails.fullName}'s` : "Candidate"}{" "}
+                    <span className="text-brand">ATS Resume Review</span>
+                  </Modal.Heading>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Detailed AI ATS scoring benchmarks and evaluation
+                  </p>
+                </div>
               </Modal.Header>
-              <Modal.Body className="overflow-y-auto space-y-5">
+              <Modal.Body
+                data-lenis-prevent="true"
+                data-lenis-prevent-wheel="true"
+                data-lenis-prevent-touch="true"
+                onWheel={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+                className="overflow-y-auto overscroll-contain p-5 space-y-5 flex-1 min-h-0 [scrollbar-width:thin]"
+              >
                 {isDetailsLoading || !resumeDetails ? (
                   <div className="space-y-4 py-4 animate-pulse">
-                    <div className="h-20 w-full rounded-xl bg-muted/40 border border-border/30" />
-                    <div className="h-32 w-full rounded-xl bg-muted/30 border border-border/30" />
-                    <div className="h-24 w-full rounded-xl bg-muted/30 border border-border/30" />
+                    <div className="h-16 w-full rounded-xl bg-muted/40 border border-border/30" />
+                    <div className="space-y-3 pt-2">
+                      <div className="h-4 w-36 rounded bg-muted/50" />
+                      <div className="h-28 w-full rounded-xl bg-muted/30 border border-border/30" />
+                      <div className="h-28 w-full rounded-xl bg-muted/30 border border-border/30" />
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    {/* ATS Score Benchmark */}
-                    <div className="flex items-center justify-between rounded-xl bg-muted/40 p-4 border border-border/40">
+                    {/* Candidate & ATS Score Info */}
+                    <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-primary/5 via-muted/20 to-primary/5 p-4 border border-border/60">
                       <div>
-                        <p className="font-semibold text-foreground text-lg">
-                          {resumeDetails.fullName}
+                        <p className="font-semibold text-foreground text-sm sm:text-base">
+                          {resumeDetails.fullName}{" "}
+                          <span className="text-xs text-muted-foreground font-normal">
+                            ({resumeDetails.email})
+                          </span>
                         </p>
-                        <p className="text-xs text-primary font-medium mt-0.5">
-                          Target Role: {resumeDetails.targetRole}
+                        <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
+                          <User className="size-3.5 text-primary" /> Target Role:{" "}
+                          <span className="text-foreground font-medium">{resumeDetails.targetRole}</span>
                         </p>
-                        <p className="text-xs text-muted-foreground">{resumeDetails.email}</p>
                       </div>
-                      <div className="text-right">
-                        <span className="text-xs text-muted-foreground">ATS Score</span>
-                        <p
-                          className={`text-3xl font-extrabold ${
-                            (resumeDetails.atsScore ?? 0) >= 80
-                              ? "text-emerald-500"
-                              : (resumeDetails.atsScore ?? 0) >= 60
-                                ? "text-amber-500"
-                                : "text-red-500"
-                          }`}
-                        >
+                      <div className="text-right pl-4 shrink-0">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">ATS Score</span>
+                        <p className="text-2xl font-black text-primary">
                           {resumeDetails.atsScore ?? 0}%
                         </p>
                       </div>
@@ -341,64 +361,79 @@ export default function AdminResumesView() {
 
                     {/* ATS Feedback Breakdown */}
                     {resumeDetails.atsFeedback && (
-                      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-4">
-                        <h4 className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                          <Sparkles className="size-4 text-primary" /> ATS Evaluation Insights
-                        </h4>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between pt-1">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                            Evaluation Insights &amp; Keywords
+                          </h4>
+                        </div>
 
-                        {resumeDetails.atsFeedback.strengths &&
-                          resumeDetails.atsFeedback.strengths.length > 0 && (
-                            <div>
-                              <p className="text-xs font-semibold text-emerald-500 mb-1.5 flex items-center gap-1">
-                                <CheckCircle2 className="size-3.5" /> Strengths Identified:
-                              </p>
-                              <ul className="list-disc list-inside text-xs text-muted-foreground space-y-1">
-                                {resumeDetails.atsFeedback.strengths.map((str, i) => (
-                                  <li key={i}>{str}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
+                        <div className="rounded-xl border border-border/60 bg-card/60 dark:bg-card/40 p-4 space-y-3.5 hover:border-primary/30 transition-colors shadow-xs">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-primary flex items-center gap-1.5">
+                              <Sparkles className="size-3.5" /> ATS Evaluation Insights
+                            </span>
+                            {resumeDetails.atsScore !== undefined && (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/15 text-primary border border-primary/30">
+                                Score: {resumeDetails.atsScore}%
+                              </span>
+                            )}
+                          </div>
 
-                        {resumeDetails.atsFeedback.missingKeywords &&
-                          resumeDetails.atsFeedback.missingKeywords.length > 0 && (
-                            <div>
-                              <p className="text-xs font-semibold text-amber-500 mb-1.5 flex items-center gap-1">
-                                <AlertTriangle className="size-3.5" /> Missing Keywords For Target Role:
-                              </p>
-                              <div className="flex flex-wrap gap-1.5">
-                                {resumeDetails.atsFeedback.missingKeywords.map((kw, i) => (
-                                  <span
-                                    key={i}
-                                    className="rounded bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[11px] font-mono text-amber-600 dark:text-amber-400"
-                                  >
-                                    {kw}
-                                  </span>
-                                ))}
+                          {resumeDetails.atsFeedback.strengths &&
+                            resumeDetails.atsFeedback.strengths.length > 0 && (
+                              <div className="rounded-lg bg-muted/40 dark:bg-muted/20 p-3.5 border border-border/40 space-y-1.5">
+                                <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                                  <CheckCircle2 className="size-3.5" /> Strengths Identified:
+                                </p>
+                                <ul className="list-disc list-inside text-xs text-foreground/90 space-y-1 leading-relaxed">
+                                  {resumeDetails.atsFeedback.strengths.map((str, i) => (
+                                    <li key={i}>{str}</li>
+                                  ))}
+                                </ul>
                               </div>
-                            </div>
-                          )}
+                            )}
 
-                        {resumeDetails.atsFeedback.suggestions &&
-                          resumeDetails.atsFeedback.suggestions.length > 0 && (
-                            <div>
-                              <p className="text-xs font-semibold text-primary mb-1.5">
-                                Recommendations:
-                              </p>
-                              <ul className="list-disc list-inside text-xs text-muted-foreground space-y-1">
-                                {resumeDetails.atsFeedback.suggestions.map((sug, i) => (
-                                  <li key={i}>{sug}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
+                          {resumeDetails.atsFeedback.missingKeywords &&
+                            resumeDetails.atsFeedback.missingKeywords.length > 0 && (
+                              <div className="rounded-lg bg-amber-500/5 dark:bg-amber-500/10 p-3.5 border border-amber-500/20 space-y-2">
+                                <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                                  <AlertTriangle className="size-3.5" /> Missing Keywords For Target Role:
+                                </p>
+                                <div className="flex flex-wrap gap-1.5 pt-0.5">
+                                  {resumeDetails.atsFeedback.missingKeywords.map((kw, i) => (
+                                    <span
+                                      key={i}
+                                      className="rounded-md bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[11px] font-mono text-amber-600 dark:text-amber-400 font-medium"
+                                    >
+                                      {kw}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                          {resumeDetails.atsFeedback.suggestions &&
+                            resumeDetails.atsFeedback.suggestions.length > 0 && (
+                              <div className="rounded-lg bg-primary/5 dark:bg-primary/10 p-3.5 border border-primary/20 space-y-1.5">
+                                <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
+                                  Recommendations:
+                                </p>
+                                <ul className="list-disc list-inside text-xs text-muted-foreground space-y-1 leading-relaxed">
+                                  {resumeDetails.atsFeedback.suggestions.map((sug, i) => (
+                                    <li key={i}>{sug}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                        </div>
                       </div>
                     )}
 
                     {/* Resume Executive Summary */}
                     {resumeDetails.summary && (
-                      <div className="rounded-xl border border-border/50 bg-card p-4 space-y-1.5">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      <div className="rounded-xl border border-border/60 bg-muted/40 dark:bg-muted/20 p-4 space-y-2">
+                        <h4 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                           Executive Summary
                         </h4>
                         <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
@@ -409,8 +444,12 @@ export default function AdminResumesView() {
                   </div>
                 )}
               </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" slot="close" fullWidth>
+              <Modal.Footer className="border-t border-border/40 p-4 bg-muted/10">
+                <Button
+                  slot="close"
+                  fullWidth
+                  className="rounded-lg font-semibold py-2.5 text-sm transition-all duration-200 !bg-primary hover:!bg-primary/90 !text-white dark:!text-black shadow-sm cursor-pointer"
+                >
                   Close
                 </Button>
               </Modal.Footer>
