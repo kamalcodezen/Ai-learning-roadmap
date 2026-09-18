@@ -225,7 +225,7 @@ export default function AdminResumesView() {
           AI Resumes &amp; ATS <span className="text-brand">Intelligence</span>
         </h1>
         <p className="section-subtitle mt-1 !text-left !mx-0 max-w-none">
-          Supervise learner resume creation, ATS scoring benchmarks, keyword match rates, and career preparation.
+          Supervise learner resume creation, ATS scoring benchmarks, keyword match rates, and career preparation
         </p>
       </div>
 
