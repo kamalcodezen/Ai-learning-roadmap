@@ -16,7 +16,7 @@ export const metadata: import("next").Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://your-production-domain.com"),
   title: {
     default: "AI Pather — AI-Powered Career Learning Platform",
-    template: "%s | AI Pather",
+    template: "AI Pather | %s",
   },
   description: "Navigate your tech career with AI-driven skill assessments, learning roadmaps, and interview prep.",
   openGraph: {

@@ -1,5 +1,8 @@
+"use client";
+
 import React from 'react';
 import Button from '../../ui/button';
+import { authClient } from '@/src/lib/auth-client';
 
 /* Dot-pattern chevron decorations (top-left & top-right) */
 function DotPattern({ className = '' }: { className?: string }) {
@@ -39,6 +42,16 @@ function DotPattern({ className = '' }: { className?: string }) {
 }
 
 export default function CTASection() {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  const userRole = (user as { role?: string } | undefined)?.role?.toUpperCase();
+
+  const ctaHref = !user
+    ? "/signin"
+    : userRole === "ADMIN"
+    ? "/dashboard/admin"
+    : "/dashboard/learner";
+
   return (
     <section className="section-pad pb-0 relative overflow-hidden">
       {/* Subtle grid background */}
@@ -73,11 +86,11 @@ export default function CTASection() {
           <div className="w-full mt-2 mb-4 flex justify-center items-center gap-3">
             {/* Mobile Button (smaller overrides) */}
             <div className="sm:hidden">
-              <Button text="Create My Roadmap" href="/dashboard/learner" className="h-9 text-sm px-3 pl-4 pr-10" />
+              <Button text="Create My Roadmap" href={ctaHref} className="h-9 text-sm px-3 pl-4 pr-10" />
             </div>
             {/* Desktop Button (default style) */}
             <div className="hidden sm:block">
-              <Button text="Create My Roadmap" href="/dashboard/learner" />
+              <Button text="Create My Roadmap" href={ctaHref} />
             </div>
           </div>
         </div>

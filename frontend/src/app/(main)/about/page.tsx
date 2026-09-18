@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     canonical: "/about",
   },
   openGraph: {
-    title: "About Us | AI Pather",
+    title: "AI Pather | About Us",
     description:
       "We believe learning should lead somewhere. AI Pather turns scattered learning into verified career capability.",
     type: "website",

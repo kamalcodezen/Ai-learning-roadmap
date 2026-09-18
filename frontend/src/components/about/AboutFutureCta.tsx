@@ -21,16 +21,14 @@ const userRole =
 
 const handleMyCareerPathClick = () => {
   if (!user) {
-    router.push("/signup");
+    router.push("/signin");
     return;
   }
 
-  if (userRole === "LEARNER") {
-    router.push("/dashboard/learner");
-  } else if (userRole === "ADMIN") {
+  if (userRole === "ADMIN") {
     router.push("/dashboard/admin");
   } else {
-    router.push("/signup");
+    router.push("/dashboard/learner");
   }
 };
 

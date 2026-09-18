@@ -6,14 +6,14 @@ import ContactFaqSection from "@/src/components/contact/ContactFaqSection";
 import { FloatingSocials } from "@/src/components/socials/FloatingSocials";
 
 export const metadata: Metadata = {
-  title: "Contact Us | AI Pather",
+  title: "Contact Us",
   description:
     "Get in touch with the AI Pather team. Reach out for technical support, adaptive roadmap guidance, enterprise capability benchmarks, or general inquiries.",
   alternates: {
     canonical: "/contact",
   },
   openGraph: {
-    title: "Contact Us | AI Pather",
+    title: "AI Pather | Contact Us",
     description:
       "Get in touch with the AI Pather team for technical support, adaptive roadmap guidance, and enterprise solutions.",
     type: "website",
