@@ -715,11 +715,34 @@ button {
 }
 
 /* =========================================
-   FORM FIELD RADIUS OVERRIDES (rounded-lg)
+   FORM FIELD RADIUS & STATIC HOVER OVERRIDES (rounded-lg)
 ========================================= */
 .select__trigger,
 [data-slot="select-trigger"],
 .search-field__group,
-[data-slot="search-field-group"] {
+[data-slot="search-field-group"],
+[data-slot="group"],
+[data-slot="trigger"] {
   border-radius: 0.5rem !important;
+  transition: none !important;
+}
+
+.search-field__group:hover,
+.search-field__group[data-hovered="true"],
+.search-field__group:hover:not(:focus-within),
+.search-field__group[data-hovered="true"]:not([data-focus-within="true"]),
+[data-slot="search-field-group"]:hover,
+[data-slot="search-field-group"][data-hovered="true"],
+[data-slot="group"]:hover,
+[data-slot="group"][data-hovered="true"],
+.select__trigger:hover,
+.select__trigger[data-hovered="true"],
+[data-slot="select-trigger"]:hover,
+[data-slot="select-trigger"][data-hovered="true"],
+[data-slot="trigger"]:hover,
+[data-slot="trigger"][data-hovered="true"] {
+  background-color: transparent !important;
+  border-color: rgb(var(--border)) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
