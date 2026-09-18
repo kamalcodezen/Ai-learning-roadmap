@@ -94,7 +94,7 @@ export default function AdminBroadcastsView() {
           <h1 className="section-title text-left">
             Broadcast &amp; <span className="text-brand">Announcements</span>
           </h1>
-          <p className="section-subtitle mt-1 text-left">
+          <p className="section-subtitle mt-1 !text-left !mx-0 max-w-none">
             Dispatch announcements, push notifications, and release updates to learner cohorts
           </p>
         </div>
