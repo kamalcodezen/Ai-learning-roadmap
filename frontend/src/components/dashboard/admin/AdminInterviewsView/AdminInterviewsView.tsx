@@ -298,7 +298,10 @@ export default function AdminInterviewsView() {
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
-              <Select.Popover>
+              <Select.Popover
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <ListBox>
                   <ListBox.Item key="COMPLETED" id="COMPLETED" textValue="Completed">
                     Completed
@@ -326,7 +329,10 @@ export default function AdminInterviewsView() {
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
-              <Select.Popover>
+              <Select.Popover
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <ListBox>
                   <ListBox.Item key="7" id="7" textValue="Last 7 Days">
                     Last 7 Days
