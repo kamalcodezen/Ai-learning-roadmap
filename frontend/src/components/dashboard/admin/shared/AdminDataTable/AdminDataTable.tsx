@@ -5,8 +5,7 @@ import Lenis from "lenis";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { DashboardButton } from "@/src/components/dashboard/shared/patterns";
 import { Label, SearchField } from "@heroui/react";
-import { CardContent, CardHeader } from "@/src/components/ui/Card";
-import { DashboardCard } from "@/src/components/dashboard/shared/cards";
+import { Card, CardContent, CardHeader } from "@/src/components/ui/Card";
 import "../../admin.css";
 
 export interface AdminDataTableColumn<T> {
@@ -80,14 +79,14 @@ export default function AdminDataTable<T>({
   }, [scrollable, rows]);
 
   return (
-    <DashboardCard
-      className={`p-0! ${
+    <Card
+      className={`!p-0 ${
         scrollable
-          ? "h-[calc(100vh-340px)] min-h-[480px] flex flex-col rounded-lg border-2 border-background shadow-none dashboard-card overflow-hidden"
-          : ""
+          ? "h-[calc(100vh-320px)] min-h-[480px] flex flex-col rounded-lg border-2 border-background shadow-none dashboard-card overflow-hidden"
+          : "rounded-lg border-2 border-background shadow-none dashboard-card"
       } ${className || ""}`}
     >
-      <CardHeader className="border-b border-border gap-0 p-4 shrink-0 relative z-10">
+      <CardHeader className="border-b border-border/40 gap-0 p-4 shrink-0 relative z-10">
         <div className="flex flex-col sm:flex-row sm:items-end gap-4">
           {searchTerm !== undefined && onSearchChange !== undefined && (
             <SearchField
@@ -121,8 +120,8 @@ export default function AdminDataTable<T>({
       </CardHeader>
 
       <CardContent
-        className={`p-0 ${
-          scrollable ? "flex flex-col h-full min-h-0 relative z-10" : ""
+        className={`flex flex-col !p-0 relative z-10 ${
+          scrollable ? "h-full min-h-0 flex-1" : ""
         }`}
       >
         <div
@@ -224,6 +223,6 @@ export default function AdminDataTable<T>({
           </div>
         )}
       </CardContent>
-    </DashboardCard>
+    </Card>
   );
 }
