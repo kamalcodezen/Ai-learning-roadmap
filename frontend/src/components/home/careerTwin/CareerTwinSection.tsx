@@ -767,7 +767,7 @@ export default function CareerTwinSection() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 right-0 mt-2 rounded-md border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl overflow-hidden z-30 flex flex-col p-1.5"
+                    className="absolute top-full left-0 right-0 mt-2 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl overflow-hidden z-30 flex flex-col p-1.5"
                   >
                     {ROLES.map((r, idx) => (
                       <button
