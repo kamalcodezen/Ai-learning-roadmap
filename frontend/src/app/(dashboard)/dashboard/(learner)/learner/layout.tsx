@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: {
-    default: "Learner Dashboard",
-    template: "%s | Learner | AI Pather",
+    default: "AI Pather | Learner Dashboard",
+    template: "AI Pather | Learner | %s",
   },
   description: "Your personalized AI career learning dashboard, progress tracker, and skill diagnostics.",
   robots: { index: false, follow: false },

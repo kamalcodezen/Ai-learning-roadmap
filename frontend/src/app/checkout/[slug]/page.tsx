@@ -18,7 +18,7 @@ export async function generateMetadata({
   const plan = pricingPlans.find((item) => item.slug === slug);
 
   return {
-    title: plan ? `Checkout · ${plan.name} | AI Pather` : "Checkout | AI Pather",
+    title: plan ? `Checkout · ${plan.name}` : "Checkout",
     robots: { index: false, follow: false },
   };
 }

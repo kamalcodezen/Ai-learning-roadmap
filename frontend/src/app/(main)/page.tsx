@@ -12,7 +12,9 @@ import Comparison from "@/src/components/home/comparison/Comparison";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AI Pather — AI-Powered Career Learning Platform",
+  title: {
+    absolute: "AI Pather — AI-Powered Career Learning Platform",
+  },
   description:
     "Accelerate your tech career with AI Pather. Get personalized learning roadmaps, AI-driven skill assessments, and mock interviews to land your dream job.",
   alternates: {
