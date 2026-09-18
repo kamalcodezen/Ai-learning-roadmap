@@ -200,7 +200,7 @@ export default function AdminAiSandboxView() {
                       onClick={() => setMaxTokens(t)}
                       className={`py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer ${
                         maxTokens === t
-                          ? "bg-primary text-primary-foreground border-primary"
+                          ? "bg-primary text-white dark:text-black border-primary"
                           : "bg-muted/30 border-border/60 text-muted-foreground hover:border-primary/40"
                       }`}
                     >
@@ -294,7 +294,7 @@ export default function AdminAiSandboxView() {
                 <button
                   type="submit"
                   disabled={testMutation.isPending}
-                  className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-sm hover:opacity-90 active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white dark:text-black shadow-sm hover:opacity-90 active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
                 >
                   {testMutation.isPending ? (
                     <>
