@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { authClient } from "@/src/lib/auth-client";
 
 import BannerBackground from "./BannerBackground";
 import BannerHeader from "./BannerHeader";
@@ -12,8 +13,18 @@ import { carouselItems, slides } from "./data";
 
 export default function AudienceBanner() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const { data: session } = authClient.useSession();
 
   const activeItem = carouselItems[activeIndex];
+
+  const user = session?.user;
+  const userRole = (user as { role?: string } | undefined)?.role?.toUpperCase();
+
+  const ctaHref = !user
+    ? "/signin"
+    : userRole === "ADMIN"
+    ? "/dashboard/admin"
+    : "/dashboard/learner";
 
   return (
     <section
@@ -79,7 +90,7 @@ export default function AudienceBanner() {
 
         {/* CTA */}
         <div className="flex w-full justify-center">
-          <BannerCta text="Get Started" href="/dashboard/learner" />
+          <BannerCta text="Get Started" href={ctaHref} />
         </div>
       </div>
     </section>

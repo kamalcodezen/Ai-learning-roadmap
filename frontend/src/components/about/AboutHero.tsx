@@ -5,32 +5,20 @@ import { motion, useReducedMotion } from "motion/react";
 import { FiArrowUpRight, FiLayers, FiCompass, FiShield } from "react-icons/fi";
 import CapabilitySkillGraph from "./CapabilitySkillGraph";
 import { authClient } from "@/src/lib/auth-client";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AboutHero() {
   const shouldReduceMotion = useReducedMotion();
-  const router = useRouter();
   const { data: session } = authClient.useSession();
 
   const user = session?.user;
-  const userRole =
-    (session?.user as { role?: string } | undefined)?.role?.toUpperCase() ||
-    "LEARNER";
+  const userRole = (user as { role?: string } | undefined)?.role?.toUpperCase();
 
-  const handleExploreSystemClick = () => {
-    if (!user) {
-      router.push("/signup");
-      return;
-    }
-
-    if (userRole === "LEARNER") {
-      router.push("/dashboard/learner");
-    } else if (userRole === "ADMIN") {
-      router.push("/dashboard/admin");
-    } else {
-      router.push("/signup");
-    }
-  };
+  const ctaHref = !user
+    ? "/signin"
+    : userRole === "ADMIN"
+    ? "/dashboard/admin"
+    : "/dashboard/learner";
 
   const handleWhyWeBuiltClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -116,14 +104,13 @@ export default function AboutHero() {
 
             {/* Quick Action Link */}
             <div className="mt-8 flex items-center gap-4">
-              <button
-                type="button"
-                onClick={handleExploreSystemClick}
+              <Link
+                href={ctaHref}
                 className="btn-primary inline-flex items-center gap-2 text-sm font-semibold !text-white cursor-pointer"
               >
                 <span>Explore The System</span>
                 <FiArrowUpRight className="size-4" />
-              </button>
+              </Link>
               {/* Dynamic Navigation */}
               <a
                 href="#the-problem"
