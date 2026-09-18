@@ -66,6 +66,7 @@ export default function AdminProjectsView() {
     enabled: !!userId,
   });
 
+
   const verifyMutation = useMutation({
     mutationFn: ({
       projectId,
@@ -285,7 +286,7 @@ export default function AdminProjectsView() {
         <p className="text-red-500 font-medium">Unable to load projects. Please try again.</p>
       </div>
     );
-  }
+  } 
 
   const { projects, total } = data;
 
@@ -359,6 +360,9 @@ export default function AdminProjectsView() {
         onPageChange={setPage}
       />
 
+
+
+
       {/* Project Detail Modal */}
       <Modal state={detailModal}>
         <Modal.Backdrop>
@@ -367,9 +371,9 @@ export default function AdminProjectsView() {
               data-lenis-prevent="true"
               data-lenis-prevent-wheel="true"
               data-lenis-prevent-touch="true"
-              className="sm:max-w-[640px]"
+              className="sm:max-w-[640px] rounded-lg!"
             >
-              <Modal.CloseTrigger />
+              <Modal.CloseTrigger className="bg-[#8d3ff3]" />
               <Modal.Header>
                 <Modal.Icon className="bg-primary/10 text-primary">
                   <FolderKanban className="size-5" />
@@ -468,7 +472,7 @@ export default function AdminProjectsView() {
                 )}
               </Modal.Body>
               <Modal.Footer>
-                <Button variant="secondary" slot="close" fullWidth>
+                <Button className="bg-[#8121ff] rounded-lg" slot="close" fullWidth>
                   Close
                 </Button>
               </Modal.Footer>
@@ -476,6 +480,9 @@ export default function AdminProjectsView() {
           </Modal.Container>
         </Modal.Backdrop>
       </Modal>
+
+
+
     </div>
   );
 }

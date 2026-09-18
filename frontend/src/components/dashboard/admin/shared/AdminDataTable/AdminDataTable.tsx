@@ -135,7 +135,7 @@ export default function AdminDataTable<T>({
                               : "text-left"
                         } ${col.className || ""}`}
                       >
-                        {col.render(row)}
+                        {col.render(row)} 
                       </td>
                     ))}
                   </tr>
