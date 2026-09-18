@@ -206,7 +206,7 @@ export default function AdminResumesView() {
         <h1 className="section-title text-left">
           AI Resumes &amp; ATS <span className="text-brand">Intelligence</span>
         </h1>
-        <p className="section-subtitle mt-1 text-left">
+        <p className="section-subtitle mt-1 !text-left !mx-0 max-w-none">
           Supervise learner resume creation, ATS scoring benchmarks, keyword match rates, and career preparation.
         </p>
       </div>
@@ -262,7 +262,10 @@ export default function AdminResumesView() {
               <Select.Value />
               <Select.Indicator />
             </Select.Trigger>
-            <Select.Popover>
+            <Select.Popover
+              className="rounded-lg! [border-radius:0.5rem]!"
+              style={{ borderRadius: "0.5rem" }}
+            >
               <ListBox>
                 <ListBox.Item key="7" id="7" textValue="Last 7 Days">
                   Last 7 Days
