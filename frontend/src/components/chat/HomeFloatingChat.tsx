@@ -151,12 +151,12 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
 
       <div
         className={cn(
-          "pointer-events-auto font-sans z-50",
+          "pointer-events-auto font-sans z-50 ",
           isExpanded
             ? "fixed inset-3 sm:inset-6 md:inset-8 flex flex-col"
-            : "fixed bottom-6 right-6 flex flex-col items-end"
+            : "fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center sm:left-auto sm:right-6 sm:translate-x-0 sm:items-end"
         )}
-      >
+       >
         {/* Plasma Animated Chat Window */}
         <AnimatePresence>
           {open && (
@@ -166,13 +166,13 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               className={cn(
-                "relative flex flex-col overflow-hidden rounded-3xl bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] dark:from-[#0a0015] dark:via-[#120025] dark:to-[#1a0040] text-zinc-950 dark:text-white backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-[var(--color-primary)]/40 dark:border-[var(--color-primary)]/30",
+                "relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] dark:from-[#0a0015] dark:via-[#120025] dark:to-[#1a0040] text-zinc-950 dark:text-white backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-[var(--color-primary)]/40 dark:border-[var(--color-primary)]/30 ",
                 isExpanded
                   ? "w-full h-full max-h-none mb-0"
-                  : "mb-3 h-[590px] max-h-[86vh] w-[385px] sm:w-[445px]"
+                  : "mb-3 h-[590px] max-h-[86vh] w-[385px] sm:w-[445px] "
               )}
               onClick={(e) => e.stopPropagation()}
-            >
+             >
               {/* Plasma Animated Border Glow Overlay */}
               <div className="pointer-events-none absolute inset-0 rounded-3xl animate-plasmaGlow z-0" />
 
@@ -547,7 +547,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
+       </AnimatePresence>
 
         {/* Floating Trigger Button */}
         <div className={cn(hideTriggerOnMobile && "hidden lg:block")}>
