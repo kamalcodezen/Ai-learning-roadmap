@@ -297,7 +297,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                     transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     className="absolute left-1/2 top-full z-50 mt-2 w-52 -translate-x-1/2"
                   >
-                    <div className="neural-dropdown rounded-xl border border-border/50 bg-card/95 p-1.5 shadow-xl backdrop-blur-xl">
+                    <div className="neural-dropdown rounded-lg border border-border/50 bg-card/95 p-1.5 shadow-xl backdrop-blur-xl">
                       {link.children!.map((child, childIndex) => (
                         <motion.div
                           key={child.label}
@@ -359,7 +359,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             data-lenis-prevent="true"
             data-lenis-prevent-wheel="true"
-            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] max-w-[360px] rounded-[28px] border border-border/70 dark:border-white/10 bg-white/95 dark:bg-[#1a1128]/95 p-5 shadow-2xl backdrop-blur-2xl"
+            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] max-w-[360px] rounded-lg border border-border/70 dark:border-white/10 bg-white/95 dark:bg-[#1a1128]/95 p-5 shadow-2xl backdrop-blur-2xl"
           >
             <div
               ref={scrollContainerRef}
