@@ -41,3 +41,19 @@
 [data-slot="listbox"] {
   border-radius: 0.5rem !important;
 }
+
+/* Disable hover effects on SearchField and Select trigger */
+.search-field__group:hover,
+.search-field__group[data-hovered="true"],
+[data-slot="search-field-group"]:hover,
+[data-slot="search-field-group"][data-hovered="true"],
+.select__trigger:hover,
+.select__trigger[data-hovered="true"],
+[data-slot="select-trigger"]:hover,
+[data-slot="select-trigger"][data-hovered="true"],
+[data-slot="trigger"]:hover,
+[data-slot="trigger"][data-hovered="true"] {
+  background-color: transparent !important;
+  border-color: var(--field-border, rgb(var(--border))) !important;
+  box-shadow: none !important;
+}
