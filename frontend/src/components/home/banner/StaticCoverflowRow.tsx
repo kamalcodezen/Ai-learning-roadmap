@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import * as React from "react";
 import { motion, useInView } from "motion/react";
 
@@ -10,6 +12,7 @@ function cn(...classes: (string | false | undefined)[]) {
 export interface CoverflowSlide {
   src: string;
   alt: string;
+  video?: string;
 }
 
 export interface StaticCoverflowRowProps {
@@ -136,13 +139,26 @@ export default function StaticCoverflowRow({
                   }}
                   transition={{ type: "spring", stiffness: 120, damping: 18 }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={slide.src}
-                    alt={slide.alt}
-                    draggable={false}
-                    className="h-full w-full select-none object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
+                  {slide.video ? (
+                    <video
+                      src={slide.video}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      disablePictureInPicture
+                      aria-hidden
+                      draggable={false}
+                      className="h-full w-full select-none object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={slide.src}
+                      alt={slide.alt}
+                      draggable={false}
+                      className="h-full w-full select-none object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  )}
                 </motion.div>
               </motion.div>
             );
