@@ -363,7 +363,12 @@ export default function AdminProjectsView() {
       <Modal state={detailModal}>
         <Modal.Backdrop>
           <Modal.Container>
-            <Modal.Dialog className="sm:max-w-[640px]">
+            <Modal.Dialog
+              data-lenis-prevent="true"
+              data-lenis-prevent-wheel="true"
+              data-lenis-prevent-touch="true"
+              className="sm:max-w-[640px]"
+            >
               <Modal.CloseTrigger />
               <Modal.Header>
                 <Modal.Icon className="bg-primary/10 text-primary">
@@ -371,7 +376,14 @@ export default function AdminProjectsView() {
                 </Modal.Icon>
                 <Modal.Heading>{selectedProject?.title}</Modal.Heading>
               </Modal.Header>
-              <Modal.Body className="space-y-4">
+              <Modal.Body
+                data-lenis-prevent="true"
+                data-lenis-prevent-wheel="true"
+                data-lenis-prevent-touch="true"
+                onWheel={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+                className="space-y-4 overflow-y-auto overscroll-contain max-h-[75vh]"
+              >
                 {selectedProject && (
                   <>
                     <div className="rounded-xl bg-muted/40 p-4 border border-border/40 space-y-2">
