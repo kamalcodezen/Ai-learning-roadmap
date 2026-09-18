@@ -375,18 +375,18 @@ export default function AdminSystemHealthView() {
       {/* ============================= TELEMETRY & DIAGNOSTICS ============================= */}
       <div className="grid grid-cols-1 lg:grid-cols-2 dashboard-card-gap">
         {/* Real-Time Telemetry Bar Chart / Comparison */}
-        <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-                <Activity className="h-4 w-4 text-primary" />
-                Response Time Breakdown
+        <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-4 sm:p-6">
+          <div className="flex items-start sm:items-center justify-between gap-3 mb-4">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
+                <Activity className="h-4 w-4 text-primary shrink-0" />
+                <span className="truncate">Response Time Breakdown</span>
               </h3>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Ping and roundtrip latency across integrated micro-services
               </p>
             </div>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary shrink-0 whitespace-nowrap">
               Real-time
             </span>
           </div>
@@ -434,18 +434,18 @@ export default function AdminSystemHealthView() {
         </div>
 
         {/* System & Architecture Details */}
-        <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-                <HardDrive className="h-4 w-4 text-primary" />
-                Infrastructure & Environment
+        <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-4 sm:p-6">
+          <div className="flex items-start sm:items-center justify-between gap-3 mb-4">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
+                <HardDrive className="h-4 w-4 text-primary shrink-0" />
+                <span className="truncate">Infrastructure &amp; Environment</span>
               </h3>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Platform specifications and security parameters
               </p>
             </div>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-500/10 text-green-500">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-green-500/10 text-green-500 shrink-0 whitespace-nowrap">
               Verified
             </span>
           </div>
