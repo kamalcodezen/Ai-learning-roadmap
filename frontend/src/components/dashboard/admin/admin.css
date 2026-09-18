@@ -67,7 +67,7 @@
 [data-slot="select-trigger"][data-hovered="true"],
 [data-slot="trigger"]:hover,
 [data-slot="trigger"][data-hovered="true"] {
-  background-color: transparent !important;
+  background-color: var(--field-background, var(--default, #ffffff)) !important;
   border-color: var(--field-border, rgb(var(--border))) !important;
   box-shadow: none !important;
   outline: none !important;
