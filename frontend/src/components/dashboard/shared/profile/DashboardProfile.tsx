@@ -311,7 +311,7 @@ export default function DashboardProfile({
                   </button>
                 </div>
               ) : (
-                <h1 className="text-2xl md:text-3xl font-extrabold font-poppins text-foreground flex items-center justify-center md:justify-start gap-2 group">
+                <h1 className="text-[13px] md:text-3xl xl:text-2xl font-extrabold font-poppins text-foreground flex items-center justify-center md:justify-start gap-2 group">
                   {activeUser?.name || roleLabel}
                   <button
                     onClick={startEditName}
