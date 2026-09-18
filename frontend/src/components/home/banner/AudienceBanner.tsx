@@ -12,7 +12,7 @@ import MobileCardCarousel from "./MobileCardCarousel";
 import { carouselItems, slides } from "./data";
 
 export default function AudienceBanner() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(3);
   const { data: session } = authClient.useSession();
 
   const activeItem = carouselItems[activeIndex];
@@ -41,7 +41,7 @@ export default function AudienceBanner() {
       "
     >
       {/* Background */}
-      <BannerBackground image={activeItem.image} title={activeItem.title} />
+      <BannerBackground image={activeItem.image} title={activeItem.title} video={activeItem.video} />
 
       {/* Content */}
       <div
@@ -85,7 +85,11 @@ export default function AudienceBanner() {
             sm:hidden
           "
         >
-          <MobileCardCarousel slides={slides} onActiveChange={setActiveIndex} />
+          <MobileCardCarousel
+            slides={slides}
+            onActiveChange={setActiveIndex}
+            initialSlide={3}
+          />
         </div>
 
         {/* CTA */}
