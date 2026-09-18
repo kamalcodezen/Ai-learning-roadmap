@@ -64,7 +64,7 @@ export default function AdminDataTable<T>({
             >
               <Label>Search</Label>
               <SearchField.Group
-                className="rounded-lg! [border-radius:0.5rem]!"
+                className="rounded-lg! [border-radius:0.5rem]! hover:border-border! hover:bg-transparent! hover:shadow-none!"
                 style={{ borderRadius: "0.5rem" }}
               >
                 <SearchField.SearchIcon />
