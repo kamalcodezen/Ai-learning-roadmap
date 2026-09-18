@@ -232,7 +232,7 @@ export default function LearnerProfilePage() {
                   <select
                     value={editedRole}
                     onChange={(e) => setEditedRole(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-muted/40 text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-muted/40 text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
                   >
                     <option value="Full Stack Developer">Full Stack Developer</option>
                     <option value="Frontend Developer">Frontend Developer</option>
@@ -252,7 +252,7 @@ export default function LearnerProfilePage() {
                     <select
                       value={editedLevel}
                       onChange={(e) => setEditedLevel(e.target.value as "BEGINNER" | "INTERMEDIATE")}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-muted/40 text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-muted/40 text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
                     >
                       <option value="BEGINNER">Beginner (0-2 yrs)</option>
                       <option value="INTERMEDIATE">Intermediate (2+ yrs)</option>
