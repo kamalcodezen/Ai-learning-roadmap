@@ -218,7 +218,7 @@ export default function NotificationBell({ className }: { className?: string } =
           data-lenis-prevent-touch="true"
           onWheel={(e) => e.stopPropagation()}
           style={dropdownStyle}
-          className="rounded-2xl border border-border/90 bg-card/95 backdrop-blur-2xl p-4 shadow-[0_16px_40px_rgba(0,0,0,0.18)] dark:bg-[#11091e]/95 dark:border-primary/25 dark:shadow-[0_20px_50px_rgba(0,0,0,0.65)] animate-in fade-in zoom-in-95 duration-150"
+          className="rounded-lg border border-border/90 bg-card/95 backdrop-blur-2xl p-4 shadow-[0_16px_40px_rgba(0,0,0,0.18)] dark:bg-[#11091e]/95 dark:border-primary/25 dark:shadow-[0_20px_50px_rgba(0,0,0,0.65)] animate-in fade-in zoom-in-95 duration-150"
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
