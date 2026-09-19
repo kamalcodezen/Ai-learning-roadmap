@@ -42,9 +42,9 @@ const mistral = env.MISTRAL_API_KEY
   : null;
 
 // Models
-const GROQ_SIMPLE_MODEL = "openai/gpt-oss-20b";
-const GROQ_COMPLEX_MODEL = "openai/gpt-oss-120b";
-const GROQ_FALLBACK_MODEL = "openai/gpt-oss-20b";
+const GROQ_SIMPLE_MODEL = "qwen/qwen3.8-27b";
+const GROQ_COMPLEX_MODEL = "qwen/qwen3.8-27b";
+const GROQ_FALLBACK_MODEL = "groq/compound-mini";
 
 // এটি OpenRouter-এর মডেল ➔ OPENROUTER_API_KEY ও OPENROUTER_API_KEY_SECONDARY দিয়ে চলে
 const OPENROUTER_MODEL = "qwen/qwen-2.5-coder-32b-instruct";
@@ -72,8 +72,9 @@ function isModelCoolingDown(modelKey: string): boolean {
   return true;
 }
 
-function setModelCooldown(modelKey: string, errMessage?: string) {
-  let durationMs = 5 * 60 * 1000; // default 5 minutes
+function setModelCooldown(modelKey: string, errMessage?: string, statusCode?: number) {
+  // Groq rate limits (TPM/RPM) operate on a 60-second rolling window. Default to 40s.
+  let durationMs = 40 * 1000;
   if (errMessage) {
     const matchMins = errMessage.match(/try again in (?:(\d+)m)?(?:([\d.]+)s)?/i);
     if (matchMins) {
@@ -81,12 +82,41 @@ function setModelCooldown(modelKey: string, errMessage?: string) {
       const seconds = matchMins[2] ? parseFloat(matchMins[2]) : 0;
       const parsedMs = (minutes * 60 + seconds) * 1000;
       if (parsedMs > 0) {
-        durationMs = parsedMs + 3000;
+        durationMs = parsedMs + 1500; // wait required cooldown + buffer
       }
+    } else if (errMessage.includes("rate_limit") || statusCode === 429) {
+      durationMs = 30 * 1000;
+    } else if (errMessage.includes("404") || errMessage.includes("does not exist")) {
+      durationMs = 60 * 60 * 1000; // 1 hour for invalid/missing models
+    } else if (errMessage.includes("invalid_api_key") || statusCode === 401) {
+      durationMs = 30 * 60 * 1000; // 30 minutes for unauthorized keys
     }
   }
   modelCooldowns.set(modelKey, Date.now() + durationMs);
-  console.log(`[CircuitBreaker] Model "${modelKey}" cooling down for ${Math.round(durationMs / 1000)}s`);
+  console.log(`[CircuitBreaker] Key/Model "${modelKey}" cooling down for ${Math.round(durationMs / 1000)}s`);
+}
+
+let groqNextClientIndex = 0;
+
+/**
+ * Returns the pool of Groq clients ordered in a fair round-robin rotation.
+ * This distributes requests equally across all 4 separate accounts (25% each)
+ * instead of exhausting the first key. If one key hits a rate limit, the cascade
+ * immediately and seamlessly moves to the next active key in the rotation.
+ */
+function getRotatedGroqClients(): Array<{ name: string; key: string; client: Groq }> {
+  if (groqClients.length <= 1) return [...groqClients];
+  const start = groqNextClientIndex % groqClients.length;
+  groqNextClientIndex = (groqNextClientIndex + 1) % groqClients.length;
+
+  const rotated: Array<{ name: string; key: string; client: Groq }> = [];
+  for (let i = 0; i < groqClients.length; i++) {
+    const item = groqClients[(start + i) % groqClients.length];
+    if (item) {
+      rotated.push(item);
+    }
+  }
+  return rotated;
 }
 
 const OUTPUT_LIMITS: Record<QueryComplexity, number> = {
@@ -475,15 +505,19 @@ export class ChatService {
     let provider = "Fallback";
     let model = "none";
 
-    // 1. Groq Multi-Key Cascade (Pool of all configured Groq Keys)
-    for (const { name, key, client } of groqClients) {
+    // 1. Groq Multi-Key Cascade (Fair Round-Robin with Seamless Multi-Account Failover)
+    const rotatedGroqClients = getRotatedGroqClients();
+    for (const { name, key, client } of rotatedGroqClients) {
       if (reply) break;
       const preferredModel = complexity === "complex" ? GROQ_COMPLEX_MODEL : GROQ_SIMPLE_MODEL;
       const groqModel = !isModelCoolingDown(`${key}:${preferredModel}`)
         ? preferredModel
         : (!isModelCoolingDown(`${key}:${GROQ_FALLBACK_MODEL}`) ? GROQ_FALLBACK_MODEL : null);
 
-      if (!groqModel) continue;
+      if (!groqModel) {
+        console.log(`[CircuitBreaker] All models on account ${name} are currently cooling down. Trying next account...`);
+        continue;
+      }
 
       try {
         const groqMaxTokens = Math.min(maxTokens, 1200);
@@ -503,12 +537,13 @@ export class ChatService {
           break;
         }
       } catch (err: any) {
-        console.warn(`[${name} failed for ${groqModel}]: ${err.message}`);
-        setModelCooldown(`${key}:${groqModel}`, err.message);
+        console.warn(`[${name} failed for ${groqModel} (${err.status || err.code || "ERR"})]: ${err.message}`);
+        setModelCooldown(`${key}:${groqModel}`, err.message, err.status);
 
         if (groqModel !== GROQ_FALLBACK_MODEL && !isModelCoolingDown(`${key}:${GROQ_FALLBACK_MODEL}`)) {
           const fallbackMaxTokens = Math.min(maxTokens, 800);
           try {
+            console.log(`[${name}] Trying fallback model ${GROQ_FALLBACK_MODEL}...`);
             const fallbackResp = await withTimeout(
               client.chat.completions.create({
                 model: GROQ_FALLBACK_MODEL,
@@ -526,9 +561,10 @@ export class ChatService {
             }
           } catch (fbErr: any) {
             console.warn(`[${name} fallback model failed]: ${fbErr.message}`);
-            setModelCooldown(`${key}:${GROQ_FALLBACK_MODEL}`, fbErr.message);
+            setModelCooldown(`${key}:${GROQ_FALLBACK_MODEL}`, fbErr.message, fbErr.status);
           }
         }
+        console.log(`[Groq Failover] Account ${name} limit reached or failed. Automatically rotating to next account...`);
       }
     }
 
@@ -677,15 +713,19 @@ export class ChatService {
     let provider = "Fallback";
     let model = "none";
 
-    // 1. Groq Multi-Key Cascade
+    // 1. Groq Multi-Key Cascade (Fair Round-Robin with Seamless Multi-Account Failover)
     const attemptTimeout = Math.min(timeoutMs, 6000);
-    for (const { name, key, client } of groqClients) {
+    const rotatedGroqClients = getRotatedGroqClients();
+    for (const { name, key, client } of rotatedGroqClients) {
       if (reply) break;
       const modelToTry = !isModelCoolingDown(`${key}:${GROQ_COMPLEX_MODEL}`)
         ? GROQ_COMPLEX_MODEL
         : (!isModelCoolingDown(`${key}:${GROQ_FALLBACK_MODEL}`) ? GROQ_FALLBACK_MODEL : null);
 
-      if (!modelToTry) continue;
+      if (!modelToTry) {
+        console.log(`[CircuitBreaker] All JSON models on account ${name} cooling down. Trying next account...`);
+        continue;
+      }
 
       try {
         const response = await withTimeout(
@@ -706,11 +746,12 @@ export class ChatService {
           break;
         }
       } catch (err: any) {
-        console.warn(`[${name} JSON failed for ${modelToTry}]: ${err.message}`);
-        setModelCooldown(`${key}:${modelToTry}`, err.message);
+        console.warn(`[${name} JSON failed for ${modelToTry} (${err.status || err.code || "ERR"})]: ${err.message}`);
+        setModelCooldown(`${key}:${modelToTry}`, err.message, err.status);
 
         if (modelToTry === GROQ_COMPLEX_MODEL && !isModelCoolingDown(`${key}:${GROQ_FALLBACK_MODEL}`)) {
           try {
+            console.log(`[${name}] Trying JSON fallback model ${GROQ_FALLBACK_MODEL}...`);
             const fallbackResp = await withTimeout(
               client.chat.completions.create({
                 model: GROQ_FALLBACK_MODEL,
@@ -730,9 +771,10 @@ export class ChatService {
             }
           } catch (fbErr: any) {
             console.warn(`[${name} fallback model JSON failed]: ${fbErr.message}`);
-            setModelCooldown(`${key}:${GROQ_FALLBACK_MODEL}`, fbErr.message);
+            setModelCooldown(`${key}:${GROQ_FALLBACK_MODEL}`, fbErr.message, fbErr.status);
           }
         }
+        console.log(`[Groq JSON Failover] Account ${name} failed. Automatically rotating to next account...`);
       }
     }
 

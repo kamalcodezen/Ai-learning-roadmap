@@ -303,14 +303,24 @@ export default function ChatBox() {
 
               {/* Feature Suggestions */}
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                {[
-                  "Create my personalized learning roadmap",
-                  "Analyze my skills and suggest what to learn",
-                  "Help me plan a real-world project",
-                  "Prepare me for a technical interview",
-                  "Review my career and skill gaps",
-                  "Help me choose my next career step",
-                ].map((suggestion) => (
+                {(session?.user
+                  ? [
+                      "What is my current milestone and next step?",
+                      "Review my active skill gaps and learning debt",
+                      "Help me plan a real-world project for my stack",
+                      "Start a 5-minute technical mock interview",
+                      "Review my ATS resume score",
+                      "How can I improve my Job Readiness Score?",
+                    ]
+                  : [
+                      "What is AIPather and how does it work?",
+                      "Which tech career track should I start with?",
+                      "How does the adaptive roadmap help me?",
+                      "How do I get verified proof for my GitHub projects?",
+                      "What is the 4-Stage Skill Mastery Simulation?",
+                      "How does the 4-Pillar Job Readiness Score work?",
+                    ]
+                ).map((suggestion) => (
                   <button
                     key={suggestion}
                     type="button"
