@@ -57,8 +57,8 @@ export default function Navbar() {
             transition-all duration-900 ease-out
             ${
               scrolled
-                ? "w-full max-w-4xl lg:max-w-5xl 2xl:max-w-6xl rounded-full bg-[#f4edff]/95 dark:bg-[#2b1e42ec] px-2.5 py-2.5 2xl:py-3 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl border-none"
-                : "w-full global-pos rounded-none py-3 2xl:py-3.5 px-6 border-none"
+                ? "w-full max-w-4xl lg:max-w-5xl 2xl:max-w-6xl rounded-full bg-[#f4edff]/95 dark:bg-[#2b1e42ec] px-2.5 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl border-none"
+                : "w-full global-pos rounded-none py-1.5 px-6 border-none"
             }
           `}
       >

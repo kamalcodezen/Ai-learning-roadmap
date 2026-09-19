@@ -264,10 +264,10 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                     }
                   }
                 }}
-                className={`font-poppins relative z-10 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-all duration-300 ${
+                className={`font-poppins relative z-10 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-300 ${
                   checkIsActive(link)
                     ? "text-primary font-semibold after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-primary"
-                    : "text-foreground/80 font-medium hover:text-primary dark:text-foreground/80 dark:hover:text-primary"
+                    : "text-foreground/80 font-semibold hover:text-primary dark:text-foreground/80 dark:hover:text-primary"
                 }`}
               >
                 {link.label}
@@ -312,7 +312,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                             <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
                               {child.icon}
                             </span>
-                            <span className="font-medium">{child.label}</span>
+                            <span className="font-semibold">{child.label}</span>
                           </Link>
                         </motion.div>
                       ))}

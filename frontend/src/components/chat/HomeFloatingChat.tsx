@@ -156,7 +156,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
             "fixed z-50",
             isExpanded
             ? "fixed inset-3 sm:inset-6 md:inset-8 flex flex-col"
-            : "fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center sm:left-auto sm:right-6 sm:translate-x-0 sm:items-end"
+            : "fixed bottom-[96px] left-1/2 -translate-x-1/2 flex flex-col items-center sm:left-auto sm:right-6 sm:translate-x-0 sm:items-end"
           )}
         >
         <AnimatePresence>
@@ -170,7 +170,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                 "relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] dark:from-[#0a0015] dark:via-[#120025] dark:to-[#1a0040] text-zinc-950 dark:text-white backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-[var(--color-primary)]/40 dark:border-[var(--color-primary)]/30 ",
                 isExpanded
                   ? "w-full h-full max-h-none mb-0"
-                  : "mb-3 h-[590px] max-h-[86vh] w-[385px] sm:w-[445px] "
+                  : "h-[570px] max-h-[calc(100vh-115px)] w-[385px] sm:w-[445px]"
               )}
               onClick={(e) => e.stopPropagation()}
              >
@@ -303,14 +303,23 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                     <div className={cn(
                       "w-full mb-2",
                       isExpanded
-                        ? "grid grid-cols-1 sm:grid-cols-3 gap-3"
+                        ? "grid grid-cols-1 sm:grid-cols-2 gap-3"
                         : "flex flex-col gap-2.5"
                     )}>
-                      {[
-                        "Create my personalized learning roadmap",
-                        "Analyze my skills and suggest what to learn",
-                        "Help me plan a real-world project",
-                      ].map((suggestion) => (
+                      {(session?.user
+                        ? [
+                            "🎯 What is my current milestone and next step?",
+                            "🧠 Review my active skill gaps and learning debt",
+                            "💻 Help me plan a real-world project for my stack",
+                            "🎙️ Start a 5-minute technical mock interview",
+                          ]
+                        : [
+                            "🚀 What is AIPather and how does it work?",
+                            "🗺️ Which tech career track should I start with?",
+                            "💡 How does the adaptive roadmap help me?",
+                            "💼 How do I get verified proof for my GitHub projects?",
+                          ]
+                      ).map((suggestion) => (
                         <button
                           key={suggestion}
                           type="button"

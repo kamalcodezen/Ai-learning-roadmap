@@ -9,7 +9,7 @@
 [![Prisma](https://img.shields.io/badge/Prisma-7.9-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![Groq AI](https://img.shields.io/badge/Groq-Llama%20%7C%20Qwen-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com/)
 [![Better Auth](https://img.shields.io/badge/Better_Auth-1.7-black?style=for-the-badge&logo=auth0&logoColor=white)](https://better-auth.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
 <br />
 
@@ -27,7 +27,7 @@ Most software developers and tech learners suffer from **The Static Checklist Cr
 
 **AIPather** replaces passive checklists with a living, reactive technical career navigation system:
 1. **Adaptive Prerequisite Graphs**: Dynamically identifies knowledge gaps and injects sub-nodes to clear architectural learning debt.
-2. **Multi-Tier Resilient AI Engine**: Ultra-fast inference with automatic multi-model failover across Groq (`openai/gpt-oss-120b`, `qwen/qwen3.8-27b`, `openai/gpt-oss-20b`), OpenRouter, Gemini, and Mistral with self-healing JSON repair.
+2. **Multi-Tier Resilient AI Engine**: Ultra-fast inference with automatic multi-model failover across Groq (`qwen/qwen3.8-27b`, `groq/compound-mini`), OpenRouter (`qwen-2.5-coder-32b-instruct`), Gemini (`gemini-3.6-flash`), and Mistral with self-healing JSON repair.
 3. **Authentic 4-Stage Simulations**: Rigorous, multi-faceted evaluations (*Understand*, *Debug*, *Code*, *Explain*) with zero-500 deterministic fallbacks.
 4. **Verified Evidence & Public Proof Graph**: Converts GitHub repositories into cryptographically verifiable proof tokens with automated dependency and architecture inspection.
 5. **Real-Time Application Readiness**: Four-pillar mathematical scoring engine measuring candidate readiness against real job market demands.
@@ -78,10 +78,10 @@ graph TB
 
 ### 🤖 2. Resilient Multi-Tier AI Gateway & Copilot
 - **Intelligent Multi-Model Fallback**:
-  - **Tier 1 (Primary)**: `openai/gpt-oss-120b` for deep contextual reasoning.
-  - **Tier 2 (Fast Fallback)**: Automatically switches to `qwen/qwen3.8-27b` on Groq when encountering HTTP 429 token rate limits or timeouts.
-  - **Tier 3 (Lightweight Fallback)**: `openai/gpt-oss-20b` for immediate structured responses.
-  - **Tier 4 (Multi-Provider)**: OpenRouter (`qwen-2.5-coder-32b`), Gemini 2.5 Flash, and Mistral.
+  - **Tier 1 (Primary Groq)**: `qwen/qwen3.8-27b` across 4 rotating API keys for fast contextual generation.
+  - **Tier 2 (Groq Fallback)**: Automatically switches to `groq/compound-mini` when encountering HTTP 429 token limits or timeouts (>6s).
+  - **Tier 3 (OpenRouter Cascade)**: `qwen/qwen-2.5-coder-32b-instruct` and `qwen/qwen-2.5-72b-instruct`.
+  - **Tier 4 (Multi-Cloud Provider)**: Google Gemini (`gemini-3.6-flash`) and Mistral (`mistral-small-latest`).
 - **Self-Healing JSON Sanitizer**: Automatically cleans trailing commas and inline comments produced by LLMs to prevent JSON parse errors.
 - **Context-Aware Chat Copilot**: Ingests real-time career profile, active roadmap milestones, skill debts, and recent GitHub project scores into system prompts.
 
@@ -156,10 +156,9 @@ graph TD
     end
 
     subgraph AIGateway ["🤖 Resilient Multi-Tier AI Engine"]
-        GroqPrimary["Primary: Groq (openai/gpt-oss-120b)"]
-        GroqFallback["Tier-1 Fallback: Groq (qwen/qwen3.8-27b)"]
-        GroqTertiary["Tier-2 Fallback: Groq (openai/gpt-oss-20b)"]
-        ExternalAI["Tier-3: OpenRouter / Gemini / Mistral"]
+        GroqPrimary["Primary: Groq (qwen/qwen3.8-27b)"]
+        GroqFallback["Tier-1 Fallback: Groq (groq/compound-mini)"]
+        ExternalAI["Tier-2: OpenRouter (qwen-2.5-coder-32b) / Gemini / Mistral"]
         DeterministicSim["Deterministic Simulation Engine (Zero-500 Fallback)"]
     end
 
@@ -191,9 +190,8 @@ graph TD
     ResumeEngine -.-> AIGateway
     JobRealityEngine -.-> AIGateway
 
-    GroqPrimary -- "On 429 / Token Limit / Timeout" --> GroqFallback
-    GroqFallback -- "On Error / Rate Limit" --> GroqTertiary
-    GroqTertiary -- "On Failover" --> ExternalAI
+    GroqPrimary -- "On 429 / Token Limit / Timeout (>6s)" --> GroqFallback
+    GroqFallback -- "On Error / Account Exhaustion" --> ExternalAI
     ExternalAI -- "If All Offline" --> DeterministicSim
 ```
 
@@ -230,22 +228,19 @@ flowchart LR
 ### 3. Resilient Multi-Tier AI Failover Pipeline
 ```mermaid
 graph TD
-    Req["Incoming AI Generation Request (Roadmap / Simulation / Copilot)"] --> Step1{"Try Primary Groq (openai/gpt-oss-120b)"}
+    Req["Incoming AI Generation Request (Roadmap / Simulation / Copilot)"] --> Step1{"Try Primary Groq (qwen/qwen3.8-27b)"}
     
     Step1 -- "HTTP 200 (Success)" --> Sanitizer["Smart JSON Sanitizer & Auto-Repair"]
-    Step1 -- "HTTP 429 / Rate Limit / Timeout (>6s)" --> Step2{"Try Tier-1 Groq Fallback (qwen/qwen3.8-27b)"}
+    Step1 -- "HTTP 429 / Rate Limit / Timeout (>6s)" --> Step2{"Try Tier-1 Groq Fallback (groq/compound-mini)"}
     
     Step2 -- "HTTP 200 (Success)" --> Sanitizer
-    Step2 -- "On Rate Limit / Error" --> Step3{"Try Tier-2 Groq Fallback (openai/gpt-oss-20b)"}
+    Step2 -- "On Error / Account Exhaustion" --> Step3{"Try External Providers (OpenRouter / Gemini / Mistral)"}
     
     Step3 -- "HTTP 200 (Success)" --> Sanitizer
-    Step3 -- "On Error / Account Exhaustion" --> Step4{"Try External Providers (OpenRouter / Gemini / Mistral)"}
-    
-    Step4 -- "HTTP 200 (Success)" --> Sanitizer
-    Step4 -- "All AI Providers Offline" --> Step5["Deterministic Offline Simulation Engine"]
+    Step3 -- "All AI Providers Offline" --> Step4["Deterministic Offline Simulation Engine"]
     
     Sanitizer --> Response["Valid, Parsed JSON Response to Client (Zero 500 Errors)"]
-    Step5 --> Response
+    Step4 --> Response
 ```
 
 ---

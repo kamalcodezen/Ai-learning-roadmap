@@ -51,7 +51,11 @@ export default function BannerBackground({
         />
       </motion.div>
 
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white/5 to-[#f4edff31] dark:from-brand/25 dark:to-[#281c3d]" />
+      {/* Bottom ambient gradient: anchored at bottom edge, softly dissipating upwards */}
+      <div
+        className="banner-bottom-gradient pointer-events-none absolute inset-x-0 bottom-0 h-52 sm:h-64 md:h-80 z-0"
+        aria-hidden="true"
+      />
     </>
   );
 }

@@ -41,6 +41,13 @@ export class ChatController {
         if (backendContext) {
           finalContext = backendContext;
         }
+      } else {
+        const guestContextNotice = `[USER STATUS: GUEST_VISITOR (UNAUTHENTICATED)]
+- User is browsing as an unauthenticated visitor.
+- They have NO account, NO saved roadmap, NO skill gaps, and NO dashboard access.
+- Never tell them to open 'My Roadmap', check 'Skill Gaps', or 'Link GitHub in settings'.
+- In your '👉 Next Step:', warmly invite them to create a free account / sign up to unlock their roadmap, or explore tracks in chat.`;
+        finalContext = finalContext ? `${guestContextNotice}\n\n${finalContext}` : guestContextNotice;
       }
 
       const result = await ChatService.processChat(
