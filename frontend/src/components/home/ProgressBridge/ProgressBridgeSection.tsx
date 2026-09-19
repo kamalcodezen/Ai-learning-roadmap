@@ -77,9 +77,9 @@ export default function ProgressBridgeSection() {
           return (
             <div key={item.id} className="flex items-center">
               {/* Extra Large Item: Icon + Label with Hover Zoom Effect */}
-              <div className="group/item flex cursor-pointer items-center gap-3.5 text-white transition-all duration-300 ease-out hover:scale-105 sm:hover:scale-110 sm:gap-4.5">
+              <div className="group/item flex cursor-pointer items-center gap-3.5 text-white transition-all duration-700 ease-out hover:scale-105 sm:hover:scale-110 sm:gap-4.5">
                 <Icon
-                  className="size-7 shrink-0 text-white/95 transition-all duration-300 ease-out group-hover/item:scale-115 group-hover/item:text-white group-hover/item:drop-shadow-[0_0_12px_rgba(255,255,255,0.8)] sm:size-8 md:size-9"
+                  className="size-7 shrink-0 text-white/95 transition-all duration-300 ease-out group-hover/item:scale-115 group-hover/item:text-white group-hover/item:drop-shadow-[0_0_12px_rgba(255,255,255,0.8)] sm:size-8"
                   strokeWidth={2.2}
                   aria-hidden="true"
                 />
