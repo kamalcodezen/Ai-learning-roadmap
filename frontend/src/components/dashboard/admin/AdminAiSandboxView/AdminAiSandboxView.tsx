@@ -43,7 +43,7 @@ export default function AdminAiSandboxView() {
   const { data: session } = authClient.useSession();
   const userId = session?.user?.id;
 
-  const [model, setModel] = useState("llama-3.1-8b-instant");
+  const [model, setModel] = useState("qwen/qwen3.8-27b");
   const [temperature, setTemperature] = useState(0.7);
   const [maxTokens, setMaxTokens] = useState(1000);
   const [systemPrompt, setSystemPrompt] = useState(
@@ -226,7 +226,7 @@ export default function AdminAiSandboxView() {
               <button
                 type="button"
                 onClick={() => {
-                  setModel("llama-3.1-8b-instant");
+                  setModel("qwen/qwen3.8-27b");
                   setTemperature(0.7);
                   setMaxTokens(1000);
                   setSystemPrompt("You are an AI Curriculum Architect and Career Mentor for the AI Pather platform. Provide structured, concise, and expert guidance.");
