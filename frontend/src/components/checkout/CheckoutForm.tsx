@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -130,6 +131,7 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
           className="from-transparent via-[#c084fc] to-transparent"
         />
         {/* Brand + Plan summary — left column on md+ */}
+        <div>
           <Link href="/" className="flex items-center justify-center" aria-label="AI Pather home">
             <Image
               src="/brand/AI-Pather-blue.png"
