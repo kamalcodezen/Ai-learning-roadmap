@@ -186,7 +186,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                       alt="AI Pathar"
                       width={22}
                       height={22}
-                      className="h-5.5 w-5.5 object-contain brightness-0 invert"
+                      className="h-5.5 w-5.5 object-contain"
                     />
                   </div>
                   <div>
@@ -357,7 +357,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                                   alt="AI"
                                   width={18}
                                   height={18}
-                                  className="h-4 w-4 sm:h-5 sm:w-5 object-contain brightness-0 invert"
+                                  className="h-4 w-4 sm:h-5 sm:w-5 object-contain"
                                 />
                               </div>
                             )}
@@ -485,7 +485,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                               alt="AI"
                               width={20}
                               height={20}
-                              className="h-5 w-5 object-contain brightness-0 invert"
+                              className="h-5 w-5 object-contain"
                             />
                           </div>
                           <TypingIndicator />
@@ -570,7 +570,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
         >
           <PlasmaTriggerButton
             size={60}
-            logo="/brand/AI-Pather-white.png"
+            logo="/brand/logo-p-dark.png"
             isOpen={open}
             onClick={toggleOpen}
           />
