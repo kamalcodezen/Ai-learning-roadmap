@@ -68,7 +68,11 @@ export default function Navbar() {
             `}
         >
           {/* Logo */}
-          <div className="flex shrink-0 justify-start pl-2 sm:pl-3 md:pl-4">
+          <div
+            className={`flex shrink-0 justify-start transition-all duration-300 ${
+              scrolled ? "pl-5 sm:pl-6 md:pl-7" : "pl-1 sm:pl-2 md:pl-3"
+            }`}
+          >
             <Logo />
           </div>
 
@@ -78,7 +82,11 @@ export default function Navbar() {
           </div>
 
           {/* Right Actions: Auth, Theme & Tablet/iPad Hamburger (< xl: iPad Pro 1024px, iPad Air, tablets) */}
-          <div className="flex items-center justify-end gap-3">
+          <div
+            className={`flex items-center justify-end gap-3 transition-all duration-300 ${
+              scrolled ? "pr-2 sm:pr-3" : "pr-0"
+            }`}
+          >
             <div className="hidden xl:block">
               <AuthCheck />
             </div>
