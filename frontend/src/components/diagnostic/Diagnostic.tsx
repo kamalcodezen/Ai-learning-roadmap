@@ -37,7 +37,7 @@ import {
 import BrandLoader from "@/src/components/shared/BrandLoader";
 import DiagnosticResultView from "./DiagnosticResultView";
 import Image from "next/image";
-import brandLogo from "@/public/brand/AI-Pather-blue.png";
+import brandLogo from "@/public/brand/logo-p-dark.png";
 
 type DiagnosticStatus =
   | "idle"
