@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import brandLogo from "@/public/brand/AI-Pather-blue.png";
+import brandLogo from "@/public/brand/logo-p-dark.png";
 
 import {
   sendChatMessage,
