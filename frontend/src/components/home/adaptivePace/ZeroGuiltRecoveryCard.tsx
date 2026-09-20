@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, HeartHandshake, CheckCircle2, Sparkles, ArrowRight, RefreshCw, Trophy } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { ShieldCheck, HeartHandshake, CheckCircle2, Sparkles, RefreshCw, Trophy, Loader2 } from "lucide-react";
 import { BorderBeam } from "@/src/components/ui/border-beam";
+import { getRecoveryPlan, claimResilienceBonus, ZeroGuiltRecoveryResult } from "@/src/lib/api/learner/adaptive-recovery";
 
 interface RecoveryStep {
   day: number;
@@ -14,7 +15,7 @@ interface RecoveryStep {
   taskDetail: string;
 }
 
-const STEPS: RecoveryStep[] = [
+const DEFAULT_STEPS: RecoveryStep[] = [
   {
     day: 1,
     duration: "5 Mins",
@@ -52,7 +53,27 @@ const STEPS: RecoveryStep[] = [
 export default function ZeroGuiltRecoveryCard() {
   const [completedDays, setCompletedDays] = useState<number[]>([1]);
   const [bonusClaimed, setBonusClaimed] = useState<boolean>(false);
+  const [isClaiming, setIsClaiming] = useState<boolean>(false);
   const [activeTabDay, setActiveTabDay] = useState<number>(2);
+  const [daysInactive, setDaysInactive] = useState<number>(8);
+  const [steps, setSteps] = useState<RecoveryStep[]>(DEFAULT_STEPS);
+
+  useEffect(() => {
+    let isMounted = true;
+    getRecoveryPlan()
+      .then((data: ZeroGuiltRecoveryResult) => {
+        if (isMounted && data) {
+          if (data.daysInactive !== undefined) setDaysInactive(data.daysInactive);
+          if (data.plan && data.plan.length > 0) setSteps(data.plan);
+        }
+      })
+      .catch(() => {
+        // graceful fallback to dynamic default steps
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const toggleDay = (day: number) => {
     if (completedDays.includes(day)) {
@@ -69,7 +90,14 @@ export default function ZeroGuiltRecoveryCard() {
   const progressPercentage = Math.round((completedDays.length / 4) * 100);
   const isAllComplete = completedDays.length === 4;
 
-  const handleClaimBonus = () => {
+  const handleClaimBonus = async () => {
+    setIsClaiming(true);
+    try {
+      await claimResilienceBonus();
+    } catch {
+      // optimistic reward update
+    }
+    setIsClaiming(false);
     setBonusClaimed(true);
   };
 
@@ -80,7 +108,7 @@ export default function ZeroGuiltRecoveryCard() {
   };
 
   return (
-    <div className="group relative w-full rounded-2xl border border-border/80 bg-white/70 dark:bg-[#0c0516]/80 p-6 sm:p-8 lg:p-10 backdrop-blur-xl shadow-xl shadow-purple-500/5 transition-all duration-300 hover:border-[var(--color-primary)]/40">
+    <div className="group relative w-full rounded-2xl border border-border/80 bg-white/70 dark:bg-[#0c0516]/80 p-5 sm:p-8 lg:p-10 backdrop-blur-xl shadow-xl shadow-purple-500/5 transition-all duration-300 hover:border-[var(--color-primary)]/40">
       <BorderBeam size={320} duration={10} colorFrom="#B978FF" colorTo="#9F54F7" delay={2} />
 
       {/* Header */}
@@ -106,7 +134,7 @@ export default function ZeroGuiltRecoveryCard() {
         {/* Positive Inactivity Status */}
         <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
           <HeartHandshake className="h-4 w-4" />
-          <span>Active: Zero-Streak Penalties</span>
+          <span>Active: Zero-Streak Penalties ({daysInactive}d Break Protected)</span>
         </div>
       </div>
 
@@ -155,7 +183,7 @@ export default function ZeroGuiltRecoveryCard() {
             />
           </div>
 
-          {STEPS.map((step) => {
+          {steps.map((step) => {
             const isCompleted = completedDays.includes(step.day);
             const isSelected = activeTabDay === step.day;
 
@@ -211,7 +239,7 @@ export default function ZeroGuiltRecoveryCard() {
         {/* Right: Active Day Detail Card */}
         <div className="lg:col-span-5 rounded-xl border border-border/80 bg-gradient-to-b from-[#faf5ff] to-[#f3e8ff]/50 dark:from-[#150727] dark:to-[#0a0015] p-6 flex flex-col justify-between min-h-[290px] shadow-inner">
           {(() => {
-            const activeStep = STEPS.find((s) => s.day === activeTabDay) || STEPS[0];
+            const activeStep = steps.find((s) => s.day === activeTabDay) || steps[0];
             const isDone = completedDays.includes(activeStep.day);
 
             return (
@@ -260,15 +288,24 @@ export default function ZeroGuiltRecoveryCard() {
                   {isAllComplete && (
                     <button
                       onClick={handleClaimBonus}
-                      disabled={bonusClaimed}
+                      disabled={isClaiming || bonusClaimed}
                       className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
                         bonusClaimed
                           ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/40"
                           : "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30 animate-pulse"
                       }`}
                     >
-                      <Trophy className="h-4 w-4" />
-                      <span>{bonusClaimed ? "🏆 +50 XP Resilience Bonus Claimed!" : "Claim +50 XP Resilience Bonus"}</span>
+                      {isClaiming ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Claiming XP...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Trophy className="h-4 w-4" />
+                          <span>{bonusClaimed ? "🏆 +50 XP Resilience Bonus Claimed!" : "Claim +50 XP Resilience Bonus"}</span>
+                        </>
+                      )}
                     </button>
                   )}
                 </div>
