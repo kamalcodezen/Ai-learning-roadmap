@@ -16,8 +16,8 @@ const MiddleImg = () => {
           />
         </div>
 
-        {/* Center Logo - percentage scaled to always sit precisely inside the center circle on any screen size */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none w-[18%]">
+        {/* Center Logo - perfectly sized and aligned with the inner circle */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none w-[13%]">
           <Image
             src="/brand/logo-p-black.png"
             alt="AI Pather"
