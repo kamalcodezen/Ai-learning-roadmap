@@ -24,9 +24,11 @@ Welcome to the comprehensive, evidence-based engineering documentation suite for
 
 ### 2. System Architecture & Diagrams
 - 🏛️ **[System Architecture](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/architecture/system-architecture.md)**: High-level architectural pattern, full technology stack inventory, and request lifecycle.
-- 🖥️ **[Frontend Architecture](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/architecture/frontend-architecture.md)**: Next.js 16 App Router topology (51 routes), XYFlow graph canvas, and state management.
+- 🖥️ **[Frontend Architecture](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/architecture/frontend-architecture.md)**: Next.js 16 App Router topology (70 routes), XYFlow graph canvas, and state management.
 - ⚙️ **[Backend Architecture](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/architecture/backend-architecture.md)**: Express 5 modular monolith, middleware pipeline, and Neon connection pool resilience.
-- 🧩 **[Module Boundaries](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/architecture/module-boundaries.md)**: Separation of concerns between Learner (22 submodules) and Admin (21 submodules).
+- 🧩 **[Module Boundaries](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/architecture/module-boundaries.md)**: Separation of concerns between Learner (24 submodules) and Admin (22 submodules).
+- 💎 **[Gem Economy & Atomic Ledger Architecture](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/architecture/gem-economy.md)**: Dynamic streaks, milestone rewards, and enterprise 100k scale raw PostgreSQL aggregations.
+- ❤️ **Zero-Guilt Adaptive Recovery**: Inactivity telemetry (7+ days), 4-day micro plans, and Roadmap Velocity Simulator.
 - 🛡️ **[Reliability Engineering](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/architecture/reliability.md)**: Fault isolation, provider cascades, retry behavior, and database pool protection.
 - 📐 **[Architecture Diagrams](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/architecture/diagrams/architecture-diagrams.md)**: Mermaid topology, sequence diagrams, and failover flowcharts.
 
@@ -66,7 +68,7 @@ Welcome to the comprehensive, evidence-based engineering documentation suite for
 ---
 
 ### 7. Engineering Practices, Quality & DevOps
-- 🧪 **[Testing Strategy & QA](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/engineering/testing-strategy.md)**: 8 backend automated test suites (`tsx --test`) and 29 manual test scripts.
+- 🧪 **[Testing Strategy & QA](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/engineering/testing-strategy.md)**: 10 backend automated test suites (58 automated tests, 100% pass) and 29 manual test scripts.
 - 🌿 **[Git Workflow & Repository Conventions](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/engineering/git-workflow.md)**: Monorepo commit conventions and proposed production branch protection.
 - 🚨 **[Error Handling & Resilience Architecture](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/engineering/error-handling.md)**: Centralized error middleware, Zod formatting, and `ErrorLog` table.
 - 🚢 **[Deployment Architecture & Guide](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/docs/infrastructure/deployment.md)**: Vercel frontend, Render/Railway backend, and environment variables.
