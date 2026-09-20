@@ -1,7 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Logo({ className = "" }: { className?: string }) {
+export default function Logo({
+  className = "",
+  imageClassName = "h-[21px] sm:h-6 md:h-8",
+}: {
+  className?: string;
+  imageClassName?: string;
+}) {
   return (
     <Link
       href="/"
@@ -14,7 +20,7 @@ export default function Logo({ className = "" }: { className?: string }) {
         alt="AI Pather"
         width={160}
         height={30}
-        className="h-7 md:h-8 w-auto block dark:hidden object-contain"
+        className={`${imageClassName} w-auto block dark:hidden object-contain`}
         priority
       />
       {/* Dark version (light logo) */}
@@ -23,7 +29,7 @@ export default function Logo({ className = "" }: { className?: string }) {
         alt="AI Pather"
         width={160}
         height={30}
-        className="h-7 md:h-8 w-auto hidden dark:block object-contain"
+        className={`${imageClassName} w-auto hidden dark:block object-contain`}
         priority
       />
     </Link>
