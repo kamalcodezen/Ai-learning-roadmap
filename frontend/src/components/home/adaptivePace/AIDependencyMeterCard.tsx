@@ -106,8 +106,7 @@ export default function AIDependencyMeterCard() {
   const clampedScore = Math.max(2, Math.min(100, score));
 
   return (
-    <div className="group relative w-full rounded-2xl border border-border/80 bg-white/70 dark:bg-[#0c0516]/80 p-5 sm:p-8 lg:p-10 backdrop-blur-xl shadow-xl shadow-purple-500/5 transition-all duration-300 hover:border-[var(--color-primary)]/40">
-      <BorderBeam size={320} duration={11} colorFrom="#9F54F7" colorTo="#B978FF" delay={4} />
+    <div className="dashboard-card w-full rounded-lg p-5 sm:p-8 lg:p-10 transition-all duration-300">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
