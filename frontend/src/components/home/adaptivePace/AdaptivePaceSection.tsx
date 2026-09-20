@@ -8,9 +8,9 @@ export default function AdaptivePaceSection() {
   return (
     <section
       id="adaptive-resilience"
-      className="section-pad relative w-full overflow-hidden px-0"
+      className="section-pad relative w-full overflow-hidden px-4 sm:px-8 md:px-12"
     >
-      <div className="relative w-[90%] max-w-[1400px] mx-auto">
+      <div className="global-pos relative z-20">
         {/* Section Header */}
         <div className="mx-auto flex w-full flex-col items-center text-center mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10 px-3.5 py-1 text-xs font-semibold text-[var(--color-primary)] mb-3">
