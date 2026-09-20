@@ -8,8 +8,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { authClient } from "@/src/lib/auth-client";
 import { useChatMentor } from "@/src/hooks/useChatMentor";
-import logoSrc from "../../../public/brand/AI-Pather-blue.png";
-import brandLogo from "../../../public/brand/logo-p-purple.png";
 import { PlasmaTriggerButton } from "./PlasmaTriggerButton";
 import { TypingIndicator } from "./TypingIndicator";
 import { useInlineVoiceChat } from "../voice-agent";
@@ -570,7 +568,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
         >
           <PlasmaTriggerButton
             size={60}
-            logo={logoSrc}
+            logo="/brand/AI-Pather-white.png"
             isOpen={open}
             onClick={toggleOpen}
           />
