@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Brain, Scale, Sparkles, Terminal, FileCode2, UserCheck2 } from "lucide-react";
-import { BorderBeam } from "@/src/components/ui/border-beam";
 import { getAIDependency, AIDependencyResult } from "@/src/lib/api/learner/adaptive-recovery";
 
 interface Persona {
