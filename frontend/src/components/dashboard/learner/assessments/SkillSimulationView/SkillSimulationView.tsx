@@ -28,6 +28,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import { triggerRealtimeSync } from "@/src/lib/utils/realtime-sync";
 
 interface Props {
   skill: string;
@@ -196,6 +197,19 @@ export default function SkillSimulationView({
       queryClient.invalidateQueries({
         queryKey: ["skillTree", session?.user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["gemWallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gemHistory"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["unreadNotificationCount"],
+      });
+      triggerRealtimeSync(queryClient);
     },
   });
 
