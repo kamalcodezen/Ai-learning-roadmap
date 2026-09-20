@@ -28,6 +28,7 @@ import { InterviewLobby } from "./InterviewLobby";
 import { InterviewLiveRoom } from "./InterviewLiveRoom";
 import { InterviewScorecard, QuestionAnswerPair, EvaluationData } from "./InterviewScorecard";
 import BrandLoader from "@/src/components/shared/BrandLoader";
+import { triggerRealtimeSync } from "@/src/lib/utils/realtime-sync";
 
 type InterviewView = "lobby" | "generating" | "live_room" | "scorecard" | "error";
 
@@ -210,20 +211,27 @@ export default function Interview() {
         const finalScore = completeRes?.data?.finalScore ?? completeRes?.finalScore ?? 78;
         const completedSession = completeRes?.data?.session || completeRes?.session;
 
-        // Invalidate relevant query caches
-        if (session?.user?.id) {
-          queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
-          queryClient.invalidateQueries({ queryKey: ["assessments"] });
-          queryClient.invalidateQueries({ queryKey: ["progress"] });
-          queryClient.invalidateQueries({ queryKey: ["careerTwin"] });
-          queryClient.invalidateQueries({ queryKey: ["interviewHistory"] });
-          queryClient.invalidateQueries({ queryKey: ["applicationReadiness"] });
-          queryClient.invalidateQueries({ queryKey: ["readiness"] });
-          queryClient.invalidateQueries({ queryKey: ["skillGaps"] });
-          queryClient.invalidateQueries({ queryKey: ["proofGraph"] });
-          queryClient.invalidateQueries({ queryKey: ["careerDecision"] });
-          queryClient.invalidateQueries({ queryKey: ["evidenceVerification"] });
-        }
+        // Invalidate relevant query caches & trigger instant real-time sync
+        queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
+        queryClient.invalidateQueries({ queryKey: ["assessments"] });
+        queryClient.invalidateQueries({ queryKey: ["progress"] });
+        queryClient.invalidateQueries({ queryKey: ["careerTwin"] });
+        queryClient.invalidateQueries({ queryKey: ["interviewHistory"] });
+        queryClient.invalidateQueries({ queryKey: ["applicationReadiness"] });
+        queryClient.invalidateQueries({ queryKey: ["readiness"] });
+        queryClient.invalidateQueries({ queryKey: ["skillGaps"] });
+        queryClient.invalidateQueries({ queryKey: ["proofGraph"] });
+        queryClient.invalidateQueries({ queryKey: ["careerDecision"] });
+        queryClient.invalidateQueries({ queryKey: ["evidenceVerification"] });
+        queryClient.invalidateQueries({ queryKey: ["gemWallet"] });
+        queryClient.refetchQueries({ queryKey: ["gemWallet"] });
+        queryClient.invalidateQueries({ queryKey: ["gemHistory"] });
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        queryClient.refetchQueries({ queryKey: ["notifications"] });
+        queryClient.invalidateQueries({ queryKey: ["unreadNotificationCount"] });
+        queryClient.refetchQueries({ queryKey: ["unreadNotificationCount"] });
+
+        triggerRealtimeSync(queryClient);
 
         // Build QuestionAnswerPair list
         const pairs: QuestionAnswerPair[] = questions.map((q) => {
