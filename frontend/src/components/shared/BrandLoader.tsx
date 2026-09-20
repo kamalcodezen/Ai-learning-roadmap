@@ -86,10 +86,16 @@ export default function BrandLoader({
           text-decoration: none;
         }
 
-        .brand-loader-img {
+        .brand-loader-logo-light {
           width: 160px;
           height: auto;
           display: block;
+        }
+
+        .brand-loader-logo-dark {
+          width: 160px;
+          height: auto;
+          display: none;
         }
 
         /* Light Track Base */
@@ -249,6 +255,20 @@ export default function BrandLoader({
           color: #94a3b8;
         }
 
+        :root.dark .brand-loader-container:not(.brand-loader-light) .brand-loader-logo-light,
+        html.dark .brand-loader-container:not(.brand-loader-light) .brand-loader-logo-light,
+        .dark .brand-loader-container:not(.brand-loader-light) .brand-loader-logo-light,
+        .brand-loader-container.brand-loader-dark .brand-loader-logo-light {
+          display: none !important;
+        }
+
+        :root.dark .brand-loader-container:not(.brand-loader-light) .brand-loader-logo-dark,
+        html.dark .brand-loader-container:not(.brand-loader-light) .brand-loader-logo-dark,
+        .dark .brand-loader-container:not(.brand-loader-light) .brand-loader-logo-dark,
+        .brand-loader-container.brand-loader-dark .brand-loader-logo-dark {
+          display: block !important;
+        }
+
         /* Dark Mode Specific Filters */
         .brand-loader-shadow-dark {
           z-index: 1;
@@ -310,6 +330,12 @@ export default function BrandLoader({
           :root:not(.light) .brand-loader-container:not(.brand-loader-light) .brand-loader-message {
             color: #94a3b8;
           }
+          :root:not(.light) .brand-loader-container:not(.brand-loader-light) .brand-loader-logo-light {
+            display: none !important;
+          }
+          :root:not(.light) .brand-loader-container:not(.brand-loader-light) .brand-loader-logo-dark {
+            display: block !important;
+          }
         }
 
         @keyframes brandLoad {
@@ -325,14 +351,14 @@ export default function BrandLoader({
       `}</style>
 
       <div className="brand-loader-wrapper">
-        {/* Brand Logo */}
+        {/* Brand Logo - single dynamic logo for light/dark theme */}
         <Link href="/" className="brand-loader-link" aria-label="AI Pather home">
           <Image
             src="/brand/AI-Pather-blue.png"
             alt="AI Pather"
             width={160}
             height={30}
-            className="brand-loader-img block dark:hidden"
+            className="brand-loader-logo-light"
             priority
           />
           <Image
@@ -340,7 +366,7 @@ export default function BrandLoader({
             alt="AI Pather"
             width={160}
             height={30}
-            className="brand-loader-img hidden dark:block"
+            className="brand-loader-logo-dark"
             priority
           />
         </Link>
