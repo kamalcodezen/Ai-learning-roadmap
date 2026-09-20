@@ -11,8 +11,8 @@ import { useChatMentor } from "@/src/hooks/useChatMentor";
 import { PlasmaTriggerButton } from "./PlasmaTriggerButton";
 import { TypingIndicator } from "./TypingIndicator";
 import { useInlineVoiceChat } from "../voice-agent";
-import logoSrc from "@/public/brand/AI-Pather-white.png";
-import brandLogo from "@/public/brand/AI-Pather-white.png";
+import logoSrc from "@/public/brand/logo-p-dark.png";
+import brandLogo from "@/public/brand/logo-p-dark.png";
 
 function getTimeGreeting(): string {
   const hours = new Date().getHours();
