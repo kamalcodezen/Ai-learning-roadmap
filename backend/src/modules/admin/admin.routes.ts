@@ -24,6 +24,7 @@ import * as skillProofController from "./skill-proof/skill-proof.controller.js";
 import * as subscriptionsController from "./subscriptions/subscriptions.controller.js";
 import * as interviewsController from "./interviews/interviews.controller.js";
 import * as resumesController from "./resumes/resumes.controller.js";
+import * as gemEconomyAdminController from "./gem-economy/gem-economy-admin.controller.js";
 
 const router = Router();
 
@@ -32,6 +33,14 @@ router.use(requireAdmin);
 
 // Dashboard routes
 router.get("/dashboard", dashboardController.getDashboardOverview);
+
+// Gem Economy & Treasury routes
+router.get("/gem-economy/overview", gemEconomyAdminController.getGemEconomyOverview);
+router.get("/gem-economy/transactions", gemEconomyAdminController.getGemTransactions);
+router.get("/gem-economy/search-learners", gemEconomyAdminController.searchLearners);
+router.post("/gem-economy/adjust", gemEconomyAdminController.adjustUserGems);
+router.get("/gem-economy/at-risk", gemEconomyAdminController.getAtRiskLearners);
+router.post("/gem-economy/remind", gemEconomyAdminController.sendRecoveryReminder);
 
 // User Management & Subscriptions routes
 router.get("/users", usersController.getUsers);
