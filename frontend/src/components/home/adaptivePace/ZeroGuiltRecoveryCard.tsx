@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, HeartHandshake, CheckCircle2, Sparkles, RefreshCw, Trophy, Loader2 } from "lucide-react";
-import { BorderBeam } from "@/src/components/ui/border-beam";
 import { getRecoveryPlan, claimResilienceBonus, ZeroGuiltRecoveryResult } from "@/src/lib/api/learner/adaptive-recovery";
 
 interface RecoveryStep {
