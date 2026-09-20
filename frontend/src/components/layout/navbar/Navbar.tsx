@@ -70,7 +70,7 @@ export default function Navbar() {
           {/* Logo */}
           <div
             className={`flex shrink-0 justify-start transition-all duration-300 ${
-              scrolled ? "pl-5 sm:pl-6 md:pl-7" : "pl-1 sm:pl-2 md:pl-3"
+              scrolled ? "pl-5 sm:pl-6 md:pl-12" : "pl-1 sm:pl-10 md:pl-3"
             }`}
           >
             <Logo />
