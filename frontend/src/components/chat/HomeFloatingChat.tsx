@@ -289,16 +289,16 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                         <Image
                           src="/brand/AI-Pather-blue.png"
                           alt="AI Pather"
-                          width={160}
-                          height={32}
-                          className="h-8 sm:h-9 w-auto object-contain block dark:hidden"
+                          width={130}
+                          height={24}
+                          className="h-5 sm:h-6 w-auto object-contain block dark:hidden"
                         />
                         <Image
                           src="/brand/AI-Pather-white.png"
                           alt="AI Pather"
-                          width={160}
-                          height={32}
-                          className="h-8 sm:h-9 w-auto object-contain hidden dark:block"
+                          width={130}
+                          height={24}
+                          className="h-5 sm:h-6 w-auto object-contain hidden dark:block"
                         />
                       </div>
                       <h3 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 dark:text-white tracking-tight">
