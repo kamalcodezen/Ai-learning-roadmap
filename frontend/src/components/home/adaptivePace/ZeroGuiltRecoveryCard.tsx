@@ -118,11 +118,11 @@ export default function ZeroGuiltRecoveryCard() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)]">
+              <span className="text-base font-bold uppercase tracking-wider text-[var(--color-primary)]">
                 Feature 02
               </span>
               <span className="h-1 w-1 rounded-full bg-border" />
-              <span className="text-xs font-medium text-muted-foreground">Inactivity Shield</span>
+              <span className="text-base font-medium text-muted-foreground">Inactivity Shield</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-foreground">
               Zero-Guilt Recovery Engine
@@ -131,7 +131,7 @@ export default function ZeroGuiltRecoveryCard() {
         </div>
 
         {/* Positive Inactivity Status */}
-        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10 text-xs font-semibold text-[var(--color-primary)]">
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10 text-base font-semibold text-[var(--color-primary)]">
           <HeartHandshake className="h-4 w-4" />
           <span>Active: Zero-Streak Penalties ({daysInactive}d Break Protected)</span>
         </div>
@@ -147,7 +147,7 @@ export default function ZeroGuiltRecoveryCard() {
             <h4 className="text-sm font-bold text-foreground">
               Welcome back! Life gets busy and breaks are 100% normal.
             </h4>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+            <p className="text-base text-muted-foreground mt-0.5 leading-relaxed">
               No broken streaks, no backlog anxiety. Re-ignite your momentum in just 10 minutes a day over the next 4 days.
             </p>
           </div>
@@ -155,7 +155,7 @@ export default function ZeroGuiltRecoveryCard() {
 
         <button
           onClick={resetDemo}
-          className="self-start sm:self-center flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-[var(--color-primary)] transition-colors shrink-0 cursor-pointer"
+          className="self-start sm:self-center flex items-center gap-1.5 text-base font-semibold text-muted-foreground hover:text-[var(--color-primary)] transition-colors shrink-0 cursor-pointer"
           title="Reset 4-day demo"
         >
           <RefreshCw className="h-3.5 w-3.5" />
@@ -167,7 +167,7 @@ export default function ZeroGuiltRecoveryCard() {
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left: Day-by-Day Cards */}
         <div className="lg:col-span-7 flex flex-col gap-3">
-          <div className="flex items-center justify-between text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">
+          <div className="flex items-center justify-between text-base font-bold text-muted-foreground uppercase tracking-wider mb-1">
             <span>4-Day Micro Catch-Up Plan</span>
             <span className="text-[var(--color-primary)]">{completedDays.length} of 4 Days Completed ({progressPercentage}%)</span>
           </div>
@@ -214,14 +214,14 @@ export default function ZeroGuiltRecoveryCard() {
 
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-foreground">
+                      <span className="text-base font-bold text-foreground">
                         Day {step.day}: {step.title}
                       </span>
                       <span className="px-2 py-0.5 rounded-md bg-[var(--color-primary)]/10 text-[10px] font-semibold text-[var(--color-primary)]">
                         {step.duration}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                    <p className="text-base text-muted-foreground mt-1 line-clamp-1">
                       {step.subtitle}
                     </p>
                   </div>
@@ -245,11 +245,11 @@ export default function ZeroGuiltRecoveryCard() {
               <>
                 <div>
                   <div className="flex items-center justify-between pb-3 border-b border-border/50">
-                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)] flex items-center gap-1.5">
+                    <span className="text-base font-bold uppercase tracking-wider text-[var(--color-primary)] flex items-center gap-1.5">
                       <Sparkles className="h-3.5 w-3.5" />
                       Day {activeStep.day} Interactive Task
                     </span>
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+                    <span className="text-base font-semibold px-2 py-0.5 rounded bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
                       {activeStep.duration}
                     </span>
                   </div>
@@ -257,11 +257,11 @@ export default function ZeroGuiltRecoveryCard() {
                   <h4 className="text-base font-bold text-foreground mt-3">
                     {activeStep.title}
                   </h4>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                  <p className="text-base text-muted-foreground mt-1 leading-relaxed">
                     {activeStep.subtitle}
                   </p>
 
-                  <div className="mt-4 p-3.5 rounded-lg border border-border/60 bg-white/60 dark:bg-black/40 text-xs">
+                  <div className="mt-4 p-3.5 rounded-lg border border-border/60 bg-white/60 dark:bg-black/40 text-base">
                     <span className="font-semibold text-foreground block mb-1">
                       Today&apos;s Focus:
                     </span>
@@ -274,7 +274,7 @@ export default function ZeroGuiltRecoveryCard() {
                 <div className="mt-6 pt-4 border-t border-border/50 flex flex-col gap-2">
                   <button
                     onClick={() => toggleDay(activeStep.day)}
-                    className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+                    className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-base font-bold transition-all duration-200 cursor-pointer ${
                       isDone
                         ? "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-md shadow-purple-500/20"
                         : "bg-[var(--color-primary)] text-white hover:opacity-90 shadow-md shadow-purple-500/20"
@@ -288,7 +288,7 @@ export default function ZeroGuiltRecoveryCard() {
                     <button
                       onClick={handleClaimBonus}
                       disabled={isClaiming || bonusClaimed}
-                      className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
+                      className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-base font-bold transition-all duration-300 cursor-pointer ${
                         bonusClaimed
                           ? "bg-[var(--color-primary)]/20 text-[var(--color-primary)] border border-[var(--color-primary)]/40"
                           : "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-lg shadow-purple-500/30 animate-pulse"
