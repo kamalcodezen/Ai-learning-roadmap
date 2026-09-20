@@ -148,6 +148,11 @@ export type XPTransaction = Prisma.XPTransactionModel
  */
 export type UserAchievement = Prisma.UserAchievementModel
 /**
+ * Model GemTransaction
+ * 
+ */
+export type GemTransaction = Prisma.GemTransactionModel
+/**
  * Model Notification
  * 
  */
