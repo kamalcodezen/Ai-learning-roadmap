@@ -16,23 +16,15 @@ const MiddleImg = () => {
         </div>
 
         {/* Center Logo */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div>
-            <Image
-              src="/brand/AI-Pather-blue.png"
-              alt="AI Pather"
-              width={140}
-              height={30}
-              className="h-[clamp(20px,3vw,30px)] w-auto object-contain block dark:hidden"
-            />
-            <Image
-              src="/brand/AI-Pather-white.png"
-              alt="AI Pather"
-              width={140}
-              height={30}
-              className="h-[clamp(20px,3vw,30px)] w-auto object-contain hidden dark:block"
-            />
-          </div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+          <Image
+            src="/brand/logo-p-black.png"
+            alt="AI Pather"
+            width={84}
+            height={100}
+            className="w-[clamp(36px,6.5vw,60px)] h-auto object-contain drop-shadow-sm"
+            priority
+          />
         </div>
       </div>
     </div>
