@@ -122,7 +122,7 @@ export default function ContactFormSection() {
             </div>
 
             {/* What to expect box */}
-            <div className="rounded-2xl border border-border/80 bg-card/60 p-6 backdrop-blur-md space-y-4">
+            <div className="rounded-2xl border border-border/80 bg-card/60 p-6 backdrop-blur-md space-y-4 dashboard-card">
               <h4 className="font-poppins text-sm font-bold uppercase tracking-wider text-foreground">
                 What happens after you submit?
               </h4>
@@ -167,7 +167,7 @@ export default function ContactFormSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-7 relative rounded-3xl border border-border/80 bg-card/80 p-6 sm:p-10 backdrop-blur-xl overflow-hidden"
+            className="lg:col-span-7 relative rounded-3xl border border-border/80 bg-card/80 p-6 sm:p-10 backdrop-blur-xl overflow-hidden dashboard-card"
           >
             <BorderBeam duration={10} size={250} />
 
