@@ -10,14 +10,17 @@ export default function Logo() {
       aria-label="AIPather home"
     >
       <span
-        className="flex w-10 h-10 md:w-12 md:h-12 items-center justify-center rounded-full"
+        className="flex w-8 h-8 md:w-10 md:h-10 items-center justify-center rounded-full"
         style={{ background: "var(--gradient-primary)" }}
       >
         <Image src={brandLogo} alt="Brand-logo" className="ml-1 w-4 h-4 md:w-5 md:h-5 brightness-0 invert" height={20} width={20}/>
       </span>
 
       <span className="font-poppins text-[22px] font-semibold text-foreground tracking-tight">
-        AI Pather
+        AI {" "}
+        <span className="text-brand">
+        Pather
+        </span>
       </span>
     </Link>
   );
