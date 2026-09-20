@@ -67,7 +67,7 @@ export default function AboutHero() {
             </div>
 
             {/* Main Headline */}
-            <h1 className="mt-6 font-poppins text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground leading-[1.12]">
+            <h1 className="mt-6 font-poppins text-3xl sm:text-5xl font-semibold tracking-tight text-foreground leading-[1.12]">
               We believe learning should{" "}
               <span className="bg-linear-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
                 lead somewhere
