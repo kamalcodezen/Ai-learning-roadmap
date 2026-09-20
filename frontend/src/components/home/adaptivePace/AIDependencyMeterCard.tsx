@@ -32,8 +32,8 @@ const PERSONAS: Persona[] = [
       interview: 88,
     },
     verdict: "Outstanding Self-Reliance! You think through logic before consulting AI.",
-    badge: "🟢 Independent Problem Solver (0%–30%)",
-    badgeColor: "text-emerald-500 bg-emerald-500/10 border-emerald-500/30",
+    badge: "Independent Problem Solver (0%–30%)",
+    badgeColor: "text-[var(--color-primary)] bg-[var(--color-primary)]/10 border-[var(--color-primary)]/30",
     advice: "Your chance of clearing live whiteboard coding rounds and FAANG technical screenings is at the highest percentile.",
   },
   {
@@ -46,8 +46,8 @@ const PERSONAS: Persona[] = [
       interview: 68,
     },
     verdict: "Healthy AI Augmentation! You use AI to boost productivity while understanding core foundations.",
-    badge: "🟡 Balanced AI Augmentation (31%–65%)",
-    badgeColor: "text-amber-500 bg-amber-500/10 border-amber-500/30",
+    badge: "Balanced AI Augmentation (31%–65%)",
+    badgeColor: "text-[var(--color-primary)] bg-[var(--color-primary)]/10 border-[var(--color-primary)]/30",
     advice: "Continue challenging yourself on algorithm design without copilot suggestions before implementing solutions.",
   },
   {
@@ -60,8 +60,8 @@ const PERSONAS: Persona[] = [
       interview: 35,
     },
     verdict: "High AI Reliance Alert! Heavy reliance on code copy-pasting detected.",
-    badge: "🔴 High AI Reliance Alert (66%–100%)",
-    badgeColor: "text-rose-500 bg-rose-500/10 border-rose-500/30",
+    badge: "High AI Reliance Alert (66%–100%)",
+    badgeColor: "text-[var(--color-primary)] bg-[var(--color-primary)]/10 border-[var(--color-primary)]/30",
     advice: "Warning: Live whiteboard interviews don't allow AI. Action Tip: Solve the next milestone without Copilot prompts to build mental muscle memory.",
   },
 ];
@@ -112,7 +112,7 @@ export default function AIDependencyMeterCard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
         <div className="flex items-center gap-3.5">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-indigo-600 text-white shadow-md shadow-purple-500/20">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-md shadow-purple-500/20">
             <Scale className="h-6 w-6" />
           </div>
           <div>
@@ -129,7 +129,7 @@ export default function AIDependencyMeterCard() {
           </div>
         </div>
 
-        {/* Live Classification Badge */}
+        {/* Live Classification Badge in Primary Brand Palette */}
         <div className={`self-start sm:self-center px-3.5 py-1.5 rounded-full border text-xs font-semibold ${badgeColor}`}>
           {badge}
         </div>
@@ -150,8 +150,8 @@ export default function AIDependencyMeterCard() {
                 onClick={() => setSelectedPersonaId(p.id)}
                 className={`py-1.5 px-3 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? "bg-[var(--color-primary)] text-white shadow-sm"
-                    : "bg-white dark:bg-zinc-900 border border-border/70 hover:border-border text-foreground/80"
+                    ? "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-sm"
+                    : "bg-white dark:bg-zinc-900 border border-border/70 hover:border-[var(--color-primary)]/40 text-foreground/80"
                 }`}
               >
                 {p.label} ({p.score}%)
@@ -172,6 +172,12 @@ export default function AIDependencyMeterCard() {
           {/* SVG Gauge */}
           <div className="relative w-48 h-48 flex items-center justify-center">
             <svg viewBox="0 0 160 160" className="w-full h-full transform -rotate-90">
+              <defs>
+                <linearGradient id="aiGaugeGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="var(--color-secondary, #8523F5)" />
+                  <stop offset="100%" stopColor="var(--color-primary, #9F54F7)" />
+                </linearGradient>
+              </defs>
               <circle
                 cx="80"
                 cy="80"
@@ -185,7 +191,7 @@ export default function AIDependencyMeterCard() {
                 cx="80"
                 cy="80"
                 r="64"
-                stroke={score > 65 ? "#f43f5e" : score > 30 ? "#eab308" : "#10b981"}
+                stroke="url(#aiGaugeGrad)"
                 strokeWidth="12"
                 strokeDasharray={402}
                 strokeDashoffset={402 - (402 * clampedScore) / 100}
@@ -199,7 +205,7 @@ export default function AIDependencyMeterCard() {
 
             {/* Readout */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-3xl font-extrabold text-foreground tabular-nums">
+              <span className="text-3xl font-extrabold text-[var(--color-primary)] tabular-nums">
                 {score}%
               </span>
               <span className="text-[11px] font-medium text-muted-foreground">
@@ -230,11 +236,11 @@ export default function AIDependencyMeterCard() {
                 <Terminal className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                 Prompt Delegation & Prompt Depth (35% Weight)
               </span>
-              <span className="font-bold text-muted-foreground tabular-nums">{pillars.prompt}% AI Used</span>
+              <span className="font-bold text-[var(--color-primary)] tabular-nums">{pillars.prompt}% AI Used</span>
             </div>
             <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-zinc-800 overflow-hidden">
               <motion.div
-                className={`h-full ${pillars.prompt > 70 ? "bg-rose-500" : pillars.prompt > 35 ? "bg-amber-500" : "bg-emerald-500"}`}
+                className="h-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)]"
                 initial={{ width: 0 }}
                 animate={{ width: `${pillars.prompt}%` }}
                 transition={{ duration: 0.6 }}
@@ -249,14 +255,14 @@ export default function AIDependencyMeterCard() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-foreground flex items-center gap-2">
-                <FileCode2 className="h-3.5 w-3.5 text-blue-500" />
+                <FileCode2 className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                 Code Ownership & Architecture Articulation (35% Weight)
               </span>
-              <span className="font-bold text-muted-foreground tabular-nums">{pillars.ownership}% Owned</span>
+              <span className="font-bold text-[var(--color-primary)] tabular-nums">{pillars.ownership}% Owned</span>
             </div>
             <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-zinc-800 overflow-hidden">
               <motion.div
-                className="h-full bg-blue-500"
+                className="h-full bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-primary)]"
                 initial={{ width: 0 }}
                 animate={{ width: `${pillars.ownership}%` }}
                 transition={{ duration: 0.6 }}
@@ -271,14 +277,14 @@ export default function AIDependencyMeterCard() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-foreground flex items-center gap-2">
-                <UserCheck2 className="h-3.5 w-3.5 text-purple-500" />
+                <UserCheck2 className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                 Live Whiteboard & Mock Technical Interview (30% Weight)
               </span>
-              <span className="font-bold text-muted-foreground tabular-nums">{pillars.interview}% Score</span>
+              <span className="font-bold text-[var(--color-primary)] tabular-nums">{pillars.interview}% Score</span>
             </div>
             <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-zinc-800 overflow-hidden">
               <motion.div
-                className="h-full bg-purple-500"
+                className="h-full bg-gradient-to-r from-[var(--color-primary)] to-[#C084FC]"
                 initial={{ width: 0 }}
                 animate={{ width: `${pillars.interview}%` }}
                 transition={{ duration: 0.6 }}
@@ -290,7 +296,7 @@ export default function AIDependencyMeterCard() {
           </div>
 
           {/* Actionable Interview Readiness Advice */}
-          <div className="mt-2 rounded-xl border border-border/70 bg-gradient-to-r from-purple-500/10 via-transparent to-transparent p-4 text-xs">
+          <div className="mt-2 rounded-xl border border-[var(--color-primary)]/30 bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-secondary)]/5 to-transparent p-4 text-xs">
             <div className="flex items-start gap-2.5">
               <Sparkles className="h-4 w-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
               <div>
