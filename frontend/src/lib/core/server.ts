@@ -10,10 +10,13 @@ export const baseUrl =
 const request = async (path: string, options?: RequestInit) => {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   const response = await fetch(`${baseUrl}${normalizedPath}`, {
+    cache: "no-store",
     ...options,
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      Pragma: "no-cache",
       ...options?.headers,
     },
   });
