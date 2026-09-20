@@ -34,7 +34,7 @@ const features = [
 
 const RightSideCard = () => {
   return (
-    <div className="group relative h-full w-full max-w-2xl overflow-hidden rounded-lg border border-primary/25 bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] p-6 transition-all duration-300 hover:border-primary/40 dark:from-[#0a0015] dark:via-[#120025] dark:to-[#2d1065] dark:hover:border-primary/35">
+    <div className="group relative h-full w-full max-w-2xl overflow-hidden rounded-lg border border-primary/25 bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] p-5 sm:p-6 md:p-4.5 lg:p-6 transition-all duration-300 hover:border-primary/40 dark:from-[#0a0015] dark:via-[#120025] dark:to-[#2d1065] dark:hover:border-primary/35">
       {/* Border Beams */}
       <BorderBeam size={250} duration={6} colorFrom="#9F54F7" colorTo="#ffffff" />
       <BorderBeam size={250} duration={6} delay={3} colorFrom="#ffffff" colorTo="#9F54F7" reverse />
