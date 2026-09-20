@@ -34,19 +34,11 @@ export default function AuthPage({ mode }: AuthPageProps) {
                 logo={
                     <Link href="/" className="flex items-center" aria-label="AI Pather home">
                         <Image
-                            src="/brand/AI-Pather-blue.png"
-                            alt="AI Pather"
-                            width={160}
-                            height={30}
-                            className="h-8 w-auto block dark:hidden object-contain"
-                            priority
-                        />
-                        <Image
                             src="/brand/AI-Pather-white.png"
                             alt="AI Pather"
                             width={160}
                             height={30}
-                            className="h-8 w-auto hidden dark:block object-contain"
+                            className="h-8 w-auto block object-contain"
                             priority
                         />
                     </Link>
