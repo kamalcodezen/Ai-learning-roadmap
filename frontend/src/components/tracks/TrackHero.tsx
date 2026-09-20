@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import type { Track } from "@/src/data/tracks";
 import Button from "@/src/components/ui/button";
-import brandLogo from "../../../public/brand/AI-Pather-white.png"
+import brandLogo from "../../../public/brand/logo-p-dark.png"
 import Image from "next/image";
 
 const formatSalary = (value: number) =>
