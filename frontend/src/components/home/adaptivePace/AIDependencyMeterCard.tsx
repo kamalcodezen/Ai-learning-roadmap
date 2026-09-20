@@ -116,11 +116,11 @@ export default function AIDependencyMeterCard() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)]">
+              <span className="text-base font-bold uppercase tracking-wider text-[var(--color-primary)]">
                 Feature 03
               </span>
               <span className="h-1 w-1 rounded-full bg-border" />
-              <span className="text-xs font-medium text-muted-foreground">Whiteboard Interview Readiness</span>
+              <span className="text-base font-medium text-muted-foreground">Whiteboard Interview Readiness</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-foreground">
               AI Dependency & Problem-Solving Meter
@@ -129,14 +129,14 @@ export default function AIDependencyMeterCard() {
         </div>
 
         {/* Live Classification Badge in Primary Brand Palette */}
-        <div className={`self-start sm:self-center px-3.5 py-1.5 rounded-full border text-xs font-semibold ${badgeColor}`}>
+        <div className={`self-start sm:self-center px-3.5 py-1.5 rounded-full border text-base font-semibold ${badgeColor}`}>
           {badge}
         </div>
       </div>
 
       {/* Interactive Profile Persona Selector */}
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl border border-border/60 bg-black/5 dark:bg-white/5">
-        <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+        <div className="flex items-center gap-2 text-base font-semibold text-muted-foreground">
           <Brain className="h-4 w-4 text-[var(--color-primary)]" />
           <span>Simulate Learner Profile:</span>
         </div>
@@ -147,7 +147,7 @@ export default function AIDependencyMeterCard() {
               <button
                 key={p.id}
                 onClick={() => setSelectedPersonaId(p.id)}
-                className={`py-1.5 px-3 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${
+                className={`py-1.5 px-3 rounded-lg text-base font-medium transition-all duration-200 cursor-pointer ${
                   isActive
                     ? "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-sm"
                     : "bg-white dark:bg-zinc-900 border border-border/70 hover:border-[var(--color-primary)]/40 text-foreground/80"
@@ -164,7 +164,7 @@ export default function AIDependencyMeterCard() {
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         {/* Left: Animated Radial Gauge */}
         <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 rounded-xl border border-border/80 bg-gradient-to-b from-[#faf5ff] to-[#f3e8ff]/50 dark:from-[#150727] dark:to-[#0a0015] shadow-inner">
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">
+          <span className="text-base font-bold uppercase tracking-wider text-muted-foreground mb-4">
             AI Dependency Index
           </span>
 
@@ -213,7 +213,7 @@ export default function AIDependencyMeterCard() {
             </div>
           </div>
 
-          <p className="mt-4 text-xs text-center font-medium text-muted-foreground max-w-[260px]">
+          <p className="mt-4 text-base text-center font-medium text-muted-foreground max-w-[260px]">
             {score <= 30
               ? "High Autonomy • Live Interview Ready"
               : score <= 65
@@ -224,13 +224,13 @@ export default function AIDependencyMeterCard() {
 
         {/* Right: 3 Pillars Breakdown */}
         <div className="lg:col-span-7 flex flex-col gap-5">
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          <span className="text-base font-bold uppercase tracking-wider text-muted-foreground">
             3-Pillar Autonomous Signal Analysis
           </span>
 
           {/* Pillar 1: Prompt Delegation */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center justify-between text-base">
               <span className="font-semibold text-foreground flex items-center gap-2">
                 <Terminal className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                 Prompt Delegation & Prompt Depth (35% Weight)
@@ -252,7 +252,7 @@ export default function AIDependencyMeterCard() {
 
           {/* Pillar 2: Code Ownership */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center justify-between text-base">
               <span className="font-semibold text-foreground flex items-center gap-2">
                 <FileCode2 className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                 Code Ownership & Architecture Articulation (35% Weight)
@@ -274,7 +274,7 @@ export default function AIDependencyMeterCard() {
 
           {/* Pillar 3: Live Problem Solving */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center justify-between text-base">
               <span className="font-semibold text-foreground flex items-center gap-2">
                 <UserCheck2 className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                 Live Whiteboard & Mock Technical Interview (30% Weight)
@@ -295,7 +295,7 @@ export default function AIDependencyMeterCard() {
           </div>
 
           {/* Actionable Interview Readiness Advice */}
-          <div className="mt-2 rounded-xl border border-[var(--color-primary)]/30 bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-secondary)]/5 to-transparent p-4 text-xs">
+          <div className="mt-2 rounded-xl border border-[var(--color-primary)]/30 bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-secondary)]/5 to-transparent p-4 text-base">
             <div className="flex items-start gap-2.5">
               <Sparkles className="h-4 w-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
               <div>
