@@ -83,8 +83,8 @@ export default function Navbar() {
 
           {/* Right Actions: Auth, Theme & Tablet/iPad Hamburger (< xl: iPad Pro 1024px, iPad Air, tablets) */}
           <div
-            className={`flex items-center justify-end gap-3 transition-all duration-300 ${
-              scrolled ? "pr-2 sm:pr-3" : "pr-0"
+            className={`flex items-center justify-end gap-3 transition-all duration-300 md:translate-x-1.5 lg:translate-x-2.5 ${
+              scrolled ? "pr-0" : "pr-0"
             }`}
           >
             <div className="hidden xl:block">
