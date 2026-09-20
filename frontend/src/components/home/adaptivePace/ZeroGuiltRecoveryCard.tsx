@@ -114,12 +114,12 @@ export default function ZeroGuiltRecoveryCard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
         <div className="flex items-center gap-3.5">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-[var(--color-primary)] text-white shadow-md shadow-emerald-500/20">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-md shadow-purple-500/20">
             <ShieldCheck className="h-6 w-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)]">
                 Feature 02
               </span>
               <span className="h-1 w-1 rounded-full bg-border" />
@@ -132,16 +132,16 @@ export default function ZeroGuiltRecoveryCard() {
         </div>
 
         {/* Positive Inactivity Status */}
-        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10 text-xs font-semibold text-[var(--color-primary)]">
           <HeartHandshake className="h-4 w-4" />
           <span>Active: Zero-Streak Penalties ({daysInactive}d Break Protected)</span>
         </div>
       </div>
 
       {/* Warm Welcome Banner */}
-      <div className="mt-6 rounded-xl border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 via-purple-500/5 to-transparent p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="mt-6 rounded-xl border border-[var(--color-primary)]/20 bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-secondary)]/5 to-transparent p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+          <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)]">
             <Sparkles className="h-4 w-4" />
           </div>
           <div>
@@ -156,7 +156,7 @@ export default function ZeroGuiltRecoveryCard() {
 
         <button
           onClick={resetDemo}
-          className="self-start sm:self-center flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors shrink-0 cursor-pointer"
+          className="self-start sm:self-center flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-[var(--color-primary)] transition-colors shrink-0 cursor-pointer"
           title="Reset 4-day demo"
         >
           <RefreshCw className="h-3.5 w-3.5" />
@@ -170,13 +170,13 @@ export default function ZeroGuiltRecoveryCard() {
         <div className="lg:col-span-7 flex flex-col gap-3">
           <div className="flex items-center justify-between text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">
             <span>4-Day Micro Catch-Up Plan</span>
-            <span>{completedDays.length} of 4 Days Completed ({progressPercentage}%)</span>
+            <span className="text-[var(--color-primary)]">{completedDays.length} of 4 Days Completed ({progressPercentage}%)</span>
           </div>
 
           {/* Progress bar */}
           <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-zinc-800 overflow-hidden mb-2">
             <motion.div
-              className="h-full bg-gradient-to-r from-emerald-500 to-[var(--color-primary)]"
+              className="h-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)]"
               initial={{ width: 0 }}
               animate={{ width: `${progressPercentage}%` }}
               transition={{ duration: 0.5, ease: "easeOut" }}
@@ -193,7 +193,7 @@ export default function ZeroGuiltRecoveryCard() {
                 onClick={() => setActiveTabDay(step.day)}
                 className={`flex items-start justify-between gap-4 p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
                   isSelected
-                    ? "border-[var(--color-primary)] bg-[var(--color-primary)]/5 shadow-sm"
+                    ? "border-[var(--color-primary)] bg-[var(--color-primary)]/8 shadow-sm"
                     : "border-border/70 hover:border-border bg-black/5 dark:bg-white/5"
                 }`}
               >
@@ -205,7 +205,7 @@ export default function ZeroGuiltRecoveryCard() {
                     }}
                     className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-colors cursor-pointer ${
                       isCompleted
-                        ? "border-emerald-500 bg-emerald-500 text-white"
+                        ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
                         : "border-border bg-white dark:bg-zinc-900 text-transparent hover:border-[var(--color-primary)]"
                     }`}
                     aria-label={`Toggle Day ${step.day}`}
@@ -218,7 +218,7 @@ export default function ZeroGuiltRecoveryCard() {
                       <span className="text-xs font-bold text-foreground">
                         Day {step.day}: {step.title}
                       </span>
-                      <span className="px-2 py-0.5 rounded-md bg-purple-500/10 text-[10px] font-semibold text-[var(--color-primary)]">
+                      <span className="px-2 py-0.5 rounded-md bg-[var(--color-primary)]/10 text-[10px] font-semibold text-[var(--color-primary)]">
                         {step.duration}
                       </span>
                     </div>
@@ -250,7 +250,7 @@ export default function ZeroGuiltRecoveryCard() {
                       <Sparkles className="h-3.5 w-3.5" />
                       Day {activeStep.day} Interactive Task
                     </span>
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded bg-black/5 dark:bg-white/10 text-foreground">
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
                       {activeStep.duration}
                     </span>
                   </div>
@@ -277,7 +277,7 @@ export default function ZeroGuiltRecoveryCard() {
                     onClick={() => toggleDay(activeStep.day)}
                     className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
                       isDone
-                        ? "bg-emerald-600 text-white shadow-sm"
+                        ? "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-md shadow-purple-500/20"
                         : "bg-[var(--color-primary)] text-white hover:opacity-90 shadow-md shadow-purple-500/20"
                     }`}
                   >
@@ -291,8 +291,8 @@ export default function ZeroGuiltRecoveryCard() {
                       disabled={isClaiming || bonusClaimed}
                       className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
                         bonusClaimed
-                          ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/40"
-                          : "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30 animate-pulse"
+                          ? "bg-[var(--color-primary)]/20 text-[var(--color-primary)] border border-[var(--color-primary)]/40"
+                          : "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-lg shadow-purple-500/30 animate-pulse"
                       }`}
                     >
                       {isClaiming ? (
