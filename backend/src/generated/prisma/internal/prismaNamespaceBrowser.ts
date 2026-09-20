@@ -77,6 +77,7 @@ export const ModelName = {
   UserGamification: 'UserGamification',
   XPTransaction: 'XPTransaction',
   UserAchievement: 'UserAchievement',
+  GemTransaction: 'GemTransaction',
   Notification: 'Notification',
   Resume: 'Resume'
 } as const
@@ -438,6 +439,7 @@ export const UserGamificationScalarFieldEnum = {
   userId: 'userId',
   totalXp: 'totalXp',
   currentLevel: 'currentLevel',
+  gemsBalance: 'gemsBalance',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -472,6 +474,20 @@ export const UserAchievementScalarFieldEnum = {
 } as const
 
 export type UserAchievementScalarFieldEnum = (typeof UserAchievementScalarFieldEnum)[keyof typeof UserAchievementScalarFieldEnum]
+
+
+export const GemTransactionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  amount: 'amount',
+  source: 'source',
+  referenceId: 'referenceId',
+  description: 'description',
+  balanceAfter: 'balanceAfter',
+  createdAt: 'createdAt'
+} as const
+
+export type GemTransactionScalarFieldEnum = (typeof GemTransactionScalarFieldEnum)[keyof typeof GemTransactionScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {
