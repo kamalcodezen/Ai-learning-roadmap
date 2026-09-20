@@ -296,16 +296,16 @@ export default function ChatBox() {
                 <Image
                   src="/brand/AI-Pather-blue.png"
                   alt="AI Pather"
-                  width={160}
-                  height={32}
-                  className="h-9 sm:h-10 w-auto object-contain block dark:hidden"
+                  width={140}
+                  height={28}
+                  className="h-6 sm:h-7 w-auto object-contain block dark:hidden"
                 />
                 <Image
                   src="/brand/AI-Pather-white.png"
                   alt="AI Pather"
-                  width={160}
-                  height={32}
-                  className="h-9 sm:h-10 w-auto object-contain hidden dark:block"
+                  width={140}
+                  height={28}
+                  className="h-6 sm:h-7 w-auto object-contain hidden dark:block"
                 />
               </div>
 
