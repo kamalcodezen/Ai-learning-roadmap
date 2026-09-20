@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Logo({
   className = "",
-  imageClassName = "h-[21px] sm:h-6 md:h-8",
+  imageClassName = "h-[21px] sm:h-6 md:h-[23px] lg:h-8",
 }: {
   className?: string;
   imageClassName?: string;
