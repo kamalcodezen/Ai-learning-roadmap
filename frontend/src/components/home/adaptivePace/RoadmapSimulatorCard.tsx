@@ -101,11 +101,11 @@ export default function RoadmapSimulatorCard() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)]">
+              <span className="text-base font-bold uppercase tracking-wider text-[var(--color-primary)]">
                 Feature 01
               </span>
               <span className="h-1 w-1 rounded-full bg-border" />
-              <span className="text-xs font-medium text-muted-foreground">Live ETA Calculator</span>
+              <span className="text-base font-medium text-muted-foreground">Live ETA Calculator</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-foreground">
               Roadmap Velocity & Pace Simulator
@@ -114,7 +114,7 @@ export default function RoadmapSimulatorCard() {
         </div>
 
         {/* Live Pace Badge */}
-        <div className={`self-start sm:self-center px-3.5 py-1.5 rounded-full border text-xs font-semibold ${simulation.paceColor}`}>
+        <div className={`self-start sm:self-center px-3.5 py-1.5 rounded-full border text-base font-semibold ${simulation.paceColor}`}>
           {simulation.paceBadge}
         </div>
       </div>
@@ -158,7 +158,7 @@ export default function RoadmapSimulatorCard() {
 
           {/* Quick Presets */}
           <div>
-            <span className="text-xs font-medium text-muted-foreground mb-2.5 block">
+            <span className="text-base font-medium text-muted-foreground mb-2.5 block">
               Quick Commitment Presets:
             </span>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -168,7 +168,7 @@ export default function RoadmapSimulatorCard() {
                   <button
                     key={preset.label}
                     onClick={() => setWeeklyHours(preset.hours)}
-                    className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg border text-xs font-medium transition-all duration-200 cursor-pointer ${
+                    className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg border text-base font-medium transition-all duration-200 cursor-pointer ${
                       isActive
                         ? "border-[var(--color-primary)] bg-[var(--color-primary)]/15 text-[var(--color-primary)] shadow-sm"
                         : "border-border/70 hover:border-[var(--color-primary)]/40 bg-black/5 dark:bg-white/5 text-foreground/80"
@@ -183,7 +183,7 @@ export default function RoadmapSimulatorCard() {
           </div>
 
           {/* Dynamic Insight Banner */}
-          <div className="rounded-xl border border-[var(--color-primary)]/20 bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-secondary)]/5 to-transparent p-4 text-xs text-muted-foreground">
+          <div className="rounded-xl border border-[var(--color-primary)]/20 bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-secondary)]/5 to-transparent p-4 text-base text-muted-foreground">
             <p className="leading-relaxed">
               <strong className="text-foreground">{simulation.paceTitle}: </strong>
               {simulation.paceDescription}
@@ -194,7 +194,7 @@ export default function RoadmapSimulatorCard() {
         {/* Right: Live Projection Card */}
         <div className="lg:col-span-5 rounded-xl border border-border/80 bg-gradient-to-b from-[#faf5ff] to-[#f3e8ff]/50 dark:from-[#150727] dark:to-[#0a0015] p-6 flex flex-col justify-between shadow-inner">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+            <span className="text-base font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-[var(--color-primary)]" />
               Dynamic Completion Projection
             </span>
@@ -204,11 +204,11 @@ export default function RoadmapSimulatorCard() {
                 ~{simulation.weeks}
               </span>
               <span className="text-lg font-semibold text-muted-foreground">Weeks</span>
-              <span className="text-xs font-medium text-muted-foreground">({simulation.months} Months)</span>
+              <span className="text-base font-medium text-muted-foreground">({simulation.months} Months)</span>
             </div>
 
             <div className="mt-5 space-y-3">
-              <div className="flex items-center justify-between text-xs py-2 border-b border-border/40">
+              <div className="flex items-center justify-between text-base py-2 border-b border-border/40">
                 <span className="text-muted-foreground flex items-center gap-2">
                   <Calendar className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                   Estimated Graduation Date:
@@ -216,7 +216,7 @@ export default function RoadmapSimulatorCard() {
                 <span className="font-bold text-foreground">{simulation.etaFormatted}</span>
               </div>
 
-              <div className="flex items-center justify-between text-xs py-2 border-b border-border/40">
+              <div className="flex items-center justify-between text-base py-2 border-b border-border/40">
                 <span className="text-muted-foreground flex items-center gap-2">
                   <Zap className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                   Remaining Workload:
@@ -224,7 +224,7 @@ export default function RoadmapSimulatorCard() {
                 <span className="font-bold text-foreground">{totalRemainingHours}h ({totalMilestones} Milestones)</span>
               </div>
 
-              <div className="flex items-center justify-between text-xs py-2">
+              <div className="flex items-center justify-between text-base py-2">
                 <span className="text-muted-foreground flex items-center gap-2">
                   <Award className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                   Learning Velocity:
@@ -239,7 +239,7 @@ export default function RoadmapSimulatorCard() {
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className={`mt-6 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
+            className={`mt-6 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-base font-bold transition-all duration-300 cursor-pointer ${
               isSaved
                 ? "bg-[var(--color-primary)] text-white shadow-lg shadow-purple-500/20"
                 : "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:opacity-95 shadow-md shadow-purple-500/20"
