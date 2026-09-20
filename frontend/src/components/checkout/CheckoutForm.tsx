@@ -1,12 +1,10 @@
 "use client";
 
-import { useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { Lock, ArrowLeft, Sparkles } from "lucide-react";
-import brandLogo from "../../../public/brand/AI-Pather-blue.png";
 import type { PricingPlan } from "../home/pricing/plans";
 import Button from "../ui/button";
 import BackToHome from "../ui/BackToHome";
@@ -132,18 +130,21 @@ export default function CheckoutForm({ plan, billing }: CheckoutFormProps) {
           className="from-transparent via-[#c084fc] to-transparent"
         />
         {/* Brand + Plan summary — left column on md+ */}
-        <div className="md:flex md:flex-col">
-          <Link href="/" className="flex items-center justify-center gap-2">
+          <Link href="/" className="flex items-center justify-center" aria-label="AI Pather home">
             <Image
-              src={brandLogo}
-              alt="Brand-logo"
-              className="ml-1 h-fit dark:invert"
-              height={20}
-              width={20}
+              src="/brand/AI-Pather-blue.png"
+              alt="AI Pather"
+              className="h-8 w-auto block dark:hidden object-contain"
+              height={30}
+              width={160}
             />
-            <span className="font-sans text-[30px] font-semibold tracking-[-0.03em] text-foreground">
-              Ai Pather
-            </span>
+            <Image
+              src="/brand/AI-Pather-white.png"
+              alt="AI Pather"
+              className="h-8 w-auto hidden dark:block object-contain"
+              height={30}
+              width={160}
+            />
           </Link>
 
           {/* Plan summary */}
