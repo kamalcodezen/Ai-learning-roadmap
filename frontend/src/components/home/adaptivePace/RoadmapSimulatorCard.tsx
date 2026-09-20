@@ -51,18 +51,16 @@ export default function RoadmapSimulatorCard() {
 
     let paceTitle = "Steady Pace";
     let paceBadge = "🌱 Steady Pace";
-    let paceColor = "text-emerald-500 bg-emerald-500/10 border-emerald-500/30";
+    const paceColor = "text-[var(--color-primary)] bg-[var(--color-primary)]/10 border-[var(--color-primary)]/30";
     let paceDescription = "Consistent, sustainable progress that fits nicely around a busy schedule.";
 
     if (weeklyHours >= 28) {
       paceTitle = "Immersive Bootcamp";
       paceBadge = "🏆 Immersive Bootcamp";
-      paceColor = "text-amber-500 bg-amber-500/10 border-amber-500/30";
       paceDescription = "High-intensity career sprint. Fast-track your completion with maximum momentum.";
     } else if (weeklyHours >= 14) {
       paceTitle = "Accelerated Sprint";
       paceBadge = "⚡ Accelerated Sprint";
-      paceColor = "text-[var(--color-primary)] bg-[var(--color-primary)]/10 border-[var(--color-primary)]/30";
       paceDescription = "Optimal balance between speed and concept retention for rapid career readiness.";
     }
 
@@ -174,7 +172,7 @@ export default function RoadmapSimulatorCard() {
                     className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg border text-xs font-medium transition-all duration-200 cursor-pointer ${
                       isActive
                         ? "border-[var(--color-primary)] bg-[var(--color-primary)]/15 text-[var(--color-primary)] shadow-sm"
-                        : "border-border/70 hover:border-border bg-black/5 dark:bg-white/5 text-foreground/80"
+                        : "border-border/70 hover:border-[var(--color-primary)]/40 bg-black/5 dark:bg-white/5 text-foreground/80"
                     }`}
                   >
                     <span>{preset.icon}</span>
@@ -186,7 +184,7 @@ export default function RoadmapSimulatorCard() {
           </div>
 
           {/* Dynamic Insight Banner */}
-          <div className="rounded-xl border border-border/70 bg-gradient-to-r from-purple-500/5 via-transparent to-purple-500/5 p-4 text-xs text-muted-foreground">
+          <div className="rounded-xl border border-[var(--color-primary)]/20 bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-secondary)]/5 to-transparent p-4 text-xs text-muted-foreground">
             <p className="leading-relaxed">
               <strong className="text-foreground">{simulation.paceTitle}: </strong>
               {simulation.paceDescription}
@@ -221,7 +219,7 @@ export default function RoadmapSimulatorCard() {
 
               <div className="flex items-center justify-between text-xs py-2 border-b border-border/40">
                 <span className="text-muted-foreground flex items-center gap-2">
-                  <Zap className="h-3.5 w-3.5 text-amber-500" />
+                  <Zap className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                   Remaining Workload:
                 </span>
                 <span className="font-bold text-foreground">{totalRemainingHours}h ({totalMilestones} Milestones)</span>
@@ -229,10 +227,10 @@ export default function RoadmapSimulatorCard() {
 
               <div className="flex items-center justify-between text-xs py-2">
                 <span className="text-muted-foreground flex items-center gap-2">
-                  <Award className="h-3.5 w-3.5 text-emerald-500" />
+                  <Award className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                   Learning Velocity:
                 </span>
-                <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                <span className="font-bold text-[var(--color-primary)]">
                   {simulation.velocityIndex}x Speed
                 </span>
               </div>
@@ -244,7 +242,7 @@ export default function RoadmapSimulatorCard() {
             disabled={isSaving}
             className={`mt-6 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
               isSaved
-                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
+                ? "bg-[var(--color-primary)] text-white shadow-lg shadow-purple-500/20"
                 : "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:opacity-95 shadow-md shadow-purple-500/20"
             }`}
           >
