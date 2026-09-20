@@ -253,7 +253,7 @@ export default function MobileNav() {
         {/* Header Bar (Always visible) */}
         <div className="flex items-center justify-between w-full px-2 py-1.5">
           {/* Logo Section */}
-          <div className="pl-1.5">
+          <div className="pl-0">
             <Logo />
           </div>
 

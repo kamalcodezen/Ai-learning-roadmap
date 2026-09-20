@@ -57,7 +57,7 @@ export default function Navbar() {
             transition-all duration-900 ease-out
             ${
               scrolled
-                ? "w-full max-w-4xl lg:max-w-5xl 2xl:max-w-6xl rounded-full bg-[#f4edff]/95 dark:bg-[#2b1e42ec] px-4 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl border-none"
+                ? "w-full max-w-4xl lg:max-w-5xl 2xl:max-w-6xl rounded-full bg-[#f4edff]/95 dark:bg-[#2b1e42ec] px-2.5 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl border-none"
                 : "w-full global-pos rounded-none py-1.5 px-6 border-none"
             }
           `}
@@ -68,11 +68,7 @@ export default function Navbar() {
             `}
         >
           {/* Logo */}
-          <div
-            className={`flex shrink-0 justify-start transition-all duration-300 ${
-              scrolled ? "pl-2 sm:pl-3 md:pl-0 lg:pl-1" : "pl-0 sm:pl-1 md:pl-0 lg:pl-2"
-            }`}
-          >
+          <div className="flex shrink-0 justify-start">
             <Logo />
           </div>
 
@@ -82,11 +78,7 @@ export default function Navbar() {
           </div>
 
           {/* Right Actions: Auth, Theme & Tablet/iPad Hamburger (< xl: iPad Pro 1024px, iPad Air, tablets) */}
-          <div
-            className={`flex items-center justify-end gap-3 transition-all duration-300 md:translate-x-1.5 lg:translate-x-2.5 ${
-              scrolled ? "pr-0" : "pr-0"
-            }`}
-          >
+          <div className="flex items-center justify-end gap-3">
             <div className="hidden xl:block">
               <AuthCheck />
             </div>
