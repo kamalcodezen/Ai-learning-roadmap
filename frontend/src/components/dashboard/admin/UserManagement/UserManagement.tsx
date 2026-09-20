@@ -39,6 +39,11 @@ interface UserRow {
     targetRole?: string;
     targetRoleName?: string;
   } | null;
+  gamification?: {
+    gemsBalance?: number;
+    currentLevel?: number;
+    totalXp?: number;
+  } | null;
 }
 
 export default function UserManagement() {
@@ -201,6 +206,16 @@ export default function UserManagement() {
           </span>
         );
       },
+    },
+    {
+      header: "Gems",
+      align: "center",
+      render: (u) => (
+        <span className="inline-flex items-center gap-1 font-bold text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+          <span>💎</span>
+          <span>{u.gamification?.gemsBalance ?? 10}</span>
+        </span>
+      ),
     },
     {
       header: "Role",
