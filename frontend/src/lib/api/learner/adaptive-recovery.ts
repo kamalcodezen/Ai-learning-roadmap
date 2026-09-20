@@ -184,6 +184,28 @@ export const getAiDependency = async (): Promise<AiDependencyOutput> => {
   return res.data;
 };
 
+export const getAIDependency = async (): Promise<AIDependencyResult | null> => {
+  try {
+    const res = await serverFetch("/api/adaptive-recovery/ai-dependency");
+    const d = res.data;
+    if (!d) return null;
+    return {
+      score: d.overallDependencyScore ?? 35,
+      category: d.category ?? "BALANCED",
+      verdict: d.categoryDescription || d.categoryTitle || "Balanced AI Augmentation",
+      badge: d.categoryBadge || d.categoryTitle || "🟡 Balanced AI Augmentation",
+      advice: d.employerPerceptionSummary || "",
+      pillars: {
+        promptDelegation: d.pillars?.promptAutonomy?.score ?? 35,
+        codeOwnership: d.pillars?.projectExplanation?.score ?? 70,
+        liveProblemSolving: d.pillars?.interviewArticulation?.score ?? 65,
+      },
+    };
+  } catch {
+    return null;
+  }
+};
+
 /* Compatibility types and client helpers for interactive landing page cards */
 export interface RoadmapSimulationResult {
   weeklyHours: number;
