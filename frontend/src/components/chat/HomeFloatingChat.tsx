@@ -281,11 +281,11 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
               >
                 {messages.length === 0 ? (
                   <div className={cn(
-                    "flex min-h-full flex-col items-center justify-between text-center p-4 pt-10",
+                    "flex min-h-full flex-col items-center justify-between text-center px-2 sm:px-3 pt-5 sm:pt-7 pb-0",
                     isExpanded && "max-w-3xl mx-auto justify-center gap-8 pt-16"
                   )}>
                     <div className="flex flex-col items-center">
-                      <div className="mb-3 flex items-center justify-center">
+                      <div className="mb-2.5 flex items-center justify-center">
                         <Image
                           src="/brand/AI-Pather-blue.png"
                           alt="AI Pather"
@@ -307,10 +307,10 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                     </div>
 
                     <div className={cn(
-                      "w-full mb-2",
+                      "w-full mt-auto mb-0",
                       isExpanded
                         ? "grid grid-cols-1 sm:grid-cols-2 gap-3"
-                        : "flex flex-col gap-2.5"
+                        : "flex flex-col gap-2"
                     )}>
                       {(session?.user
                         ? [
@@ -331,7 +331,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                           type="button"
                           onClick={() => void handleSendMessage(suggestion)}
                           disabled={isLoading}
-                          className="rounded-2xl border border-black/10 dark:border-[var(--color-primary)]/30 bg-purple-100/85 dark:bg-black/40 px-4 py-3 text-left text-sm font-semibold text-zinc-950 dark:text-zinc-100 transition hover:border-black dark:hover:border-[var(--color-primary)] hover:bg-purple-200 dark:hover:bg-[var(--color-primary)]/20 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+                          className="rounded-2xl border border-black/10 dark:border-[var(--color-primary)]/30 bg-purple-100/85 dark:bg-black/40 px-3.5 py-2.5 sm:px-4 sm:py-3 text-left text-sm font-semibold text-zinc-950 dark:text-zinc-100 transition hover:border-black dark:hover:border-[var(--color-primary)] hover:bg-purple-200 dark:hover:bg-[var(--color-primary)]/20 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {suggestion}
                         </button>
@@ -504,7 +504,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
               </div>
 
             {/* Input Footer */}
-            <div className="relative z-10 shrink-0 border-t border-black/10 dark:border-[var(--color-primary)]/20 p-3.5 bg-purple-50/80 dark:bg-black/75 backdrop-blur-md">
+            <div className="relative z-10 shrink-0 border-t border-black/10 dark:border-[var(--color-primary)]/20 px-3.5 pt-2.5 pb-3 bg-purple-50/80 dark:bg-black/75 backdrop-blur-md">
               <div className={cn("w-full", isExpanded && "max-w-4xl mx-auto")}>
                 <div className="flex items-center gap-2 rounded-2xl border-1 border-black/20 dark:border-[var(--color-primary)]/40 bg-white dark:bg-[var(--color-surface)] px-4 py-2 focus-within:border-[var(--color-primary)] dark:focus-within:border-[var(--color-primary)] transition-all">
                   <input
