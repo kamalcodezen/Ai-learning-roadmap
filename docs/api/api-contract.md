@@ -130,7 +130,30 @@
 
 ---
 
-### K. Administrative Operations (`/api/admin/*`)
+### K. Learner Gem Economy & Atomic Ledger (`/api/learner/gem-economy`)
+| Method | Endpoint | Auth | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/learner/gem-economy/wallet` | `requireAuth` | Returns wallet balance, streak days, claim eligibility, and recent transactions |
+| `POST` | `/api/learner/gem-economy/claim-daily` | `requireAuth` | Claims daily streak reward (1, 2, or 5 gems) with atomic balance credit |
+| `POST` | `/api/learner/gem-economy/award-milestone` | `requireAuth` | Awards milestone completion gems (5-15 gems) into ledger |
+| `GET` | `/api/learner/gem-economy/transactions` | `requireAuth` | Returns paginated user transaction audit trail |
+
+---
+
+### L. Adaptive Recovery & Roadmap Velocity Simulator (`/api/learner/adaptive-recovery`)
+| Method | Endpoint | Auth | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/learner/adaptive-recovery/status` | `requireAuth` | Analyzes inactivity telemetry and returns 4-day micro catch-up plan if eligible |
+| `POST` | `/api/learner/adaptive-recovery/start` | `requireAuth` | Enrolls learner in Zero-Guilt Catch-Up mode without resetting overall roadmap progress |
+| `POST` | `/api/learner/adaptive-recovery/step/:stepIndex/complete` | `requireAuth` | Completes micro catch-up day task, awarding recovery bonus gems |
+| `POST` | `/api/learner/adaptive-recovery/dismiss` | `requireAuth` | Dismisses recovery suggestion and resumes standard roadmap pace |
+| `GET` | `/api/learner/adaptive-recovery/simulator` | `requireAuth` | Returns stored weekly study hours and estimated roadmap completion velocity |
+| `POST` | `/api/learner/adaptive-recovery/simulator/pace` | `requireAuth` | Persists updated weekly available hours and recalculates completion date |
+| `GET` | `/api/learner/adaptive-recovery/dependency-meter` | `requireAuth` | Evaluates learner autonomy vs AI reliance across 3 cognitive pillars |
+
+---
+
+### M. Administrative Operations (`/api/admin/*`)
 *Protected by `requireAdmin` middleware ([admin.middleware.ts](file:///c:/Coding-Projects/projects/Ai-learning-roadmap/backend/src/middlewares/admin.middleware.ts))*
 
 | Method | Endpoint | Query / Body Params | Description |
@@ -148,6 +171,12 @@
 | `GET` | `/api/admin/activity` | `userId=<admin_id>&skip=0&take=20` | Returns global platform activity feed |
 | `GET` | `/api/admin/broadcasts` | `userId=<admin_id>` | Returns platform system broadcasts |
 | `POST` | `/api/admin/broadcasts` | `userId=<admin_id>`, `{ title, message, type }` | Publishes platform system announcement |
+| `GET` | `/api/admin/gem-economy/overview` | `userId=<admin_id>` | Aggregates platform treasury, active streaks, and at-risk learner counts |
+| `GET` | `/api/admin/gem-economy/transactions` | `userId=<admin_id>&take=20&skip=0&search=...` | Returns paginated global gem transactions ledger |
+| `POST` | `/api/admin/gem-economy/adjust` | `userId=<admin_id>`, `{ targetUserId, amount, reason }` | Adjusts or gifts user gems with atomic ledger entry & audit log |
+| `GET` | `/api/admin/gem-economy/at-risk` | `userId=<admin_id>&take=20&skip=0` | Lists learners inactive for 7+ days with recovery state |
+| `POST` | `/api/admin/gem-economy/remind` | `userId=<admin_id>`, `{ targetUserId }` | Dispatches comeback notification to inactive learner |
+| `GET` | `/api/admin/gem-economy/search-learners` | `userId=<admin_id>&q=...` | Autocomplete search across 100k+ learners for modal gem awards |
 | `GET` | `/api/admin/ai-sandbox/models` | `userId=<admin_id>` | Returns available models for playground testing |
 | `POST` | `/api/admin/ai-sandbox/test` | `userId=<admin_id>`, `{ model, prompt }` | Tests prompt against selected AI provider |
 | `GET` | `/api/admin/roadmaps` | `userId=<admin_id>&skip=0&take=20` | Returns learner roadmap oversight & milestones |
