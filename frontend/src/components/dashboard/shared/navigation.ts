@@ -21,6 +21,7 @@ import {
   Megaphone,
   Sparkles,
   CreditCard,
+  Sliders,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -49,9 +50,10 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
         ],
       },
       {
-        title: "USERS & REVENUE",
+        title: "USERS & ECONOMY",
         items: [
           { href: `${prefix}/users`, label: "All Users", icon: Users },
+          { href: `${prefix}/gem-economy`, label: "Gem Economy & Streaks", icon: Sparkles },
           { href: `${prefix}/subscriptions`, label: "Subscriptions & Pricing", icon: CreditCard },
         ],
       },
@@ -115,6 +117,7 @@ export const getDashboardNavSections = (prefix: string): NavSection[] => {
       title: "LEARN",
       items: [
         { href: `${learnerPrefix}/learning-path`, label: "My Roadmap", icon: Route }, // সম্পূর্ণ ফ্রি
+        { href: `${learnerPrefix}/adaptive-recovery`, label: "Adaptive Pace & Recovery", icon: Sliders },
         { href: `${learnerPrefix}/skill-gaps`, label: "Skill Gaps", icon: Target },
         { href: `${learnerPrefix}/assessments`, label: "Assessments", icon: ClipboardCheck, requiredPlan: "PLUS" },
         { href: `${learnerPrefix}/portfolio`, label: "Projects", icon: FolderKanban },
