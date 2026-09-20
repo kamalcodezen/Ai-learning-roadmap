@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Logo() {
+export default function Logo({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/"
-      className="flex shrink-0 items-center"
+      className={`flex shrink-0 items-center ${className}`}
       aria-label="AI Pather home"
     >
       {/* Light version (dark logo) */}
