@@ -12,7 +12,6 @@ import { PlasmaTriggerButton } from "./PlasmaTriggerButton";
 import { TypingIndicator } from "./TypingIndicator";
 import { useInlineVoiceChat } from "../voice-agent";
 import logoSrc from "@/public/brand/logo-p-dark.png";
-import brandLogo from "@/public/brand/logo-p-dark.png";
 
 function getTimeGreeting(): string {
   const hours = new Date().getHours();
@@ -288,11 +287,18 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                     <div className="flex flex-col items-center">
                       <div className="mb-3 flex items-center justify-center">
                         <Image
-                          src={brandLogo}
-                          alt="AI Pathar"
-                          width={44}
-                          height={44}
-                          className="h-11 w-11 object-contain"
+                          src="/brand/AI-Pather-blue.png"
+                          alt="AI Pather"
+                          width={160}
+                          height={32}
+                          className="h-8 sm:h-9 w-auto object-contain block dark:hidden"
+                        />
+                        <Image
+                          src="/brand/AI-Pather-white.png"
+                          alt="AI Pather"
+                          width={160}
+                          height={32}
+                          className="h-8 sm:h-9 w-auto object-contain hidden dark:block"
                         />
                       </div>
                       <h3 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 dark:text-white tracking-tight">
