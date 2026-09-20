@@ -7,6 +7,7 @@ import Logo from "./Logo";
 import NavLinks from "./NavLinks";
 import AuthCheck from "./AuthCheck";
 import MobileNav from "./MobileNav";
+import CrownButton from "./CrownButton";
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 
 export default function Navbar() {
@@ -57,7 +58,7 @@ export default function Navbar() {
             transition-all duration-900 ease-out
             ${
               scrolled
-                ? "w-full max-w-4xl lg:max-w-5xl 2xl:max-w-6xl rounded-full bg-[#f4edff]/95 dark:bg-[#2b1e42ec] px-2.5 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl border-none"
+                ? "w-full max-w-3xl xl:max-w-6xl 2xl:max-w-7xl rounded-full bg-[#f4edff]/95 dark:bg-[#2b1e42ec] px-2.5 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-2xl border-none"
                 : "w-full global-pos rounded-none py-1.5 px-6 border-none"
             }
           `}
@@ -69,7 +70,10 @@ export default function Navbar() {
         >
           {/* Logo */}
           <div className="flex shrink-0 justify-start">
-            <Logo />
+            <div className="flex items-center gap-2">
+              <Logo />
+              <CrownButton />
+            </div>
           </div>
 
           {/* Desktop Navigation (xl+) */}
