@@ -293,7 +293,20 @@ export default function ChatBox() {
             <div className="w-full max-w-xl text-center">
               {/* Welcome Icon */}
               <div className="mx-auto mb-4 flex items-center justify-center">
-                <Image src={brandLogo} alt="AI Pathar" className="h-11 w-11 object-contain" height={44} width={44}/>
+                <Image
+                  src="/brand/AI-Pather-blue.png"
+                  alt="AI Pather"
+                  width={160}
+                  height={32}
+                  className="h-9 sm:h-10 w-auto object-contain block dark:hidden"
+                />
+                <Image
+                  src="/brand/AI-Pather-white.png"
+                  alt="AI Pather"
+                  width={160}
+                  height={32}
+                  className="h-9 sm:h-10 w-auto object-contain hidden dark:block"
+                />
               </div>
 
               {/* Greeting */}
