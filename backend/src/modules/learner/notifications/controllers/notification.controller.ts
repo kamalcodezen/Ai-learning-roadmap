@@ -19,6 +19,7 @@ export const getNotifications = async (req: Request, res: Response, next: NextFu
       isNaN(offset) ? 0 : offset
     );
 
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
     res.json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -29,6 +30,7 @@ export const getUnreadCount = async (req: Request, res: Response, next: NextFunc
   try {
     const userId = getUserId(req);
     const result = await notificationService.getUnreadCount(userId);
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
     res.json({ success: true, data: result });
   } catch (error) {
     next(error);

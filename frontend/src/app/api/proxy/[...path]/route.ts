@@ -66,6 +66,7 @@ async function handleProxy(
       method,
       headers: forwardHeaders,
       body,
+      cache: "no-store",
     });
 
     const responseHeaders = new Headers();
@@ -73,6 +74,11 @@ async function handleProxy(
     if (respContentType) {
       responseHeaders.set("content-type", respContentType);
     }
+
+    // Never cache API responses through proxy
+    responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    responseHeaders.set("Pragma", "no-cache");
+    responseHeaders.set("Expires", "0");
 
     // Forward Set-Cookie if the backend sets any
     const setCookie = backendRes.headers.get("set-cookie");

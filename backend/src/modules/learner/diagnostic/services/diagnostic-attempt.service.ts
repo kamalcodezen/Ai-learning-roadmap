@@ -178,6 +178,20 @@ export const completeDiagnosticAttempt = async (attemptId: string, userId: strin
     console.error("Failed to award gamification XP for diagnostic:", err);
   }
 
+  // Award Dynamic Gems for Diagnostic Assessment (+5 💎)
+  try {
+    const { awardGems } = await import("../../gem-economy/services/gem-economy.service.js");
+    await awardGems(
+      attempt.userId,
+      5,
+      "DIAGNOSTIC_COMPLETED",
+      `Completed career diagnostic assessment with ${score}% score (+5 💎)`,
+      attempt.id
+    );
+  } catch (err) {
+    console.error("Failed to award diagnostic gems:", err);
+  }
+
   // Create real Notification
   try {
     const { createNotification } = await import("../../notifications/services/notification.service.js");

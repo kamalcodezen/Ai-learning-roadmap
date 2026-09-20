@@ -34,7 +34,8 @@ export default function DashboardSidebar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const userRole = (user as { role?: string })?.role || "LEARNER";
-  const prefix = userRole.toUpperCase() === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
+  const isAdmin = userRole.toUpperCase() === "ADMIN";
+  const prefix = isAdmin ? "/dashboard/admin" : "/dashboard/learner";
   const bottomNavItems = getBottomNavItems(prefix);
 
   // Escape key closes drawer

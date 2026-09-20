@@ -296,6 +296,19 @@ export const createProject = async (userId: string, data: any) => {
     await awardXp(userId, "PROJECT_COMPLETION", project.id, 200, `Created project: ${project.title}`);
     if (project.isVerified) {
       await awardXp(userId, "EVIDENCE_VERIFIED", `evidence-${project.id}`, 100, `Verified repository/live link for: ${project.title}`);
+      try {
+        const { awardGems } = await import("../../gem-economy/services/gem-economy.service.js");
+        const gemAmount = score >= 80 ? 10 : 4;
+        await awardGems(
+          userId,
+          gemAmount,
+          "PROJECT_VERIFIED",
+          `Verified repository/live link for project "${project.title}" (+${gemAmount} 💎)`,
+          `project-${project.id}`
+        );
+      } catch (gemErr) {
+        console.error("Failed to award project verification gems:", gemErr);
+      }
     }
     await evaluateAchievements(userId);
   } catch (err) {
@@ -479,6 +492,19 @@ Synthesize this repository evidence into an objective AI Project Summary.`;
     const { awardXp, evaluateAchievements } = await import("../../gamification/services/gamification.service.js");
     await awardXp(userId, "PROJECT_COMPLETION", project.id, 250, `Imported GitHub project: ${project.title}`);
     await awardXp(userId, "EVIDENCE_VERIFIED", `evidence-${project.id}`, 100, `Verified GitHub repository for: ${project.title}`);
+    try {
+      const { awardGems } = await import("../../gem-economy/services/gem-economy.service.js");
+      const gemAmount = (project.score || 0) >= 80 ? 10 : 4;
+      await awardGems(
+        userId,
+        gemAmount,
+        "PROJECT_VERIFIED",
+        `Imported & verified GitHub repository for "${project.title}" (+${gemAmount} 💎)`,
+        `project-${project.id}`
+      );
+    } catch (gemErr) {
+      console.error("Failed to award project gems for imported project:", gemErr);
+    }
     await evaluateAchievements(userId);
   } catch (err) {
     console.error("Failed to award gamification XP for imported project:", err);
