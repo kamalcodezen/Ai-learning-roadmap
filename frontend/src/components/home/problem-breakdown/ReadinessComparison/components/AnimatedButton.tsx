@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { GoArrowUpRight } from "react-icons/go";
 
 interface AnimatedButtonProps {
-  text: string;
+  text: ReactNode;
   href?: string;
   onClick?: () => void;
   icon?: ReactNode;

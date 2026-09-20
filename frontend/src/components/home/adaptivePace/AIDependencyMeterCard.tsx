@@ -106,54 +106,55 @@ export default function AIDependencyMeterCard() {
   const clampedScore = Math.max(2, Math.min(100, score));
 
   return (
-    <div className="dashboard-card w-full rounded-lg p-5 sm:p-8 lg:p-10 transition-all duration-300">
+    <div className="dashboard-card w-full rounded-lg p-4 sm:p-8 lg:p-10 transition-all duration-300">
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
-        <div className="flex items-center gap-3.5">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-md shadow-purple-500/20">
-            <Scale className="h-6 w-6" />
+      <div className="flex flex-col md:flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-6 border-b border-border/60">
+        <div className="flex items-center gap-3 sm:gap-3.5">
+          <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-md shadow-purple-500/20">
+            <Scale className="h-5 w-5 sm:h-6 sm:w-6" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-base font-bold uppercase tracking-wider text-[var(--color-primary)]">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="text-xs sm:text-base font-bold uppercase tracking-wider text-[var(--color-primary)]">
                 Feature 03
               </span>
               <span className="h-1 w-1 rounded-full bg-border" />
-              <span className="text-base font-medium text-muted-foreground">Whiteboard Interview Readiness</span>
+              <span className="text-xs sm:text-base font-medium text-muted-foreground">Whiteboard Readiness</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground">
+            <h3 className="text-lg sm:text-2xl font-bold text-foreground">
               AI Dependency & Problem-Solving Meter
             </h3>
           </div>
         </div>
 
         {/* Live Classification Badge in Primary Brand Palette */}
-        <div className={`self-start sm:self-center px-3.5 py-1.5 rounded-full border text-base font-semibold ${badgeColor}`}>
+        <div className={`self-start lg:self-center px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full border text-xs sm:text-base font-semibold ${badgeColor}`}>
           {badge}
         </div>
       </div>
 
       {/* Interactive Profile Persona Selector */}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl border border-border/60 bg-black/5 dark:bg-white/5">
-        <div className="flex items-center gap-2 text-base font-semibold text-muted-foreground">
-          <Brain className="h-4 w-4 text-[var(--color-primary)]" />
+      <div className="mt-5 sm:mt-6 flex flex-col md:flex-col lg:flex-row lg:items-center justify-between gap-3 p-3 rounded-xl border border-border/60 bg-black/5 dark:bg-white/5">
+        <div className="flex items-center gap-2 text-xs sm:text-base font-semibold text-muted-foreground">
+          <Brain className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[var(--color-primary)] shrink-0" />
           <span>Simulate Learner Profile:</span>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-3 gap-2 w-full lg:w-auto">
           {PERSONAS.map((p) => {
             const isActive = p.id === selectedPersonaId;
             return (
               <button
                 key={p.id}
                 onClick={() => setSelectedPersonaId(p.id)}
-                className={`py-1.5 px-3 rounded-lg text-base font-medium transition-all duration-200 cursor-pointer ${
+                className={`py-2 px-2 sm:py-2 sm:px-3 rounded-lg text-xs sm:text-sm lg:text-base font-medium text-center transition-all duration-200 cursor-pointer ${
                   isActive
                     ? "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white shadow-sm"
                     : "bg-white dark:bg-zinc-900 border border-border/70 hover:border-[var(--color-primary)]/40 text-foreground/80"
                 }`}
               >
-                {p.label} ({p.score}%)
+                <span>{p.label}</span>{" "}
+                <span className="text-[10px] sm:text-xs opacity-80">({p.score}%)</span>
               </button>
             );
           })}
@@ -161,15 +162,15 @@ export default function AIDependencyMeterCard() {
       </div>
 
       {/* Main Grid: Visual Gauge + 3 Pillars */}
-      <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="mt-6 sm:mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
         {/* Left: Animated Radial Gauge */}
-        <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 rounded-xl border border-border/80 bg-gradient-to-b from-[#faf5ff] to-[#f3e8ff]/50 dark:from-[#150727] dark:to-[#0a0015] shadow-inner">
-          <span className="text-base font-bold uppercase tracking-wider text-muted-foreground mb-4">
+        <div className="lg:col-span-5 flex flex-col items-center justify-center p-4 sm:p-6 rounded-xl border border-border/80 bg-gradient-to-b from-[#faf5ff] to-[#f3e8ff]/50 dark:from-[#150727] dark:to-[#0a0015] shadow-inner">
+          <span className="text-xs sm:text-base font-bold uppercase tracking-wider text-muted-foreground mb-3 sm:mb-4">
             AI Dependency Index
           </span>
 
           {/* SVG Gauge */}
-          <div className="relative w-48 h-48 flex items-center justify-center">
+          <div className="relative w-36 h-36 sm:w-48 sm:h-48 flex items-center justify-center">
             <svg viewBox="0 0 160 160" className="w-full h-full transform -rotate-90">
               <defs>
                 <linearGradient id="aiGaugeGrad" x1="0" y1="0" x2="1" y2="1">
@@ -204,16 +205,16 @@ export default function AIDependencyMeterCard() {
 
             {/* Readout */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-3xl font-extrabold text-[var(--color-primary)] tabular-nums">
+              <span className="text-2xl sm:text-3xl font-extrabold text-[var(--color-primary)] tabular-nums">
                 {score}%
               </span>
-              <span className="text-[11px] font-medium text-muted-foreground">
+              <span className="text-xs sm:text-sm font-medium text-muted-foreground">
                 AI Reliance
               </span>
             </div>
           </div>
 
-          <p className="mt-4 text-base text-center font-medium text-muted-foreground max-w-[260px]">
+          <p className="mt-3 sm:mt-4 text-xs sm:text-base text-center font-medium text-muted-foreground max-w-[240px] sm:max-w-[260px]">
             {score <= 30
               ? "High Autonomy • Live Interview Ready"
               : score <= 65
@@ -223,19 +224,19 @@ export default function AIDependencyMeterCard() {
         </div>
 
         {/* Right: 3 Pillars Breakdown */}
-        <div className="lg:col-span-7 flex flex-col gap-5">
-          <span className="text-base font-bold uppercase tracking-wider text-muted-foreground">
+        <div className="lg:col-span-7 flex flex-col gap-4 sm:gap-5">
+          <span className="text-xs sm:text-base font-bold uppercase tracking-wider text-muted-foreground">
             3-Pillar Autonomous Signal Analysis
           </span>
 
           {/* Pillar 1: Prompt Delegation */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-base">
-              <span className="font-semibold text-foreground flex items-center gap-2">
-                <Terminal className="h-3.5 w-3.5 text-[var(--color-primary)]" />
-                Prompt Delegation & Prompt Depth (35% Weight)
+          <div className="space-y-1 sm:space-y-1.5">
+            <div className="flex items-center justify-between text-xs sm:text-base">
+              <span className="font-semibold text-foreground flex items-center gap-1.5 sm:gap-2">
+                <Terminal className="h-3.5 w-3.5 text-[var(--color-primary)] shrink-0" />
+                Prompt Delegation (35% Weight)
               </span>
-              <span className="font-bold text-[var(--color-primary)] tabular-nums">{pillars.prompt}% AI Used</span>
+              <span className="font-bold text-[var(--color-primary)] tabular-nums">{pillars.prompt}% AI</span>
             </div>
             <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-zinc-800 overflow-hidden">
               <motion.div
@@ -245,17 +246,17 @@ export default function AIDependencyMeterCard() {
                 transition={{ duration: 0.6 }}
               />
             </div>
-            <span className="text-[11px] text-muted-foreground block">
+            <span className="text-xs sm:text-base text-muted-foreground block leading-relaxed">
               Measures whether user asks for concepts/hints vs full solution code dumps.
             </span>
           </div>
 
           {/* Pillar 2: Code Ownership */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-base">
-              <span className="font-semibold text-foreground flex items-center gap-2">
-                <FileCode2 className="h-3.5 w-3.5 text-[var(--color-primary)]" />
-                Code Ownership & Architecture Articulation (35% Weight)
+          <div className="space-y-1 sm:space-y-1.5">
+            <div className="flex items-center justify-between text-xs sm:text-base">
+              <span className="font-semibold text-foreground flex items-center gap-1.5 sm:gap-2">
+                <FileCode2 className="h-3.5 w-3.5 text-[var(--color-primary)] shrink-0" />
+                Code Ownership (35% Weight)
               </span>
               <span className="font-bold text-[var(--color-primary)] tabular-nums">{pillars.ownership}% Owned</span>
             </div>
@@ -267,17 +268,17 @@ export default function AIDependencyMeterCard() {
                 transition={{ duration: 0.6 }}
               />
             </div>
-            <span className="text-[11px] text-muted-foreground block">
+            <span className="text-xs sm:text-base text-muted-foreground block leading-relaxed">
               Evaluates user&apos;s ability to explain architectural mechanics in their own words.
             </span>
           </div>
 
           {/* Pillar 3: Live Problem Solving */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-base">
-              <span className="font-semibold text-foreground flex items-center gap-2">
-                <UserCheck2 className="h-3.5 w-3.5 text-[var(--color-primary)]" />
-                Live Whiteboard & Mock Technical Interview (30% Weight)
+          <div className="space-y-1 sm:space-y-1.5">
+            <div className="flex items-center justify-between text-xs sm:text-base">
+              <span className="font-semibold text-foreground flex items-center gap-1.5 sm:gap-2">
+                <UserCheck2 className="h-3.5 w-3.5 text-[var(--color-primary)] shrink-0" />
+                Whiteboard Readiness (30% Weight)
               </span>
               <span className="font-bold text-[var(--color-primary)] tabular-nums">{pillars.interview}% Score</span>
             </div>
@@ -289,13 +290,13 @@ export default function AIDependencyMeterCard() {
                 transition={{ duration: 0.6 }}
               />
             </div>
-            <span className="text-[11px] text-muted-foreground block">
+            <span className="text-xs sm:text-base text-muted-foreground block leading-relaxed">
               Direct verification of unassisted coding confidence during mock sessions.
             </span>
           </div>
 
           {/* Actionable Interview Readiness Advice */}
-          <div className="mt-2 rounded-xl border border-[var(--color-primary)]/30 bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-secondary)]/5 to-transparent p-4 text-base">
+          <div className="mt-1 sm:mt-2 rounded-xl border border-[var(--color-primary)]/30 bg-gradient-to-r from-[var(--color-primary)]/10 via-[var(--color-secondary)]/5 to-transparent p-3.5 sm:p-4 text-xs sm:text-base">
             <div className="flex items-start gap-2.5">
               <Sparkles className="h-4 w-4 text-[var(--color-primary)] shrink-0 mt-0.5" />
               <div>

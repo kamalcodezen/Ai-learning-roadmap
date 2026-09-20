@@ -10,8 +10,7 @@ export default function FeatureHeader() {
         <span className="text-primary">Smart Execution</span>
       </h2>
       <p className="section-subtitle max-w-max">
-        Bridge skill gaps, prove your capability with live evidence, and adapt
-        learning paths without guilt.
+        Bridge skill gaps, prove your capability with live evidence, and adapt learning paths without guilt
       </p>
     </div>
   );
