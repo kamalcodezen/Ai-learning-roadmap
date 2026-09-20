@@ -24,6 +24,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import GenericPageSkeleton from "../../../shared/GenericPageSkeleton";
 import { showToast } from "@/src/components/ui/toast";
+import { triggerRealtimeSync } from "@/src/lib/utils/realtime-sync";
 import {
   Card,
   CardContent,
@@ -263,6 +264,19 @@ export default function PortfolioPage() {
       queryClient.invalidateQueries({
         queryKey: ["skillGaps"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["gemWallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gemHistory"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["unreadNotificationCount"],
+      });
+      triggerRealtimeSync(queryClient);
       setIsModalOpen(false);
       resetForm();
       showToast({ message: "Project created successfully!", variant: "success" });
@@ -294,6 +308,19 @@ export default function PortfolioPage() {
       queryClient.invalidateQueries({
         queryKey: ["skillGaps", session?.user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["gemWallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gemHistory"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["unreadNotificationCount"],
+      });
+      triggerRealtimeSync(queryClient);
       setIsImportModalOpen(false);
       resetImportForm();
       setActiveFilter("ALL");
@@ -395,6 +422,18 @@ export default function PortfolioPage() {
       queryClient.invalidateQueries({
         queryKey: ["skillGaps", session?.user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["gemWallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gemHistory"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["unreadNotificationCount"],
+      });
       if (variables) {
         setExpandedReviews((prev) => ({ ...prev, [variables]: true }));
       }
@@ -425,6 +464,18 @@ export default function PortfolioPage() {
       queryClient.invalidateQueries({
         queryKey: ["skillGaps", session?.user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["gemWallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gemHistory"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["unreadNotificationCount"],
+      });
       showToast({ message: "Repository re-analyzed and evidence synchronized!", variant: "success" });
     },
     onError: (err: Error) =>
@@ -451,6 +502,18 @@ export default function PortfolioPage() {
       });
       queryClient.invalidateQueries({
         queryKey: ["skillGaps", session?.user?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gemWallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gemHistory"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["unreadNotificationCount"],
       });
       showToast({ message: "Project links verified successfully!", variant: "success" });
     },

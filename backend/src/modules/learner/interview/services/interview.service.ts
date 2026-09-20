@@ -258,6 +258,28 @@ export const completeInterviewSession = async (userId: string) => {
     console.error("Failed to award gamification XP for interview:", err);
   }
 
+  // Award Dynamic Gems for Passing Mock Interview (60%-74%: +2 💎, 75%-89%: +5 💎, 90%+: +10 💎)
+  if (finalScore >= 60) {
+    try {
+      const { awardGems } = await import("../../gem-economy/services/gem-economy.service.js");
+      let gemReward = 2;
+      if (finalScore >= 90) {
+        gemReward = 10;
+      } else if (finalScore >= 75) {
+        gemReward = 5;
+      }
+      await awardGems(
+        userId,
+        gemReward,
+        "INTERVIEW_PASSED",
+        `Completed technical mock interview with ${finalScore}% score (+${gemReward} 💎)`,
+        session.id
+      );
+    } catch (err) {
+      console.error("Failed to award interview gems:", err);
+    }
+  }
+
   // Record Activity Log
   try {
     await prisma.activityLog.create({

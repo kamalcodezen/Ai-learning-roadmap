@@ -717,6 +717,21 @@ export async function submitSkillSimulation(
     console.warn(`[Gamification XP award skipped]: ${err.message}`);
   }
 
+  // 9b. Award Gems via gem-economy service
+  try {
+    const { awardGems } = await import("../../gem-economy/services/gem-economy.service.js");
+    const simulationGems = overallScore >= 80 ? 5 : overallScore >= 50 ? 3 : 2;
+    await awardGems(
+      userId,
+      simulationGems,
+      "ASSESSMENT_COMPLETED",
+      `Completed ${normSkill} Skill Simulation with score ${overallScore}%`,
+      `skill-simulation-${normSkill.toLowerCase()}-${Date.now()}`
+    );
+  } catch (err: any) {
+    console.warn(`[Gem award skipped]: ${err.message}`);
+  }
+
   // 10. Trigger Notification
   try {
     const { createNotification } = await import("../../notifications/services/notification.service.js");

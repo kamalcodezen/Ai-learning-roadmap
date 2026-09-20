@@ -34,6 +34,7 @@ export interface AdminDashboardOverview {
     totalInterviews?: number;
     totalResumes?: number;
     aiRequests: string | number;
+    totalGemsInCirculation?: number;
   };
   userAnalytics: {
     totalUsers: number;

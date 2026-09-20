@@ -85,15 +85,25 @@ erDiagram
 - **`Resume`**: Candidate resume storage (`targetRole`, `fullName`, `summary`, `skills` [JSON], `experience` [JSON], `projects` [JSON], `education` [JSON], `atsScore`, `atsFeedback` [JSON]).
 - **`InterviewSession`**, **`InterviewQuestion`**, **`InterviewAnswer`**: Multi-turn mock interview transcripts and scoring evaluations.
 
+### 8. Gem Economy & Gamification Ledger
+- **`UserGamification`**:
+  - Central ledger of learner streaks, gems, and adaptive recovery state.
+  - Fields: `userId` (unique foreign key), `level`, `currentXp`, `nextLevelXp`, `gemsBalance`, `streakDays`, `longestStreak`, `lastActiveDate`, `freezeCount`, `recoveryActive`, `recoveryStartDate`.
+- **`GemTransaction`**:
+  - Immutable audit trail recording every gem credit, debit, reward, and administrative adjustment.
+  - Fields: `userId`, `amount`, `type` (`DAILY_STREAK`, `MILESTONE_REWARD`, `ADMIN_ADJUSTMENT`, `RECOVERY_BONUS`, `ASSESSMENT_PERFECT`, `STORE_PURCHASE`), `source`, `balanceAfter`, `metadata` (JSON), `createdAt`.
+  - Indexes: `[userId, createdAt(sort: Desc)]`, `[type]`, `[createdAt]`.
+
 ---
 
 ## 3. Database Constraints & Indexing Strategy
 
 1. **Cascade Deletions**:
-   - `user` cascades deletions to `account`, `session`, `twoFactor`, `CareerProfile`, `diagnosticAttempts`, `interviewSessions`, `skillStates`, `roadmaps`, `projects`, and `adminAuditLogs`.
+   - `user` cascades deletions to `account`, `session`, `twoFactor`, `CareerProfile`, `diagnosticAttempts`, `interviewSessions`, `skillStates`, `roadmaps`, `projects`, `UserGamification`, `gemTransactions`, and `adminAuditLogs`.
    - `Roadmap` cascades deletions to `Milestone`.
    - `Project` cascades deletions to `ProjectEvidence`.
 2. **Compound Indexes for Query Optimization**:
    - `[userId, status, completedAt(sort: Desc)]` on `DiagnosticAttempt` enables rapid retrieval of the user's latest completed assessment.
    - `[userId, status, targetRole]` on `Roadmap` optimizes active roadmap resolution.
    - `[userId, createdAt(sort: Desc)]` on `ActivityLog` accelerates learner timeline rendering.
+   - `[userId, createdAt(sort: Desc)]` on `GemTransaction` powers sub-10ms paginated ledger audits for learners and administrators.

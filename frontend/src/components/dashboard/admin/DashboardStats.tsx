@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { useQuery } from "@tanstack/react-query";
 
+import Link from "next/link";
 import {
   Users,
   Route,
@@ -17,6 +18,7 @@ import {
   ArrowRight,
   Headphones,
   FileText,
+  Gem,
   type LucideIcon,
 } from "lucide-react";
 import { getAdminDashboardStats } from "@/src/lib/api/admin/dashboard";
@@ -88,11 +90,12 @@ export default function DashboardStats() {
   const kpis: Kpi[] = [
     { title: "Total Users", value: overview.totalUsers, icon: Users, color: "bg-blue-500/10 text-blue-500" },
     { title: "Active Learners", value: overview.activeLearners, icon: UserPlus, color: "bg-green-500/10 text-green-500" },
+    { title: "Gem Treasury", value: `${(overview.totalGemsInCirculation ?? 0).toLocaleString()} 💎`, icon: Gem, color: "bg-emerald-500/10 text-emerald-400" },
     { title: "Total Roadmaps", value: overview.totalRoadmaps, icon: Route, color: "bg-purple-500/10 text-purple-500" },
     { title: "Assessments", value: overview.totalAssessments, icon: ClipboardCheck, color: "bg-amber-500/10 text-amber-500" },
     { title: "Projects", value: overview.totalProjects, icon: FolderKanban, color: "bg-indigo-500/10 text-indigo-500" },
     { title: "Mock Interviews", value: overview.totalInterviews ?? 0, icon: Headphones, color: "bg-cyan-500/10 text-cyan-500" },
-    { title: "AI Resumes", value: overview.totalResumes ?? 0, icon: FileText, color: "bg-emerald-500/10 text-emerald-500" },
+    { title: "AI Resumes", value: overview.totalResumes ?? 0, icon: FileText, color: "bg-teal-500/10 text-teal-500" },
     { title: "AI Requests", value: overview.aiRequests, icon: Sparkles, color: "bg-pink-500/10 text-pink-500" },
   ];
 
@@ -110,15 +113,15 @@ export default function DashboardStats() {
       suffix: "",
     },
     {
-      value: overview.totalRoadmaps,
-      label: "Total Roadmaps",
-      subtext: "Generated career paths",
+      value: `${(overview.totalGemsInCirculation ?? 0).toLocaleString()} 💎`,
+      label: "Gem Circulation",
+      subtext: "Platform treasury",
       suffix: "",
     },
     {
-      value: overview.totalAssessments,
-      label: "Assessments",
-      subtext: "Completed by learners",
+      value: overview.totalRoadmaps,
+      label: "Total Roadmaps",
+      subtext: "Generated career paths",
       suffix: "",
     },
   ];
@@ -137,10 +140,37 @@ export default function DashboardStats() {
         stats={adminBannerStats}
       />
 
+      {/* ============================= GEM ECONOMY SPOTLIGHT BANNER ============================= */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xl border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 via-purple-500/5 to-transparent p-4 shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 shadow-inner">
+            <Gem className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <p className="font-bold text-foreground text-sm">Gem Economy & Streaks Manager</p>
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                {(overview.totalGemsInCirculation ?? 0).toLocaleString()} 💎 in circulation
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Live treasury stats, daily streak claim velocity, learner drop-off pipeline, and 1-click encouragement push.
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/dashboard/admin/gem-economy"
+          className="flex shrink-0 items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-500 transition-colors shadow-sm"
+        >
+          Open Economy Console
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+
       {/* ============================= KPI GRID ============================= */}
       <section>
         <h2 className="mb-4 text-xl font-bold tracking-tight text-foreground">Platform Overview</h2>
-        <div className="grid grid-cols-2 dashboard-card-gap sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 dashboard-card-gap sm:grid-cols-3 lg:grid-cols-3">
           {kpis.map((kpi) => {
             const Icon = kpi.icon;
             return (

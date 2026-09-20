@@ -29,11 +29,13 @@ export type AggregateUserGamification = {
 export type UserGamificationAvgAggregateOutputType = {
   totalXp: number | null
   currentLevel: number | null
+  gemsBalance: number | null
 }
 
 export type UserGamificationSumAggregateOutputType = {
   totalXp: number | null
   currentLevel: number | null
+  gemsBalance: number | null
 }
 
 export type UserGamificationMinAggregateOutputType = {
@@ -41,6 +43,7 @@ export type UserGamificationMinAggregateOutputType = {
   userId: string | null
   totalXp: number | null
   currentLevel: number | null
+  gemsBalance: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +53,7 @@ export type UserGamificationMaxAggregateOutputType = {
   userId: string | null
   totalXp: number | null
   currentLevel: number | null
+  gemsBalance: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +63,7 @@ export type UserGamificationCountAggregateOutputType = {
   userId: number
   totalXp: number
   currentLevel: number
+  gemsBalance: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -68,11 +73,13 @@ export type UserGamificationCountAggregateOutputType = {
 export type UserGamificationAvgAggregateInputType = {
   totalXp?: true
   currentLevel?: true
+  gemsBalance?: true
 }
 
 export type UserGamificationSumAggregateInputType = {
   totalXp?: true
   currentLevel?: true
+  gemsBalance?: true
 }
 
 export type UserGamificationMinAggregateInputType = {
@@ -80,6 +87,7 @@ export type UserGamificationMinAggregateInputType = {
   userId?: true
   totalXp?: true
   currentLevel?: true
+  gemsBalance?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -89,6 +97,7 @@ export type UserGamificationMaxAggregateInputType = {
   userId?: true
   totalXp?: true
   currentLevel?: true
+  gemsBalance?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -98,6 +107,7 @@ export type UserGamificationCountAggregateInputType = {
   userId?: true
   totalXp?: true
   currentLevel?: true
+  gemsBalance?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -194,6 +204,7 @@ export type UserGamificationGroupByOutputType = {
   userId: string
   totalXp: number
   currentLevel: number
+  gemsBalance: number
   createdAt: Date
   updatedAt: Date
   _count: UserGamificationCountAggregateOutputType | null
@@ -226,6 +237,7 @@ export type UserGamificationWhereInput = {
   userId?: Prisma.StringFilter<"UserGamification"> | string
   totalXp?: Prisma.IntFilter<"UserGamification"> | number
   currentLevel?: Prisma.IntFilter<"UserGamification"> | number
+  gemsBalance?: Prisma.IntFilter<"UserGamification"> | number
   createdAt?: Prisma.DateTimeFilter<"UserGamification"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserGamification"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
@@ -236,6 +248,7 @@ export type UserGamificationOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
   currentLevel?: Prisma.SortOrder
+  gemsBalance?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.userOrderByWithRelationInput
@@ -249,6 +262,7 @@ export type UserGamificationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserGamificationWhereInput | Prisma.UserGamificationWhereInput[]
   totalXp?: Prisma.IntFilter<"UserGamification"> | number
   currentLevel?: Prisma.IntFilter<"UserGamification"> | number
+  gemsBalance?: Prisma.IntFilter<"UserGamification"> | number
   createdAt?: Prisma.DateTimeFilter<"UserGamification"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserGamification"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.userWhereInput>
@@ -259,6 +273,7 @@ export type UserGamificationOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
   currentLevel?: Prisma.SortOrder
+  gemsBalance?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserGamificationCountOrderByAggregateInput
@@ -276,6 +291,7 @@ export type UserGamificationScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"UserGamification"> | string
   totalXp?: Prisma.IntWithAggregatesFilter<"UserGamification"> | number
   currentLevel?: Prisma.IntWithAggregatesFilter<"UserGamification"> | number
+  gemsBalance?: Prisma.IntWithAggregatesFilter<"UserGamification"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UserGamification"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UserGamification"> | Date | string
 }
@@ -284,6 +300,7 @@ export type UserGamificationCreateInput = {
   id?: string
   totalXp?: number
   currentLevel?: number
+  gemsBalance?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.userCreateNestedOneWithoutGamificationInput
@@ -294,6 +311,7 @@ export type UserGamificationUncheckedCreateInput = {
   userId: string
   totalXp?: number
   currentLevel?: number
+  gemsBalance?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -302,6 +320,7 @@ export type UserGamificationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   currentLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  gemsBalance?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.userUpdateOneRequiredWithoutGamificationNestedInput
@@ -312,6 +331,7 @@ export type UserGamificationUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   currentLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  gemsBalance?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -321,6 +341,7 @@ export type UserGamificationCreateManyInput = {
   userId: string
   totalXp?: number
   currentLevel?: number
+  gemsBalance?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -329,6 +350,7 @@ export type UserGamificationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   currentLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  gemsBalance?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -338,6 +360,7 @@ export type UserGamificationUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   currentLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  gemsBalance?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -352,6 +375,7 @@ export type UserGamificationCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
   currentLevel?: Prisma.SortOrder
+  gemsBalance?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -359,6 +383,7 @@ export type UserGamificationCountOrderByAggregateInput = {
 export type UserGamificationAvgOrderByAggregateInput = {
   totalXp?: Prisma.SortOrder
   currentLevel?: Prisma.SortOrder
+  gemsBalance?: Prisma.SortOrder
 }
 
 export type UserGamificationMaxOrderByAggregateInput = {
@@ -366,6 +391,7 @@ export type UserGamificationMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
   currentLevel?: Prisma.SortOrder
+  gemsBalance?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -375,6 +401,7 @@ export type UserGamificationMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   totalXp?: Prisma.SortOrder
   currentLevel?: Prisma.SortOrder
+  gemsBalance?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -382,6 +409,7 @@ export type UserGamificationMinOrderByAggregateInput = {
 export type UserGamificationSumOrderByAggregateInput = {
   totalXp?: Prisma.SortOrder
   currentLevel?: Prisma.SortOrder
+  gemsBalance?: Prisma.SortOrder
 }
 
 export type UserGamificationCreateNestedOneWithoutUserInput = {
@@ -420,6 +448,7 @@ export type UserGamificationCreateWithoutUserInput = {
   id?: string
   totalXp?: number
   currentLevel?: number
+  gemsBalance?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -428,6 +457,7 @@ export type UserGamificationUncheckedCreateWithoutUserInput = {
   id?: string
   totalXp?: number
   currentLevel?: number
+  gemsBalance?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -452,6 +482,7 @@ export type UserGamificationUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   currentLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  gemsBalance?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -460,6 +491,7 @@ export type UserGamificationUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   totalXp?: Prisma.IntFieldUpdateOperationsInput | number
   currentLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  gemsBalance?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -471,6 +503,7 @@ export type UserGamificationSelect<ExtArgs extends runtime.Types.Extensions.Inte
   userId?: boolean
   totalXp?: boolean
   currentLevel?: boolean
+  gemsBalance?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.userDefaultArgs<ExtArgs>
@@ -481,6 +514,7 @@ export type UserGamificationSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   userId?: boolean
   totalXp?: boolean
   currentLevel?: boolean
+  gemsBalance?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.userDefaultArgs<ExtArgs>
@@ -491,6 +525,7 @@ export type UserGamificationSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   userId?: boolean
   totalXp?: boolean
   currentLevel?: boolean
+  gemsBalance?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.userDefaultArgs<ExtArgs>
@@ -501,11 +536,12 @@ export type UserGamificationSelectScalar = {
   userId?: boolean
   totalXp?: boolean
   currentLevel?: boolean
+  gemsBalance?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserGamificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "totalXp" | "currentLevel" | "createdAt" | "updatedAt", ExtArgs["result"]["userGamification"]>
+export type UserGamificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "totalXp" | "currentLevel" | "gemsBalance" | "createdAt" | "updatedAt", ExtArgs["result"]["userGamification"]>
 export type UserGamificationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.userDefaultArgs<ExtArgs>
 }
@@ -526,6 +562,7 @@ export type $UserGamificationPayload<ExtArgs extends runtime.Types.Extensions.In
     userId: string
     totalXp: number
     currentLevel: number
+    gemsBalance: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["userGamification"]>
@@ -956,6 +993,7 @@ export interface UserGamificationFieldRefs {
   readonly userId: Prisma.FieldRef<"UserGamification", 'String'>
   readonly totalXp: Prisma.FieldRef<"UserGamification", 'Int'>
   readonly currentLevel: Prisma.FieldRef<"UserGamification", 'Int'>
+  readonly gemsBalance: Prisma.FieldRef<"UserGamification", 'Int'>
   readonly createdAt: Prisma.FieldRef<"UserGamification", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"UserGamification", 'DateTime'>
 }
