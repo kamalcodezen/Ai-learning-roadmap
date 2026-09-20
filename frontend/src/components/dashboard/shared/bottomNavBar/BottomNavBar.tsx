@@ -8,7 +8,6 @@ import { motion } from "motion/react";
 import type { NavLink } from "../navigation";
 import { cn } from "@/src/utils/cn";
 import { BorderBeam } from "@/src/components/ui/border-beam";
-import brandLogo from "@/public/brand/AI-Pather-blue.png";
 
 interface BottomNavBarProps {
   items: NavLink[];
@@ -49,15 +48,15 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
         <Link
           href="/"
           aria-label="AI Pather home"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full px-1"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           <Image
-            src={brandLogo}
-            alt="Brand logo"
-            className="ml-0.5 h-5 w-5 brightness-0 invert"
-            height={20}
-            width={20}
+            src="/brand/AI-Pather-white.png"
+            alt="AI Pather"
+            className="w-8 h-auto object-contain"
+            height={16}
+            width={40}
           />
         </Link>
 

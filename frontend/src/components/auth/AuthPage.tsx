@@ -4,8 +4,7 @@ import { useTheme } from "next-themes";
 import AuthShell from "./AuthShell";
 import Silk from "@/src/registry/magicui/silk";
 import type { AuthMode } from "./auth.types";
-import brandLogo from "../../../public/brand/AI-Pather-blue.png"
-import cubeImg from "../../../public/images/cube.png"
+import cubeImg from "../../../public/images/cube.png";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,11 +32,15 @@ export default function AuthPage({ mode }: AuthPageProps) {
                 initialMode={mode}
                 cubeSrc={cubeImg}
                 logo={
-                    <Link href="/" className="flex gap-2 items-center">
-                        <Image src={brandLogo} alt="Brand-logo" className="ml-1 h-fit dark:invert" height={20} width={20} />
-                        <span className="font-sans text-[30px] font-semibold tracking-[-0.03em] text-foreground">
-                            Ai Pather
-                        </span>
+                    <Link href="/" className="flex items-center" aria-label="AI Pather home">
+                        <Image
+                            src="/brand/AI-Pather-white.png"
+                            alt="AI Pather"
+                            width={160}
+                            height={30}
+                            className="h-8 w-auto block object-contain"
+                            priority
+                        />
                     </Link>
                 }
             />

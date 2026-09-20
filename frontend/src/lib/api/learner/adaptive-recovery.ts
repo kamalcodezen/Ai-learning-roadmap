@@ -183,3 +183,82 @@ export const getAiDependency = async (): Promise<AiDependencyOutput> => {
   const res = await serverFetch("/api/adaptive-recovery/ai-dependency");
   return res.data;
 };
+
+export const getAIDependency = async (): Promise<AIDependencyResult | null> => {
+  try {
+    const res = await serverFetch("/api/adaptive-recovery/ai-dependency");
+    const d = res.data;
+    if (!d) return null;
+    return {
+      score: d.overallDependencyScore ?? 35,
+      category: d.category ?? "BALANCED",
+      verdict: d.categoryDescription || d.categoryTitle || "Balanced AI Augmentation",
+      badge: d.categoryBadge || d.categoryTitle || "🟡 Balanced AI Augmentation",
+      advice: d.employerPerceptionSummary || "",
+      pillars: {
+        promptDelegation: d.pillars?.promptAutonomy?.score ?? 35,
+        codeOwnership: d.pillars?.projectExplanation?.score ?? 70,
+        liveProblemSolving: d.pillars?.interviewArticulation?.score ?? 65,
+      },
+    };
+  } catch {
+    return null;
+  }
+};
+
+/* Compatibility types and client helpers for interactive landing page cards */
+export interface RoadmapSimulationResult {
+  weeklyHours: number;
+  remainingHours: number;
+  remainingMilestones: number;
+  estimatedWeeks: number;
+  estimatedMonths: number;
+  projectedDate: string;
+  paceTitle: string;
+  paceBadge: string;
+  velocityIndex: number;
+}
+
+export interface ZeroGuiltRecoveryResult {
+  daysInactive: number;
+  isRecoveryActive: boolean;
+  streakShieldActive: boolean;
+  bonusXpAmount: number;
+  plan: {
+    day: number;
+    duration: string;
+    title: string;
+    subtitle: string;
+    type: string;
+    taskDetail: string;
+  }[];
+}
+
+export interface AIDependencyResult {
+  score: number;
+  category: string;
+  verdict: string;
+  badge: string;
+  advice: string;
+  pillars: {
+    promptDelegation: number;
+    codeOwnership: number;
+    liveProblemSolving: number;
+  };
+}
+
+export const simulatePace = async (hours: number): Promise<RoadmapSimulationResult> => {
+  return await serverFetch(`/api/adaptive-recovery/simulate?hours=${hours}`);
+};
+
+export const savePace = async (weeklyHours: number) => {
+  return await serverMutation("/api/adaptive-recovery/pace", { weeklyHours }, "PATCH");
+};
+
+export const getRecoveryPlan = async (): Promise<ZeroGuiltRecoveryResult> => {
+  return await serverFetch("/api/adaptive-recovery/recovery-status");
+};
+
+export const claimResilienceBonus = async () => {
+  return await serverMutation("/api/adaptive-recovery/complete-step", { dayIndex: 4 }, "POST");
+};

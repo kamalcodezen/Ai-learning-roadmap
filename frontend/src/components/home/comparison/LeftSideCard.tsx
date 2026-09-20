@@ -32,7 +32,7 @@ const features = [
 
 const LeftSideCard = () => {
   return (
-    <div className="group relative h-full w-full max-w-2xl overflow-hidden rounded-lg border border-border bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] p-6 transition-all duration-300 hover:border-muted-foreground/30 dark:from-[#0a0015] dark:via-[#120025] dark:to-[#2d1065] dark:hover:border-muted-foreground/20">
+    <div className="group relative h-full w-full max-w-2xl overflow-hidden rounded-lg border border-border bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] p-5 sm:p-6 md:p-4.5 lg:p-6 transition-all duration-300 hover:border-muted-foreground/30 dark:from-[#0a0015] dark:via-[#120025] dark:to-[#2d1065] dark:hover:border-muted-foreground/20">
       {/* Border Beams */}
       <BorderBeam size={200} duration={8} colorFrom="#9F54F7" colorTo="#B978FF" />
       <BorderBeam size={200} duration={8} delay={4} colorFrom="#B978FF" colorTo="#9F54F7" reverse />

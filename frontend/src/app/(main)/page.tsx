@@ -3,6 +3,7 @@ import TestimonialSection from "@/src/components/home/testimonial/TestimonialSec
 import CTASection from "@/src/components/home/cta/CTASection";
 import HowItWorksSection from "@/src/components/home/howItWorks/HowItWorksSection";
 import CareerTwinSection from "@/src/components/home/careerTwin/CareerTwinSection";
+import AdaptivePaceSection from "@/src/components/home/adaptivePace/AdaptivePaceSection";
 import ProblemBreakdown from "@/src/components/home/problem-breakdown/ProblemBreakdown/ProblemBreakdown";
 import ProgressBridgeSection from "@/src/components/home/ProgressBridge/ProgressBridgeSection";
 import Pricing from "@/src/components/home/pricing/Pricing";
@@ -12,16 +13,14 @@ import Comparison from "@/src/components/home/comparison/Comparison";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: {
-    absolute: "AI Pather — AI-Powered Career Learning Platform",
-  },
+  title: "AI Pather",
   description:
     "Accelerate your tech career with AI Pather. Get personalized learning roadmaps, AI-driven skill assessments, and mock interviews to land your dream job.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "AI Pather — AI-Powered Career Learning Platform",
+    title: "AI Pather",
     description:
       "Accelerate your tech career with AI Pather. Get personalized learning roadmaps, AI-driven skill assessments, and mock interviews to land your dream job.",
   },
@@ -35,6 +34,7 @@ export default function HomePage() {
       <ProblemBreakdown />      
       <HowItWorksSection />
       <CareerTwinSection />
+      <AdaptivePaceSection />
       <FeaturesSection />
       <Comparison />
       <Pricing />

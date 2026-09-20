@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import brandLogo from "../../../public/brand/logo-p-purple.png"
+import brandLogo from "@/public/brand/logo-p-dark.png";
 
 import {
   sendChatMessage,
@@ -229,7 +229,7 @@ export default function ChatBox() {
         <div className="flex items-center gap-3">
           {/* AI Pathar Icon */}
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
-            <Image src={brandLogo} alt="Brand-logo" className="ml-1 w-4 h-4 md:w-5 md:h-5 dark:brightness-0 dark:invert" height={20} width={20}/>
+            <Image src={brandLogo} alt="AI Pathar" className="h-6 w-6 object-contain" height={24} width={24}/>
           </div>
 
           {/* Brand */}
@@ -293,7 +293,20 @@ export default function ChatBox() {
             <div className="w-full max-w-xl text-center">
               {/* Welcome Icon */}
               <div className="mx-auto mb-4 flex items-center justify-center">
-                <Image src={brandLogo} alt="AI Pathar" className="h-11 w-11 object-contain dark:brightness-0 dark:invert" height={44} width={44}/>
+                <Image
+                  src="/brand/AI-Pather-blue.png"
+                  alt="AI Pather"
+                  width={140}
+                  height={28}
+                  className="h-6 sm:h-7 w-auto object-contain block dark:hidden"
+                />
+                <Image
+                  src="/brand/AI-Pather-white.png"
+                  alt="AI Pather"
+                  width={140}
+                  height={28}
+                  className="h-6 sm:h-7 w-auto object-contain hidden dark:block"
+                />
               </div>
 
               {/* Greeting */}
