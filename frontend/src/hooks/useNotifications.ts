@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getNotifications,
@@ -25,15 +26,35 @@ export function useNotifications(limit = 20) {
     queryKey: [...NOTIFICATIONS_QUERY_KEY, userId, limit],
     queryFn: () => getNotifications(limit),
     enabled: !!userId,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 0,
+    refetchInterval: 3000,
+    refetchOnWindowFocus: true,
   });
 
   const unreadCountQuery = useQuery({
     queryKey: [...UNREAD_COUNT_QUERY_KEY, userId],
     queryFn: () => getUnreadNotificationCount(),
     enabled: !!userId,
-    staleTime: 1000 * 30,
+    staleTime: 0,
+    refetchInterval: 3000,
+    refetchOnWindowFocus: true,
   });
+
+  // Listen for real-time broadcast events
+  useEffect(() => {
+    const handleSync = () => {
+      notificationsQuery.refetch();
+      unreadCountQuery.refetch();
+    };
+    window.addEventListener("notifications-updated", handleSync);
+    window.addEventListener("gems-updated", handleSync);
+    window.addEventListener("focus", handleSync);
+    return () => {
+      window.removeEventListener("notifications-updated", handleSync);
+      window.removeEventListener("gems-updated", handleSync);
+      window.removeEventListener("focus", handleSync);
+    };
+  }, [notificationsQuery, unreadCountQuery]);
 
   const markReadMutation = useMutation({
     mutationFn: (id: string) => markNotificationAsRead(id),
