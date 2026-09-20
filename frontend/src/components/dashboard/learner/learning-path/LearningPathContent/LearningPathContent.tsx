@@ -34,10 +34,12 @@ import {
   Network,
   List,
   Lock,
+  Sliders,
 } from "lucide-react";
 import Link from "next/link";
 import { DashboardButton } from "@/src/components/dashboard/shared/patterns";
 import { RoadmapGraphCanvas } from "../RoadmapGraph/RoadmapGraphCanvas";
+import { triggerRealtimeSync } from "@/src/lib/utils/realtime-sync";
 
 function isMatchingSkillFrontend(aRaw: string, bRaw: string): boolean {
   if (!aRaw || !bRaw) return false;
@@ -273,6 +275,19 @@ export default function LearningPathContent() {
       queryClient.invalidateQueries({
         queryKey: ["skillTree"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["gemWallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gemHistory"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["unreadNotificationCount"],
+      });
+      triggerRealtimeSync(queryClient);
       refetch();
     },
   });
@@ -433,6 +448,15 @@ export default function LearningPathContent() {
               List View
             </button>
           </div>
+
+          <Link
+            href="/dashboard/learner/adaptive-recovery"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-muted-foreground hover:text-foreground bg-card hover:bg-muted/80 border border-border shrink-0 transition-all"
+            title="Adjust study commitment & recovery settings"
+          >
+            <Sliders className="w-3.5 h-3.5 text-primary" />
+            <span>Adaptive Pace</span>
+          </Link>
 
           <div className="bg-card p-3.5 rounded-xl border border-border shrink-0 min-w-[180px]">
             <p className="text-xs text-muted-foreground mb-1.5">
