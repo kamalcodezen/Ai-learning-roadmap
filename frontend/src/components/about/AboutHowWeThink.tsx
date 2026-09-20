@@ -109,7 +109,7 @@ export default function AboutHowWeThink() {
             </span>
           </div>
 
-          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground text-balance">
+          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground text-balance">
             The closed-loop architecture for{" "}
             <span className="bg-linear-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
               career mastery
@@ -136,7 +136,7 @@ export default function AboutHowWeThink() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: index * 0.1 }}
                 className={`
-                  relative flex flex-col justify-between rounded-2xl border ${card.borderColor} bg-card p-6 shadow-md overflow-hidden
+                  relative flex flex-col justify-between rounded-2xl border ${card.borderColor} bg-card p-6 shadow-md overflow-hidden dashboard-card
                 `}
               >
                 {/* Active Dynamic Border Beam matching card accent color */}
