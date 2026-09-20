@@ -1,0 +1,282 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShieldCheck, HeartHandshake, CheckCircle2, Sparkles, ArrowRight, RefreshCw, Trophy } from "lucide-react";
+import { BorderBeam } from "@/src/components/ui/border-beam";
+
+interface RecoveryStep {
+  day: number;
+  duration: string;
+  title: string;
+  subtitle: string;
+  type: string;
+  taskDetail: string;
+}
+
+const STEPS: RecoveryStep[] = [
+  {
+    day: 1,
+    duration: "5 Mins",
+    title: "Concept Warm-Up Refresher",
+    subtitle: "Quick digest of the key concepts you mastered before your break.",
+    type: "Memory Warm-Up",
+    taskDetail: "Review: Asynchronous JavaScript, Event Loop & Promises overview.",
+  },
+  {
+    day: 2,
+    duration: "10 Mins",
+    title: "Micro Confidence Puzzle",
+    subtitle: "A low-friction practical quiz to reactivate your problem-solving reflex.",
+    type: "Confidence Booster",
+    taskDetail: "Solve: 3 quick logic prompts on Array.reduce & state immutability.",
+  },
+  {
+    day: 3,
+    duration: "12 Mins",
+    title: "Resume Milestone Frontier",
+    subtitle: "Complete the very first small step of your active milestone.",
+    type: "Frontier Step",
+    taskDetail: "Action: Scaffold your React Custom Hook component structure.",
+  },
+  {
+    day: 4,
+    duration: "8 Mins",
+    title: "Momentum Lock-in (+50 XP)",
+    subtitle: "Celebrate your resilience and seamlessly return to your normal path.",
+    type: "Habit Locked",
+    taskDetail: "Milestone: Sync your progress and collect +50 Resilience XP bonus.",
+  },
+];
+
+export default function ZeroGuiltRecoveryCard() {
+  const [completedDays, setCompletedDays] = useState<number[]>([1]);
+  const [bonusClaimed, setBonusClaimed] = useState<boolean>(false);
+  const [activeTabDay, setActiveTabDay] = useState<number>(2);
+
+  const toggleDay = (day: number) => {
+    if (completedDays.includes(day)) {
+      setCompletedDays(completedDays.filter((d) => d !== day));
+    } else {
+      const nextCompleted = [...completedDays, day].sort();
+      setCompletedDays(nextCompleted);
+      if (day < 4) {
+        setActiveTabDay(day + 1);
+      }
+    }
+  };
+
+  const progressPercentage = Math.round((completedDays.length / 4) * 100);
+  const isAllComplete = completedDays.length === 4;
+
+  const handleClaimBonus = () => {
+    setBonusClaimed(true);
+  };
+
+  const resetDemo = () => {
+    setCompletedDays([1]);
+    setBonusClaimed(false);
+    setActiveTabDay(2);
+  };
+
+  return (
+    <div className="group relative w-full rounded-2xl border border-border/80 bg-white/70 dark:bg-[#0c0516]/80 p-6 sm:p-8 lg:p-10 backdrop-blur-xl shadow-xl shadow-purple-500/5 transition-all duration-300 hover:border-[var(--color-primary)]/40">
+      <BorderBeam size={320} duration={10} colorFrom="#B978FF" colorTo="#9F54F7" delay={2} />
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-[var(--color-primary)] text-white shadow-md shadow-emerald-500/20">
+            <ShieldCheck className="h-6 w-6" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                Feature 02
+              </span>
+              <span className="h-1 w-1 rounded-full bg-border" />
+              <span className="text-xs font-medium text-muted-foreground">Inactivity Shield</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground">
+              Zero-Guilt Recovery Engine
+            </h3>
+          </div>
+        </div>
+
+        {/* Positive Inactivity Status */}
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+          <HeartHandshake className="h-4 w-4" />
+          <span>Active: Zero-Streak Penalties</span>
+        </div>
+      </div>
+
+      {/* Warm Welcome Banner */}
+      <div className="mt-6 rounded-xl border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 via-purple-500/5 to-transparent p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+            <Sparkles className="h-4 w-4" />
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-foreground">
+              Welcome back! Life gets busy and breaks are 100% normal.
+            </h4>
+            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+              No broken streaks, no backlog anxiety. Re-ignite your momentum in just 10 minutes a day over the next 4 days.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={resetDemo}
+          className="self-start sm:self-center flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors shrink-0 cursor-pointer"
+          title="Reset 4-day demo"
+        >
+          <RefreshCw className="h-3.5 w-3.5" />
+          <span>Reset Demo</span>
+        </button>
+      </div>
+
+      {/* 4-Day Catch-up Stepper Grid */}
+      <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left: Day-by-Day Cards */}
+        <div className="lg:col-span-7 flex flex-col gap-3">
+          <div className="flex items-center justify-between text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">
+            <span>4-Day Micro Catch-Up Plan</span>
+            <span>{completedDays.length} of 4 Days Completed ({progressPercentage}%)</span>
+          </div>
+
+          {/* Progress bar */}
+          <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-zinc-800 overflow-hidden mb-2">
+            <motion.div
+              className="h-full bg-gradient-to-r from-emerald-500 to-[var(--color-primary)]"
+              initial={{ width: 0 }}
+              animate={{ width: `${progressPercentage}%` }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            />
+          </div>
+
+          {STEPS.map((step) => {
+            const isCompleted = completedDays.includes(step.day);
+            const isSelected = activeTabDay === step.day;
+
+            return (
+              <div
+                key={step.day}
+                onClick={() => setActiveTabDay(step.day)}
+                className={`flex items-start justify-between gap-4 p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
+                  isSelected
+                    ? "border-[var(--color-primary)] bg-[var(--color-primary)]/5 shadow-sm"
+                    : "border-border/70 hover:border-border bg-black/5 dark:bg-white/5"
+                }`}
+              >
+                <div className="flex items-start gap-3.5">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleDay(step.day);
+                    }}
+                    className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-colors cursor-pointer ${
+                      isCompleted
+                        ? "border-emerald-500 bg-emerald-500 text-white"
+                        : "border-border bg-white dark:bg-zinc-900 text-transparent hover:border-[var(--color-primary)]"
+                    }`}
+                    aria-label={`Toggle Day ${step.day}`}
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                  </button>
+
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-foreground">
+                        Day {step.day}: {step.title}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md bg-purple-500/10 text-[10px] font-semibold text-[var(--color-primary)]">
+                        {step.duration}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                      {step.subtitle}
+                    </p>
+                  </div>
+                </div>
+
+                <span className="text-[11px] font-medium text-muted-foreground shrink-0 hidden sm:block">
+                  {step.type}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Right: Active Day Detail Card */}
+        <div className="lg:col-span-5 rounded-xl border border-border/80 bg-gradient-to-b from-[#faf5ff] to-[#f3e8ff]/50 dark:from-[#150727] dark:to-[#0a0015] p-6 flex flex-col justify-between min-h-[290px] shadow-inner">
+          {(() => {
+            const activeStep = STEPS.find((s) => s.day === activeTabDay) || STEPS[0];
+            const isDone = completedDays.includes(activeStep.day);
+
+            return (
+              <>
+                <div>
+                  <div className="flex items-center justify-between pb-3 border-b border-border/50">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)] flex items-center gap-1.5">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Day {activeStep.day} Interactive Task
+                    </span>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded bg-black/5 dark:bg-white/10 text-foreground">
+                      {activeStep.duration}
+                    </span>
+                  </div>
+
+                  <h4 className="text-base font-bold text-foreground mt-3">
+                    {activeStep.title}
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                    {activeStep.subtitle}
+                  </p>
+
+                  <div className="mt-4 p-3.5 rounded-lg border border-border/60 bg-white/60 dark:bg-black/40 text-xs">
+                    <span className="font-semibold text-foreground block mb-1">
+                      Today&apos;s Focus:
+                    </span>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {activeStep.taskDetail}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-border/50 flex flex-col gap-2">
+                  <button
+                    onClick={() => toggleDay(activeStep.day)}
+                    className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+                      isDone
+                        ? "bg-emerald-600 text-white shadow-sm"
+                        : "bg-[var(--color-primary)] text-white hover:opacity-90 shadow-md shadow-purple-500/20"
+                    }`}
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span>{isDone ? `Day ${activeStep.day} Marked Complete` : `Complete Day ${activeStep.day} (${activeStep.duration})`}</span>
+                  </button>
+
+                  {isAllComplete && (
+                    <button
+                      onClick={handleClaimBonus}
+                      disabled={bonusClaimed}
+                      className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
+                        bonusClaimed
+                          ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/40"
+                          : "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30 animate-pulse"
+                      }`}
+                    >
+                      <Trophy className="h-4 w-4" />
+                      <span>{bonusClaimed ? "🏆 +50 XP Resilience Bonus Claimed!" : "Claim +50 XP Resilience Bonus"}</span>
+                    </button>
+                  )}
+                </div>
+              </>
+            );
+          })()}
+        </div>
+      </div>
+    </div>
+  );
+}

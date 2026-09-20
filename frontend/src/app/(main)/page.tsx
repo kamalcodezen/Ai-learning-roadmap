@@ -3,6 +3,7 @@ import TestimonialSection from "@/src/components/home/testimonial/TestimonialSec
 import CTASection from "@/src/components/home/cta/CTASection";
 import HowItWorksSection from "@/src/components/home/howItWorks/HowItWorksSection";
 import CareerTwinSection from "@/src/components/home/careerTwin/CareerTwinSection";
+import AdaptivePaceSection from "@/src/components/home/adaptivePace/AdaptivePaceSection";
 import ProblemBreakdown from "@/src/components/home/problem-breakdown/ProblemBreakdown/ProblemBreakdown";
 import ProgressBridgeSection from "@/src/components/home/ProgressBridge/ProgressBridgeSection";
 import Pricing from "@/src/components/home/pricing/Pricing";
@@ -35,6 +36,7 @@ export default function HomePage() {
       <ProblemBreakdown />      
       <HowItWorksSection />
       <CareerTwinSection />
+      <AdaptivePaceSection />
       <FeaturesSection />
       <Comparison />
       <Pricing />
