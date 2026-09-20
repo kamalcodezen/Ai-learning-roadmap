@@ -18,10 +18,13 @@ import {
   FiMoon,
   FiHome,
   FiMail,
+  FiTrendingUp,
+  FiCopy,
 } from "react-icons/fi";
 import { Sparkles, Crown, Loader2 } from "lucide-react";
 import Logo from "./Logo";
 import Button from "../../ui/button";
+import CrownButton from "./CrownButton";
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 import { authClient } from "@/src/lib/auth-client";
 import { getDropdownLinks, getPlanBadge } from "./profileDropdown";
@@ -36,7 +39,7 @@ const getHashServerSnapshot = () => "";
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
-  const [expandedSolutions, setExpandedSolutions] = useState(false);
+  const [expandedDropdown, setExpandedDropdown] = useState<string | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const mobileNavRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -183,6 +186,10 @@ export default function MobileNav() {
     switch (label) {
       case "Home":
         return <FiHome className="size-4 shrink-0" />;
+      case "Tracks":
+        return <FiTrendingUp className="size-4 shrink-0" />;
+      case "Pages":
+        return <FiCopy className="size-4 shrink-0" />;
       case "Solutions":
         return <FiLayers className="size-4 shrink-0" />;
       case "Why AI Pather":
@@ -253,28 +260,29 @@ export default function MobileNav() {
         {/* Header Bar (Always visible) */}
         <div className="flex items-center justify-between w-full px-2 py-1.5">
           {/* Logo Section */}
-          <div className="pl-0">
+          <div className="flex items-center gap-2 pl-0">
             <Logo />
+            <CrownButton />
           </div>
 
           {/* Menu Toggle Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center justify-center size-9 bg-foreground text-background rounded-full hover:bg-foreground/80 transition-all focus:outline-none relative"
+            className="flex items-center justify-center size-9 bg-brand text-white rounded-full transition-all focus:outline-none relative"
             aria-label="Toggle menu"
           >
             <div
-              className={`w-3.5 h-0.5 bg-background rounded-full transition-transform duration-300 absolute ${
+              className={`w-3.5 h-0.5 bg-white rounded-full transition-transform duration-300 absolute ${
                 isOpen ? "rotate-45" : "-translate-y-1"
               }`}
             />
             <div
-              className={`w-3.5 h-0.5 bg-background rounded-full transition-opacity duration-300 absolute ${
+              className={`w-3.5 h-0.5 bg-white rounded-full transition-opacity duration-300 absolute ${
                 isOpen ? "opacity-0" : "opacity-100"
               }`}
             />
             <div
-              className={`w-3.5 h-0.5 bg-background rounded-full transition-transform duration-300 absolute ${
+              className={`w-3.5 h-0.5 bg-white rounded-full transition-transform duration-300 absolute ${
                 isOpen ? "-rotate-45" : "translate-y-1"
               }`}
             />
@@ -396,11 +404,16 @@ export default function MobileNav() {
                     const hasChildren = link.children && link.children.length > 0;
 
                     if (hasChildren) {
+                      const isLabelOpen = expandedDropdown === link.label;
                       return (
                         <div key={link.label} className="flex flex-col">
                           <button
                             type="button"
-                            onClick={() => setExpandedSolutions((prev) => !prev)}
+                            onClick={() =>
+                              setExpandedDropdown((prev) =>
+                                prev === link.label ? null : link.label,
+                              )
+                            }
                             className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
                           >
                             <div className="flex items-center gap-2.5">
@@ -411,13 +424,13 @@ export default function MobileNav() {
                             </div>
                             <FiChevronDown
                               className={`size-4 text-muted-foreground transition-transform duration-200 ${
-                                expandedSolutions ? "rotate-180 text-primary" : ""
+                                isLabelOpen ? "rotate-180 text-primary" : ""
                               }`}
                             />
                           </button>
 
                           <AnimatePresence>
-                            {expandedSolutions && (
+                            {isLabelOpen && (
                               <motion.div
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
