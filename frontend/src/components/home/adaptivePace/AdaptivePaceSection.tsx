@@ -20,8 +20,8 @@ export default function AdaptivePaceSection() {
           <h2 className="section-title font-bold mt-1">
             Engineered for <span className="text-brand">Real-Life Learning</span>
           </h2>
-          <p className="section-subtitle mt-2 max-w-2xl">
-            Flexible commitment pacing, zero-guilt recovery after breaks, and autonomous problem-solving tracking to ensure you land top tech roles.
+          <p className="section-subtitle mt-2 max-w-full">
+            Flexible commitment pacing, zero-guilt recovery after breaks, and autonomous problem-solving tracking to ensure you land top tech roles
           </p>
         </div>
 
