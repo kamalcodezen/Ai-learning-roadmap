@@ -49,7 +49,7 @@ const handleMyCareerPathClick = () => {
       />
 
       {/* Radial Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-primary/15 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-primary/15 rounded-full blur-[140px] pointer-events-none -z-10 dashboard-card" />
 
       <div className="global-pos px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -57,7 +57,7 @@ const handleMyCareerPathClick = () => {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative mx-auto w-full max-w-6xl rounded-3xl border border-primary/30 bg-gradient-to-b from-card via-card to-primary/10 p-8 sm:p-14 lg:p-20 text-center shadow-2xl overflow-hidden"
+          className="relative mx-auto w-full max-w-6xl rounded-3xl border border-primary/30 bg-gradient-to-b from-card via-card to-primary/10 p-8 sm:p-14 lg:p-20 text-center shadow-2xl overflow-hidden dashboard-card"
         >
           {/* Top Badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 backdrop-blur-md mb-8">
@@ -68,7 +68,7 @@ const handleMyCareerPathClick = () => {
           </div>
 
           {/* Core Impact Headlines */}
-          <h2 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground text-balance max-w-6xl mx-auto">
+          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground text-balance max-w-6xl mx-auto">
             “The goal isn&apos;t to help you learn more{" "}
             <span className="block mt-2 bg-linear-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
               It&apos;s to help you become more capable“
