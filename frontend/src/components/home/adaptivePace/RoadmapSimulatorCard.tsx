@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { Clock, Calendar, Zap, Sparkles, CheckCircle2, Award, ChevronRight, Loader2 } from "lucide-react";
-import { BorderBeam } from "@/src/components/ui/border-beam";
 import { simulatePace, savePace } from "@/src/lib/api/learner/adaptive-recovery";
 
 const PRESETS = [
@@ -22,7 +21,7 @@ export default function RoadmapSimulatorCard() {
   // Fetch real milestone remaining hours on mount
   useEffect(() => {
     let isMounted = true;
-    simulatePace(weeklyHours)
+    simulatePace(15)
       .then((data) => {
         if (isMounted && data) {
           if (data.remainingHours) setTotalRemainingHours(data.remainingHours);
