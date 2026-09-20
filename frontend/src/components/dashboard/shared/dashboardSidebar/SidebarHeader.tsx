@@ -21,17 +21,17 @@ export default function SidebarHeader({ onClose }: SidebarHeaderProps) {
         <Image
           src="/brand/AI-Pather-blue.png"
           alt="AI Pather"
-          width={140}
-          height={26}
-          className="h-6 md:h-7 w-auto block dark:hidden object-contain"
+          width={120}
+          height={22}
+          className="h-5 md:h-[22px] w-auto block dark:hidden object-contain"
           priority
         />
         <Image
           src="/brand/AI-Pather-white.png"
           alt="AI Pather"
-          width={140}
-          height={26}
-          className="h-6 md:h-7 w-auto hidden dark:block object-contain"
+          width={120}
+          height={22}
+          className="h-5 md:h-[22px] w-auto hidden dark:block object-contain"
           priority
         />
       </Link>
