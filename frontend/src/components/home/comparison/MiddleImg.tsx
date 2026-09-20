@@ -19,7 +19,7 @@ const MiddleImg = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div>
             <Image
-              src="/brand/logo-p-dark.png"
+              src="/brand/AI-Pather-blue.png"
               alt="Project logo"
               width={80}
               height={80}
