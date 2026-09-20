@@ -19,8 +19,11 @@ import {
   FiX,
   FiHome,
   FiMail,
+  FiTrendingUp,
+  FiCopy,
 } from "react-icons/fi";
-import { Sparkles, Crown, Loader2 } from "lucide-react";
+import { Sparkles, Crown, Loader2, Bot, BrainCircuit, BarChart3, Layers, Monitor, Server, ShieldCheck, FileText, BookMarked } from "lucide-react";
+import { trackNavLinks } from "@/src/data/tracks";
 import { authClient } from "@/src/lib/auth-client";
 import { getDropdownLinks, getPlanBadge } from "./profileDropdown";
 import Button from "../../ui/button";
@@ -32,22 +35,51 @@ export interface NavLink {
   children?: { label: string; href: string; icon: React.ReactNode }[];
 }
 
+const trackIcons: Record<string, React.ReactNode> = {
+  "/tracks/ai-engineer": <Bot className="size-4 shrink-0" />,
+  "/tracks/machine-learning": <BrainCircuit className="size-4 shrink-0" />,
+  "/tracks/data-scientist": <BarChart3 className="size-4 shrink-0" />,
+  "/tracks/fullstack": <Layers className="size-4 shrink-0" />,
+  "/tracks/frontend": <Monitor className="size-4 shrink-0" />,
+  "/tracks/backend": <Server className="size-4 shrink-0" />,
+};
+
+const pageIcons: Record<string, React.ReactNode> = {
+  "/privacy": <ShieldCheck className="size-4 shrink-0" />,
+  "/terms": <FileText className="size-4 shrink-0" />,
+  "/faq": <BookMarked className="size-4 shrink-0" />,
+};
+
 export const getNavLinks = (): NavLink[] => [
   {
     label: "Home",
     href: "/",
   },
   {
+    label: "Tracks",
+    href: "#",
+    children: trackNavLinks.map((track) => ({
+      label: track.label,
+      href: track.href,
+      icon: trackIcons[track.href] ?? <Layers className="size-4 shrink-0" />,
+    })),
+  },
+  {
     label: "Why AI Pather",
     href: "/#comparison",
   },
   {
-    label: "About Us",
-    href: "/about",
+    label: "Pages",
+    href: "#",
+    children: [
+      { label: "Privacy Policy", href: "/privacy", icon: pageIcons["/privacy"] },
+      { label: "Terms & Conditions", href: "/terms", icon: pageIcons["/terms"] },
+      { label: "FAQ", href: "/faq", icon: pageIcons["/faq"] },
+    ],
   },
   {
-    label: "Pricing",
-    href: "/pricing",
+    label: "About Us",
+    href: "/about",
   },
   {
     label: "Contact Us",
@@ -69,7 +101,7 @@ interface NavLinksProps {
 export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
-  const [expandedSolutions, setExpandedSolutions] = useState(false);
+  const [expandedDropdown, setExpandedDropdown] = useState<string | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -104,6 +136,12 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   const activeHash = scrollSection || hashFromStore;
 
   const checkIsActive = (link: NavLink) => {
+    if (link.children && link.children.length > 0) {
+      return link.children.some(
+        (child) =>
+          pathname === child.href || pathname.startsWith(`${child.href}/`),
+      );
+    }
     if (link.href === "/") {
       return pathname === "/" && (!activeHash || activeHash === "" || activeHash === "#");
     }
@@ -164,6 +202,10 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
     switch (label) {
       case "Home":
         return <FiHome className="size-4 shrink-0" />;
+      case "Tracks":
+        return <FiTrendingUp className="size-4 shrink-0" />;
+      case "Pages":
+        return <FiCopy className="size-4 shrink-0" />;
       case "Solutions":
         return <FiLayers className="size-4 shrink-0" />;
       case "Why AI Pather":
@@ -234,7 +276,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   // If only rendering the desktop nav links
   if (!onlyHamburger) {
     return (
-      <nav className="flex items-center gap-1 md:gap-2 lg:gap-4">
+      <nav className="flex items-center gap-1 md:gap-0 lg:gap-0">
         {links.map((link, index) => {
           const hasChildren = link.children && link.children.length > 0;
           const isActive = activeDropdown === index;
@@ -309,9 +351,9 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                             href={child.href}
                             className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-black transition-all duration-200 hover:bg-muted/70 dark:text-white group"
                           >
-                            <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
-                              {child.icon}
-                            </span>
+<span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
+  {child.icon}
+</span>
                             <span className="font-semibold">{child.label}</span>
                           </Link>
                         </motion.div>
@@ -334,7 +376,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
       <button
         type="button"
         onClick={() => setMobileOpen((prev) => !prev)}
-        className="flex size-10 md:size-11 shrink-0 items-center justify-center rounded-full bg-[#1e1e1e] dark:bg-white text-white dark:text-[#1e1e1e] shadow-md transition-all hover:opacity-90 active:scale-95 focus:outline-none relative"
+        className="flex size-10 md:size-11 shrink-0 items-center justify-center rounded-full bg-brand text-white  transition-all duration-700 hover:opacity-90 active:scale-95 focus:outline-none relative"
         aria-label="Toggle navigation menu"
         aria-expanded={mobileOpen}
       >
@@ -460,12 +502,17 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                   const hasChildren = link.children && link.children.length > 0;
 
                   if (hasChildren) {
+                    const isLabelOpen = expandedDropdown === link.label;
                     return (
                       <div key={link.label} className="flex flex-col">
                         <button
                           type="button"
-                          onClick={() => setExpandedSolutions((prev) => !prev)}
-                          className="flex items-center justify-between rounded-2xl px-2.5 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
+                          onClick={() =>
+                            setExpandedDropdown((prev) =>
+                              prev === link.label ? null : link.label,
+                            )
+                          }
+                          className="flex items-center justify-between rounded-2xl px-0 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
                         >
                           <div className="flex items-center gap-3.5">
                             <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 shrink-0">
@@ -475,13 +522,13 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                           </div>
                           <FiChevronDown
                             className={`size-4 text-muted-foreground transition-transform duration-200 ${
-                              expandedSolutions ? "rotate-180 text-primary" : ""
+                              isLabelOpen ? "rotate-180 text-primary" : ""
                             }`}
                           />
                         </button>
 
                         <AnimatePresence>
-                          {expandedSolutions && (
+                          {isLabelOpen && (
                             <motion.div
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: "auto", opacity: 1 }}

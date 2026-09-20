@@ -773,3 +773,25 @@ button {
   box-shadow: none !important;
   outline: none !important;
 }
+/* ===== Crown button auto-glare (like pricing cards) ===== */
+.crown-glare {
+  background-image: linear-gradient(
+    var(--gh-angle, -45deg),
+    transparent 60%,
+    var(--gh-rgba, rgba(159, 84, 247, 0.35)) 70%,
+    transparent,
+    transparent 100%
+  );
+  background-size: var(--gh-size, 250%) var(--gh-size, 250%), 100% 100%;
+  background-position: -100% -100%, 0 0;
+  animation: crown-glare-sweep 2s ease-in-out infinite;
+}
+
+@keyframes crown-glare-sweep {
+  0% {
+    background-position: -100% -100%, 0 0;
+  }
+  100% {
+    background-position: 100% 100%, 0 0;
+  }
+}

@@ -73,7 +73,7 @@ export default function AboutAudience() {
             </span>
           </div>
 
-          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground text-balance">
+          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground text-balance">
             Built for people who are{" "}
             <span className="bg-linear-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
               serious about becoming capable
@@ -99,7 +99,7 @@ export default function AboutAudience() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: index * 0.1 }}
                 whileHover={shouldReduceMotion ? {} : { y: -6 }}
-                className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-6 sm:p-8 shadow-md transition-all duration-300 hover:border-primary/50 hover:shadow-xl"
+                className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-6 sm:p-8 shadow-md transition-all duration-300 hover:border-primary/50 hover:shadow-xl dashboard-card"
               >
                 <div>
                   {/* Card Header */}

@@ -1,0 +1,468 @@
+{
+  "roles": [
+    {
+      "id": "ai-engineer",
+      "title": "AI Engineer",
+      "category": "AI & Data",
+      "icon": "Bot",
+      "badge": "Trending Now",
+      "tagline": "Design, build, and ship products powered by LLMs, agents, and intelligent systems.",
+      "overview": "AI Engineers are the people turning raw models into products people actually use — RAG systems, autonomous agents, and AI features inside existing apps. It is the single fastest-growing job title in the United States, topping LinkedIn's Jobs on the Rise list two years running, and one of the few roles where demand is growing far faster than supply.",
+      "stats": {
+        "activePostings": 21000,
+        "postingsYoY": 143,
+        "medianSalary": 176000,
+        "growthForecast": 82,
+        "entryLevelShare": 5.8,
+        "remoteShare": 44
+      },
+      "charts": {
+        "demandTrend": [
+          { "period": "Q1 2024", "postings": 1800 },
+          { "period": "Q3 2024", "postings": 3400 },
+          { "period": "Q1 2025", "postings": 6000 },
+          { "period": "Q3 2025", "postings": 9500 },
+          { "period": "Q1 2026", "postings": 14200 },
+          { "period": "Q2 2026", "postings": 16200 }
+        ],
+        "salaryByLevel": [
+          { "level": "Entry", "salary": 134000 },
+          { "level": "Mid", "salary": 176000 },
+          { "level": "Senior", "salary": 226000 }
+        ],
+        "topSkills": [
+          { "skill": "Python", "demand": 68 },
+          { "skill": "LangChain", "demand": 41 },
+          { "skill": "PyTorch", "demand": 37 },
+          { "skill": "LLM APIs", "demand": 35 },
+          { "skill": "Evals", "demand": 31 },
+          { "skill": "AWS/GCP", "demand": 29 },
+          { "skill": "Vector DBs", "demand": 24 }
+        ],
+        "regionalDemand": [
+          { "region": "N. America", "share": 44 },
+          { "region": "Europe", "share": 27 },
+          { "region": "Asia-Pacific", "share": 21 },
+          { "region": "Rest of World", "share": 8 }
+        ]
+      },
+      "keySkills": [
+        "Python",
+        "RAG & LangChain",
+        "PyTorch",
+        "LLM APIs",
+        "Model Evaluation",
+        "Vector Databases",
+        "AWS / GCP",
+        "MLOps"
+      ],
+      "helpSteps": [
+        {
+          "title": "Diagnose your AI skill baseline",
+          "desc": "Take a diagnostic built for AI Engineers. AI evaluates your Python, ML, and prompt-engineering level and tells you exactly how far you are from the role."
+        },
+        {
+          "title": "Walk an adaptive AI Engineer roadmap",
+          "desc": "Get a personalized learning path covering LLM architecture, RAG, agents, and deployment — every milestone links to curated resources and a real project."
+        },
+        {
+          "title": "Prove it with projects & interviews",
+          "desc": "Build agents and RAG apps in a sandbox, import them as GitHub proof, and face AI mock interviews on system design and model selection."
+        },
+        {
+          "title": "Become the hire AI companies want",
+          "desc": "Polish an ATS-ready AI Engineer resume, check your career alignment, and get an application-readiness score before you apply."
+        }
+      ],
+      "ctaHeadline": "The market is hungry for AI Engineers. Start becoming one today.",
+      "ctaButton": "Become an AI Engineer"
+    },
+    {
+      "id": "machine-learning",
+      "title": "Machine Learning",
+      "category": "AI & Data",
+      "icon": "BrainCircuit",
+      "badge": "High Demand",
+      "tagline": "Build, train, evaluate, and deploy machine learning systems at production scale.",
+      "overview": "Machine Learning Engineers are the most common AI title in Europe and one of the largest AI hiring categories in the US, with hundreds of new postings every month. The role sits at the intersection of data, models, and infrastructure — if you like productionizing models that reliably work in the real world, this track is where the career runway is longest.",
+      "stats": {
+        "activePostings": 4800,
+        "postingsYoY": 26,
+        "medianSalary": 165000,
+        "growthForecast": 82,
+        "entryLevelShare": 4.8,
+        "remoteShare": 39
+      },
+      "charts": {
+        "demandTrend": [
+          { "period": "Q1 2024", "postings": 1100 },
+          { "period": "Q3 2024", "postings": 2100 },
+          { "period": "Q1 2025", "postings": 3400 },
+          { "period": "Q3 2025", "postings": 5200 },
+          { "period": "Q1 2026", "postings": 6100 },
+          { "period": "Q2 2026", "postings": 6600 }
+        ],
+        "salaryByLevel": [
+          { "level": "Entry", "salary": 148000 },
+          { "level": "Mid", "salary": 165000 },
+          { "level": "Senior", "salary": 210000 }
+        ],
+        "topSkills": [
+          { "skill": "Python", "demand": 74 },
+          { "skill": "PyTorch", "demand": 45 },
+          { "skill": "AWS/GCP", "demand": 33 },
+          { "skill": "MLOps", "demand": 32 },
+          { "skill": "Docker/K8s", "demand": 30 },
+          { "skill": "SQL", "demand": 29 },
+          { "skill": "Deploy", "demand": 28 }
+        ],
+        "regionalDemand": [
+          { "region": "N. America", "share": 41 },
+          { "region": "Europe", "share": 26 },
+          { "region": "Asia-Pacific", "share": 24 },
+          { "region": "Rest of World", "share": 9 }
+        ]
+      },
+      "keySkills": [
+        "Python",
+        "PyTorch",
+        "MLOps",
+        "Docker & Kubernetes",
+        "Model Deployment",
+        "Data Pipelines",
+        "AWS / GCP",
+        "Experimentation"
+      ],
+      "helpSteps": [
+        {
+          "title": "Diagnose your ML foundation",
+          "desc": "AI scores your math, Python, and modeling fundamentals so you know whether to start with linear regression or jump straight to transformers."
+        },
+        {
+          "title": "Follow a production-ML roadmap",
+          "desc": "Your learning path covers training, evaluation, feature pipelines, and deployment — with hands-on projects at every milestone."
+        },
+        {
+          "title": "Deploy, then prove it",
+          "desc": "Ship models to endpoints, import the repos as proof, and get grade-level feedback from AI on your MLOps decisions."
+        },
+        {
+          "title": "Land the ML role",
+          "desc": "Build an ATS-ready MLOps resume, verify your skill graph, and test your application readiness before the interviews start."
+        }
+      ],
+      "ctaHeadline": "ML Engineers build the models that power the future. Start building your career.",
+      "ctaButton": "Become a Machine Learner"
+    },
+    {
+      "id": "data-scientist",
+      "title": "Data Scientist",
+      "category": "AI & Data",
+      "icon": "BarChart3",
+      "badge": "Fastest Growing",
+      "tagline": "Use statistics, Python, machine learning, and experimentation to solve real business problems.",
+      "overview": "The World Economic Forum projects data science to be one of the fastest-growing jobs of the decade, with demand expected to grow over 100% by 2030. Data Scientists are moving beyond reports and into ML and LLM work — the role is being redefined to sit closer to product decisions than ever before.",
+      "stats": {
+        "activePostings": 11400,
+        "postingsYoY": 24,
+        "medianSalary": 154000,
+        "growthForecast": 113,
+        "entryLevelShare": 12,
+        "remoteShare": 41
+      },
+      "charts": {
+        "demandTrend": [
+          { "period": "Q1 2024", "postings": 2900 },
+          { "period": "Q3 2024", "postings": 3800 },
+          { "period": "Q1 2025", "postings": 5200 },
+          { "period": "Q3 2025", "postings": 6900 },
+          { "period": "Q1 2026", "postings": 8900 },
+          { "period": "Q2 2026", "postings": 9600 }
+        ],
+        "salaryByLevel": [
+          { "level": "Entry", "salary": 122000 },
+          { "level": "Mid", "salary": 154000 },
+          { "level": "Senior", "salary": 185000 }
+        ],
+        "topSkills": [
+          { "skill": "Python", "demand": 70 },
+          { "skill": "SQL", "demand": 61 },
+          { "skill": "Stats & ML", "demand": 47 },
+          { "skill": "Data Viz", "demand": 38 },
+          { "skill": "A/B Testing", "demand": 33 },
+          { "skill": "PyTorch", "demand": 30 },
+          { "skill": "Spark", "demand": 22 }
+        ],
+        "regionalDemand": [
+          { "region": "N. America", "share": 43 },
+          { "region": "Europe", "share": 26 },
+          { "region": "Asia-Pacific", "share": 23 },
+          { "region": "Rest of World", "share": 8 }
+        ]
+      },
+      "keySkills": [
+        "Python",
+        "SQL",
+        "Statistics & ML",
+        "PyTorch",
+        "Data Visualization",
+        "Experiment Design",
+        "Spark",
+        "Storytelling with Data"
+      ],
+      "helpSteps": [
+        {
+          "title": "Diagnose your data skills",
+          "desc": "AI benchmarks your statistics, SQL, and Python against what data roles actually require, so you never waste time on the wrong tools."
+        },
+        {
+          "title": "Follow a data-science roadmap",
+          "desc": "Your adaptive path moves from analytics to experimentation to ML — each milestone unlocked with real datasets and delivered projects."
+        },
+        {
+          "title": "Turn insight into proof",
+          "desc": "Publish analyses, A/B experiment write-ups, and models as verified portfolio proof AI can grade against data-science hiring bars."
+        },
+        {
+          "title": "Get decision-table ready",
+          "desc": "Align your profile to the role, get an application-readiness score, and practice presenting findings like you would in a real case interview."
+        }
+      ],
+      "ctaHeadline": "The data-driven decade has just begun. Start becoming the analyst it needs.",
+      "ctaButton": "Become a Data Scientist"
+    },
+    {
+      "id": "fullstack",
+      "title": "Full Stack Developer",
+      "category": "Software Engineering",
+      "icon": "Layers",
+      "badge": "Most Versatile",
+      "tagline": "Build complete products across frontend, backend, and deployment.",
+      "overview": "Full Stack Developers remain the most consistently requested engineering role in the market, and in 2026 the most in-demand variant combines it with AI: companies are paying a premium for engineers who can wire LLMs into a shipped product end to end. It is the pragmatic path to owning whole systems — from database to button.",
+      "stats": {
+        "activePostings": 28400,
+        "postingsYoY": 22,
+        "medianSalary": 155000,
+        "growthForecast": 25,
+        "entryLevelShare": 14,
+        "remoteShare": 52
+      },
+      "charts": {
+        "demandTrend": [
+          { "period": "Q1 2024", "postings": 12300 },
+          { "period": "Q3 2024", "postings": 14800 },
+          { "period": "Q1 2025", "postings": 17500 },
+          { "period": "Q3 2025", "postings": 20800 },
+          { "period": "Q1 2026", "postings": 23900 },
+          { "period": "Q2 2026", "postings": 25300 }
+        ],
+        "salaryByLevel": [
+          { "level": "Entry", "salary": 85000 },
+          { "level": "Mid", "salary": 145000 },
+          { "level": "Senior", "salary": 182000 }
+        ],
+        "topSkills": [
+          { "skill": "TypeScript", "demand": 58 },
+          { "skill": "React", "demand": 52 },
+          { "skill": "Node.js", "demand": 44 },
+          { "skill": "SQL", "demand": 35 },
+          { "skill": "AWS", "demand": 32 },
+          { "skill": "Next.js", "demand": 28 },
+          { "skill": "Python", "demand": 24 },
+          { "skill": "Docker", "demand": 22 }
+        ],
+        "regionalDemand": [
+          { "region": "N. America", "share": 40 },
+          { "region": "Europe", "share": 28 },
+          { "region": "Asia-Pacific", "share": 24 },
+          { "region": "Rest of World", "share": 8 }
+        ]
+      },
+      "keySkills": [
+        "TypeScript",
+        "React",
+        "Node.js",
+        "Next.js",
+        "SQL & PostgreSQL",
+        "AWS",
+        "REST & GraphQL",
+        "Docker"
+      ],
+      "helpSteps": [
+        {
+          "title": "Diagnose your full-stack baseline",
+          "desc": "AI tests your frontend, backend, and database fundamentals to find the fastest route from your current level to shipping complete apps."
+        },
+        {
+          "title": "Learn by building real products",
+          "desc": "Your roadmap chains milestones together — UI, API, database, deployment — so every step ends with a working, shippable feature."
+        },
+        {
+          "title": "Prove your stack with GitHub proof",
+          "desc": "Import your repos, get AI code reviews, and watch real project evidence build your skill-graph and portfolio in parallel."
+        },
+        {
+          "title": "Pass the interview, land the role",
+          "desc": "Mock interviews cover both sides of the stack, and our ATS-resume tool makes sure your full-stack proof reads like a hire."
+        }
+      ],
+      "ctaHeadline": "Companies need engineers who own the whole product. Become the one they hire.",
+      "ctaButton": "Become a Full Stack Dev"
+    },
+    {
+      "id": "frontend",
+      "title": "Frontend Developer",
+      "category": "Software Engineering",
+      "icon": "Monitor",
+      "badge": "Beginner Friendly",
+      "tagline": "Build modern, accessible, high-performance web interfaces with React and TypeScript.",
+      "overview": "Frontend development is one of the most accessible doors into tech — roughly one in five openings is entry-level, far above the industry average. Yet senior frontend demand is still scrambling: TypeScript, design systems, and performance skills command a real salary premium, which means frontends who grow past the tutorial stage are scarce.",
+      "stats": {
+        "activePostings": 6100,
+        "postingsYoY": 16,
+        "medianSalary": 134500,
+        "growthForecast": 18,
+        "entryLevelShare": 20,
+        "remoteShare": 55
+      },
+      "charts": {
+        "demandTrend": [
+          { "period": "Q1 2024", "postings": 3900 },
+          { "period": "Q3 2024", "postings": 4600 },
+          { "period": "Q1 2025", "postings": 5400 },
+          { "period": "Q3 2025", "postings": 6100 },
+          { "period": "Q1 2026", "postings": 5800 },
+          { "period": "Q2 2026", "postings": 6400 }
+        ],
+        "salaryByLevel": [
+          { "level": "Entry", "salary": 72000 },
+          { "level": "Mid", "salary": 118000 },
+          { "level": "Senior", "salary": 158000 }
+        ],
+        "topSkills": [
+          { "skill": "TypeScript", "demand": 61 },
+          { "skill": "React", "demand": 58 },
+          { "skill": "JS", "demand": 56 },
+          { "skill": "Design Sys", "demand": 47 },
+          { "skill": "Next.js", "demand": 33 },
+          { "skill": "A11y", "demand": 21 },
+          { "skill": "GraphQL", "demand": 18 },
+          { "skill": "Perf", "demand": 19 }
+        ],
+        "regionalDemand": [
+          { "region": "N. America", "share": 39 },
+          { "region": "Europe", "share": 29 },
+          { "region": "Asia-Pacific", "share": 24 },
+          { "region": "Rest of World", "share": 8 }
+        ]
+      },
+      "keySkills": [
+        "TypeScript",
+        "React",
+        "Next.js",
+        "CSS & Design Systems",
+        "JavaScript",
+        "GraphQL",
+        "Accessibility",
+        "Web Performance"
+      ],
+      "helpSteps": [
+        {
+          "title": "Diagnose your frontend level",
+          "desc": "Start anywhere — AI benchmarks your HTML, CSS, React, and TypeScript and builds a path from your exact baseline to a frontend job."
+        },
+        {
+          "title": "Master the modern frontend stack",
+          "desc": "Your roadmap flows from React fundamentals to Next.js, design systems, and performance — with a polished portfolio project every step of the way."
+        },
+        {
+          "title": "Ship UI and get ranked proof",
+          "desc": "Deploy real interfaces, import them as GitHub proof, and earn verified skill checks that interviewers can actually inspect."
+        },
+        {
+          "title": "Win frontend interviews",
+          "desc": "AI mock interviews on React patterns and system design, plus an ATS resume that highlights your TypeScript premium over the crowd."
+        }
+      ],
+      "ctaHeadline": "Frontend is the fastest door into tech. TypeScript up and walk through it.",
+      "ctaButton": "Become a Frontend Dev"
+    },
+    {
+      "id": "backend",
+      "title": "Backend Developer",
+      "category": "Software Engineering",
+      "icon": "Server",
+      "badge": "Solid Career",
+      "tagline": "Build APIs, services, databases, and scalable systems that power everything else.",
+      "overview": "Backend engineering is where the highest-paid senior roles in software live — but it is also the least entry-level-friendly track, with barely 1% of postings open to juniors. That mismatch makes structured, proven preparation non-negotiable: the market rewards backend engineers who can show real systems experience over course certificates.",
+      "stats": {
+        "activePostings": 18300,
+        "postingsYoY": 19,
+        "medianSalary": 160000,
+        "growthForecast": 26,
+        "entryLevelShare": 1.1,
+        "remoteShare": 48
+      },
+      "charts": {
+        "demandTrend": [
+          { "period": "Q1 2024", "postings": 8100 },
+          { "period": "Q3 2024", "postings": 9900 },
+          { "period": "Q1 2025", "postings": 12100 },
+          { "period": "Q3 2025", "postings": 14600 },
+          { "period": "Q1 2026", "postings": 17200 },
+          { "period": "Q2 2026", "postings": 18200 }
+        ],
+        "salaryByLevel": [
+          { "level": "Entry", "salary": 95000 },
+          { "level": "Mid", "salary": 150000 },
+          { "level": "Senior", "salary": 210000 }
+        ],
+        "topSkills": [
+          { "skill": "SQL", "demand": 42 },
+          { "skill": "Python", "demand": 39 },
+          { "skill": "AWS", "demand": 37 },
+          { "skill": "Dist Sys", "demand": 30 },
+          { "skill": "Docker/K8s", "demand": 26 },
+          { "skill": "API Design", "demand": 18 },
+          { "skill": "Go", "demand": 15 }
+        ],
+        "regionalDemand": [
+          { "region": "N. America", "share": 42 },
+          { "region": "Europe", "share": 27 },
+          { "region": "Asia-Pacific", "share": 23 },
+          { "region": "Rest of World", "share": 8 }
+        ]
+      },
+      "keySkills": [
+        "Python",
+        "SQL & Databases",
+        "AWS",
+        "System Design",
+        "Docker & Kubernetes",
+        "API Design",
+        "Go",
+        "Observability"
+      ],
+      "helpSteps": [
+        {
+          "title": "Diagnose against real hiring bars",
+          "desc": "AI tests your programming, data modeling, and system-design fundamentals — showing you where companies expect entry-level candidates to actually fail."
+        },
+        {
+          "title": "Build scalable systems step by step",
+          "desc": "Your roadmap moves from API design to distributed systems, with production-grade projects that become the proofs hiring managers trust."
+        },
+        {
+          "title": "Prove production experience",
+          "desc": "Import your deployments, get AI reviews on architecture, and accumulate verified skill proof that closes the junior-openings gap."
+        },
+        {
+          "title": "Command the senior backend market",
+          "desc": "Practice heavy system-design mock interviews and build an ATS resume that positions your proof at the level the pay demands."
+        }
+      ],
+      "ctaHeadline": "Backend engineers are paid like senior engineers from day one. Earn the track record.",
+      "ctaButton": "Become a Backend Dev"
+    }
+  ]
+}

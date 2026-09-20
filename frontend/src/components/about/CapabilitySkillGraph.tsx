@@ -71,9 +71,9 @@ export default function CapabilitySkillGraph() {
       <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-primary/20 via-primary/5 to-transparent blur-2xl pointer-events-none" />
 
       {/* Main glass card container */}
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-card/90 p-5 sm:p-6 shadow-xl backdrop-blur-xl transition-all duration-300">
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-card/90 p-5 sm:p-6 shadow-xl backdrop-blur-xl transition-all duration-300 dashboard-card">
         {/* Terminal Header */}
-        <div className="flex items-center justify-between border-b border-border/70 pb-3 mb-5">
+        <div className="flex flex-col sm:flex-row items-center justify-between border-b border-border/70 pb-3 mb-5">
           <div className="flex items-center gap-2">
             <span className="flex size-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">

@@ -403,7 +403,7 @@ export default function PrivacyView() {
           </div>
 
           <div className="space-y-3 max-w-3xl">
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-foreground font-poppins">
+            <h1 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground text-balance">
               Privacy Policy
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
