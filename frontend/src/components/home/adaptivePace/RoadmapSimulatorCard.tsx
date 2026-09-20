@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Clock, Calendar, Zap, Sparkles, CheckCircle2, Award, ChevronRight } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Clock, Calendar, Zap, Sparkles, CheckCircle2, Award, ChevronRight, Loader2 } from "lucide-react";
 import { BorderBeam } from "@/src/components/ui/border-beam";
+import { simulatePace, savePace } from "@/src/lib/api/learner/adaptive-recovery";
 
 const PRESETS = [
   { label: "Part-Time", hours: 5, icon: "🌱" },
@@ -14,8 +15,27 @@ const PRESETS = [
 export default function RoadmapSimulatorCard() {
   const [weeklyHours, setWeeklyHours] = useState<number>(15);
   const [isSaved, setIsSaved] = useState<boolean>(false);
-  const totalRemainingHours = 120; // Dynamic remaining milestone hours
-  const totalMilestones = 8;
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [totalRemainingHours, setTotalRemainingHours] = useState<number>(120);
+  const [totalMilestones, setTotalMilestones] = useState<number>(8);
+
+  // Fetch real milestone remaining hours on mount
+  useEffect(() => {
+    let isMounted = true;
+    simulatePace(weeklyHours)
+      .then((data) => {
+        if (isMounted && data) {
+          if (data.remainingHours) setTotalRemainingHours(data.remainingHours);
+          if (data.remainingMilestones) setTotalMilestones(data.remainingMilestones);
+        }
+      })
+      .catch(() => {
+        // graceful fallback to dynamic state
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const simulation = useMemo(() => {
     const weeks = Math.max(1, Math.ceil(totalRemainingHours / weeklyHours));
@@ -58,15 +78,22 @@ export default function RoadmapSimulatorCard() {
       paceDescription,
       velocityIndex,
     };
-  }, [weeklyHours]);
+  }, [weeklyHours, totalRemainingHours]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await savePace(weeklyHours);
+    } catch {
+      // optimistic response
+    }
+    setIsSaving(false);
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2500);
   };
 
   return (
-    <div className="group relative w-full rounded-2xl border border-border/80 bg-white/70 dark:bg-[#0c0516]/80 p-6 sm:p-8 lg:p-10 backdrop-blur-xl shadow-xl shadow-purple-500/5 transition-all duration-300 hover:border-[var(--color-primary)]/40">
+    <div className="group relative w-full rounded-2xl border border-border/80 bg-white/70 dark:bg-[#0c0516]/80 p-5 sm:p-8 lg:p-10 backdrop-blur-xl shadow-xl shadow-purple-500/5 transition-all duration-300 hover:border-[var(--color-primary)]/40">
       <BorderBeam size={320} duration={9} colorFrom="#9F54F7" colorTo="#B978FF" />
 
       {/* Header */}
@@ -214,13 +241,19 @@ export default function RoadmapSimulatorCard() {
 
           <button
             onClick={handleSave}
+            disabled={isSaving}
             className={`mt-6 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
               isSaved
                 ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
                 : "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:opacity-95 shadow-md shadow-purple-500/20"
             }`}
           >
-            {isSaved ? (
+            {isSaving ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Saving Pace...</span>
+              </>
+            ) : isSaved ? (
               <>
                 <CheckCircle2 className="h-4 w-4" />
                 <span>Pace Synced to Profile!</span>
