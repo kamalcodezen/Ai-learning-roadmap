@@ -106,7 +106,7 @@ export default function AboutBelief() {
             </span>
           </div>
 
-          <h2 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground leading-tight text-balance">
+          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground text-balance">
             “Knowledge is only the beginning.{" "}
             <span className="bg-linear-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
               Capability is the goal
@@ -158,7 +158,7 @@ export default function AboutBelief() {
                       <span className="font-mono text-xs font-bold text-primary">
                         {pillar.number}
                       </span>
-                      <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                      <span className="font-mono hidden sm:block text-xs uppercase tracking-wider text-muted-foreground">
                         {pillar.tag}
                       </span>
                     </div>
@@ -189,7 +189,7 @@ export default function AboutBelief() {
               initial={shouldReduceMotion ? {} : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
-              className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-xl relative overflow-hidden"
+              className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-xl relative overflow-hidden dashboard-card"
             >
               {/* Pillar Header */}
               <div className="flex items-center justify-between border-b border-border/80 pb-4 mb-6">
@@ -206,7 +206,7 @@ export default function AboutBelief() {
                     </h4>
                   </div>
                 </div>
-                <span className="font-mono text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary">
+                <span className="font-mono hidden sm:block text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary">
                   {activePillar.badge}
                 </span>
               </div>
