@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Brain, Scale, ShieldAlert, Sparkles, Terminal, FileCode2, UserCheck2, CheckCircle, Info } from "lucide-react";
+import { Brain, Scale, Sparkles, Terminal, FileCode2, UserCheck2 } from "lucide-react";
 import { BorderBeam } from "@/src/components/ui/border-beam";
+import { getAIDependency, AIDependencyResult } from "@/src/lib/api/learner/adaptive-recovery";
 
 interface Persona {
   id: string;
@@ -67,15 +68,45 @@ const PERSONAS: Persona[] = [
 
 export default function AIDependencyMeterCard() {
   const [selectedPersonaId, setSelectedPersonaId] = useState<string>("balanced");
+  const [liveData, setLiveData] = useState<AIDependencyResult | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    getAIDependency()
+      .then((data) => {
+        if (isMounted && data && data.score) {
+          setLiveData(data);
+        }
+      })
+      .catch(() => {
+        // graceful fallback to interactive profiles
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const currentPersona = PERSONAS.find((p) => p.id === selectedPersonaId) || PERSONAS[1];
-  const { score, pillars, verdict, badge, badgeColor, advice } = currentPersona;
+  
+  // Use live data if user hasn't overridden via simulation buttons
+  const score = liveData && selectedPersonaId === "balanced" ? liveData.score : currentPersona.score;
+  const pillars = liveData && selectedPersonaId === "balanced"
+    ? {
+        prompt: liveData.pillars.promptDelegation,
+        ownership: liveData.pillars.codeOwnership,
+        interview: liveData.pillars.liveProblemSolving,
+      }
+    : currentPersona.pillars;
+  const verdict = liveData && selectedPersonaId === "balanced" ? liveData.verdict : currentPersona.verdict;
+  const badge = liveData && selectedPersonaId === "balanced" ? liveData.badge : currentPersona.badge;
+  const badgeColor = currentPersona.badgeColor;
+  const advice = liveData && selectedPersonaId === "balanced" ? liveData.advice : currentPersona.advice;
 
   // Gauge calculation
   const clampedScore = Math.max(2, Math.min(100, score));
 
   return (
-    <div className="group relative w-full rounded-2xl border border-border/80 bg-white/70 dark:bg-[#0c0516]/80 p-6 sm:p-8 lg:p-10 backdrop-blur-xl shadow-xl shadow-purple-500/5 transition-all duration-300 hover:border-[var(--color-primary)]/40">
+    <div className="group relative w-full rounded-2xl border border-border/80 bg-white/70 dark:bg-[#0c0516]/80 p-5 sm:p-8 lg:p-10 backdrop-blur-xl shadow-xl shadow-purple-500/5 transition-all duration-300 hover:border-[var(--color-primary)]/40">
       <BorderBeam size={320} duration={11} colorFrom="#9F54F7" colorTo="#B978FF" delay={4} />
 
       {/* Header */}
