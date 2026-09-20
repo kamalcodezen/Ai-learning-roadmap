@@ -3,7 +3,6 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 import { Compass, Sparkles, Trophy } from "lucide-react";
-import brandLogo from "../../../public/brand/AI-Pather-blue.png";
 
 const highlights = [
   {
@@ -30,14 +29,21 @@ export function WelcomeStep() {
         initial={{ opacity: 0, scale: 0.92, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="flex h-20 w-20 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 shadow-[0_0_40px_rgba(159,84,247,0.25)]"
+        className="flex items-center justify-center"
       >
         <Image
-          src={brandLogo}
+          src="/brand/AI-Pather-blue.png"
           alt="AI Pather"
           height={40}
-          width={40}
-          className="ml-1 h-9 w-9 brightness-0 dark:invert"
+          width={220}
+          className="h-10 sm:h-12 w-auto block dark:hidden object-contain"
+        />
+        <Image
+          src="/brand/AI-Pather-white.png"
+          alt="AI Pather"
+          height={40}
+          width={220}
+          className="h-10 sm:h-12 w-auto hidden dark:block object-contain"
         />
       </motion.div>
 

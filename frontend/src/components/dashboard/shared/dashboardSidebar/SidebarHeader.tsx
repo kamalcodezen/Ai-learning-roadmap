@@ -6,36 +6,34 @@ import { X } from "lucide-react";
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 import NotificationBell from "../notifications/NotificationBell";
 
-import brandLogo from "@/public/brand/AI-Pather-blue.png";
-
 interface SidebarHeaderProps {
   onClose?: () => void;
 }
 
 export default function SidebarHeader({ onClose }: SidebarHeaderProps) {
   return (
-    <div className="flex shrink-0 items-center justify-between border-b border-border pl-4 pr-3 py-2">
+    <div className="flex shrink-0 items-center justify-between border-b border-border pl-4 pr-3 py-3">
       <Link
         href="/"
-        className="flex shrink-0 items-center gap-2"
+        className="flex shrink-0 items-center"
         aria-label="AI Pather home"
       >
-        <span
-          className="flex size-8 items-center justify-center rounded-full"
-          style={{ backgroundColor: "var(--color-primary)" }}
-        >
-          <Image
-            src={brandLogo}
-            alt="Brand logo"
-            className="ml-1 h-4 w-4 brightness-0 invert"
-            height={16}
-            width={16}
-          />
-        </span>
-
-        <span className="font-sans text-h4 font-semibold text-foreground">
-          AI Pather
-        </span>
+        <Image
+          src="/brand/AI-Pather-blue.png"
+          alt="AI Pather"
+          width={140}
+          height={26}
+          className="h-6 md:h-7 w-auto block dark:hidden object-contain"
+          priority
+        />
+        <Image
+          src="/brand/AI-Pather-white.png"
+          alt="AI Pather"
+          width={140}
+          height={26}
+          className="h-6 md:h-7 w-auto hidden dark:block object-contain"
+          priority
+        />
       </Link>
 
       <div className="hidden lg:flex items-center ml-auto">

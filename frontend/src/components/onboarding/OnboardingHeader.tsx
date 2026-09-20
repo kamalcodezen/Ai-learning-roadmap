@@ -5,8 +5,6 @@ import Link from "next/link";
 
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 
-import brandLogo from "../../../public/brand/AI-Pather-blue.png";
-
 interface OnboardingHeaderProps {
   step: number;
   totalSteps: number;
@@ -16,22 +14,25 @@ export function OnboardingHeader({ step, totalSteps }: OnboardingHeaderProps) {
   return (
     <div className="space-y-5">
       <header className="flex items-center justify-between gap-4">
-        <Link className="group flex items-center gap-3" href="/">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 shadow-[0_0_30px_rgba(159,84,247,0.10)]">
-            <Image
-              src={brandLogo}
-              alt="Brand-logo"
-              className="ml-1 h-4 w-4 brightness-0 dark:invert md:h-5 md:w-5"
-              height={20}
-              width={20}
-            />
-          </div>
-
-          <div>
-            <div className="text-sm font-bold tracking-tight">AI Pather</div>
-            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-              Your learning partner
-            </div>
+        <Link className="group flex flex-col gap-0.5" href="/" aria-label="AI Pather home">
+          <Image
+            src="/brand/AI-Pather-blue.png"
+            alt="AI Pather"
+            width={140}
+            height={26}
+            className="h-6 md:h-7 w-auto block dark:hidden object-contain"
+            priority
+          />
+          <Image
+            src="/brand/AI-Pather-white.png"
+            alt="AI Pather"
+            width={140}
+            height={26}
+            className="h-6 md:h-7 w-auto hidden dark:block object-contain"
+            priority
+          />
+          <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+            Your learning partner
           </div>
         </Link>
 

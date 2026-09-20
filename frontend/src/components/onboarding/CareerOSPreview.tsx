@@ -1,8 +1,7 @@
 import { BrainCircuit, CheckCircle2, ShieldCheck, Target, Zap } from "lucide-react";
 import Image from "next/image";
-
 import { Card } from "@/src/components/ui/Card";
-import brandLogo from "../../../public/brand/AI-Pather-blue.png";
+import brandLogo from "@/public/brand/AI-Pather-blue.png";
 
 interface CareerOSPreviewProps {
   currentRole: string;

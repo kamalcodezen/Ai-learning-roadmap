@@ -87,17 +87,9 @@ export default function BrandLoader({
         }
 
         .brand-loader-img {
-          width: 20px;
+          width: 160px;
           height: auto;
           display: block;
-        }
-
-        .brand-loader-title {
-          font-family: 'Poppins', sans-serif;
-          font-size: 1.7rem;
-          font-weight: 600;
-          color: var(--text-foreground);
-          transition: color 0.3s ease;
         }
 
         /* Light Track Base */
@@ -333,17 +325,24 @@ export default function BrandLoader({
       `}</style>
 
       <div className="brand-loader-wrapper">
-        {/* Standalone Icon + Text Heading */}
-        <Link href="/" className="brand-loader-link" aria-label="AIPather home">
+        {/* Brand Logo */}
+        <Link href="/" className="brand-loader-link" aria-label="AI Pather home">
           <Image
-            src="/brand/logo-p-purple.png"
-            alt="Logo"
-            width={20}
-            height={20}
-            className="brand-loader-img"
+            src="/brand/AI-Pather-blue.png"
+            alt="AI Pather"
+            width={160}
+            height={30}
+            className="brand-loader-img block dark:hidden"
             priority
           />
-          <span className="brand-loader-title">AI Pather</span>
+          <Image
+            src="/brand/AI-Pather-white.png"
+            alt="AI Pather"
+            width={160}
+            height={30}
+            className="brand-loader-img hidden dark:block"
+            priority
+          />
         </Link>
 
         <div className="brand-loader-bar">

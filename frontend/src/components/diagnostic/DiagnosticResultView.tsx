@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import type { DiagnosticResultData } from "@/src/lib/api/learner/diagnostic";
 import { glowCardClass } from "@/src/components/dashboard/shared/cards";
-import brandLogo from "../../../public/brand/AI-Pather-blue.png";
+import brandLogo from "@/public/brand/AI-Pather-blue.png";
 
 interface DiagnosticResultViewProps {
   result: DiagnosticResultData;
