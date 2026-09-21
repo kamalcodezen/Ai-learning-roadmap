@@ -31,11 +31,11 @@ export default function HomePage() {
     <>
       <HeroSection />
       <ProgressBridgeSection />
-      <ProblemBreakdown />      
-      <HowItWorksSection />
+      <ProblemBreakdown />
       <CareerTwinSection />
       <AdaptivePaceSection />
       <FeaturesSection />
+      <HowItWorksSection />
       <Comparison />
       <Pricing />
       <TestimonialSection />
