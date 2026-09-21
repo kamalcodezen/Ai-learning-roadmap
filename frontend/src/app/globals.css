@@ -56,6 +56,7 @@
   --card-foreground: 38 38 38;
 
   --primary: 159 84 247;
+  --primary-foreground: 255 255 255;
   --secondary: 133 35 245;
   --accent: 159 84 247;
 
@@ -96,6 +97,7 @@
   --card-foreground: 247 247 247;
 
   --primary: 185 120 255;
+  --primary-foreground: 255 255 255;
   --secondary: 168 85 247;
   --accent: 185 120 255;
 
