@@ -59,20 +59,20 @@ export default function AiDependencyMeter({
   const autonomyScore = data.autonomyScore;
 
   // Visual status indicators
-  let themeColor = "text-emerald-500";
-  let statusIcon = <ShieldCheck className="w-5 h-5 text-emerald-500" />;
+  let themeColor = "text-primary";
+  let statusIcon = <ShieldCheck className="w-5 h-5 text-primary" />;
 
   if (data.category === "HIGH_RELIANCE") {
     themeColor = "text-rose-500";
     statusIcon = <ShieldAlert className="w-5 h-5 text-rose-500" />;
   } else if (data.category === "BALANCED") {
-    themeColor = "text-amber-500";
-    statusIcon = <Zap className="w-5 h-5 text-amber-500" />;
+    themeColor = "text-primary";
+    statusIcon = <Zap className="w-5 h-5 text-primary" />;
   }
 
   return (
     <div
-      className={`rounded-xl border border-border bg-card shadow-sm transition-all duration-300 ${className}`}
+      className={`rounded-xl border border-border bg-card shadow-sm transition-all duration-300 ${className} dashboard-card`}
     >
       {/* Dropdown Accordion Header */}
       <div
@@ -141,9 +141,7 @@ export default function AiDependencyMeter({
                     className={`transition-all duration-1000 ${
                       data.category === "HIGH_RELIANCE"
                         ? "stroke-rose-500"
-                        : data.category === "BALANCED"
-                        ? "stroke-amber-500"
-                        : "stroke-emerald-500"
+                        : "stroke-primary"
                     }`}
                     strokeWidth="8"
                     strokeDasharray={251.2}
