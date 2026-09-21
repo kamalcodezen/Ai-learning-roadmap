@@ -247,16 +247,51 @@ export interface AIDependencyResult {
   };
 }
 
-export const simulatePace = async (hours: number): Promise<RoadmapSimulationResult> => {
-  return await serverFetch(`/api/adaptive-recovery/simulate?hours=${hours}`);
+export const simulatePace = async (hours: number): Promise<RoadmapSimulationResult | null> => {
+  try {
+    const data = await getSimulatorData();
+    if (!data) return null;
+    return {
+      weeklyHours: hours,
+      remainingHours: data.remainingEstimatedHours || 120,
+      remainingMilestones: data.remainingMilestones || 8,
+      estimatedWeeks: data.currentPace?.weeksRemaining || Math.max(1, Math.ceil((data.remainingEstimatedHours || 120) / hours)),
+      estimatedMonths: data.currentPace?.monthsRemaining || parseFloat((Math.max(1, Math.ceil((data.remainingEstimatedHours || 120) / hours)) / 4.3).toFixed(1)),
+      projectedDate: data.currentPace?.completionDate || new Date().toISOString(),
+      paceTitle: data.currentPace?.paceLabel || "Steady Pace",
+      paceBadge: data.currentPace?.paceLabel || "🌱 Steady Pace",
+      velocityIndex: Number((hours / 10).toFixed(1)),
+    };
+  } catch {
+    return null;
+  }
 };
 
 export const savePace = async (weeklyHours: number) => {
   return await serverMutation("/api/adaptive-recovery/pace", { weeklyHours }, "PATCH");
 };
 
-export const getRecoveryPlan = async (): Promise<ZeroGuiltRecoveryResult> => {
-  return await serverFetch("/api/adaptive-recovery/recovery-status");
+export const getRecoveryPlan = async (): Promise<ZeroGuiltRecoveryResult | null> => {
+  try {
+    const data = await getRecoveryStatus();
+    if (!data) return null;
+    return {
+      daysInactive: data.daysInactive || 8,
+      isRecoveryActive: data.isRecoveryActive || false,
+      streakShieldActive: true,
+      bonusXpAmount: 50,
+      plan: data.steps?.map((s) => ({
+        day: s.dayIndex,
+        duration: `${s.estimatedMinutes || 10} Mins`,
+        title: s.title,
+        subtitle: s.subtitle,
+        type: s.type,
+        taskDetail: s.content?.description || s.title,
+      })) || [],
+    };
+  } catch {
+    return null;
+  }
 };
 
 export const claimResilienceBonus = async () => {

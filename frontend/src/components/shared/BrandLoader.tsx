@@ -42,7 +42,9 @@ export default function BrandLoader({
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          background-color: #F8FAFC;
+          background-color: rgba(107, 33, 168, 0.12);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           box-sizing: border-box;
           margin: 0;
@@ -214,10 +216,12 @@ export default function BrandLoader({
           --text-foreground: #ffffff;
           background: linear-gradient(
             165deg,
-            #240349 0%,
-            #0d0715 55%,
-            #1a0e2e 100%
+            rgba(36, 3, 73, 0.70) 0%,
+            rgba(13, 7, 21, 0.70) 55%,
+            rgba(26, 14, 46, 0.70) 100%
           );
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
         }
 
         :root.dark .brand-loader-container:not(.brand-loader-light) .brand-loader-bar,

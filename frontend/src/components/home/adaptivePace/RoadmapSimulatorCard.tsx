@@ -166,6 +166,8 @@ export default function RoadmapSimulatorCard() {
                 return (
                   <button
                     key={preset.label}
+                    type="button"
+                    suppressHydrationWarning
                     onClick={() => setWeeklyHours(preset.hours)}
                     className={`flex items-center justify-center gap-1.5 sm:gap-2 py-2 px-2.5 sm:py-2 sm:px-3 rounded-lg border text-xs sm:text-base font-medium transition-all duration-200 cursor-pointer ${
                       isActive
@@ -236,6 +238,8 @@ export default function RoadmapSimulatorCard() {
           </div>
 
           <button
+            type="button"
+            suppressHydrationWarning
             onClick={handleSave}
             disabled={isSaving}
             className={`mt-5 sm:mt-6 w-full flex items-center justify-center gap-2 py-2.5 sm:py-3 px-4 rounded-xl text-xs sm:text-base font-bold transition-all duration-300 cursor-pointer ${

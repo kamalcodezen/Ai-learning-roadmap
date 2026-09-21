@@ -60,7 +60,7 @@ export default function ZeroGuiltRecoveryCard() {
   useEffect(() => {
     let isMounted = true;
     getRecoveryPlan()
-      .then((data: ZeroGuiltRecoveryResult) => {
+      .then((data: ZeroGuiltRecoveryResult | null) => {
         if (isMounted && data) {
           if (data.daysInactive !== undefined) setDaysInactive(data.daysInactive);
           if (data.plan && data.plan.length > 0) setSteps(data.plan);
@@ -153,6 +153,8 @@ export default function ZeroGuiltRecoveryCard() {
         </div>
 
         <button
+          type="button"
+          suppressHydrationWarning
           onClick={resetDemo}
           className="self-start sm:self-center flex items-center gap-1.5 text-xs sm:text-base font-semibold text-muted-foreground hover:text-[var(--color-primary)] transition-colors shrink-0 cursor-pointer"
           title="Reset 4-day demo"
@@ -197,6 +199,8 @@ export default function ZeroGuiltRecoveryCard() {
               >
                 <div className="flex items-start gap-2.5 sm:gap-3.5">
                   <button
+                    type="button"
+                    suppressHydrationWarning
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleDay(step.day);
@@ -272,6 +276,8 @@ export default function ZeroGuiltRecoveryCard() {
 
                 <div className="mt-5 sm:mt-6 pt-3 sm:pt-4 border-t border-border/50 flex flex-col gap-2">
                   <button
+                    type="button"
+                    suppressHydrationWarning
                     onClick={() => toggleDay(activeStep.day)}
                     className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-base font-bold transition-all duration-200 cursor-pointer ${
                       isDone
@@ -285,6 +291,8 @@ export default function ZeroGuiltRecoveryCard() {
 
                   {isAllComplete && (
                     <button
+                      type="button"
+                      suppressHydrationWarning
                       onClick={handleClaimBonus}
                       disabled={isClaiming || bonusClaimed}
                       className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-base font-bold transition-all duration-300 cursor-pointer ${

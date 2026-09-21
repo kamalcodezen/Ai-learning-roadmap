@@ -123,6 +123,7 @@ const Header = ({ billing, onBillingChange }: HeaderProps) => {
         >
           <button
             type="button"
+            suppressHydrationWarning
             aria-pressed={billing === "monthly"}
             onClick={() => handleSelect("monthly")}
             className={periodPill(billing === "monthly")}
@@ -132,6 +133,7 @@ const Header = ({ billing, onBillingChange }: HeaderProps) => {
 
           <button
             type="button"
+            suppressHydrationWarning
             aria-pressed={billing === "yearly"}
             onClick={() => handleSelect("yearly")}
             className={`${periodPill(billing === "yearly")} flex items-center gap-1.5`}

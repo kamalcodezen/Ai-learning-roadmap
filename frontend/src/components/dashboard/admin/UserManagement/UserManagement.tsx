@@ -21,7 +21,7 @@ import {
 } from "@/src/lib/actions/admin/users";
 import { exportAdminData } from "@/src/lib/actions/admin/export";
 import { authClient } from "@/src/lib/auth-client";
-import { Loader2, Trash2, Shield, User, Crown, Sparkles } from "lucide-react";
+import { Loader2, Trash2, Shield, User, Crown, Sparkles, X } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import { useOverlayState } from "@heroui/react";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
@@ -437,27 +437,42 @@ export default function UserManagement() {
       />
 
       <Modal state={deleteModal}>
-        <Modal.Backdrop>
-          <Modal.Container>
-            <Modal.Dialog className="sm:max-w-[360px]">
-              <Modal.CloseTrigger />
-              <Modal.Header>
-                <Modal.Icon className="bg-red-500/10 text-red-500">
+        <Modal.Backdrop className="bg-black/70 backdrop-blur-sm z-50">
+          <Modal.Container className="z-50 p-4">
+            <Modal.Dialog className="sm:max-w-[400px] w-full rounded-2xl border border-border bg-card text-card-foreground shadow-2xl p-6 relative overflow-hidden">
+              <Modal.CloseTrigger className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-muted/60 hover:bg-muted text-foreground/70 hover:text-foreground transition-all duration-200 cursor-pointer shadow-sm z-20">
+                <X className="size-4" />
+              </Modal.CloseTrigger>
+              <Modal.Header className="flex items-center gap-3.5 pb-2">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 shadow-sm">
                   <Trash2 className="size-5" />
-                </Modal.Icon>
-                <Modal.Heading>Delete user?</Modal.Heading>
+                </div>
+                <div>
+                  <Modal.Heading className="text-lg font-bold text-foreground tracking-tight">
+                    Delete user?
+                  </Modal.Heading>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Irreversible administrative action
+                  </p>
+                </div>
               </Modal.Header>
-              <Modal.Body>
-                <p>
+              <Modal.Body className="py-3">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   WARNING: This will permanently delete the user and all
                   associated data. This action cannot be undone.
                 </p>
               </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" slot="close" fullWidth>
+              <Modal.Footer className="flex items-center gap-3 pt-4 border-t border-border/40">
+                <Button
+                  className="flex-1 rounded-xl border border-border bg-muted/50 hover:bg-muted text-foreground font-semibold py-2.5 transition-colors cursor-pointer"
+                  slot="close"
+                >
                   Cancel
                 </Button>
-                <Button variant="danger" onPress={confirmDelete} fullWidth>
+                <Button
+                  className="flex-1 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 shadow-lg shadow-red-600/20 transition-all cursor-pointer"
+                  onPress={confirmDelete}
+                >
                   Delete
                 </Button>
               </Modal.Footer>
