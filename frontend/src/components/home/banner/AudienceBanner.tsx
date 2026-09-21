@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "motion/react";
 import { authClient } from "@/src/lib/auth-client";
 
 import BannerBackground from "./BannerBackground";
@@ -8,6 +9,7 @@ import BannerHeader from "./BannerHeader";
 import BannerCta from "./BannerCta";
 import StaticCoverflowRow from "./StaticCoverflowRow";
 import MobileCardCarousel from "./MobileCardCarousel";
+import { renderHighlighted } from "./TextBody";
 
 import { carouselItems, slides } from "./data";
 
@@ -49,18 +51,17 @@ export default function AudienceBanner() {
           relative z-10
           flex w-full max-w-7xl
           flex-col items-center justify-center
-          gap-6
-          sm:gap-8
-          md:gap-9
-          lg:gap-10
+          gap-5
+          sm:gap-7
+          md:gap-8
+          lg:gap-9
         "
       >
-        {/* Header */}
+        {/* Header (Eyebrow above Big Heading) */}
         <div className="w-full">
           <BannerHeader
-            badge="A smarter way to learn"
+            badge="Track Your Journey"
             heading={activeItem.title}
-            subHeading={activeItem.description}
           />
         </div>
 
@@ -92,8 +93,33 @@ export default function AudienceBanner() {
           />
         </div>
 
-        {/* CTA */}
-        <div className="flex w-full justify-center">
+        {/* Subtitle & CTA (Below cards, above button) */}
+        <div className="flex flex-col items-center justify-center gap-1 sm:gap-2 w-full">
+          <motion.p
+            key={`${activeItem.title}-subtitle`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.45,
+              delay: 0.08,
+              ease: "easeOut",
+            }}
+            className="
+              section-description
+              max-w-xl
+              px-4
+              text-center
+              font-poppins
+              text-sm
+              text-black dark:text-white
+              font-medium
+              dark:[text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
+              sm:text-lg
+            "
+          >
+            {renderHighlighted(activeItem.description, true)}
+          </motion.p>
+
           <BannerCta text="Get Started" href={ctaHref} />
         </div>
       </div>
