@@ -374,7 +374,7 @@ export default function AdminInterviewsView() {
               data-lenis-prevent-touch="true"
               className="sm:max-w-[720px] max-h-[90vh] flex flex-col rounded-2xl border border-border bg-card text-card-foreground shadow-2xl overflow-hidden relative"
             >
-              <Modal.CloseTrigger className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white dark:text-black transition-all duration-200 cursor-pointer shadow-sm z-20">
+              <Modal.CloseTrigger className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white transition-all duration-200 cursor-pointer shadow-sm z-20">
                 <X className="size-4" />
               </Modal.CloseTrigger>
               <Modal.Header className="border-b border-border/40 p-5 flex items-center gap-3.5 relative z-10">
