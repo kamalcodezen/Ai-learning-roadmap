@@ -383,7 +383,7 @@ export default function AdminProjectsView() {
               data-lenis-prevent-touch="true"
               className="sm:max-w-[640px] w-full rounded-2xl border border-border bg-card text-card-foreground shadow-2xl p-6 relative overflow-hidden"
             >
-              <Modal.CloseTrigger className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white dark:text-black transition-all duration-200 cursor-pointer shadow-sm z-20">
+              <Modal.CloseTrigger className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white transition-all duration-200 cursor-pointer shadow-sm z-20">
                 <X className="size-4" />
               </Modal.CloseTrigger>
               <Modal.Header className="border-b border-border/40 pb-4 flex items-center gap-3.5 relative z-10">
@@ -491,7 +491,7 @@ export default function AdminProjectsView() {
                 )}
               </Modal.Body>
               <Modal.Footer className="border-t border-border/40 pt-4">
-                <Button className="w-full rounded-xl bg-primary hover:bg-primary/90 text-white dark:text-black font-semibold py-2.5 transition-colors cursor-pointer" slot="close">
+                <Button className="w-full rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold py-2.5 transition-colors cursor-pointer" slot="close">
                   Close
                 </Button>
               </Modal.Footer>
