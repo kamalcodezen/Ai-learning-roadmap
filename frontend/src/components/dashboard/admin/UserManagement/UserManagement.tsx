@@ -361,7 +361,7 @@ export default function UserManagement() {
 
         <button
           onClick={() => setIsAddUserOpen(true)}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-sm transition-all shadow-md shadow-emerald-600/20 active:scale-98 cursor-pointer shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/80 text-white font-semibold text-sm transition-all shadow-md shadow-primary/20 active:scale-98 cursor-pointer shrink-0"
         >
           <UserPlus className="size-4" />
           <span>Add User</span>
@@ -602,9 +602,9 @@ export default function UserManagement() {
                     title={isAllSelected ? "Deselect page" : "Select all on page"}
                   >
                     {isAllSelected ? (
-                      <CheckSquare className="size-4 text-emerald-500" />
+                      <CheckSquare className="size-4 text-primary" />
                     ) : isSomeSelected ? (
-                      <MinusSquare className="size-4 text-emerald-500" />
+                      <MinusSquare className="size-4 text-primary" />
                     ) : (
                       <Square className="size-4" />
                     )}
@@ -647,7 +647,7 @@ export default function UserManagement() {
                           className="flex items-center justify-center mx-auto cursor-pointer text-muted-foreground hover:text-foreground"
                         >
                           {isSelected ? (
-                            <CheckSquare className="size-4 text-emerald-500" />
+                            <CheckSquare className="size-4 text-primary" />
                           ) : (
                             <Square className="size-4" />
                           )}
