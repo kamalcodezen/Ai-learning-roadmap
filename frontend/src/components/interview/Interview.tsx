@@ -380,7 +380,7 @@ export default function Interview() {
   // Live Interview Room
   if (view === "live_room" && questions.length > 0) {
     return (
-      <main className="min-h-screen w-full px-4 py-8 max-w-5xl mx-auto">
+      <main className="min-h-[calc(100vh-100px)] w-full flex flex-col py-2">
         {errorMessage && (
           <div className="mb-4 p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-500 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
