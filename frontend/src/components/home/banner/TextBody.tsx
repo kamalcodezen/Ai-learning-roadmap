@@ -4,12 +4,12 @@ import { ReactNode } from "react";
 import { motion } from "motion/react";
 
 interface TextBodyProps {
+  badge?: string;
   heading: string;
-  subHeading: string;
 }
 
 /* Renders text with *word* segments highlighted in brand purple */
-function renderHighlighted(text: string): ReactNode[] {
+export function renderHighlighted(text: string, isLightModeDark = false): ReactNode[] {
   return text
     .split(/(\*[^*]+\*)/g)
     .filter(Boolean)
@@ -18,10 +18,11 @@ function renderHighlighted(text: string): ReactNode[] {
         return (
           <span
             key={index}
-            className="
-              text-white
-              [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
-            "
+            className={
+              isLightModeDark
+                ? "text-black dark:text-white font-semibold"
+                : "text-white [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]"
+            }
           >
             {part.slice(1, -1)}
           </span>
@@ -32,34 +33,13 @@ function renderHighlighted(text: string): ReactNode[] {
     });
 }
 
-export default function TextBody({ heading, subHeading }: TextBodyProps) {
+export default function TextBody({ heading }: TextBodyProps) {
   const plainHeading = heading.replace(/\*/g, "");
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col items-center pb-2 text-center">
-      {/* Eyebrow */}
-      {/* <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="
-          mb-2
-          flex
-          items-center
-          gap-2
-          font-poppins
-          text-xs
-          font-semibold
-          uppercase
-          tracking-[0.18em]
-          text-[#9F54F7]
-          [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
-          sm:mb-4
-        "
-      >
-        <span className="text-sm">✦</span>
-        Track Your Journey
-      </motion.div> */}
+      {/* Eyebrow / Small Heading above main big heading */}
+    
 
       {/* Heading */}
       <motion.h1
@@ -69,6 +49,7 @@ export default function TextBody({ heading, subHeading }: TextBodyProps) {
         transition={{ duration: 0.45, ease: "easeOut" }}
         aria-label={plainHeading}
         className="
+        pt-12
           text-[2.5rem]
           font-extrabold
           text-white
@@ -80,32 +61,6 @@ export default function TextBody({ heading, subHeading }: TextBodyProps) {
       >
         {renderHighlighted(heading)}
       </motion.h1>
-
-      {/* Subtitle */}
-      <motion.p
-        key={`${heading}-subtitle`}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.45,
-          delay: 0.12,
-          ease: "easeOut",
-        }}
-        className="
-          section-description
-          mt-2
-          max-w-xl
-          px-4
-          font-poppins
-          text-sm
-          text-white/80
-          [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
-          sm:mt-5
-          sm:text-lg
-        "
-      >
-        {renderHighlighted(subHeading)}
-      </motion.p>
     </div>
   );
 }

@@ -269,17 +269,17 @@ export default function AdminBroadcastsView() {
               <button
                 type="submit"
                 disabled={sendMutation.isPending}
-                className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary py-2.5 text-sm font-bold text-white dark:text-black shadow-sm hover:opacity-90 active:scale-[0.99] transition-all disabled:opacity-50 cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary py-2.5 text-sm font-bold text-white shadow-sm hover:opacity-90 active:scale-[0.99] transition-all disabled:opacity-50 cursor-pointer"
               >
                 {sendMutation.isPending ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin text-white dark:text-black" />
-                    <span className="text-white dark:text-black">Dispatching to {targetCohort} Learners...</span>
+                    <Loader2 className="h-4 w-4 animate-spin text-white" />
+                    <span className="text-white">Dispatching to {targetCohort} Learners...</span>
                   </>
                 ) : (
                   <>
-                    <Send className="h-4 w-4 text-white dark:text-black" />
-                    <span className="text-white dark:text-black">Dispatch Broadcast Announcement</span>
+                    <Send className="h-4 w-4 text-white" />
+                    <span className="text-white">Dispatch Broadcast Announcement</span>
                   </>
                 )}
               </button>

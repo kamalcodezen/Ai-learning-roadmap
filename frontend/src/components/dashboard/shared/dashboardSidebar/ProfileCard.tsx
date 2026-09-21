@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Crown, Sparkles, Zap } from "lucide-react";
+import { Crown, Sparkles, Zap, ShieldCheck } from "lucide-react";
 import { useDashboardSession } from "../sessionGuard/SessionGuard";
 
 interface ProfileCardProps {
@@ -31,9 +31,18 @@ export default function ProfileCard({ name, email, plan, image }: ProfileCardPro
     return () => window.removeEventListener("user-avatar-updated", handleAvatarUpdate);
   }, []);
 
+  const userRole = ((session?.user as { role?: string })?.role || "").toUpperCase();
+  const isAdmin = userRole === "ADMIN";
   const userPlan = (plan || (session?.user as { plan?: string })?.plan || "FREE").toUpperCase();
 
   const getPlanBadge = () => {
+    if (isAdmin) {
+      return {
+        label: "SUPER ADMIN",
+        icon: ShieldCheck,
+        style: "bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30 font-bold",
+      };
+    }
     switch (userPlan) {
       case "PRO":
         return {
