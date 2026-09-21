@@ -39,7 +39,11 @@ export default function ZeroGuiltRecoveryBanner({
 }: ZeroGuiltRecoveryBannerProps) {
   const queryClient = useQueryClient();
   const [isBannerOpen, setIsBannerOpen] = useState(defaultExpanded);
-  const [activeStepIndex, setActiveStepIndex] = useState<number | null>(null);
+  const [activeStepIndex, setActiveStepIndex] = useState<number | null>(() => {
+    if (!initialData) return null;
+    const current = initialData.steps.find((s) => !s.completed) || initialData.steps[initialData.steps.length - 1];
+    return current?.dayIndex ?? null;
+  });
   const [puzzleAnswer, setPuzzleAnswer] = useState<number | null>(null);
   const [puzzleSubmitted, setPuzzleSubmitted] = useState(false);
 
@@ -172,7 +176,7 @@ export default function ZeroGuiltRecoveryBanner({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
             {data.steps.map((step) => {
               const isCurrent = currentStep?.dayIndex === step.dayIndex;
-              const isExpanded = activeStepIndex === step.dayIndex || (activeStepIndex === null && isCurrent);
+              const isExpanded = activeStepIndex === step.dayIndex;
 
               return (
                 <div

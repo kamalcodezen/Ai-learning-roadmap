@@ -54,7 +54,7 @@ export default function BrandLoader({
           position: fixed;
           inset: 0;
           min-height: 100vh;
-          width: 100vw;
+          width: 100%;
           z-index: 9999;
         }
 

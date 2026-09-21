@@ -57,7 +57,7 @@ const MARQUEE_ITEMS = [
 
 export default function ProgressBridgeSection() {
   return (
-    <div className="relative w-full overflow-visible z-20">
+    <div className="relative w-full overflow-hidden z-20">
       {/* ============================= NETFLIX-STYLE CURVED TOP ARC ============================= */}
       <div className="relative w-full overflow-hidden leading-none pointer-events-none -mb-[1px]">
         {/* Ambient subtle purple glow behind the apex peak */}

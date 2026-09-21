@@ -422,7 +422,7 @@ export default function LearningPathContent() {
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           {/* View Mode Switcher */}
-          <div className="flex items-center gap-1 p-1 bg-card rounded-xl border border-border shrink-0">
+          <div className="flex items-center w-fit gap-1 p-1 bg-card rounded-xl border border-border shrink-0">
             <button
               type="button"
               onClick={() => setViewMode("graph")}
@@ -451,7 +451,7 @@ export default function LearningPathContent() {
 
           <Link
             href="/dashboard/learner/adaptive-recovery"
-            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-muted-foreground hover:text-foreground bg-card hover:bg-muted/80 border border-border shrink-0 transition-all"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-muted-foreground hover:text-foreground bg-card hover:bg-muted/80 border border-border shrink-0 transition-all w-fit"
             title="Adjust study commitment & recovery settings"
           >
             <Sliders className="w-3.5 h-3.5 text-primary" />

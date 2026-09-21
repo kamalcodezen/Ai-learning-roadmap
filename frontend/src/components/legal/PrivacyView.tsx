@@ -344,7 +344,7 @@ export default function PrivacyView() {
   };
 
   return (
-    <div className="relative w-full min-h-screen py-12 px-4 sm:px-6 lg:px-8 pt-26">
+    <div className="relative w-full min-h-screen overflow-hidden py-12 px-4 sm:px-6 lg:px-8 pt-26">
       {/* Soft Ambient Glows */}
       <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-primary/10 blur-[130px] rounded-full" />
 

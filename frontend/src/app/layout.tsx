@@ -58,7 +58,7 @@ export default function RootLayout({
       className={`antialiased ${hindSiliguri.variable}`}
     >
       <body
-        className="flex flex-col antialiased"
+        className="flex flex-col antialiased overflow-x-hidden"
         suppressHydrationWarning
       >
         <NextTopLoader

@@ -299,7 +299,7 @@ export function InterviewLobby({
           type="button"
           onClick={() => onStart({ mode: selectedMode, questionCount })}
           disabled={isLoading}
-          className="w-full sm:w-auto min-w-[300px] flex items-center justify-center gap-3 px-8 py-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-extrabold text-base shadow-lg shadow-primary/25 transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 cursor-pointer"
+          className="w-full sm:w-auto min-w-[300px] flex items-center justify-center gap-3 px-8 py-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-primary/25 transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 cursor-pointer"
         >
           {isLoading ? (
             <>Generating Role-Specific AI Interview...</>
