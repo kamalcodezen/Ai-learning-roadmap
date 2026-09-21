@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getRecoveryStatus,
@@ -51,6 +51,16 @@ export default function ZeroGuiltRecoveryBanner({
   });
 
   const data = serverData || initialData;
+
+  // Auto-expand the current (first incomplete) step on initial load
+  useEffect(() => {
+    if (data && activeStepIndex === null) {
+      const current = data.steps.find((s) => !s.completed) || data.steps[data.steps.length - 1];
+      if (current) {
+        setActiveStepIndex(current.dayIndex);
+      }
+    }
+  }, [data]);
 
   const stepMutation = useMutation({
     mutationFn: (dayIndex: number) => completeRecoveryStep(dayIndex),
@@ -172,7 +182,7 @@ export default function ZeroGuiltRecoveryBanner({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
             {data.steps.map((step) => {
               const isCurrent = currentStep?.dayIndex === step.dayIndex;
-              const isExpanded = activeStepIndex === step.dayIndex || (activeStepIndex === null && isCurrent);
+              const isExpanded = activeStepIndex === step.dayIndex;
 
               return (
                 <div
