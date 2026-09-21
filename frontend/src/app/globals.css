@@ -795,3 +795,35 @@ button {
     background-position: 100% 100%, 0 0;
   }
 }
+
+/* ===== Features Swiper (mobile) ===== */
+.features-swiper {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.features-swiper .swiper-slide {
+  transition: transform 0.3s ease;
+  box-shadow: none;
+}
+
+.features-swiper .swiper-slide-active {
+  transform: scale(1);
+}
+
+.features-swiper .swiper-slide-prev,
+.features-swiper .swiper-slide-next {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Force animated border always visible on mobile */
+@media (max-width: 639px) {
+  .features-swiper .swiper-slide svg polygon {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .features-swiper .swiper-slide:hover {
+    transform: none;
+  }
+}
