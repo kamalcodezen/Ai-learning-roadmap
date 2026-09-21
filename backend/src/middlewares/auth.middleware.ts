@@ -5,6 +5,7 @@ declare global {
   namespace Express {
     interface Request {
       userId?: string;
+      userRole?: string;
     }
   }
 }
@@ -33,6 +34,7 @@ export const optionalAuth = async (
       const data = (await response.json()) as any;
       if (data?.user?.id) {
         req.userId = data.user.id;
+        req.userRole = data.user.role;
       }
     }
 
@@ -71,6 +73,7 @@ export const requireAuth = async (
     }
 
     req.userId = data.user.id;
+    req.userRole = data.user.role;
     next();
   } catch (error) {
     console.error("[Require Auth Middleware Error]", error);

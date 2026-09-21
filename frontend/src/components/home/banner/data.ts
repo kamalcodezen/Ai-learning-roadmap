@@ -71,5 +71,4 @@ export const slides: CoverflowSlide[] = carouselItems.map((item) => ({
   alt: item.title.replace(/\*/g, ""),
   title: item.title,
   subtitle: item.description,
-  video: item.video,
 }));

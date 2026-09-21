@@ -1069,6 +1069,38 @@ export function ResumeStudio() {
               </div>
             </div>
           )}
+
+          {/* Bottom Save Action Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 p-5 rounded-lg bg-card border border-border dashboard-card mt-6">
+            <div className="flex items-center gap-2.5">
+              <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+                <Save className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-foreground">Ready to save your progress?</p>
+                <p className="text-[11px] text-muted-foreground">
+                  All changes are saved to your database and synced with ATS diagnostics.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              {saveStatusMessage && (
+                <span className="text-xs font-bold text-primary animate-in fade-in">
+                  {saveStatusMessage}
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => saveMutation.mutate(resumeState)}
+                disabled={saveMutation.isPending}
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white text-xs font-bold shadow-md shadow-primary/20 transition-all cursor-pointer disabled:opacity-50"
+              >
+                <Save className={`w-4 h-4 ${saveMutation.isPending ? "animate-spin" : ""}`} />
+                <span>{saveMutation.isPending ? "Saving Resume..." : "Save Resume Changes"}</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

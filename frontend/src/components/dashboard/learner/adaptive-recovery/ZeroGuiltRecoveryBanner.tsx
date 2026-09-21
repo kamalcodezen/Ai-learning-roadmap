@@ -110,7 +110,7 @@ export default function ZeroGuiltRecoveryBanner({
 
   return (
     <div
-      className={`rounded-xl border border-border bg-card shadow-sm transition-all duration-300 ${className}`}
+      className={`rounded-xl border border-border bg-card shadow-sm transition-all duration-300 ${className} dashboard-card`}
     >
       {/* Dropdown Accordion Header */}
       <div
@@ -235,7 +235,7 @@ export default function ZeroGuiltRecoveryBanner({
                         }
                         className={`w-full py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                           isCurrent
-                            ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs"
+                            ? "bg-primary hover:bg-primary/90 text-white shadow-xs"
                             : "bg-muted hover:bg-muted/80 text-foreground"
                         }`}
                       >
@@ -369,7 +369,7 @@ export default function ZeroGuiltRecoveryBanner({
                             type="button"
                             onClick={() => stepMutation.mutate(step.dayIndex)}
                             disabled={stepMutation.isPending}
-                            className="px-4 py-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-bold transition-all shadow-xs"
+                            className="px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 text-xs font-bold transition-all shadow-xs cursor-pointer"
                           >
                             Mark Frontier Active
                           </button>
@@ -381,7 +381,7 @@ export default function ZeroGuiltRecoveryBanner({
                     {step.type === "MOMENTUM_BOOST" && (
                       <div className="bg-card p-4 rounded-xl border border-border space-y-3">
                         <div className="flex items-center gap-3">
-                          <div className="p-3 rounded-xl bg-amber-500/10 text-amber-500 border border-border">
+                          <div className="p-3 rounded-xl bg-primary/10 text-primary border border-border">
                             <Trophy className="w-6 h-6" />
                           </div>
                           <div>
@@ -403,7 +403,7 @@ export default function ZeroGuiltRecoveryBanner({
                           type="button"
                           disabled={puzzleAnswer === null}
                           onClick={() => handlePuzzleSubmit(step)}
-                          className="px-5 py-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
+                          className="px-5 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
                         >
                           Check Answer
                         </button>
@@ -414,7 +414,7 @@ export default function ZeroGuiltRecoveryBanner({
                           type="button"
                           disabled={stepMutation.isPending}
                           onClick={() => stepMutation.mutate(step.dayIndex)}
-                          className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold transition-all flex items-center gap-2 shadow-xs cursor-pointer"
+                          className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white text-xs font-bold transition-all flex items-center gap-2 shadow-xs cursor-pointer"
                         >
                           {stepMutation.isPending ? (
                             <>

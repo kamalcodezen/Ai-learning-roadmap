@@ -44,7 +44,7 @@ const mistral = env.MISTRAL_API_KEY
 // Models
 const GROQ_SIMPLE_MODEL = "qwen/qwen3.8-27b";
 const GROQ_COMPLEX_MODEL = "qwen/qwen3.8-27b";
-const GROQ_FALLBACK_MODEL = "groq/compound-mini";
+const GROQ_FALLBACK_MODEL = "groq/compound";
 
 // এটি OpenRouter-এর মডেল ➔ OPENROUTER_API_KEY ও OPENROUTER_API_KEY_SECONDARY দিয়ে চলে
 const OPENROUTER_MODEL = "qwen/qwen-2.5-coder-32b-instruct";
@@ -248,10 +248,16 @@ const getRecentHistory = (history: any[] = []): MessageItem[] => {
         item.content.trim(),
     )
     .slice(-4)
-    .map((item) => ({
-      role: item.role as "user" | "assistant",
-      content: item.content.trim(),
-    }));
+    .map((item) => {
+      let content = item.content.trim();
+      if (content.length > 800) {
+        content = content.slice(0, 800) + "... [truncated]";
+      }
+      return {
+        role: item.role as "user" | "assistant",
+        content,
+      };
+    });
 };
 
 /**
@@ -341,6 +347,26 @@ export class ChatService {
       // If no career context needed (e.g. casual greeting), return undefined to save DB queries
       if (!needsDeepContext) {
         return undefined;
+      }
+
+      // Check user role first
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { role: true, name: true, email: true },
+      });
+
+      if (user?.role === "ADMIN") {
+        const [totalUsers, totalRoadmaps, totalProjects] = await Promise.all([
+          prisma.user.count(),
+          prisma.roadmap.count(),
+          prisma.project.count(),
+        ]);
+        return `[USER STATUS: SYSTEM_ADMIN (ROOT ACCESS)]
+- User: ${user.name || "Administrator"} (System Administrator)
+- Email: ${user.email}
+- Platform Overview: Total Registered Users: ${totalUsers}, Active Roadmaps: ${totalRoadmaps}, Submitted Projects: ${totalProjects}.
+- Admin has full superuser permissions across the platform (Analytics, User Directory, Broadcasts, Audit Logs, System Health, Gem Economy).
+- Provide administrative insights, operational assistance, platform statistics, architecture analysis, and broadcast drafting as requested.`;
       }
 
       // Fetch the baseline profile

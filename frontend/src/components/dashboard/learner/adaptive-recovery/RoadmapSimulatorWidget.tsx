@@ -130,7 +130,7 @@ export default function RoadmapSimulatorWidget({
 
   return (
     <div
-      className={`rounded-xl border border-border bg-card shadow-sm transition-all duration-300 ${className}`}
+      className={`rounded-xl border border-border bg-card shadow-sm transition-all duration-300 ${className} dashboard-card`}
     >
       {/* Dropdown Accordion Header */}
       <div
@@ -236,7 +236,7 @@ export default function RoadmapSimulatorWidget({
                     onClick={() => setSliderHours(preset.val)}
                     className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all border ${
                       sliderHours === preset.val
-                        ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                        ? "bg-primary text-white border-primary shadow-xs"
                         : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border-border"
                     }`}
                   >
@@ -300,7 +300,7 @@ export default function RoadmapSimulatorWidget({
                 disabled={paceMutation.isPending || (!isModified && !saveSuccess)}
                 className={`w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-xs ${
                   isModified
-                    ? "bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer"
+                    ? "bg-primary hover:bg-primary/90 text-white cursor-pointer"
                     : "bg-muted text-muted-foreground opacity-75 cursor-default"
                 }`}
               >

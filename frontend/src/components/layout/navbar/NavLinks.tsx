@@ -21,6 +21,8 @@ import {
   FiMail,
   FiTrendingUp,
   FiCopy,
+  FiUsers,
+  FiRadio,
 } from "react-icons/fi";
 import { Sparkles, Crown, Loader2, Bot, BrainCircuit, BarChart3, Layers, Monitor, Server, ShieldCheck, FileText, BookMarked } from "lucide-react";
 import { trackNavLinks } from "@/src/data/tracks";
@@ -193,7 +195,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
   const profileLinks = getDropdownLinks(userRole, prefix);
 
-  const planBadge = getPlanBadge(userPlan);
+  const planBadge = getPlanBadge(userPlan, userRole);
   const PlanIcon = planBadge.icon;
 
   const links = getNavLinks();
@@ -224,10 +226,16 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   const getProfileIcon = (label: string) => {
     switch (label) {
       case "Dashboard":
+      case "Admin Overview":
       case "Admin Dashboard":
         return <FiLayout className="size-4 shrink-0" />;
+      case "User Directory":
+        return <FiUsers className="size-4 shrink-0" />;
+      case "Broadcast Center":
+        return <FiRadio className="size-4 shrink-0" />;
       case "Profile":
       case "My Profile":
+      case "Admin Profile":
         return <FiUser className="size-4 shrink-0" />;
       case "Settings":
       case "Settings & Billing":
@@ -448,46 +456,64 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                 </div>
               )}
 
-              {/* Dynamic Plan Upgrade Card */}
+              {/* Dynamic Plan Upgrade Card or Admin System Banner */}
               {isAuthenticated && (
                 <div className="px-0.5">
-                  {userPlan === "FREE" && (
+                  {userRole === "ADMIN" ? (
                     <Link
-                      href="/pricing"
+                      href="/dashboard/admin"
                       onClick={() => setMobileOpen(false)}
-                      className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                      className="group flex items-center justify-between rounded-xl border border-purple-500/30 bg-purple-500/10 px-3.5 py-2.5 text-xs font-semibold text-purple-700 dark:text-purple-300 shadow-xs transition-all hover:bg-purple-500/20"
                     >
                       <span className="flex items-center gap-1.5">
-                        <Sparkles className="size-3.5 text-yellow-300" />
-                        <span>Upgrade to Plus</span>
+                        <ShieldCheck className="size-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
+                        <span className="font-bold">Admin Console</span>
                       </span>
-                      <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
-                        Save 20%
-                      </span>
-                    </Link>
-                  )}
-
-                  {userPlan === "PLUS" && (
-                    <Link
-                      href="/pricing"
-                      onClick={() => setMobileOpen(false)}
-                      className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <Crown className="size-3.5 text-yellow-200" />
-                        <span>Upgrade to Pro</span>
-                      </span>
-                      <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
-                        Enterprise
+                      <span className="rounded-md bg-purple-500/20 dark:bg-purple-400/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-purple-700 dark:text-purple-300">
+                        Root Access
                       </span>
                     </Link>
-                  )}
+                  ) : (
+                    <>
+                      {userPlan === "FREE" && (
+                        <Link
+                          href="/pricing"
+                          onClick={() => setMobileOpen(false)}
+                          className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            <Sparkles className="size-3.5 text-yellow-300" />
+                            <span>Upgrade to Plus</span>
+                          </span>
+                          <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                            Save 20%
+                          </span>
+                        </Link>
+                      )}
 
-                  {userPlan === "PRO" && (
-                    <div className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3.5 py-2 text-xs font-bold text-amber-500 dark:text-amber-400">
-                      <Crown className="size-3.5" />
-                      <span>Verified Pro Member</span>
-                    </div>
+                      {userPlan === "PLUS" && (
+                        <Link
+                          href="/pricing"
+                          onClick={() => setMobileOpen(false)}
+                          className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            <Crown className="size-3.5 text-yellow-200" />
+                            <span>Upgrade to Pro</span>
+                          </span>
+                          <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                            Enterprise
+                          </span>
+                        </Link>
+                      )}
+
+                      {userPlan === "PRO" && (
+                        <div className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3.5 py-2 text-xs font-bold text-amber-500 dark:text-amber-400">
+                          <Crown className="size-3.5" />
+                          <span>Verified Pro Member</span>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               )}
