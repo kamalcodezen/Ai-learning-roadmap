@@ -11,7 +11,6 @@ import { useChatMentor } from "@/src/hooks/useChatMentor";
 import { PlasmaTriggerButton } from "./PlasmaTriggerButton";
 import { TypingIndicator } from "./TypingIndicator";
 import { useInlineVoiceChat } from "../voice-agent";
-import logoSrc from "@/public/brand/logo-p-dark.png";
 
 function getTimeGreeting(): string {
   const hours = new Date().getHours();
@@ -23,6 +22,8 @@ function getTimeGreeting(): string {
   }
   return "Good evening";
 }
+
+const logoSrc = "/brand/uploaded-p-white.png";
 
 function cn(...classes: (string | boolean | undefined | null)[]) {
   return classes.filter(Boolean).join(" ");
@@ -82,9 +83,19 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
     return () => clearInterval(interval);
   }, []);
 
+  const sessionUser = session?.user as { role?: string; name?: string } | undefined;
+  const userRole = sessionUser?.role?.toUpperCase() || (session?.user ? "LEARNER" : "GUEST");
   const rawName = session?.user?.name?.trim();
   const userName = rawName ? rawName.split(/\s+/)[0] : undefined;
-  const greeting = userName ? `${timeGreeting}, ${userName}` : timeGreeting;
+
+  const greeting =
+    userRole === "ADMIN"
+      ? userName
+        ? `${timeGreeting}, ${userName} (Admin)`
+        : `${timeGreeting}, Admin`
+      : userName
+      ? `${timeGreeting}, ${userName}`
+      : timeGreeting;
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -181,16 +192,23 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[0_0_15px_rgba(159,84,247,0.5)] p-2">
                     <Image
-                      src={logoSrc}
-                      alt="AI Pathar"
+                      src="/brand/uploaded-p-white.png"
+                      alt="AI Pather"
                       width={22}
                       height={22}
-                      className="h-5.5 w-5.5 object-contain"
+                      className="h-5.5 w-5.5 object-contain block dark:hidden"
+                    />
+                    <Image
+                      src="/brand/uploaded-p-white.png"
+                      alt="AI Pather"
+                      width={22}
+                      height={22}
+                      className="h-5.5 w-5.5 object-contain hidden dark:block"
                     />
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-zinc-950 dark:text-white tracking-wide">
-                      AI Pathar
+                      AI Pather
                     </h3>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className="h-2 w-2 rounded-full bg-[var(--color-primary)] dark:bg-[var(--color-primary)] shadow-[0_0_8px_rgba(159,84,247,0.8)]" />
@@ -292,6 +310,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                           width={130}
                           height={24}
                           className="h-5 sm:h-6 w-auto object-contain block dark:hidden"
+                          style={{ width: "auto" }}
                         />
                         <Image
                           src="/brand/AI-Pather-white.png"
@@ -299,6 +318,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                           width={130}
                           height={24}
                           className="h-5 sm:h-6 w-auto object-contain hidden dark:block"
+                          style={{ width: "auto" }}
                         />
                       </div>
                       <h3 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 dark:text-white tracking-tight">
@@ -312,7 +332,14 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                         ? "grid grid-cols-1 sm:grid-cols-2 gap-3"
                         : "flex flex-col gap-2"
                     )}>
-                      {(session?.user
+                      {(userRole === "ADMIN"
+                        ? [
+                            "📊 Summarize platform health & active learner metrics",
+                            "👥 How do I manage users & assign role permissions?",
+                            "📢 Help me draft a platform broadcast announcement",
+                            "🔍 What are the top learner skill gap trends?",
+                          ]
+                        : userRole === "LEARNER"
                         ? [
                             "🎯 What is my current milestone and next step?",
                             "🧠 Review my active skill gaps and learning debt",
@@ -320,7 +347,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                             "🎙️ Start a 5-minute technical mock interview",
                           ]
                         : [
-                            "🚀 What is AIPather and how does it work?",
+                            "🚀 What is AI Pather and how does it work?",
                             "🗺️ Which tech career track should I start with?",
                             "💡 How does the adaptive roadmap help me?",
                             "💼 How do I get verified proof for my GitHub projects?",
@@ -513,7 +540,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     disabled={isLoading}
-                    placeholder="Ask AI Pathar..."
+                    placeholder="Ask AI Pather..."
                     className="flex-1 bg-transparent text-sm font-bold !text-black dark:!text-white outline-none placeholder:text-zinc-700 dark:placeholder:text-zinc-400 placeholder:font-medium disabled:cursor-not-allowed"
                   />
                   {/* Direct Inline Voice Input Mic Button */}
@@ -557,7 +584,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                   </motion.button>
                 </div>
                 <p className="mt-2 text-center text-xs text-zinc-500 dark:text-zinc-300 font-medium">
-                  AI Pathar can make mistakes. Verify important information.
+                  AI Pather can make mistakes. Verify important information.
                 </p>
               </div>
             </div>

@@ -7,14 +7,13 @@ import { X } from "lucide-react";
 
 interface PlasmaTriggerButtonProps {
   size?: number;
-  logo: string | StaticImageData;
+  logo?: string | StaticImageData;
   isOpen: boolean;
   onClick: () => void;
 }
 
 export const PlasmaTriggerButton: FC<PlasmaTriggerButtonProps> = ({
   size = 60,
-  logo,
   isOpen,
   onClick,
 }) => {
@@ -44,13 +43,21 @@ export const PlasmaTriggerButton: FC<PlasmaTriggerButtonProps> = ({
 
           {/* Logo or Close Icon */}
           {!isOpen ? (
-            <div className="relative z-10 flex items-center justify-center p-2 bg-transparent animate-loaderLogo">
+            <div className="relative z-10 flex items-center justify-center bg-transparent animate-loaderLogo">
               <Image
-                src={logo}
+                src="/brand/logo-p-dark.png"
                 alt="AI Pathar Logo"
-                width={32}
-                height={32}
-                className="h-8 w-8 object-contain"
+                width={30}
+                height={30}
+                className="h-7 w-7 object-contain block dark:hidden"
+                priority
+              />
+              <Image
+                src="/brand/uploaded-p-white.png"
+                alt="AI Pathar Logo"
+                width={30}
+                height={30}
+                className="h-7 w-7 object-contain hidden dark:block"
                 priority
               />
             </div>
