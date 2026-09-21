@@ -2,17 +2,25 @@ import type { Metadata } from "next";
 import TermsView from "@/src/components/legal/TermsView";
 
 export const metadata: Metadata = {
-  title: "Terms of Service",
+  title: "Terms & Conditions",
   description:
-    "Review the terms and conditions governing your use of AI Pather's career roadmaps, skill diagnostics, portfolio audits, and subscription tiers.",
+    "Review the Terms and Conditions governing your use of AI Pather's career roadmaps, skill diagnostics, portfolio audits, and subscription tiers.",
   alternates: {
     canonical: "/terms",
   },
   openGraph: {
-    title: "AI Pather | Terms of Service",
+    title: "Terms & Conditions | AI Pather",
     description:
-      "Clear, transparent terms of service, 100% user code ownership, and platform agreements for learners.",
+      "Review the Terms and Conditions governing your use of AI Pather's career roadmaps, skill diagnostics, portfolio audits, and subscription tiers.",
+    url: "/terms",
+    siteName: "AI Pather",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms & Conditions | AI Pather",
+    description:
+      "Review the Terms and Conditions governing your use of AI Pather's career roadmaps, skill diagnostics, portfolio audits, and subscription tiers.",
   },
 };
 

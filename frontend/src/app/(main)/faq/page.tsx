@@ -3,17 +3,25 @@ import FaqSection from "@/src/components/faq/FaqSection";
 import { mainFaqs } from "@/src/data/faqs";
 
 export const metadata: Metadata = {
-  title: "FAQ",
+  title: "Frequently Asked Questions",
   description:
-    "Answers to the most common questions about AI Pather — how our AI skill diagnostics, personalized roadmaps, career proof, and subscription plans work.",
+    "Find answers to common questions about AI Pather — how our AI skill diagnostics, personalized learning paths, cryptographic proof graph, and subscription tiers work.",
   alternates: {
     canonical: "/faq",
   },
   openGraph: {
-    title: "AI Pather | FAQ",
+    title: "Frequently Asked Questions (FAQ) | AI Pather",
     description:
-      "Everything you need to know about AI Pather's diagnostics, roadmaps, proof system, and pricing.",
+      "Find answers to common questions about AI Pather — how our AI skill diagnostics, personalized learning paths, cryptographic proof graph, and subscription tiers work.",
+    url: "/faq",
+    siteName: "AI Pather",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Frequently Asked Questions (FAQ) | AI Pather",
+    description:
+      "Find answers to common questions about AI Pather — how our AI skill diagnostics, personalized learning paths, cryptographic proof graph, and subscription tiers work.",
   },
 };
 

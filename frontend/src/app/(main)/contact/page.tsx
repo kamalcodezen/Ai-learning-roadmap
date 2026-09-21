@@ -9,15 +9,23 @@ import { FloatingSocials } from "@/src/components/socials/FloatingSocials";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Get in touch with the AI Pather team. Reach out for technical support, adaptive roadmap guidance, enterprise capability benchmarks, or general inquiries.",
+    "Get in touch with the AI Pather team. Reach out for technical support, adaptive roadmap guidance, enterprise training partnerships, or general platform inquiries.",
   alternates: {
     canonical: "/contact",
   },
   openGraph: {
-    title: "AI Pather | Contact Us",
+    title: "Contact Us | AI Pather",
     description:
-      "Get in touch with the AI Pather team for technical support, adaptive roadmap guidance, and enterprise solutions.",
+      "Get in touch with the AI Pather team. Reach out for technical support, adaptive roadmap guidance, enterprise training partnerships, or general platform inquiries.",
+    url: "/contact",
+    siteName: "AI Pather",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Us | AI Pather",
+    description:
+      "Get in touch with the AI Pather team. Reach out for technical support, adaptive roadmap guidance, enterprise training partnerships, or general platform inquiries.",
   },
 };
 

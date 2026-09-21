@@ -4,15 +4,23 @@ import Pricing from "@/src/components/home/pricing/Pricing";
 export const metadata: Metadata = {
   title: "Pricing & Plans",
   description:
-    "Explore AI Pather subscription tiers and choose the plan that best accelerates your career growth.",
+    "Choose the right AI Pather plan for your tech journey. Unlock full personalized roadmaps, unlimited AI diagnostic assessments, realistic mock interviews, and verified skill proofs.",
   alternates: {
     canonical: "/pricing",
   },
   openGraph: {
-    title: "AI Pather | Pricing & Plans",
+    title: "Pricing & Plans | AI Pather",
     description:
-      "Explore AI Pather subscription tiers and choose the plan that best accelerates your career growth.",
+      "Choose the right AI Pather plan for your tech journey. Unlock full personalized roadmaps, unlimited AI diagnostic assessments, realistic mock interviews, and verified skill proofs.",
+    url: "/pricing",
+    siteName: "AI Pather",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pricing & Plans | AI Pather",
+    description:
+      "Choose the right AI Pather plan for your tech journey. Unlock full personalized roadmaps, unlimited AI diagnostic assessments, realistic mock interviews, and verified skill proofs.",
   },
 };
 

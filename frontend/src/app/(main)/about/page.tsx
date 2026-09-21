@@ -12,15 +12,23 @@ import { FloatingSocials } from "@/src/components/socials/FloatingSocials";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "AI Pather exists to help people turn scattered learning into a clear, adaptive path toward real career capability through diagnostic gap isolation and zero-clone proof.",
+    "Learn about AI Pather's mission to bridge the tech career readiness gap. We turn scattered tutorials into verified engineering capability through diagnostic gap isolation and proof-backed learning.",
   alternates: {
     canonical: "/about",
   },
   openGraph: {
-    title: "AI Pather | About Us",
+    title: "About Us | AI Pather",
     description:
-      "We believe learning should lead somewhere. AI Pather turns scattered learning into verified career capability.",
+      "Learn about AI Pather's mission to bridge the tech career readiness gap with precision skill diagnostics, adaptive learning roadmaps, and verified project proofs.",
+    url: "/about",
+    siteName: "AI Pather",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Us | AI Pather",
+    description:
+      "Learn about AI Pather's mission to bridge the tech career readiness gap with precision skill diagnostics, adaptive learning roadmaps, and verified project proofs.",
   },
 };
 

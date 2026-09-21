@@ -10,7 +10,7 @@ export const dynamicParams = false;
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-  "https://your-production-domain.com";
+  "https://aipather.com";
 
 const formatSalary = (value: number) =>
   `$${(value / 1000).toFixed(value % 1000 === 0 ? 0 : 1)}K`;
@@ -31,14 +31,15 @@ export async function generateMetadata({
     return { title: "Track Not Found" };
   }
 
-  const title = `${track.title} — Career Track | AI Pather`;
-  const description = `${track.title} careers: ${track.stats.activePostings.toLocaleString()} active job postings, ${formatSalary(
+  const title = `${track.title} Career Track`;
+  const fullTitle = `${track.title} Career Track | AI Pather`;
+  const description = `Master ${track.title} skills with AI Pather. Explore ${track.stats.activePostings.toLocaleString()}+ active job postings, ${formatSalary(
     track.stats.medianSalary,
-  )} median salary, and ${track.stats.growthForecast}% projected growth by 2030. Learn the in-demand skills of a ${track.title} with a personalized roadmap, real projects, and AI mock interviews at AI Pather.`;
+  )} median salary, ${track.stats.growthForecast}% industry growth, personalized learning paths, and AI mock interview prep.`;
   const canonicalUrl = `${siteUrl}/tracks/${track.id}`;
   const keywords = [
     `${track.title} career`,
-    `${track.title} job`,
+    `${track.title} roadmap`,
     `${track.title} salary`,
     `${track.title} skills`,
     track.category,
@@ -62,7 +63,7 @@ export async function generateMetadata({
       "max-video-preview": -1,
     },
     openGraph: {
-      title,
+      title: fullTitle,
       description,
       url: canonicalUrl,
       siteName: "AI Pather",
@@ -71,7 +72,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: fullTitle,
       description,
     },
   };
