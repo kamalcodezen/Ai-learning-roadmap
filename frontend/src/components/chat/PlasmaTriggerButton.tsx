@@ -22,6 +22,7 @@ export const PlasmaTriggerButton: FC<PlasmaTriggerButtonProps> = ({
     <>
       <motion.button
         type="button"
+        suppressHydrationWarning
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
         transition={{ type: "spring", stiffness: 400, damping: 17 }}

@@ -151,18 +151,18 @@ export function Onboarding() {
 
   return (
     <div className="global-pos dashboard-card w-full min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-primary/25">
-      {/* Floating Back button (mobile & tablet only) */}
+      {/* Floating Back button (mobile & tablet only - top-left corner) */}
       {step > 1 && (
         <button
           onClick={handlePrev}
-          className="absolute left-12 top-30 z-10 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors lg:hidden"
+          className="absolute left-3.5 top-3.5 sm:left-6 sm:top-5 z-30 inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors lg:hidden p-1.5 rounded-lg hover:bg-muted/50"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </button>
       )}
 
-      {/* Floating Theme Toggler (mobile & tablet only) */}
-      <div className="absolute right-12 top-30 z-10 flex lg:hidden">
+      {/* Floating Theme Toggler (mobile & tablet only - top-right corner) */}
+      <div className="absolute right-3.5 top-3.5 sm:right-6 sm:top-5 z-30 flex lg:hidden">
         <AnimatedThemeToggler />
       </div>
 

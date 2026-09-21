@@ -69,6 +69,7 @@ export function FloatingSocials() {
               className={iconClass}
               aria-label="Share page"
               title="Share page"
+              suppressHydrationWarning
             >
               <Share2 size={18} />
             </button>
@@ -79,6 +80,7 @@ export function FloatingSocials() {
               className={iconClass}
               aria-label="Copy link"
               title="Copy link"
+              suppressHydrationWarning
             >
               {copied ? (
                 <Check size={18} className="text-[var(--color-primary)]" />
@@ -92,6 +94,7 @@ export function FloatingSocials() {
 
       <motion.button
         type="button"
+        suppressHydrationWarning
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
         onClick={toggleOpen}

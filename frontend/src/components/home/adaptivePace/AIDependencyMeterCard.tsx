@@ -145,6 +145,8 @@ export default function AIDependencyMeterCard() {
             return (
               <button
                 key={p.id}
+                type="button"
+                suppressHydrationWarning
                 onClick={() => setSelectedPersonaId(p.id)}
                 className={`py-2 px-2 sm:py-2 sm:px-3 rounded-lg text-xs sm:text-sm lg:text-base font-medium text-center transition-all duration-200 cursor-pointer ${
                   isActive

@@ -112,7 +112,7 @@ export default function AnimatedButton({
   }
 
   return (
-    <button type="button" onClick={onClick} className={classes}>
+    <button type="button" onClick={onClick} className={classes} suppressHydrationWarning>
       {content}
     </button>
   );

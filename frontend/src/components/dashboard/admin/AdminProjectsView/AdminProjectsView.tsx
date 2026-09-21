@@ -17,6 +17,7 @@ import {
   ShieldAlert,
   Loader2,
   Eye,
+  X,
 } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import {
@@ -374,20 +375,29 @@ export default function AdminProjectsView() {
 
       {/* Project Detail Modal */}
       <Modal state={detailModal}>
-        <Modal.Backdrop>
-          <Modal.Container>
+        <Modal.Backdrop className="bg-black/70 backdrop-blur-sm z-50">
+          <Modal.Container className="z-50 p-4">
             <Modal.Dialog
               data-lenis-prevent="true"
               data-lenis-prevent-wheel="true"
               data-lenis-prevent-touch="true"
-              className="sm:max-w-[640px] rounded-lg!"
+              className="sm:max-w-[640px] w-full rounded-2xl border border-border bg-card text-card-foreground shadow-2xl p-6 relative overflow-hidden"
             >
-              <Modal.CloseTrigger className="bg-[#8d3ff3]" />
-              <Modal.Header>
-                <Modal.Icon className="bg-primary/10 text-primary">
+              <Modal.CloseTrigger className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white dark:text-black transition-all duration-200 cursor-pointer shadow-sm z-20">
+                <X className="size-4" />
+              </Modal.CloseTrigger>
+              <Modal.Header className="border-b border-border/40 pb-4 flex items-center gap-3.5 relative z-10">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20">
                   <FolderKanban className="size-5" />
-                </Modal.Icon>
-                <Modal.Heading>{selectedProject?.title}</Modal.Heading>
+                </div>
+                <div>
+                  <Modal.Heading className="text-lg font-bold text-foreground tracking-tight">
+                    {selectedProject?.title}
+                  </Modal.Heading>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Project Verification & Build Details
+                  </p>
+                </div>
               </Modal.Header>
               <Modal.Body
                 data-lenis-prevent="true"
@@ -395,7 +405,7 @@ export default function AdminProjectsView() {
                 data-lenis-prevent-touch="true"
                 onWheel={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}
-                className="space-y-4 overflow-y-auto overscroll-contain max-h-[75vh]"
+                className="space-y-4 overflow-y-auto overscroll-contain max-h-[75vh] py-4"
               >
                 {selectedProject && (
                   <>
@@ -480,8 +490,8 @@ export default function AdminProjectsView() {
                   </>
                 )}
               </Modal.Body>
-              <Modal.Footer>
-                <Button className="bg-[#8121ff] rounded-lg" slot="close" fullWidth>
+              <Modal.Footer className="border-t border-border/40 pt-4">
+                <Button className="w-full rounded-xl bg-primary hover:bg-primary/90 text-white dark:text-black font-semibold py-2.5 transition-colors cursor-pointer" slot="close">
                   Close
                 </Button>
               </Modal.Footer>
