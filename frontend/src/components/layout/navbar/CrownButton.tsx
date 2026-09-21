@@ -8,27 +8,59 @@ import { authClient } from "@/src/lib/auth-client";
 const glareVars = {
   "--gh-angle": "-45deg",
   "--gh-size": "250%",
-  "--gh-rgba": "rgba(255, 255, 255, 0.35)",
+  "--gh-rgba": "rgba(255, 255, 255, 0.45)",
 } as CSSProperties;
 
 export default function CrownButton() {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
 
-  if (isPending) return null;
+  const user = session?.user as { role?: string; plan?: string } | undefined;
+  const userRole = (user?.role || "").toUpperCase();
+  const userPlan = (user?.plan || "FREE").toUpperCase();
+  const isAdmin = userRole === "ADMIN";
 
-  const plan =
-    (session?.user as { plan?: string } | undefined)?.plan?.toUpperCase() || "FREE";
+  // Dynamic crown styling & glow based on active plan / role
+  const getCrownStyle = () => {
+    if (isAdmin) {
+      return {
+        background: "linear-gradient(135deg, #9333ea 0%, #c084fc 50%, #ec4899 100%)",
+        shadow: "shadow-[0_0_18px_rgba(168,85,247,0.65)]",
+        title: "Super Admin Access",
+      };
+    }
+    if (userPlan === "PRO") {
+      return {
+        background: "linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%)",
+        shadow: "shadow-[0_0_18px_rgba(245,158,11,0.65)]",
+        title: "Pro Tier Active",
+      };
+    }
+    if (userPlan === "PLUS") {
+      return {
+        background: "linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #a855f7 100%)",
+        shadow: "shadow-[0_0_18px_rgba(124,58,237,0.6)]",
+        title: "Plus Tier Active",
+      };
+    }
+    // FREE / Guest
+    return {
+      background: "var(--gradient-primary)",
+      shadow: "shadow-[0_0_16px_rgba(159,84,247,0.4)]",
+      title: "Free Tier - Upgrade Plan",
+    };
+  };
 
-  if (plan !== "FREE") return null;
+  const styleConfig = getCrownStyle();
 
   return (
     <Link
       href="/pricing"
       aria-label="Go to pricing"
-      className="relative flex ml-1.5 size-9 md:size-10 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-[0_0_16px_rgba(159,84,247,0.4)] transition-transform duration-300 hover:scale-105"
-      style={{ background: "var(--gradient-primary)", ...glareVars }}
+      title={styleConfig.title}
+      className={`relative flex ml-1.5 size-9 md:size-10 shrink-0 items-center justify-center overflow-hidden rounded-full ${styleConfig.shadow} transition-transform duration-300 hover:scale-105 active:scale-95`}
+      style={{ background: styleConfig.background, ...glareVars }}
     >
-      <Crown className="size-5 md:size-6 text-white" strokeWidth={2} />
+      <Crown className="size-5 md:size-6 text-white drop-shadow-xs" strokeWidth={2.2} />
       <span className="crown-glare pointer-events-none absolute inset-0 z-10 bg-no-repeat" />
     </Link>
   );
