@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "motion/react";
 import { authClient } from "@/src/lib/auth-client";
 
 import BannerBackground from "./BannerBackground";
@@ -9,7 +8,7 @@ import BannerHeader from "./BannerHeader";
 import BannerCta from "./BannerCta";
 import StaticCoverflowRow from "./StaticCoverflowRow";
 import MobileCardCarousel from "./MobileCardCarousel";
-import { renderHighlighted } from "./TextBody";
+import ProgressBridgeSection from "../ProgressBridge/ProgressBridgeSection";
 
 import { carouselItems, slides } from "./data";
 
@@ -32,29 +31,26 @@ export default function AudienceBanner() {
     <section
       className="
         relative isolate flex min-h-[100svh] w-full
-        items-center justify-center
+        flex-col items-center justify-between
         overflow-hidden
         px-0
-        py-20
-        sm:px-6 sm:py-24
-        md:min-h-0 md:px-8 md:py-16 md:pt-28
-        lg:min-h-0 lg:px-10 lg:py-20 lg:pt-32
-        xl:min-h-[100svh] xl:px-12 xl:py-20 xl:pt-30
+        pt-16 sm:pt-20 md:pt-22 lg:pt-24
+        pb-0
       "
     >
       {/* Background */}
       <BannerBackground image={activeItem.image} title={activeItem.title} video={activeItem.video} />
 
-      {/* Content */}
+      {/* Center Content */}
       <div
         className="
           relative z-10
-          flex w-full max-w-7xl
+          flex w-full max-w-7xl flex-1
           flex-col items-center justify-center
-          gap-5
-          sm:gap-7
-          md:gap-8
-          lg:gap-9
+          gap-4
+          sm:gap-5
+          md:gap-6
+          my-auto py-2
         "
       >
         {/* Header (Eyebrow above Big Heading) */}
@@ -93,35 +89,15 @@ export default function AudienceBanner() {
           />
         </div>
 
-        {/* Subtitle & CTA (Below cards, above button) */}
-        <div className="flex flex-col items-center justify-center gap-1 sm:gap-2 w-full">
-          <motion.p
-            key={`${activeItem.title}-subtitle`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.45,
-              delay: 0.08,
-              ease: "easeOut",
-            }}
-            className="
-              section-description
-              max-w-xl
-              px-4
-              text-center
-              font-poppins
-              text-sm
-              text-black dark:text-white
-              font-medium
-              dark:[text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
-              sm:text-lg
-            "
-          >
-            {renderHighlighted(activeItem.description, true)}
-          </motion.p>
-
+        {/* CTA Button */}
+        <div className="flex flex-col items-center justify-center w-full pt-1">
           <BannerCta text="Get Started" href={ctaHref} />
         </div>
+      </div>
+
+      {/* Netflix-style Curved Arc & Marquee anchored seamlessly at the bottom of the banner viewport */}
+      <div className="relative z-20 w-full mt-auto">
+        <ProgressBridgeSection />
       </div>
     </section>
   );
