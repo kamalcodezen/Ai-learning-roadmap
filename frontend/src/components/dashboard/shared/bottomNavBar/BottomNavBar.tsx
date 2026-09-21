@@ -48,15 +48,22 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
         <Link
           href="/"
           aria-label="AI Pather home"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full px-1"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full p-2.5"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           <Image
-            src="/brand/AI-Pather-white.png"
+            src="/brand/uploaded-p-white.png"
             alt="AI Pather"
-            className="w-8 h-auto object-contain"
-            height={16}
-            width={40}
+            className="h-6 w-6 object-contain block dark:hidden"
+            height={24}
+            width={24}
+          />
+          <Image
+            src="/brand/uploaded-p-white.png"
+            alt="AI Pather"
+            className="h-6 w-6 object-contain hidden dark:block"
+            height={24}
+            width={24}
           />
         </Link>
 
