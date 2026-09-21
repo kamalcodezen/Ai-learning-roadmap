@@ -3,7 +3,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import brandLogo from "@/public/brand/logo-p-dark.png";
 
 import {
   sendChatMessage,
@@ -103,9 +102,19 @@ export default function ChatBox() {
     await clearChatHistory();
   }, []);
 
+  const sessionUser = session?.user as { role?: string; name?: string } | undefined;
+  const userRole = sessionUser?.role?.toUpperCase() || (session?.user ? "LEARNER" : "GUEST");
   const rawName = session?.user?.name?.trim();
   const userName = rawName ? rawName.split(/\s+/)[0] : undefined;
-  const greeting = userName ? `${timeGreeting}, ${userName}` : timeGreeting;
+
+  const greeting =
+    userRole === "ADMIN"
+      ? userName
+        ? `${timeGreeting}, ${userName} (Admin)`
+        : `${timeGreeting}, Admin`
+      : userName
+      ? `${timeGreeting}, ${userName}`
+      : timeGreeting;
 
   // Auto-scroll the inner chat area after hydration, only when messages/loading change
   useEffect(() => {
@@ -229,7 +238,20 @@ export default function ChatBox() {
         <div className="flex items-center gap-3">
           {/* AI Pathar Icon */}
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
-            <Image src={brandLogo} alt="AI Pathar" className="h-6 w-6 object-contain" height={24} width={24}/>
+            <Image
+              src="/brand/uploaded-p-white.png"
+              alt="AI Pathar"
+              className="h-6 w-6 object-contain block dark:hidden"
+              height={24}
+              width={24}
+            />
+            <Image
+              src="/brand/logo-p-dark.png"
+              alt="AI Pathar"
+              className="h-6 w-6 object-contain hidden dark:block"
+              height={24}
+              width={24}
+            />
           </div>
 
           {/* Brand */}
@@ -316,22 +338,31 @@ export default function ChatBox() {
 
               {/* Feature Suggestions */}
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                {(session?.user
+                {(userRole === "ADMIN"
                   ? [
-                      "What is my current milestone and next step?",
-                      "Review my active skill gaps and learning debt",
-                      "Help me plan a real-world project for my stack",
-                      "Start a 5-minute technical mock interview",
-                      "Review my ATS resume score",
-                      "How can I improve my Job Readiness Score?",
+                      "📊 Summarize platform health & active learner metrics",
+                      "👥 How do I manage users & assign role permissions?",
+                      "📢 Help me draft a platform broadcast announcement",
+                      "🔍 What are the top learner skill gap trends?",
+                      "🛡️ Explain platform security & audit log inspection",
+                      "💎 How does the Gem economy & reward system balance work?",
+                    ]
+                  : userRole === "LEARNER"
+                  ? [
+                      "🎯 What is my current milestone and next step?",
+                      "🧠 Review my active skill gaps and learning debt",
+                      "💻 Help me plan a real-world project for my stack",
+                      "🎙️ Start a 5-minute technical mock interview",
+                      "📄 Review my ATS resume score & improvements",
+                      "📈 How can I increase my Career Twin readiness score?",
                     ]
                   : [
-                      "What is AIPather and how does it work?",
-                      "Which tech career track should I start with?",
-                      "How does the adaptive roadmap help me?",
-                      "How do I get verified proof for my GitHub projects?",
-                      "What is the 4-Stage Skill Mastery Simulation?",
-                      "How does the 4-Pillar Job Readiness Score work?",
+                      "🚀 What is AI Pather and how does it work?",
+                      "🗺️ Which tech career track should I start with?",
+                      "💡 How does the adaptive roadmap help me?",
+                      "💼 How do I get verified proof for my GitHub projects?",
+                      "🎯 What is the 4-Stage Skill Mastery Simulation?",
+                      "📈 How does the 4-Pillar Job Readiness Score work?",
                     ]
                 ).map((suggestion) => (
                   <button
