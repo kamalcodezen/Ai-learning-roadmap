@@ -17,8 +17,8 @@ export const metadata: Metadata = {
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SessionGuard>
-      <div className="h-screen w-full overflow-hidden bg-[#eae0ff] xl:pt-[15px] xl:pb-[15px] xl:pr-[15px] dark:bg-[#5b3491]">
-        <div className="flex h-full w-full overflow-hidden bg-background xl:rounded-2xl dark:bg-[#0b0f1a] transition-all duration-300">
+      <div className="min-h-[100dvh] w-full bg-[#eae0ff] xl:h-screen xl:h-[100dvh] xl:overflow-hidden xl:pt-[15px] xl:pb-[15px] xl:pr-[15px] dark:bg-[#5b3491]">
+        <div className="min-h-[100dvh] w-full bg-background xl:flex xl:h-full xl:overflow-hidden xl:rounded-2xl dark:bg-[#0b0f1a] transition-all duration-300">
           <DashboardSidebar />
           <DashboardScrollProvider>{children}</DashboardScrollProvider>
         </div>

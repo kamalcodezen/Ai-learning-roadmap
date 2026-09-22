@@ -72,7 +72,10 @@ export default function Navbar() {
           <div className="flex shrink-0 justify-start">
             <div className="flex items-center gap-2">
               <Logo />
-              <CrownButton />
+              {/* When hamburger is NOT present (desktop xl+), Crown stays next to Logo */}
+              <div className="hidden xl:block">
+                <CrownButton />
+              </div>
             </div>
           </div>
 
@@ -89,8 +92,9 @@ export default function Navbar() {
             <div className="hidden xl:block">
               <AnimatedThemeToggler />
             </div>
-            {/* Tablet & iPad Pro Hamburger (< xl) */}
-            <div className="block xl:hidden">
+            {/* When hamburger IS present (< xl), Crown is placed next to hamburger */}
+            <div className="flex xl:hidden items-center gap-2">
+              <CrownButton />
               <NavLinks onlyHamburger />
             </div>
           </div>

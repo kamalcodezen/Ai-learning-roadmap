@@ -8,7 +8,7 @@ import BannerHeader from "./BannerHeader";
 import BannerCta from "./BannerCta";
 import StaticCoverflowRow from "./StaticCoverflowRow";
 import MobileCardCarousel from "./MobileCardCarousel";
-import ProgressBridgeSection from "../ProgressBridge/ProgressBridgeSection";
+import { ProgressBridgeArc } from "../ProgressBridge/ProgressBridgeSection";
 
 import { carouselItems, slides } from "./data";
 
@@ -94,9 +94,9 @@ export default function AudienceBanner() {
         </div>
       </div>
 
-      {/* Netflix-style Curved Arc & Marquee anchored seamlessly at the bottom of the banner viewport */}
+      {/* Netflix-style Curved Arc ONLY anchored seamlessly at the bottom of the banner viewport */}
       <div className="relative z-20 w-full mt-auto shrink-0">
-        <ProgressBridgeSection />
+        <ProgressBridgeArc />
       </div>
     </section>
   );

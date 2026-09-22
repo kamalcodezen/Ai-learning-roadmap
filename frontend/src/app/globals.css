@@ -657,43 +657,25 @@ button {
    BANNER BOTTOM AMBIENT GRADIENT
 ========================================= */
 .banner-bottom-gradient {
-  background:
-    /* Ambient brand glow radiating gently from bottom center using project color tokens */
-    radial-gradient(
-      ellipse 60% 70% at 50% 100%,
-      rgb(var(--primary) / 0.2) 0%,
-      rgb(var(--secondary) / 0.06) 45%,
-      transparent 80%
-    ),
-    /* Smooth upward scrim fade into project background token */
-    linear-gradient(
-      to top,
-      rgb(var(--background) / 0.98) 0%,
-      rgb(var(--background) / 0.8) 25%,
-      rgb(var(--background) / 0.42) 55%,
-      rgb(var(--background) / 0.1) 80%,
-      transparent 100%
-    );
+  background: linear-gradient(
+    to top,
+    rgb(var(--background) / 0.98) 0%,
+    rgb(var(--background) / 0.8) 25%,
+    rgb(var(--background) / 0.42) 55%,
+    rgb(var(--background) / 0.1) 80%,
+    transparent 100%
+  );
 }
 
 .dark .banner-bottom-gradient {
-  background:
-    /* Ambient neon-violet aura radiating gently from bottom center using dark theme tokens */
-    radial-gradient(
-      ellipse 60% 70% at 50% 100%,
-      rgb(var(--primary) / 0.32) 0%,
-      rgb(var(--secondary) / 0.1) 45%,
-      transparent 80%
-    ),
-    /* Smooth upward scrim fade into dark background token */
-    linear-gradient(
-      to top,
-      rgb(var(--background) / 0.96) 0%,
-      rgb(var(--background) / 0.76) 25%,
-      rgb(var(--background) / 0.38) 55%,
-      rgb(var(--background) / 0.1) 80%,
-      transparent 100%
-    );
+  background: linear-gradient(
+    to top,
+    rgb(var(--background) / 0.96) 0%,
+    rgb(var(--background) / 0.76) 25%,
+    rgb(var(--background) / 0.38) 55%,
+    rgb(var(--background) / 0.1) 80%,
+    transparent 100%
+  );
 }
 
 @theme inline {

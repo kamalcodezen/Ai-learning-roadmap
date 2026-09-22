@@ -271,18 +271,18 @@ const sections: Section[] = [
                 Legal &amp; Compliance Team
               </p>
               <a
-                href="mailto:kamaluddin7908@gmail.com"
+                href="mailto:legal@aipather.com"
                 className="text-sm font-bold text-foreground hover:text-primary transition-colors"
               >
-                kamaluddin7908@gmail.com
+                legal@aipather.com
               </a>
             </div>
           </div>
           <a
-            href="mailto:kamaluddin7908@gmail.com"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+            href="mailto:legal@aipather.com"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
           >
-            Contact Legal <ExternalLink className="w-3 h-3" />
+            Contact Legal <ExternalLink className="w-3 h-3 text-white" />
           </a>
         </div>
       </div>
@@ -506,11 +506,11 @@ export default function TermsView() {
                 licenses?
               </p>
               <a
-                href="mailto:kamaluddin7908@gmail.com"
+                href="mailto:legal@aipather.com"
                 className="inline-flex w-full items-center justify-center gap-1.5 text-xs font-semibold py-2 px-3 rounded-lg border border-border bg-card hover:bg-card-soft text-foreground hover:text-primary transition-all"
               >
                 <Mail className="w-3.5 h-3.5 text-primary" />
-                kamaluddin7908@gmail.com
+                legal@aipather.com
               </a>
             </div>
           </aside>
