@@ -223,7 +223,7 @@ export default function ChatBox() {
 
   return (
     <section
-      className="group relative flex h-[75vh] lg:h-[85vh] w-full flex-col rounded-xl border-2 border-[#E6E9EE] dark:border-[rgba(159,84,247,0.15)] transition-all duration-300 bg-background overflow-clip"
+      className="group relative flex h-[580px] max-h-[calc(100dvh-170px)] sm:h-[75vh] lg:h-[85vh] w-full flex-col rounded-xl border-2 border-[#E6E9EE] dark:border-[rgba(159,84,247,0.15)] transition-all duration-300 bg-background overflow-hidden"
       id="dashboard-chatbot"
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
@@ -234,52 +234,51 @@ export default function ChatBox() {
       />
       <Meteors number={8} className="bg-primary/30" />
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-border px-5 py-2 sm:px-6">
-        <div className="flex items-center gap-3">
+      <header className="flex items-center justify-between border-b border-border px-3 py-2.5 sm:px-6 sm:py-3 gap-2 min-w-0">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           {/* AI Pathar Icon */}
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary">
+          <div className="flex size-9 sm:size-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-primary">
             <Image
               src="/brand/logo-p-dark.png"
               alt="AI Pathar"
-              className="h-6 w-6 object-contain block dark:hidden"
+              className="h-5 w-5 sm:h-6 sm:w-6 object-contain block dark:hidden"
               height={24}
               width={24}
             />
             <Image
               src="/brand/uploaded-p-white.png"
               alt="AI Pathar"
-              className="h-6 w-6 object-contain hidden dark:block"
+              className="h-5 w-5 sm:h-6 sm:w-6 object-contain hidden dark:block"
               height={24}
               width={24}
             />
           </div>
 
           {/* Brand */}
-          <div>
-            <h1 className="text-base font-semibold text-foreground">AI Pathar</h1>
-
-            <p className="text-xs text-muted-foreground">Your AI Career Copilot</p>
+          <div className="min-w-0">
+            <h1 className="text-sm sm:text-base font-bold text-foreground truncate">AI Pathar</h1>
+            <p className="text-[10px] sm:text-xs text-muted-foreground truncate hidden xs:block">Your AI Career Copilot</p>
           </div>
         </div>
 
         {/* Right Header Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* AI Voice Output Toggle */}
           <button
             type="button"
             onClick={toggleVoiceReply}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border opacity-100 shadow-sm ${voiceReplyEnabled
+            className={`flex items-center justify-center size-8 sm:h-9 sm:w-auto sm:px-3 rounded-full text-xs font-bold transition-all cursor-pointer border opacity-100 shadow-xs ${voiceReplyEnabled
               ? "bg-primary text-white border-primary-foreground/30 shadow-[0_0_12px_rgba(159,84,247,0.5)]"
               : "bg-purple-600/20 text-purple-950 dark:text-purple-200 border-purple-500/40 hover:bg-purple-600/30"
               }`}
             title={voiceReplyEnabled ? "AI Voice Reply is ON (Click to Mute)" : "AI Voice Reply is OFF (Click to Unmute)"}
           >
             {voiceReplyEnabled ? (
-              <Volume2 className="w-3.5 h-3.5 text-white" />
+              <Volume2 className="size-3.5 text-white" />
             ) : (
-              <VolumeX className="w-3.5 h-3.5 text-purple-950 dark:text-purple-200" />
+              <VolumeX className="size-3.5 text-purple-950 dark:text-purple-200" />
             )}
-            <span className="hidden xs:inline">
+            <span className="hidden md:inline ml-1.5">
               {voiceReplyEnabled ? "Voice ON" : "Voice OFF"}
             </span>
           </button>
@@ -289,24 +288,24 @@ export default function ChatBox() {
             <button
               type="button"
               onClick={() => void handleClearChat()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer border bg-muted/40 border-border text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 hover:border-rose-500/30"
+              className="flex items-center justify-center size-8 sm:h-9 sm:w-auto sm:px-3 rounded-full text-xs font-semibold transition-all cursor-pointer border bg-muted/40 border-border text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 hover:border-rose-500/30"
               title="Clear Chat History"
             >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span className="hidden xs:inline">Clear Chat</span>
+              <Trash2 className="size-3.5" />
+              <span className="hidden md:inline ml-1.5">Clear Chat</span>
             </button>
           )}
 
           {/* Online Status */}
-          <div className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5">
-            <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_rgba(159,84,247,0.8)]" />
-            <span className="text-xs text-primary font-medium">Online</span>
+          <div className="flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2 py-1 sm:px-3 sm:py-1.5">
+            <span className="size-2 rounded-full bg-primary shadow-[0_0_10px_rgba(159,84,247,0.8)] animate-pulse" />
+            <span className="text-[11px] sm:text-xs text-primary font-semibold">Online</span>
           </div>
         </div>
       </header>
 
       {/* Chat Area */}
-      <div ref={chatScrollRef} className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-6 sm:px-8 proof-card">
+      <div ref={chatScrollRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-3 py-4 sm:px-8 sm:py-6 proof-card overscroll-contain">
         <div ref={chatContentRef} className="min-h-full min-w-0">
           {messages.length === 0 ? (
             /* Welcome Screen */
@@ -563,10 +562,10 @@ export default function ChatBox() {
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-border px-4 py-2 md:p-3">
+      <div className="border-t border-border px-2.5 py-2 sm:px-4 sm:py-3 bg-card/40 backdrop-blur-sm">
         <form
           onSubmit={handleSubmit}
-          className="relative mx-auto flex max-w-3xl items-end gap-3 rounded-2xl border border-border bg-card py-0 px-2 md:py-2 transition focus-within:border-primary/30"
+          className="relative mx-auto flex max-w-3xl items-center gap-1.5 sm:gap-2 rounded-2xl border border-border bg-background/90 px-2 sm:px-3 py-1.5 transition focus-within:border-primary/50 shadow-xs"
         >
           <BorderBeam
             duration={6}
@@ -595,7 +594,7 @@ export default function ChatBox() {
             disabled={isLoading}
             rows={1}
             placeholder="Ask AI Pathar anything..."
-            className="max-h-32 min-h-11 flex-1 resize-none bg-transparent px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground/50"
+            className="max-h-28 min-h-10 sm:min-h-11 flex-1 resize-none bg-transparent px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-foreground outline-none placeholder:text-muted-foreground/60 leading-relaxed"
           />
 
           {/* Direct Inline Voice Input Mic Button */}
@@ -604,7 +603,7 @@ export default function ChatBox() {
             onClick={toggleMic}
             aria-label={isListening ? "Stop listening" : "Start speaking"}
             title={isListening ? "Listening to your voice... (Click to stop)" : "Click to speak your message"}
-            className={`relative flex h-10 w-9 mb-0.5 md:h-11 md:w-11 md:m-0 shrink-0 items-center justify-center rounded-xl transition-all cursor-pointer opacity-100 border font-bold shadow-sm ${isListening
+            className={`relative flex size-9 sm:size-10 md:size-11 shrink-0 items-center justify-center rounded-xl transition-all cursor-pointer opacity-100 border font-bold shadow-xs ${isListening
               ? "bg-rose-500 text-white border-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.8)] animate-pulse"
               : isSpeaking
                 ? "bg-primary text-white border-primary-foreground/30 shadow-[0_0_12px_rgba(159,84,247,0.8)] animate-pulse"
@@ -612,9 +611,9 @@ export default function ChatBox() {
               }`}
           >
             {isListening ? (
-              <MicOff className="w-4 h-4 md:w-5 md:h-5 text-white" />
+              <MicOff className="size-4 sm:size-5 text-white" />
             ) : (
-              <Mic className="w-4 h-4 md:w-5 md:h-5 text-purple-950 dark:text-purple-200 font-bold" />
+              <Mic className="size-4 sm:size-5 text-purple-950 dark:text-purple-200 font-bold" />
             )}
           </button>
 
@@ -623,7 +622,7 @@ export default function ChatBox() {
             type="submit"
             disabled={!input.trim() || isLoading}
             aria-label="Send message"
-            className="flex h-10 w-9 mb-0.5 -mr-1 md:h-11 md:w-11 md:m-0 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-semibold text-white transition hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-30"
+            className="flex size-9 sm:size-10 md:size-11 shrink-0 items-center justify-center rounded-xl bg-primary text-base sm:text-lg font-semibold text-white transition hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-30 shadow-xs"
           >
             ↑
           </button>
