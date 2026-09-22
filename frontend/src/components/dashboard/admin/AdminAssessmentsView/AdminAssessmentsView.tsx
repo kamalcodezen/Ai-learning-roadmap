@@ -147,7 +147,7 @@ export default function AdminAssessmentsView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="section-title text-left">Assessment <span className="text-brand">Analytics</span></h1>
-          <p className="section-subtitle mt-1 text-left">Review platform-wide assessment attempts, completion and performance.</p>
+          <p className="section-subtitle mt-1 text-left">Review platform-wide assessment attempts, completion and performance</p>
         </div>
       </div>
 
