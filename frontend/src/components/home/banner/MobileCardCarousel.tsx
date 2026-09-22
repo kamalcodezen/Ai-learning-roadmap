@@ -60,7 +60,7 @@ export default function MobileCardCarousel({
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div className="overflow-hidden rounded-xl bg-card shadow-[var(--shadow)] transition-shadow duration-300 my-10">
+            <div className="overflow-hidden rounded-xl bg-card shadow-[var(--shadow)] transition-shadow duration-300 my-2 sm:my-3">
               {slide.video ? (
                 <video
                   src={slide.video}

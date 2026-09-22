@@ -37,9 +37,8 @@ export default function TextBody({ heading }: TextBodyProps) {
   const plainHeading = heading.replace(/\*/g, "");
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col items-center pb-2 text-center">
+    <div className="mx-auto flex w-full max-w-6xl flex-col items-center text-center">
       {/* Eyebrow / Small Heading above main big heading */}
-    
 
       {/* Heading */}
       <motion.h1
@@ -49,14 +48,19 @@ export default function TextBody({ heading }: TextBodyProps) {
         transition={{ duration: 0.45, ease: "easeOut" }}
         aria-label={plainHeading}
         className="
-        pt-12
-          text-[2.5rem]
+          pt-20 sm:pt-10 lg:pt-5
+          pb-6
+          md:pb-10
+          text-4xl
           font-extrabold
           text-white
           [text-shadow:0_3px_14px_rgba(0,0,0,0.65)]
-          sm:text-h1
+          sm:text-[44px]
+          md:text-5xl
+          lg:text-[3.5rem]
           sm:whitespace-nowrap
           sm:[text-wrap:unset]
+         
         "
       >
         {renderHighlighted(heading)}
