@@ -107,7 +107,7 @@ export default function DashboardSidebar() {
       <aside
         ref={sidebarRef}
         aria-label="Dashboard sidebar"
-        className="sidebar-container sidebar-gradient fixed left-0 top-0 z-40 hidden h-screen w-64 text-foreground lg:flex"
+        className="sidebar-container sidebar-gradient fixed left-0 top-0 z-40 hidden h-screen w-64 text-foreground xl:flex"
       >
         <SidebarContent
           userName={user?.name}
@@ -124,7 +124,7 @@ export default function DashboardSidebar() {
       {/* ── Mobile drawer ───────────────────────────────────────── */}
       <AnimatePresence>
         {drawerOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="fixed inset-0 z-50 xl:hidden">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
