@@ -113,7 +113,7 @@ export default function AdminSkillHealthView() {
             Skill <span className="text-brand">Health</span>
           </h1>
           <p className="section-subtitle mt-1 text-left">
-            Identify strengths and learning debt across competencies and learner cohorts.
+            Identify strengths and learning debt across competencies and learner cohorts
           </p>
         </div>
       </div>
