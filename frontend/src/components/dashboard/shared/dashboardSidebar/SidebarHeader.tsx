@@ -11,14 +11,14 @@ interface SidebarHeaderProps {
 
 export default function SidebarHeader({ onClose }: SidebarHeaderProps) {
   return (
-    <div className="flex shrink-0 items-center justify-between border-b border-border pl-4 pr-3 py-3">
+    <div className="flex shrink-0 items-center justify-between xl:justify-center pl-4 pr-3 xl:px-4 py-3">
       <Link
         href="/"
-        className="flex shrink-0 items-center"
+        className="flex shrink-0 items-center justify-center"
         aria-label="AI Pather home"
       >
         <Image
-          src="/brand/AI-Pather-blue.png"
+          src="/brand/AI-Pather-purple.png"
           alt="AI Pather"
           width={120}
           height={22}
@@ -40,7 +40,7 @@ export default function SidebarHeader({ onClose }: SidebarHeaderProps) {
           type="button"
           onClick={onClose}
           aria-label="Close menu"
-          className="flex size-8 items-center justify-center rounded-lg text-foreground/60 transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 lg:hidden"
+          className="flex size-8 items-center justify-center rounded-lg text-foreground/60 transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 xl:hidden"
         >
           <X className="size-4" aria-hidden="true" />
         </button>
