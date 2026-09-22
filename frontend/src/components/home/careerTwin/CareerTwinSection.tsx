@@ -725,7 +725,7 @@ export default function CareerTwinSection() {
               Career <span className="text-brand">twin</span>
             </h2>
             <p className="section-subtitle mt-1">
-              Track your progress and match your skills to real-world roles.
+              Track your progress and match your skills to real-world roles
             </p>
           </>
         }
