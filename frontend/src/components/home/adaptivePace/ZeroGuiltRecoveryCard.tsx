@@ -147,7 +147,7 @@ export default function ZeroGuiltRecoveryCard() {
               Welcome back! Life gets busy and breaks are 100% normal.
             </h4>
             <p className="text-xs sm:text-base text-muted-foreground mt-0.5 leading-relaxed">
-              No broken streaks, no backlog anxiety. Re-ignite your momentum in just 10 minutes a day over the next 4 days.
+              No broken streaks, no backlog anxiety. Re-ignite your momentum in just 10 minutes a day over the next 4 days
             </p>
           </div>
         </div>
