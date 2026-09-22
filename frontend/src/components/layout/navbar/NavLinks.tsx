@@ -409,13 +409,13 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             data-lenis-prevent="true"
             data-lenis-prevent-wheel="true"
-            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] max-w-[360px] rounded-lg border border-border/70 dark:border-white/10 bg-white/95 dark:bg-[#1a1128]/95 p-5 shadow-2xl backdrop-blur-2xl"
+            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] sm:w-[380px] max-w-[380px] rounded-2xl border border-border/70 dark:border-white/10 bg-white/95 dark:bg-[#1a1128]/95 overflow-hidden shadow-2xl backdrop-blur-2xl"
           >
             <div
               ref={scrollContainerRef}
               data-lenis-prevent="true"
               data-lenis-prevent-wheel="true"
-              className="flex flex-col gap-4 max-h-[76vh] overflow-y-auto overscroll-contain pr-1"
+              className="flex flex-col gap-4 px-4 py-4.5 max-h-[76vh] overflow-y-auto overscroll-contain"
             >
               {/* User Profile Card (when authenticated) */}
               {isAuthenticated && (
@@ -520,7 +520,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
 
               {/* Navigation Links */}
               <div className="flex flex-col gap-1">
-                <span className="px-2 text-[11px] font-mono font-semibold tracking-[0.16em] text-muted-foreground uppercase">
+                <span className="px-2.5 text-[11px] font-mono font-semibold tracking-[0.16em] text-muted-foreground uppercase">
                   Navigation
                 </span>
 
@@ -538,7 +538,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                               prev === link.label ? null : link.label,
                             )
                           }
-                          className="flex items-center justify-between rounded-2xl px-0 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
+                          className="flex items-center justify-between rounded-2xl px-2.5 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5 cursor-pointer"
                         >
                           <div className="flex items-center gap-3.5">
                             <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 shrink-0">
@@ -562,9 +562,8 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                               transition={{ duration: 0.2 }}
                               className="overflow-hidden pl-2"
                             >
-                              <div className="flex flex-col gap-1 border-l-2 border-primary/25 my-1 pl-2.5">
+                              <div className="flex flex-col gap-1 border-l-2 border-primary/25 my-1 ml-4 pl-3">
                                 {link.children!.map((child) => (
-                                  
                                   <Link
                                     key={child.label}
                                     href={child.href}
@@ -634,7 +633,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
               {/* Authenticated User Account Section */}
               {isAuthenticated ? (
                 <div className="flex flex-col gap-1 border-t border-border/60 dark:border-white/10 pt-3">
-                  <span className="px-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                  <span className="px-2.5 text-[11px] font-mono font-semibold tracking-[0.16em] text-muted-foreground uppercase">
                     Account
                   </span>
 
@@ -645,18 +644,18 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                         type="button"
                         onClick={handleSignOut}
                         disabled={isSigningOut}
-                        className="group flex items-center gap-2.5 w-full rounded-xl px-2.5 py-2.5 mt-1 text-sm font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all disabled:opacity-50 cursor-pointer"
+                        className="group flex items-center gap-3.5 w-full rounded-2xl px-2.5 py-2.5 mt-1 text-sm font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all disabled:opacity-50 cursor-pointer"
                       >
                         {isSigningOut ? (
                           <>
-                            <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/20 text-red-500 shrink-0">
+                            <span className="flex size-8 items-center justify-center rounded-xl bg-red-500/20 text-red-500 shrink-0">
                               <Loader2 className="size-4 animate-spin shrink-0" />
                             </span>
                             <span>Signing out...</span>
                           </>
                         ) : (
                           <>
-                            <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/20 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all shrink-0">
+                            <span className="flex size-8 items-center justify-center rounded-xl bg-red-500/20 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all shrink-0">
                               <FiLogOut className="size-4 shrink-0" />
                             </span>
                             <span>{link.label}</span>
@@ -668,12 +667,12 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                         key={link.label}
                         href={link.href}
                         onClick={() => setMobileOpen(false)}
-                        className="group flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
+                        className="group flex items-center gap-3.5 rounded-2xl px-2.5 py-2.5 text-sm font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
                       >
-                        <span className="flex size-7 items-center justify-center rounded-lg bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 group-hover:bg-primary group-hover:text-white transition-all shrink-0">
+                        <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 group-hover:bg-primary group-hover:text-white transition-all shrink-0">
                           {getProfileIcon(link.label)}
                         </span>
-                        <span className="group-hover:text-primary transition-colors">{link.label}</span>
+                        <span className="text-[14px] font-medium group-hover:text-primary transition-colors">{link.label}</span>
                       </Link>
                     )
                   )}
