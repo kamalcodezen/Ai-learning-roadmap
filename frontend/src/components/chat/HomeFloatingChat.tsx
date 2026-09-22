@@ -305,7 +305,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                     <div className="flex flex-col items-center">
                       <div className="mb-2.5 flex items-center justify-center">
                         <Image
-                          src="/brand/AI-Pather-blue.png"
+                          src="/brand/AI-Pather-purple.png"
                           alt="AI Pather"
                           width={130}
                           height={24}
