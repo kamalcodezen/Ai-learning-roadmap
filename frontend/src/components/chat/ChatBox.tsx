@@ -40,7 +40,7 @@ export default function ChatBox() {
   const chatContentRef = useRef<HTMLDivElement>(null);
   const chatLenisRef = useRef<Lenis | null>(null);
   const hasHydratedRef = useRef(false);
-  const sendMessageRef = useRef<(text: string) => Promise<void>>(async () => {});
+  const sendMessageRef = useRef<(text: string) => Promise<void>>(async () => { });
 
   const handleAutoSubmit = useCallback((spokenText: string) => {
     if (spokenText.trim()) {
@@ -113,8 +113,8 @@ export default function ChatBox() {
         ? `${timeGreeting}, ${userName} (Admin)`
         : `${timeGreeting}, Admin`
       : userName
-      ? `${timeGreeting}, ${userName}`
-      : timeGreeting;
+        ? `${timeGreeting}, ${userName}`
+        : timeGreeting;
 
   // Auto-scroll the inner chat area after hydration, only when messages/loading change
   useEffect(() => {
@@ -237,16 +237,16 @@ export default function ChatBox() {
       <header className="flex items-center justify-between border-b border-border px-5 py-2 sm:px-6">
         <div className="flex items-center gap-3">
           {/* AI Pathar Icon */}
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary">
             <Image
-              src="/brand/uploaded-p-white.png"
+              src="/brand/logo-p-dark.png"
               alt="AI Pathar"
               className="h-6 w-6 object-contain block dark:hidden"
               height={24}
               width={24}
             />
             <Image
-              src="/brand/logo-p-dark.png"
+              src="/brand/uploaded-p-white.png"
               alt="AI Pathar"
               className="h-6 w-6 object-contain hidden dark:block"
               height={24}
@@ -268,11 +268,10 @@ export default function ChatBox() {
           <button
             type="button"
             onClick={toggleVoiceReply}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border opacity-100 shadow-sm ${
-              voiceReplyEnabled
-                ? "bg-primary text-white border-primary-foreground/30 shadow-[0_0_12px_rgba(159,84,247,0.5)]"
-                : "bg-purple-600/20 text-purple-950 dark:text-purple-200 border-purple-500/40 hover:bg-purple-600/30"
-            }`}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border opacity-100 shadow-sm ${voiceReplyEnabled
+              ? "bg-primary text-white border-primary-foreground/30 shadow-[0_0_12px_rgba(159,84,247,0.5)]"
+              : "bg-purple-600/20 text-purple-950 dark:text-purple-200 border-purple-500/40 hover:bg-purple-600/30"
+              }`}
             title={voiceReplyEnabled ? "AI Voice Reply is ON (Click to Mute)" : "AI Voice Reply is OFF (Click to Unmute)"}
           >
             {voiceReplyEnabled ? (
@@ -309,37 +308,37 @@ export default function ChatBox() {
       {/* Chat Area */}
       <div ref={chatScrollRef} className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-6 sm:px-8 proof-card">
         <div ref={chatContentRef} className="min-h-full min-w-0">
-        {messages.length === 0 ? (
-          /* Welcome Screen */
-          <div className="flex h-full items-center justify-center">
-            <div className="w-full max-w-xl text-center">
-              {/* Welcome Icon */}
-              <div className="mx-auto mb-4 flex items-center justify-center">
-                <Image
-                  src="/brand/AI-Pather-blue.png"
-                  alt="AI Pather"
-                  width={140}
-                  height={28}
-                  className="h-6 sm:h-7 w-auto object-contain block dark:hidden"
-                />
-                <Image
-                  src="/brand/AI-Pather-white.png"
-                  alt="AI Pather"
-                  width={140}
-                  height={28}
-                  className="h-6 sm:h-7 w-auto object-contain hidden dark:block"
-                />
-              </div>
+          {messages.length === 0 ? (
+            /* Welcome Screen */
+            <div className="flex h-full items-center justify-center">
+              <div className="w-full max-w-xl text-center">
+                {/* Welcome Icon */}
+                <div className="mx-auto mb-4 flex items-center justify-center">
+                  <Image
+                    src="/brand/AI-Pather-purple.png"
+                    alt="AI Pather"
+                    width={140}
+                    height={28}
+                    className="h-6 sm:h-7 w-auto object-contain block dark:hidden"
+                  />
+                  <Image
+                    src="/brand/AI-Pather-white.png"
+                    alt="AI Pather"
+                    width={140}
+                    height={28}
+                    className="h-6 sm:h-7 w-auto object-contain hidden dark:block"
+                  />
+                </div>
 
-              {/* Greeting */}
-              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl mb-6">
-                {greeting}
-              </h2>
+                {/* Greeting */}
+                <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl mb-6">
+                  {greeting}
+                </h2>
 
-              {/* Feature Suggestions */}
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                {(userRole === "ADMIN"
-                  ? [
+                {/* Feature Suggestions */}
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  {(userRole === "ADMIN"
+                    ? [
                       "📊 Summarize platform health & active learner metrics",
                       "👥 How do I manage users & assign role permissions?",
                       "📢 Help me draft a platform broadcast announcement",
@@ -347,221 +346,219 @@ export default function ChatBox() {
                       "🛡️ Explain platform security & audit log inspection",
                       "💎 How does the Gem economy & reward system balance work?",
                     ]
-                  : userRole === "LEARNER"
-                  ? [
-                      "🎯 What is my current milestone and next step?",
-                      "🧠 Review my active skill gaps and learning debt",
-                      "💻 Help me plan a real-world project for my stack",
-                      "🎙️ Start a 5-minute technical mock interview",
-                      "📄 Review my ATS resume score & improvements",
-                      "📈 How can I increase my Career Twin readiness score?",
-                    ]
-                  : [
-                      "🚀 What is AI Pather and how does it work?",
-                      "🗺️ Which tech career track should I start with?",
-                      "💡 How does the adaptive roadmap help me?",
-                      "💼 How do I get verified proof for my GitHub projects?",
-                      "🎯 What is the 4-Stage Skill Mastery Simulation?",
-                      "📈 How does the 4-Pillar Job Readiness Score work?",
-                    ]
-                ).map((suggestion) => (
-                  <button
-                    key={suggestion}
-                    type="button"
-                    onClick={() => setInput(suggestion)}
-                    disabled={isLoading}
-                    className="rounded-2xl border border-border bg-card px-4 py-3 text-left text-sm leading-5 text-muted-foreground transition hover:border-primary/30 hover:bg-primary/5 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
+                    : userRole === "LEARNER"
+                      ? [
+                        "🎯 What is my current milestone and next step?",
+                        "🧠 Review my active skill gaps and learning debt",
+                        "💻 Help me plan a real-world project for my stack",
+                        "🎙️ Start a 5-minute technical mock interview",
+                        "📄 Review my ATS resume score & improvements",
+                        "📈 How can I increase my Career Twin readiness score?",
+                      ]
+                      : [
+                        "🚀 What is AI Pather and how does it work?",
+                        "🗺️ Which tech career track should I start with?",
+                        "💡 How does the adaptive roadmap help me?",
+                        "💼 How do I get verified proof for my GitHub projects?",
+                        "🎯 What is the 4-Stage Skill Mastery Simulation?",
+                        "📈 How does the 4-Pillar Job Readiness Score work?",
+                      ]
+                  ).map((suggestion) => (
+                    <button
+                      key={suggestion}
+                      type="button"
+                      onClick={() => setInput(suggestion)}
+                      disabled={isLoading}
+                      className="rounded-2xl border border-border bg-card px-4 py-3 text-left text-sm leading-5 text-muted-foreground transition hover:border-primary/30 hover:bg-primary/5 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        ) : (
-          /* Messages */
-          <div className="mx-auto flex max-w-3xl flex-col gap-5 min-w-0 w-full">
-            {messages.map((message, index) => (
-              <div
-                key={`${message.role}-${index}`}
-                className={`flex w-full min-w-0 ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
+          ) : (
+            /* Messages */
+            <div className="mx-auto flex max-w-3xl flex-col gap-5 min-w-0 w-full">
+              {messages.map((message, index) => (
                 <div
-                  className={`max-w-[92%] sm:max-w-[85%] min-w-0 rounded-3xl px-4 py-3 text-sm sm:text-base leading-relaxed break-words [overflow-wrap:anywhere] ${
-                    message.role === "user"
+                  key={`${message.role}-${index}`}
+                  className={`flex w-full min-w-0 ${message.role === "user" ? "justify-end" : "justify-start"
+                    }`}
+                >
+                  <div
+                    className={`max-w-[92%] sm:max-w-[85%] min-w-0 rounded-3xl px-4 py-3 text-sm sm:text-base leading-relaxed break-words [overflow-wrap:anywhere] ${message.role === "user"
                       ? "rounded-br-md bg-primary text-white font-medium"
                       : "rounded-bl-md border border-border bg-card text-foreground"
-                  }`}
-                >
-                  {message.role === "assistant" ? (
-                    <div className="markdown-content min-w-0 text-sm sm:text-base break-words [overflow-wrap:anywhere]">
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          h1: ({ children }) => (
-                            <h1 className="mb-4 mt-1 text-xl sm:text-2xl font-bold text-foreground">
-                              {children}
-                            </h1>
-                          ),
+                      }`}
+                  >
+                    {message.role === "assistant" ? (
+                      <div className="markdown-content min-w-0 text-sm sm:text-base break-words [overflow-wrap:anywhere]">
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            h1: ({ children }) => (
+                              <h1 className="mb-4 mt-1 text-xl sm:text-2xl font-bold text-foreground">
+                                {children}
+                              </h1>
+                            ),
 
-                          h2: ({ children }) => (
-                            <h2 className="mb-3 mt-5 text-lg sm:text-xl font-bold text-foreground">
-                              {children}
-                            </h2>
-                          ),
+                            h2: ({ children }) => (
+                              <h2 className="mb-3 mt-5 text-lg sm:text-xl font-bold text-foreground">
+                                {children}
+                              </h2>
+                            ),
 
-                          h3: ({ children }) => (
-                            <h3 className="mb-2 mt-4 text-base sm:text-lg font-semibold text-foreground">
-                              {children}
-                            </h3>
-                          ),
+                            h3: ({ children }) => (
+                              <h3 className="mb-2 mt-4 text-base sm:text-lg font-semibold text-foreground">
+                                {children}
+                              </h3>
+                            ),
 
-                          p: ({ children }) => (
-                            <p className="mb-3.5 last:mb-0 text-sm sm:text-base leading-relaxed text-foreground/90 font-normal">{children}</p>
-                          ),
+                            p: ({ children }) => (
+                              <p className="mb-3.5 last:mb-0 text-sm sm:text-base leading-relaxed text-foreground/90 font-normal">{children}</p>
+                            ),
 
-                          strong: ({ children }) => (
-                            <strong className="font-semibold text-foreground">
-                              {children}
-                            </strong>
-                          ),
+                            strong: ({ children }) => (
+                              <strong className="font-semibold text-foreground">
+                                {children}
+                              </strong>
+                            ),
 
-                          em: ({ children }) => (
-                            <em className="text-muted-foreground">{children}</em>
-                          ),
+                            em: ({ children }) => (
+                              <em className="text-muted-foreground">{children}</em>
+                            ),
 
-                          ul: ({ children }) => (
-                            <ul className="mb-4 ml-5 list-disc space-y-1.5 text-sm sm:text-base">
-                              {children}
-                            </ul>
-                          ),
+                            ul: ({ children }) => (
+                              <ul className="mb-4 ml-5 list-disc space-y-1.5 text-sm sm:text-base">
+                                {children}
+                              </ul>
+                            ),
 
-                          ol: ({ children }) => (
-                            <ol className="mb-4 ml-5 list-decimal space-y-1.5 text-sm sm:text-base">
-                              {children}
-                            </ol>
-                          ),
+                            ol: ({ children }) => (
+                              <ol className="mb-4 ml-5 list-decimal space-y-1.5 text-sm sm:text-base">
+                                {children}
+                              </ol>
+                            ),
 
-                          li: ({ children }) => (
-                            <li className="pl-1 text-sm sm:text-base leading-relaxed">{children}</li>
-                          ),
+                            li: ({ children }) => (
+                              <li className="pl-1 text-sm sm:text-base leading-relaxed">{children}</li>
+                            ),
 
-                          blockquote: ({ children }) => (
-                            <blockquote className="my-4 border-l-2 border-primary/50 pl-4 italic text-muted-foreground">
-                              {children}
-                            </blockquote>
-                          ),
+                            blockquote: ({ children }) => (
+                              <blockquote className="my-4 border-l-2 border-primary/50 pl-4 italic text-muted-foreground">
+                                {children}
+                              </blockquote>
+                            ),
 
-                          hr: () => <hr className="my-5 border-border" />,
+                            hr: () => <hr className="my-5 border-border" />,
 
-                          code: ({ className, children, ...props }) => {
-                            const isBlock = className?.includes("language-");
+                            code: ({ className, children, ...props }) => {
+                              const isBlock = className?.includes("language-");
 
-                            if (isBlock) {
+                              if (isBlock) {
+                                return (
+                                  <code
+                                    className="block whitespace-pre-wrap break-words text-xs leading-6 text-foreground sm:text-sm"
+                                    {...props}
+                                  >
+                                    {children}
+                                  </code>
+                                );
+                              }
+
                               return (
                                 <code
-                                  className="block whitespace-pre-wrap break-words text-xs leading-6 text-foreground sm:text-sm"
+                                  className="rounded bg-primary/10 dark:bg-primary/25 px-1.5 py-0.5 text-xs sm:text-sm font-mono font-semibold text-primary"
                                   {...props}
                                 >
                                   {children}
                                 </code>
                               );
-                            }
+                            },
 
-                            return (
-                              <code
-                                className="rounded bg-primary/10 dark:bg-primary/25 px-1.5 py-0.5 text-xs sm:text-sm font-mono font-semibold text-primary"
-                                {...props}
+                            pre: ({ children }) => (
+                              <pre className="my-4 overflow-x-auto rounded-xl border border-border bg-card p-4">
+                                {children}
+                              </pre>
+                            ),
+
+                            a: ({ children, href }) => (
+                              <a
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary/80"
                               >
                                 {children}
-                              </code>
-                            );
-                          },
+                              </a>
+                            ),
 
-                          pre: ({ children }) => (
-                            <pre className="my-4 overflow-x-auto rounded-xl border border-border bg-card p-4">
-                              {children}
-                            </pre>
-                          ),
+                            table: ({ children }) => (
+                              <div className="my-4 overflow-x-auto rounded-xl border border-border">
+                                <table className="w-full text-left text-xs sm:text-sm">
+                                  {children}
+                                </table>
+                              </div>
+                            ),
 
-                          a: ({ children, href }) => (
-                            <a
-                              href={href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-primary underline decoration-primary/30 underline-offset-2 transition hover:text-primary/80"
-                            >
-                              {children}
-                            </a>
-                          ),
-
-                          table: ({ children }) => (
-                            <div className="my-4 overflow-x-auto rounded-xl border border-border">
-                              <table className="w-full text-left text-xs sm:text-sm">
+                            thead: ({ children }) => (
+                              <thead className="bg-card text-foreground">
                                 {children}
-                              </table>
-                            </div>
-                          ),
+                              </thead>
+                            ),
 
-                          thead: ({ children }) => (
-                            <thead className="bg-card text-foreground">
-                              {children}
-                            </thead>
-                          ),
+                            tbody: ({ children }) => (
+                              <tbody className="divide-y divide-border">
+                                {children}
+                              </tbody>
+                            ),
 
-                          tbody: ({ children }) => (
-                            <tbody className="divide-y divide-border">
-                              {children}
-                            </tbody>
-                          ),
+                            tr: ({ children }) => (
+                              <tr className="transition hover:bg-card-soft">
+                                {children}
+                              </tr>
+                            ),
 
-                          tr: ({ children }) => (
-                            <tr className="transition hover:bg-card-soft">
-                              {children}
-                            </tr>
-                          ),
+                            th: ({ children }) => (
+                              <th className="border-r border-border px-3 py-2.5 font-semibold last:border-r-0">
+                                {children}
+                              </th>
+                            ),
 
-                          th: ({ children }) => (
-                            <th className="border-r border-border px-3 py-2.5 font-semibold last:border-r-0">
-                              {children}
-                            </th>
-                          ),
-
-                          td: ({ children }) => (
-                            <td className="border-r border-border px-3 py-2.5 align-top last:border-r-0">
-                              {children}
-                            </td>
-                          ),
-                        }}
-                      >
-                        {message.content}
-                      </ReactMarkdown>
-                    </div>
-                  ) : (
-                    <span className="whitespace-pre-wrap text-white/80">{message.content}</span>
-                  )}
-                </div>
-              </div>
-            ))}
-
-            {/* Loading */}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="rounded-3xl rounded-bl-md border border-border bg-card px-5 py-3">
-                  <div className="flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground" />
-
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:120ms]" />
-
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:240ms]" />
+                            td: ({ children }) => (
+                              <td className="border-r border-border px-3 py-2.5 align-top last:border-r-0">
+                                {children}
+                              </td>
+                            ),
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      </div>
+                    ) : (
+                      <span className="whitespace-pre-wrap text-white/80">{message.content}</span>
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              ))}
+
+              {/* Loading */}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="rounded-3xl rounded-bl-md border border-border bg-card px-5 py-3">
+                    <div className="flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground" />
+
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:120ms]" />
+
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:240ms]" />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -607,13 +604,12 @@ export default function ChatBox() {
             onClick={toggleMic}
             aria-label={isListening ? "Stop listening" : "Start speaking"}
             title={isListening ? "Listening to your voice... (Click to stop)" : "Click to speak your message"}
-            className={`relative flex h-10 w-9 mb-0.5 md:h-11 md:w-11 md:m-0 shrink-0 items-center justify-center rounded-xl transition-all cursor-pointer opacity-100 border font-bold shadow-sm ${
-              isListening
-                ? "bg-rose-500 text-white border-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.8)] animate-pulse"
-                : isSpeaking
+            className={`relative flex h-10 w-9 mb-0.5 md:h-11 md:w-11 md:m-0 shrink-0 items-center justify-center rounded-xl transition-all cursor-pointer opacity-100 border font-bold shadow-sm ${isListening
+              ? "bg-rose-500 text-white border-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.8)] animate-pulse"
+              : isSpeaking
                 ? "bg-primary text-white border-primary-foreground/30 shadow-[0_0_12px_rgba(159,84,247,0.8)] animate-pulse"
                 : "bg-purple-600/20 text-purple-950 dark:text-purple-200 border-purple-500/40 hover:bg-purple-600/30"
-            }`}
+              }`}
           >
             {isListening ? (
               <MicOff className="w-4 h-4 md:w-5 md:h-5 text-white" />

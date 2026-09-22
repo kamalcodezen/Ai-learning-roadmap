@@ -213,7 +213,7 @@ export function InterviewLiveRoom({
   };
 
   return (
-    <div className="w-full flex-1 flex flex-col justify-between space-y-5 animate-in fade-in duration-300">
+    <div className="w-full flex-1 flex flex-col justify-between dashboard-card-gap animate-in fade-in duration-300">
       {/* ── Top HUD Control Bar ── */}
       <div className="dashboard-card !p-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
