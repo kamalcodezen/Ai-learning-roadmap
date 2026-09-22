@@ -44,7 +44,7 @@ export default function AdaptCard() {
       </BorderGlow>
 
       <p className="text-small text-muted-foreground text-center mt-4 px-2 leading-relaxed">
-        Continuously adjust your learning path as your progress changes.
+        Continuously adjust your learning path as your progress changes
       </p>
     </div>
   );
