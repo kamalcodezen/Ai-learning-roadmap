@@ -29,7 +29,7 @@ export default function TrackHelp({ track }: { track: Track }) {
           <p className="section-subtitle mt-1">
             A complete, AI-guided system — not another course library — that
             takes you from wherever you are now to an interview-ready{" "}
-            {track.title}.
+            {track.title}
           </p>
         </div>
 
