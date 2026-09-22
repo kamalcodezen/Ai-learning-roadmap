@@ -236,16 +236,18 @@ export default function AdminGemEconomyView() {
       {/* Header & Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <Sparkles className="size-6 text-emerald-500" />
-            AI Gem Economy & Streaks Manager
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-start sm:items-center gap-2.5">
+            <div className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-500 border border-emerald-500/20 shadow-xs mt-0.5 sm:mt-0">
+              <Sparkles className="size-4 sm:size-5" />
+            </div>
+            <span className="leading-tight">AI Gem Economy & Streaks Manager</span>
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Real-time platform treasury monitoring, streak participation, and learner drop-off recovery.
+          <p className="text-xs sm:text-sm lg:text-base text-muted-foreground mt-1.5 sm:mt-1 leading-relaxed">
+            Real-time platform treasury monitoring, streak participation, and learner drop-off recovery
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
           <button
             type="button"
             onClick={() => {
@@ -253,7 +255,7 @@ export default function AdminGemEconomyView() {
               if (activeTab === "transactions") refetchTx();
               if (activeTab === "atRisk") refetchAtRisk();
             }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-muted/60 hover:bg-muted text-foreground text-xs font-semibold transition-colors border border-border cursor-pointer"
+            className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 px-3.5 py-2.5 sm:py-2 rounded-xl bg-muted/60 hover:bg-muted active:scale-[0.98] text-foreground text-xs font-semibold transition-all border border-border cursor-pointer shadow-xs"
           >
             <RefreshCw className="size-3.5" />
             <span>Sync</span>
@@ -262,16 +264,16 @@ export default function AdminGemEconomyView() {
           <button
             type="button"
             onClick={() => setIsAdjustModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-sm shadow-emerald-600/20 cursor-pointer"
+            className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 px-4 py-2.5 sm:py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white text-xs font-bold transition-all shadow-sm shadow-emerald-600/20 hover:shadow-emerald-500/30 cursor-pointer"
           >
             <PlusCircle className="size-4" />
-            <span>Award / Adjust Gems</span>
+            <span className="whitespace-nowrap">Award / Adjust Gems</span>
           </button>
         </div>
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
         <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Circulation</span>
