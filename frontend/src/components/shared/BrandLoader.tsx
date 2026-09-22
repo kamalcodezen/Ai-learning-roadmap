@@ -354,7 +354,7 @@ export default function BrandLoader({
         {/* Brand Logo - single dynamic logo for light/dark theme */}
         <Link href="/" className="brand-loader-link" aria-label="AI Pather home">
           <Image
-            src="/brand/AI-Pather-blue.png"
+            src="/brand/AI-Pather-purple.png"
             alt="AI Pather"
             width={160}
             height={30}
