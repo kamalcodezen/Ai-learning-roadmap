@@ -70,32 +70,36 @@ export default function DashboardSidebar() {
     return () => el.removeEventListener("wheel", handleWheel);
   }, [handleWheel]);
 
-  // ── Mobile drawer: mouse-wheel scroll handler (same pattern) ─────
+  // ── Lock body scroll when mobile drawer is open ──────────────────
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [drawerOpen]);
+
+  // ── Mobile drawer: mouse-wheel scroll handler (isolated to drawer) ──
+  const mobileDrawerRef = useRef<HTMLElement>(null);
   const mobileNavRef = useRef<HTMLDivElement>(null);
 
   const handleMobileWheel = useCallback((e: WheelEvent) => {
     const el = mobileNavRef.current;
-    if (!el) return;
-    const { scrollTop, scrollHeight, clientHeight } = el;
-    const canScrollDown = scrollTop + clientHeight < scrollHeight;
-    const canScrollUp = scrollTop > 0;
-    if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
-      e.preventDefault();
+    e.preventDefault();
+    e.stopPropagation();
+    if (el) {
       el.scrollTop += e.deltaY;
     }
   }, []);
 
   useEffect(() => {
     if (!drawerOpen) return;
-    // Capture ref at effect time — used in both timeout and cleanup
-    const navEl = mobileNavRef.current;
-    const timer = setTimeout(() => {
-      if (!navEl) return;
-      navEl.addEventListener("wheel", handleMobileWheel, { passive: false });
-    }, 50);
+    const drawerEl = mobileDrawerRef.current;
+    if (!drawerEl) return;
+    drawerEl.addEventListener("wheel", handleMobileWheel, { passive: false });
     return () => {
-      clearTimeout(timer);
-      navEl?.removeEventListener("wheel", handleMobileWheel);
+      drawerEl.removeEventListener("wheel", handleMobileWheel);
     };
   }, [drawerOpen, handleMobileWheel]);
 
@@ -132,12 +136,21 @@ export default function DashboardSidebar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={closeDrawer}
+              onWheel={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onTouchMove={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
               aria-hidden="true"
               className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             />
 
             {/* Drawer panel */}
             <motion.aside
+              ref={mobileDrawerRef}
               role="dialog"
               aria-modal="true"
               aria-label="Dashboard menu"
@@ -145,7 +158,10 @@ export default function DashboardSidebar() {
               animate="open"
               exit="closed"
               variants={drawerVariants}
-              className="sidebar-container sidebar-gradient absolute inset-y-0 left-0 flex h-screen w-72 max-w-[85vw] flex-col text-foreground shadow-2xl"
+              data-lenis-prevent="true"
+              data-lenis-prevent-wheel="true"
+              data-lenis-prevent-touch="true"
+              className="sidebar-container sidebar-gradient absolute inset-y-0 left-0 flex h-full max-h-[100dvh] w-72 max-w-[85vw] flex-col overflow-hidden overscroll-contain text-foreground shadow-2xl"
             >
               {/* Fixed header */}
               <SidebarHeader onClose={closeDrawer} />
@@ -158,7 +174,10 @@ export default function DashboardSidebar() {
               {/* Scrollable navigation — independent scroll zone */}
               <div
                 ref={mobileNavRef}
-                className="mobile-nav-scroll flex-1 overflow-y-auto overscroll-contain"
+                data-lenis-prevent="true"
+                data-lenis-prevent-wheel="true"
+                data-lenis-prevent-touch="true"
+                className="mobile-nav-scroll flex-1 overflow-y-auto overscroll-contain touch-pan-y"
                 style={{ touchAction: "pan-y" }}
               >
                 <SidebarNav

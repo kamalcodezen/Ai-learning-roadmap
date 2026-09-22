@@ -51,6 +51,16 @@ export default function AdminSidebar() {
     return () => el.removeEventListener("wheel", handleWheel);
   }, [handleWheel]);
 
+  // ── Lock body scroll when mobile drawer is open ──────────────────
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [drawerOpen]);
+
   const closeDrawer = () => setDrawerOpen(false);
 
   return (
@@ -80,6 +90,14 @@ export default function AdminSidebar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={closeDrawer}
+              onWheel={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onTouchMove={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
               aria-hidden="true"
               className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             />
@@ -92,7 +110,9 @@ export default function AdminSidebar() {
               exit="closed"
               variants={drawerVariants}
               data-lenis-prevent="true"
-              className="sidebar-container sidebar-gradient absolute inset-y-0 left-0 w-72 max-w-[85vw] overflow-hidden overscroll-none text-foreground shadow-2xl"
+              data-lenis-prevent-wheel="true"
+              data-lenis-prevent-touch="true"
+              className="sidebar-container sidebar-gradient absolute inset-y-0 left-0 flex h-full max-h-[100dvh] w-72 max-w-[85vw] flex-col overflow-hidden overscroll-contain text-foreground shadow-2xl"
             >
               <SidebarContent
                 userName={user?.name}

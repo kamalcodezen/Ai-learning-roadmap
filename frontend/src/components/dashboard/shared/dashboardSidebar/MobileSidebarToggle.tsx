@@ -42,35 +42,33 @@ export default function MobileSidebarToggle({ onOpen }: MobileSidebarToggleProps
 
       {/* Unified Action Controls (Identical on Desktop & Mobile) */}
       <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3">
-        {!isAdmin && (
-          <button
-            type="button"
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                window.dispatchEvent(new CustomEvent("open-ai-chat"));
-              }
-            }}
-            aria-label="Open AI Mentor Chat"
-            className="relative flex items-center gap-2 rounded-lg border border-foreground/20 px-2.5 py-1.5 font-semibold text-xs sm:text-sm text-primary transition-colors hover:bg-brand hover:text-white cursor-pointer"
-          >
-            <BorderBeam
-              size={60}
-              duration={6}
-              colorFrom="rgba(239,68,68,0)"
-              colorTo="#ef4444"
-            />
-            <BorderBeam
-              size={60}
-              duration={6}
-              delay={3}
-              borderWidth={2}
-              colorFrom="rgba(59,130,246,0)"
-              colorTo="#3b82f6"
-            />
-            <Sparkles className="size-4" aria-hidden="true" />
-            <span className="mt-0.5">Ai Mentor</span>
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new CustomEvent("open-ai-chat"));
+            }
+          }}
+          aria-label="Open AI Mentor Chat"
+          className="relative flex items-center gap-2 rounded-lg border border-foreground/20 px-2.5 py-1.5 font-semibold text-xs sm:text-sm text-primary transition-colors hover:bg-brand hover:text-white cursor-pointer"
+        >
+          <BorderBeam
+            size={60}
+            duration={6}
+            colorFrom="rgba(239,68,68,0)"
+            colorTo="#ef4444"
+          />
+          <BorderBeam
+            size={60}
+            duration={6}
+            delay={3}
+            borderWidth={2}
+            colorFrom="rgba(59,130,246,0)"
+            colorTo="#3b82f6"
+          />
+          <Sparkles className="size-4" aria-hidden="true" />
+          <span className="mt-0.5">Ai Mentor</span>
+        </button>
 
         {/* Gems Wallet Pill is only for students/learners, not for Admin */}
         {!isAdmin && <GemWalletPill />}

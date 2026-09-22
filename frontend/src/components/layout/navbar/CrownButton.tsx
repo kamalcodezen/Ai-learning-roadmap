@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Crown } from "lucide-react";
 import type { CSSProperties } from "react";
 import { authClient } from "@/src/lib/auth-client";
+import { cn } from "@/src/utils/cn";
 
 const glareVars = {
   "--gh-angle": "-45deg",
@@ -11,7 +12,11 @@ const glareVars = {
   "--gh-rgba": "rgba(255, 255, 255, 0.45)",
 } as CSSProperties;
 
-export default function CrownButton() {
+interface CrownButtonProps {
+  className?: string;
+}
+
+export default function CrownButton({ className }: CrownButtonProps) {
   const { data: session } = authClient.useSession();
 
   const user = session?.user as { role?: string; plan?: string } | undefined;
@@ -57,10 +62,14 @@ export default function CrownButton() {
       href="/pricing"
       aria-label="Go to pricing"
       title={styleConfig.title}
-      className={`relative flex ml-1.5 size-9 md:size-10 shrink-0 items-center justify-center overflow-hidden rounded-full ${styleConfig.shadow} transition-transform duration-300 hover:scale-105 active:scale-95`}
+      className={cn(
+        "relative flex size-9 md:size-10 shrink-0 items-center justify-center overflow-hidden rounded-full transition-transform duration-300 hover:scale-105 active:scale-95",
+        styleConfig.shadow,
+        className
+      )}
       style={{ background: styleConfig.background, ...glareVars }}
     >
-      <Crown className="size-5 md:size-6 text-white drop-shadow-xs" strokeWidth={2.2} />
+      <Crown className="size-6  text-white drop-shadow-xs" strokeWidth={2.2} />
       <span className="crown-glare pointer-events-none absolute inset-0 z-10 bg-no-repeat" />
     </Link>
   );
