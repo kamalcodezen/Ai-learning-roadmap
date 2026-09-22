@@ -40,7 +40,13 @@ export default function SidebarContent({
         <ProfileCard name={userName} email={userEmail} plan={userPlan} image={userImage || user?.image} />
       </div>
 
-      <div className="mt-1 flex min-h-0 flex-1 flex-col overflow-y-auto">
+      <div
+        data-lenis-prevent="true"
+        data-lenis-prevent-wheel="true"
+        data-lenis-prevent-touch="true"
+        className="mt-1 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain touch-pan-y"
+        style={{ touchAction: "pan-y" }}
+      >
         <SidebarNav indicatorId={indicatorId} onItemClick={onNavigate} />
       </div>
 

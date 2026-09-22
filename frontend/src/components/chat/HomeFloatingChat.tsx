@@ -166,7 +166,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
             "fixed z-50",
             isExpanded
             ? "fixed inset-3 sm:inset-6 md:inset-8 flex flex-col"
-            : "fixed bottom-[96px] left-1/2 -translate-x-1/2 flex flex-col items-center sm:left-auto sm:right-6 sm:translate-x-0 sm:items-end"
+            : "fixed bottom-[80px] sm:bottom-[96px] left-1/2 -translate-x-1/2 flex flex-col items-center sm:left-auto sm:right-6 sm:translate-x-0 sm:items-end"
           )}
         >
         <AnimatePresence>
@@ -180,7 +180,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                 "relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] dark:from-[#0a0015] dark:via-[#120025] dark:to-[#1a0040] text-zinc-950 dark:text-white backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-[var(--color-primary)]/40 dark:border-[var(--color-primary)]/30 ",
                 isExpanded
                   ? "w-full h-full max-h-none mb-0"
-                  : "h-[570px] max-h-[calc(100vh-115px)] w-[385px] sm:w-[445px]"
+                  : "h-[540px] max-h-[calc(100dvh-100px)] w-[calc(100vw-24px)] max-w-[430px]"
               )}
               onClick={(e) => e.stopPropagation()}
              >
@@ -188,38 +188,38 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
               <div className="pointer-events-none absolute inset-0 rounded-3xl animate-plasmaGlow z-0" />
 
               {/* Header */}
-              <div className="relative z-10 flex shrink-0 items-center justify-between border-b border-black/10 dark:border-[var(--color-primary)]/20 px-5 py-4 bg-purple-50/70 dark:bg-black/40 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[0_0_15px_rgba(159,84,247,0.5)] p-2">
+              <div className="relative z-10 flex shrink-0 items-center justify-between border-b border-black/10 dark:border-[var(--color-primary)]/20 px-3.5 py-3 sm:px-5 sm:py-4 bg-purple-50/70 dark:bg-black/40 backdrop-blur-md gap-2 min-w-0">
+                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                  <div className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[0_0_15px_rgba(159,84,247,0.5)] p-2">
                     <Image
                       src="/brand/uploaded-p-white.png"
                       alt="AI Pather"
                       width={22}
                       height={22}
-                      className="h-5.5 w-5.5 object-contain block dark:hidden"
+                      className="h-4.5 w-4.5 sm:h-5.5 sm:w-5.5 object-contain block dark:hidden"
                     />
                     <Image
                       src="/brand/uploaded-p-white.png"
                       alt="AI Pather"
                       width={22}
                       height={22}
-                      className="h-5.5 w-5.5 object-contain hidden dark:block"
+                      className="h-4.5 w-4.5 sm:h-5.5 sm:w-5.5 object-contain hidden dark:block"
                     />
                   </div>
-                  <div>
-                    <h3 className="text-base font-bold text-zinc-950 dark:text-white tracking-wide">
+                  <div className="min-w-0">
+                    <h3 className="text-sm sm:text-base font-bold text-zinc-950 dark:text-white tracking-wide truncate">
                       AI Pather
                     </h3>
                     <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="h-2 w-2 rounded-full bg-[var(--color-primary)] dark:bg-[var(--color-primary)] shadow-[0_0_8px_rgba(159,84,247,0.8)]" />
-                      <p className="text-xs text-zinc-800 dark:text-[var(--color-primary)] font-semibold">
+                      <span className="size-2 rounded-full bg-[var(--color-primary)] dark:bg-[var(--color-primary)] shadow-[0_0_8px_rgba(159,84,247,0.8)]" />
+                      <p className="text-[11px] sm:text-xs text-zinc-800 dark:text-[var(--color-primary)] font-semibold truncate">
                         AI Career Copilot
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                   {/* Voice Output Toggle */}
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -229,7 +229,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                     aria-label="Toggle voice output"
                     title={voiceReplyEnabled ? "AI Voice Reply is ON (Click to Mute)" : "AI Voice Reply is OFF (Click to Unmute)"}
                     className={cn(
-                      "flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer border opacity-100 shadow-sm",
+                      "flex items-center justify-center size-8 sm:h-9 sm:w-auto sm:px-3 rounded-full text-xs font-bold transition-all cursor-pointer border opacity-100 shadow-xs",
                       voiceReplyEnabled
                         ? "bg-[var(--color-primary)] text-white border-white/40 shadow-[0_0_12px_rgba(159,84,247,0.5)]"
                         : "bg-purple-600/20 text-purple-950 dark:text-purple-200 border-purple-500/40 hover:bg-purple-600/30"
@@ -240,7 +240,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                     ) : (
                       <VolumeX className="size-3.5 text-purple-950 dark:text-purple-200" />
                     )}
-                    <span className="text-[11px] font-bold hidden xs:inline">
+                    <span className="text-[11px] font-bold hidden md:inline ml-1.5">
                       {voiceReplyEnabled ? "Voice ON" : "Voice OFF"}
                     </span>
                   </motion.button>
