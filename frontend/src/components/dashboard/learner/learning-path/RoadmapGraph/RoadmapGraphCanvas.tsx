@@ -284,7 +284,7 @@ export function RoadmapGraphCanvas({
     >
       {/* Top Left Title Card Overlay (Toggleable Collapse / Expand) */}
       {isOverviewOpen ? (
-        <div className="absolute top-6 left-6 z-10 max-w-sm md:max-w-md p-5 rounded-2xl bg-card/95 border border-border shadow-2xl backdrop-blur-xl space-y-3 animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute top-2 left-2 z-10 w-[95%] md:max-w-md p-5 rounded-2xl bg-card/95 border border-border shadow-2xl backdrop-blur-xl space-y-3 animate-in fade-in zoom-in-95 duration-200">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
               <Target className="w-4 h-4" /> {targetRole} Roadmap
@@ -337,7 +337,7 @@ export function RoadmapGraphCanvas({
         </div>
       ) : (
         /* Top Left Collapsed Badge / Toggle Button */
-        <div className="absolute top-6 left-6 z-10 flex items-center gap-2 animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute top-2 left-2 max-w-[95%] sm:w-fit z-10 flex items-center gap-2 animate-in fade-in zoom-in-95 duration-200">
           <button
             onClick={() => setIsOverviewOpen(true)}
             className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-card/95 border border-border hover:border-primary/50 shadow-xl backdrop-blur-xl text-foreground text-xs font-semibold transition-all hover:scale-[1.02] cursor-pointer group"

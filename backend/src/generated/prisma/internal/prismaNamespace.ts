@@ -423,6 +423,7 @@ export const ModelName = {
   UserGamification: 'UserGamification',
   XPTransaction: 'XPTransaction',
   UserAchievement: 'UserAchievement',
+  GemTransaction: 'GemTransaction',
   Notification: 'Notification',
   Resume: 'Resume'
 } as const
@@ -440,7 +441,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verification" | "twoFactor" | "careerProfile" | "diagnosticQuestion" | "diagnosticAttempt" | "diagnosticAnswer" | "skillState" | "roadmap" | "milestone" | "project" | "projectEvidence" | "activityLog" | "skillStateHistory" | "adminAuditLog" | "aiUsageLog" | "errorLog" | "analyticsSnapshot" | "interviewSession" | "interviewQuestion" | "interviewAnswer" | "userGamification" | "xPTransaction" | "userAchievement" | "notification" | "resume"
+    modelProps: "account" | "session" | "user" | "verification" | "twoFactor" | "careerProfile" | "diagnosticQuestion" | "diagnosticAttempt" | "diagnosticAnswer" | "skillState" | "roadmap" | "milestone" | "project" | "projectEvidence" | "activityLog" | "skillStateHistory" | "adminAuditLog" | "aiUsageLog" | "errorLog" | "analyticsSnapshot" | "interviewSession" | "interviewQuestion" | "interviewAnswer" | "userGamification" | "xPTransaction" | "userAchievement" | "gemTransaction" | "notification" | "resume"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2368,6 +2369,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GemTransaction: {
+      payload: Prisma.$GemTransactionPayload<ExtArgs>
+      fields: Prisma.GemTransactionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GemTransactionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GemTransactionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload>
+        }
+        findFirst: {
+          args: Prisma.GemTransactionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GemTransactionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload>
+        }
+        findMany: {
+          args: Prisma.GemTransactionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload>[]
+        }
+        create: {
+          args: Prisma.GemTransactionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload>
+        }
+        createMany: {
+          args: Prisma.GemTransactionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GemTransactionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload>[]
+        }
+        delete: {
+          args: Prisma.GemTransactionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload>
+        }
+        update: {
+          args: Prisma.GemTransactionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload>
+        }
+        deleteMany: {
+          args: Prisma.GemTransactionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GemTransactionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GemTransactionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload>[]
+        }
+        upsert: {
+          args: Prisma.GemTransactionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GemTransactionPayload>
+        }
+        aggregate: {
+          args: Prisma.GemTransactionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGemTransaction>
+        }
+        groupBy: {
+          args: Prisma.GemTransactionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GemTransactionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GemTransactionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GemTransactionCountAggregateOutputType> | number
+        }
+      }
+    }
     Notification: {
       payload: Prisma.$NotificationPayload<ExtArgs>
       fields: Prisma.NotificationFieldRefs
@@ -2896,6 +2971,7 @@ export const UserGamificationScalarFieldEnum = {
   userId: 'userId',
   totalXp: 'totalXp',
   currentLevel: 'currentLevel',
+  gemsBalance: 'gemsBalance',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2930,6 +3006,20 @@ export const UserAchievementScalarFieldEnum = {
 } as const
 
 export type UserAchievementScalarFieldEnum = (typeof UserAchievementScalarFieldEnum)[keyof typeof UserAchievementScalarFieldEnum]
+
+
+export const GemTransactionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  amount: 'amount',
+  source: 'source',
+  referenceId: 'referenceId',
+  description: 'description',
+  balanceAfter: 'balanceAfter',
+  createdAt: 'createdAt'
+} as const
+
+export type GemTransactionScalarFieldEnum = (typeof GemTransactionScalarFieldEnum)[keyof typeof GemTransactionScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {
@@ -3293,6 +3383,7 @@ export type GlobalOmitConfig = {
   userGamification?: Prisma.UserGamificationOmit
   xPTransaction?: Prisma.XPTransactionOmit
   userAchievement?: Prisma.UserAchievementOmit
+  gemTransaction?: Prisma.GemTransactionOmit
   notification?: Prisma.NotificationOmit
   resume?: Prisma.ResumeOmit
 }

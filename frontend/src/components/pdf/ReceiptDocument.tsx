@@ -1,7 +1,6 @@
 import { Document, Image, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import type { StaticImageData } from "next/image";
-
-import brandLogo from "../../../public/brand/AI-Pather-white.png";
+import brandLogo from "@/public/brand/AI-Pather-white.png";
 
 const BRAND = "#9F54F7";
 const BRAND_DARK = "#8523F5";

@@ -8,7 +8,6 @@ import { motion } from "motion/react";
 import type { NavLink } from "../navigation";
 import { cn } from "@/src/utils/cn";
 import { BorderBeam } from "@/src/components/ui/border-beam";
-import brandLogo from "@/public/brand/AI-Pather-blue.png";
 
 interface BottomNavBarProps {
   items: NavLink[];
@@ -23,7 +22,7 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
   return (
     <nav
       aria-label="Mobile bottom navigation"
-      className="fixed bottom-4 left-1/2 -ml-1 z-40 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 lg:hidden"
+      className="fixed bottom-4 left-1/2 -ml-1 z-40 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 xl:hidden"
     >
       <div
         className="relative flex items-center gap-1 rounded-full border px-2 py-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.45)]"
@@ -49,15 +48,22 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
         <Link
           href="/"
           aria-label="AI Pather home"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full p-2.5"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           <Image
-            src={brandLogo}
-            alt="Brand logo"
-            className="ml-0.5 h-5 w-5 brightness-0 invert"
-            height={20}
-            width={20}
+            src="/brand/uploaded-p-white.png"
+            alt="AI Pather"
+            className="h-6 w-6 object-contain block dark:hidden"
+            height={24}
+            width={24}
+          />
+          <Image
+            src="/brand/uploaded-p-white.png"
+            alt="AI Pather"
+            className="h-6 w-6 object-contain hidden dark:block"
+            height={24}
+            width={24}
           />
         </Link>
 

@@ -21,6 +21,7 @@ export const getDashboardStats = async () => {
     totalInterviews,
     totalResumes,
     totalAiRequests,
+    totalGemsResult,
     recentUsers,
     recentActivity,
   ] = await Promise.all([
@@ -40,6 +41,9 @@ export const getDashboardStats = async () => {
     prisma.interviewSession.count(),
     prisma.resume.count(),
     prisma.aiUsageLog.count(),
+    prisma.userGamification.aggregate({
+      _sum: { gemsBalance: true },
+    }),
     
     prisma.user.findMany({
       take: 5,
@@ -78,6 +82,7 @@ export const getDashboardStats = async () => {
       totalInterviews,
       totalResumes,
       aiRequests: totalAiRequests,
+      totalGemsInCirculation: totalGemsResult._sum.gemsBalance || 0,
     },
     userAnalytics: {
       totalUsers,

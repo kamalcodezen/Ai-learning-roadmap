@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import SkillSimulationView from "@/src/components/dashboard/learner/assessments/SkillSimulationView";
 import GenericPageSkeleton from "@/src/components/dashboard/shared/GenericPageSkeleton";
+import FeatureLockedOverlay from "@/src/components/dashboard/shared/FeatureLockedOverlay";
 import Link from "next/link";
 import { ArrowLeft, Target } from "lucide-react";
 
@@ -35,8 +36,14 @@ function SimulationContent() {
 
 export default function SimulationPage() {
   return (
-    <Suspense fallback={<GenericPageSkeleton />}>
-      <SimulationContent />
-    </Suspense>
+    <FeatureLockedOverlay
+      featureName="AI Skill Mastery Simulation"
+      requiredPlan="PLUS"
+      description="Engage in authentic 4-stage coding simulations (Understand, Debug, Code, Explain) with real-time AI evaluation and competency grading."
+    >
+      <Suspense fallback={<GenericPageSkeleton />}>
+        <SimulationContent />
+      </Suspense>
+    </FeatureLockedOverlay>
   );
 }

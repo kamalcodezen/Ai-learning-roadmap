@@ -39,7 +39,7 @@ export function VoiceControlBar({
     <div className="relative flex flex-col items-center">
       {/* Voice Selection Dropdown Drawer */}
       {showVoicePicker && voices.length > 0 && (
-        <div className="absolute bottom-20 z-50 w-72 max-h-60 overflow-y-auto rounded-2xl bg-card/95 border border-border/80 backdrop-blur-xl p-2 shadow-2xl space-y-1 animate-in fade-in slide-in-from-bottom-3 duration-200">
+        <div className="absolute bottom-20 z-50 w-72 max-h-60 overflow-y-auto rounded-lg bg-card/95 border border-border/80 backdrop-blur-xl p-2 shadow-2xl space-y-1 animate-in fade-in slide-in-from-bottom-3 duration-200">
           <div className="px-3 py-1.5 text-xs font-semibold text-muted-foreground flex items-center gap-1.5 border-b border-border/50">
             <Sparkles className="w-3.5 h-3.5 text-primary" /> Select Neural Voice
           </div>

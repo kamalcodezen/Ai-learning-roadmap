@@ -335,7 +335,7 @@ export default function TermsView() {
   };
 
   return (
-    <div className="relative w-full min-h-screen py-12 px-4 sm:px-6 lg:px-8 pt-26">
+    <div className="relative w-full min-h-screen overflow-hidden py-12 px-4 sm:px-6 lg:px-8 pt-26">
       {/* Soft Ambient Glows */}
       <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-primary/10 blur-[130px] rounded-full" />
 
@@ -394,7 +394,7 @@ export default function TermsView() {
           </div>
 
           <div className="space-y-3 max-w-3xl">
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-foreground font-poppins">
+            <h1 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground text-balance">
               Terms of Service
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">

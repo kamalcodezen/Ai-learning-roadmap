@@ -19,8 +19,13 @@ import {
   FiX,
   FiHome,
   FiMail,
+  FiTrendingUp,
+  FiCopy,
+  FiUsers,
+  FiRadio,
 } from "react-icons/fi";
-import { Sparkles, Crown, Loader2 } from "lucide-react";
+import { Sparkles, Crown, Loader2, Bot, BrainCircuit, BarChart3, Layers, Monitor, Server, ShieldCheck, FileText, BookMarked } from "lucide-react";
+import { trackNavLinks } from "@/src/data/tracks";
 import { authClient } from "@/src/lib/auth-client";
 import { getDropdownLinks, getPlanBadge } from "./profileDropdown";
 import Button from "../../ui/button";
@@ -32,22 +37,51 @@ export interface NavLink {
   children?: { label: string; href: string; icon: React.ReactNode }[];
 }
 
+const trackIcons: Record<string, React.ReactNode> = {
+  "/tracks/ai-engineer": <Bot className="size-4 shrink-0" />,
+  "/tracks/machine-learning": <BrainCircuit className="size-4 shrink-0" />,
+  "/tracks/data-scientist": <BarChart3 className="size-4 shrink-0" />,
+  "/tracks/fullstack": <Layers className="size-4 shrink-0" />,
+  "/tracks/frontend": <Monitor className="size-4 shrink-0" />,
+  "/tracks/backend": <Server className="size-4 shrink-0" />,
+};
+
+const pageIcons: Record<string, React.ReactNode> = {
+  "/privacy": <ShieldCheck className="size-4 shrink-0" />,
+  "/terms": <FileText className="size-4 shrink-0" />,
+  "/faq": <BookMarked className="size-4 shrink-0" />,
+};
+
 export const getNavLinks = (): NavLink[] => [
   {
     label: "Home",
     href: "/",
   },
   {
+    label: "Tracks",
+    href: "#",
+    children: trackNavLinks.map((track) => ({
+      label: track.label,
+      href: track.href,
+      icon: trackIcons[track.href] ?? <Layers className="size-4 shrink-0" />,
+    })),
+  },
+  {
     label: "Why AI Pather",
     href: "/#comparison",
   },
   {
-    label: "About Us",
-    href: "/about",
+    label: "Pages",
+    href: "#",
+    children: [
+      { label: "Privacy Policy", href: "/privacy", icon: pageIcons["/privacy"] },
+      { label: "Terms & Conditions", href: "/terms", icon: pageIcons["/terms"] },
+      { label: "FAQ", href: "/faq", icon: pageIcons["/faq"] },
+    ],
   },
   {
-    label: "Pricing",
-    href: "/pricing",
+    label: "About Us",
+    href: "/about",
   },
   {
     label: "Contact Us",
@@ -69,7 +103,7 @@ interface NavLinksProps {
 export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
-  const [expandedSolutions, setExpandedSolutions] = useState(false);
+  const [expandedDropdown, setExpandedDropdown] = useState<string | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -104,6 +138,12 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   const activeHash = scrollSection || hashFromStore;
 
   const checkIsActive = (link: NavLink) => {
+    if (link.children && link.children.length > 0) {
+      return link.children.some(
+        (child) =>
+          pathname === child.href || pathname.startsWith(`${child.href}/`),
+      );
+    }
     if (link.href === "/") {
       return pathname === "/" && (!activeHash || activeHash === "" || activeHash === "#");
     }
@@ -155,7 +195,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   const prefix = userRole === "ADMIN" ? "/dashboard/admin" : "/dashboard/learner";
   const profileLinks = getDropdownLinks(userRole, prefix);
 
-  const planBadge = getPlanBadge(userPlan);
+  const planBadge = getPlanBadge(userPlan, userRole);
   const PlanIcon = planBadge.icon;
 
   const links = getNavLinks();
@@ -164,6 +204,10 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
     switch (label) {
       case "Home":
         return <FiHome className="size-4 shrink-0" />;
+      case "Tracks":
+        return <FiTrendingUp className="size-4 shrink-0" />;
+      case "Pages":
+        return <FiCopy className="size-4 shrink-0" />;
       case "Solutions":
         return <FiLayers className="size-4 shrink-0" />;
       case "Why AI Pather":
@@ -182,10 +226,16 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   const getProfileIcon = (label: string) => {
     switch (label) {
       case "Dashboard":
+      case "Admin Overview":
       case "Admin Dashboard":
         return <FiLayout className="size-4 shrink-0" />;
+      case "User Directory":
+        return <FiUsers className="size-4 shrink-0" />;
+      case "Broadcast Center":
+        return <FiRadio className="size-4 shrink-0" />;
       case "Profile":
       case "My Profile":
+      case "Admin Profile":
         return <FiUser className="size-4 shrink-0" />;
       case "Settings":
       case "Settings & Billing":
@@ -234,7 +284,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
   // If only rendering the desktop nav links
   if (!onlyHamburger) {
     return (
-      <nav className="flex items-center gap-1 md:gap-2 lg:gap-4">
+      <nav className="flex items-center gap-1 md:gap-0 lg:gap-0">
         {links.map((link, index) => {
           const hasChildren = link.children && link.children.length > 0;
           const isActive = activeDropdown === index;
@@ -264,10 +314,10 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                     }
                   }
                 }}
-                className={`font-poppins relative z-10 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-all duration-300 ${
+                className={`font-poppins relative z-10 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-300 ${
                   checkIsActive(link)
                     ? "text-primary font-semibold after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-primary"
-                    : "text-foreground/80 font-medium hover:text-primary dark:text-foreground/80 dark:hover:text-primary"
+                    : "text-foreground/80 font-semibold hover:text-primary dark:text-foreground/80 dark:hover:text-primary"
                 }`}
               >
                 {link.label}
@@ -297,7 +347,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                     transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     className="absolute left-1/2 top-full z-50 mt-2 w-52 -translate-x-1/2"
                   >
-                    <div className="neural-dropdown rounded-xl border border-border/50 bg-card/95 p-1.5 shadow-xl backdrop-blur-xl">
+                    <div className="neural-dropdown rounded-lg border border-border/50 bg-card/95 p-1.5 shadow-xl backdrop-blur-xl">
                       {link.children!.map((child, childIndex) => (
                         <motion.div
                           key={child.label}
@@ -309,10 +359,10 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                             href={child.href}
                             className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-black transition-all duration-200 hover:bg-muted/70 dark:text-white group"
                           >
-                            <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
-                              {child.icon}
-                            </span>
-                            <span className="font-medium">{child.label}</span>
+<span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
+  {child.icon}
+</span>
+                            <span className="font-semibold">{child.label}</span>
                           </Link>
                         </motion.div>
                       ))}
@@ -334,7 +384,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
       <button
         type="button"
         onClick={() => setMobileOpen((prev) => !prev)}
-        className="flex size-10 md:size-11 shrink-0 items-center justify-center rounded-full bg-[#1e1e1e] dark:bg-white text-white dark:text-[#1e1e1e] shadow-md transition-all hover:opacity-90 active:scale-95 focus:outline-none relative"
+        className="flex size-10 md:size-11 shrink-0 items-center justify-center rounded-full bg-brand text-white  transition-all duration-700 hover:opacity-90 active:scale-95 focus:outline-none relative"
         aria-label="Toggle navigation menu"
         aria-expanded={mobileOpen}
       >
@@ -359,13 +409,13 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             data-lenis-prevent="true"
             data-lenis-prevent-wheel="true"
-            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] max-w-[360px] rounded-[28px] border border-border/70 dark:border-white/10 bg-white/95 dark:bg-[#1a1128]/95 p-5 shadow-2xl backdrop-blur-2xl"
+            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] sm:w-[380px] max-w-[380px] rounded-2xl border border-border/70 dark:border-white/10 bg-white/95 dark:bg-[#1a1128]/95 overflow-hidden shadow-2xl backdrop-blur-2xl"
           >
             <div
               ref={scrollContainerRef}
               data-lenis-prevent="true"
               data-lenis-prevent-wheel="true"
-              className="flex flex-col gap-4 max-h-[76vh] overflow-y-auto overscroll-contain pr-1"
+              className="flex flex-col gap-4 px-4 py-4.5 max-h-[76vh] overflow-y-auto overscroll-contain"
             >
               {/* User Profile Card (when authenticated) */}
               {isAuthenticated && (
@@ -406,53 +456,71 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                 </div>
               )}
 
-              {/* Dynamic Plan Upgrade Card */}
+              {/* Dynamic Plan Upgrade Card or Admin System Banner */}
               {isAuthenticated && (
                 <div className="px-0.5">
-                  {userPlan === "FREE" && (
+                  {userRole === "ADMIN" ? (
                     <Link
-                      href="/pricing"
+                      href="/dashboard/admin"
                       onClick={() => setMobileOpen(false)}
-                      className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                      className="group flex items-center justify-between rounded-xl border border-purple-500/30 bg-purple-500/10 px-3.5 py-2.5 text-xs font-semibold text-purple-700 dark:text-purple-300 shadow-xs transition-all hover:bg-purple-500/20"
                     >
                       <span className="flex items-center gap-1.5">
-                        <Sparkles className="size-3.5 text-yellow-300" />
-                        <span>Upgrade to Plus</span>
+                        <ShieldCheck className="size-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
+                        <span className="font-bold">Admin Console</span>
                       </span>
-                      <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
-                        Save 20%
-                      </span>
-                    </Link>
-                  )}
-
-                  {userPlan === "PLUS" && (
-                    <Link
-                      href="/pricing"
-                      onClick={() => setMobileOpen(false)}
-                      className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <Crown className="size-3.5 text-yellow-200" />
-                        <span>Upgrade to Pro</span>
-                      </span>
-                      <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
-                        Enterprise
+                      <span className="rounded-md bg-purple-500/20 dark:bg-purple-400/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-purple-700 dark:text-purple-300">
+                        Root Access
                       </span>
                     </Link>
-                  )}
+                  ) : (
+                    <>
+                      {userPlan === "FREE" && (
+                        <Link
+                          href="/pricing"
+                          onClick={() => setMobileOpen(false)}
+                          className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            <Sparkles className="size-3.5 text-yellow-300" />
+                            <span>Upgrade to Plus</span>
+                          </span>
+                          <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                            Save 20%
+                          </span>
+                        </Link>
+                      )}
 
-                  {userPlan === "PRO" && (
-                    <div className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3.5 py-2 text-xs font-bold text-amber-500 dark:text-amber-400">
-                      <Crown className="size-3.5" />
-                      <span>Verified Pro Member</span>
-                    </div>
+                      {userPlan === "PLUS" && (
+                        <Link
+                          href="/pricing"
+                          onClick={() => setMobileOpen(false)}
+                          className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            <Crown className="size-3.5 text-yellow-200" />
+                            <span>Upgrade to Pro</span>
+                          </span>
+                          <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                            Enterprise
+                          </span>
+                        </Link>
+                      )}
+
+                      {userPlan === "PRO" && (
+                        <div className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3.5 py-2 text-xs font-bold text-amber-500 dark:text-amber-400">
+                          <Crown className="size-3.5" />
+                          <span>Verified Pro Member</span>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               )}
 
               {/* Navigation Links */}
               <div className="flex flex-col gap-1">
-                <span className="px-2 text-[11px] font-mono font-semibold tracking-[0.16em] text-muted-foreground uppercase">
+                <span className="px-2.5 text-[11px] font-mono font-semibold tracking-[0.16em] text-muted-foreground uppercase">
                   Navigation
                 </span>
 
@@ -460,12 +528,17 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                   const hasChildren = link.children && link.children.length > 0;
 
                   if (hasChildren) {
+                    const isLabelOpen = expandedDropdown === link.label;
                     return (
                       <div key={link.label} className="flex flex-col">
                         <button
                           type="button"
-                          onClick={() => setExpandedSolutions((prev) => !prev)}
-                          className="flex items-center justify-between rounded-2xl px-2.5 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
+                          onClick={() =>
+                            setExpandedDropdown((prev) =>
+                              prev === link.label ? null : link.label,
+                            )
+                          }
+                          className="flex items-center justify-between rounded-2xl px-2.5 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5 cursor-pointer"
                         >
                           <div className="flex items-center gap-3.5">
                             <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 shrink-0">
@@ -475,13 +548,13 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                           </div>
                           <FiChevronDown
                             className={`size-4 text-muted-foreground transition-transform duration-200 ${
-                              expandedSolutions ? "rotate-180 text-primary" : ""
+                              isLabelOpen ? "rotate-180 text-primary" : ""
                             }`}
                           />
                         </button>
 
                         <AnimatePresence>
-                          {expandedSolutions && (
+                          {isLabelOpen && (
                             <motion.div
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: "auto", opacity: 1 }}
@@ -489,9 +562,8 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                               transition={{ duration: 0.2 }}
                               className="overflow-hidden pl-2"
                             >
-                              <div className="flex flex-col gap-1 border-l-2 border-primary/25 my-1 pl-2.5">
+                              <div className="flex flex-col gap-1 border-l-2 border-primary/25 my-1 ml-4 pl-3">
                                 {link.children!.map((child) => (
-                                  
                                   <Link
                                     key={child.label}
                                     href={child.href}
@@ -561,7 +633,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
               {/* Authenticated User Account Section */}
               {isAuthenticated ? (
                 <div className="flex flex-col gap-1 border-t border-border/60 dark:border-white/10 pt-3">
-                  <span className="px-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                  <span className="px-2.5 text-[11px] font-mono font-semibold tracking-[0.16em] text-muted-foreground uppercase">
                     Account
                   </span>
 
@@ -572,18 +644,18 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                         type="button"
                         onClick={handleSignOut}
                         disabled={isSigningOut}
-                        className="group flex items-center gap-2.5 w-full rounded-xl px-2.5 py-2.5 mt-1 text-sm font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all disabled:opacity-50 cursor-pointer"
+                        className="group flex items-center gap-3.5 w-full rounded-2xl px-2.5 py-2.5 mt-1 text-sm font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all disabled:opacity-50 cursor-pointer"
                       >
                         {isSigningOut ? (
                           <>
-                            <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/20 text-red-500 shrink-0">
+                            <span className="flex size-8 items-center justify-center rounded-xl bg-red-500/20 text-red-500 shrink-0">
                               <Loader2 className="size-4 animate-spin shrink-0" />
                             </span>
                             <span>Signing out...</span>
                           </>
                         ) : (
                           <>
-                            <span className="flex size-7 items-center justify-center rounded-lg bg-red-500/20 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all shrink-0">
+                            <span className="flex size-8 items-center justify-center rounded-xl bg-red-500/20 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all shrink-0">
                               <FiLogOut className="size-4 shrink-0" />
                             </span>
                             <span>{link.label}</span>
@@ -595,12 +667,12 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                         key={link.label}
                         href={link.href}
                         onClick={() => setMobileOpen(false)}
-                        className="group flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
+                        className="group flex items-center gap-3.5 rounded-2xl px-2.5 py-2.5 text-sm font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
                       >
-                        <span className="flex size-7 items-center justify-center rounded-lg bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 group-hover:bg-primary group-hover:text-white transition-all shrink-0">
+                        <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 group-hover:bg-primary group-hover:text-white transition-all shrink-0">
                           {getProfileIcon(link.label)}
                         </span>
-                        <span className="group-hover:text-primary transition-colors">{link.label}</span>
+                        <span className="text-[14px] font-medium group-hover:text-primary transition-colors">{link.label}</span>
                       </Link>
                     )
                   )}

@@ -14,7 +14,7 @@ export default function AuthSocialButton({
   isPending = false,
 }: AuthSocialButtonProps) {
   return (
-    <div className="space-y-3 flex flex-col gap-3 md:flex-row">
+    <div className="space-y-3 flex flex-col gap-3 lg:flex-row">
       <GoogleAuthButton mode={mode} isPending={isPending} />
       <GithubAuthButton mode={mode} isPending={isPending} />
     </div>

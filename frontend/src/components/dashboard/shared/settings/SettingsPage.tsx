@@ -33,6 +33,7 @@ import {
   deleteUserAccount,
   NotificationPreferences,
 } from "@/src/lib/api/learner/settings";
+import { Avatar } from "@heroui/react";
 
 const glowCardClass =
   "group relative overflow-hidden rounded-xl p-6 transition-all duration-300 border-2 border-background shadow-none proof-card";
@@ -217,7 +218,7 @@ export default function SettingsPage() {
     emailMilestoneReminders: true,
     browserAlerts: false,
   };
-
+console.log("useimg",user);
   return (
     <div className="flex flex-col pb-12 animate-in fade-in duration-500 dashboard-card-gap">
       <div>
@@ -241,7 +242,18 @@ export default function SettingsPage() {
           <CardContent className="relative z-10 space-y-6">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-xl font-bold text-primary shrink-0">
-                {user?.name?.[0]?.toUpperCase() || "U"}
+         <Avatar className="w-16 h-16 rounded-full ring-4 ring-card bg-card shadow-xl text-3xl font-bold font-poppins relative overflow-hidden group">
+              <Avatar.Image
+                alt={user?.name}
+                src={user?.image || undefined}
+                referrerPolicy="no-referrer"
+              />
+              <Avatar.Fallback>
+                <User size={40} />
+              </Avatar.Fallback>
+
+              
+            </Avatar>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-lg truncate">{user?.name || "User"}</p>

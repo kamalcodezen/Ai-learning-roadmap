@@ -28,6 +28,7 @@ import { InterviewLobby } from "./InterviewLobby";
 import { InterviewLiveRoom } from "./InterviewLiveRoom";
 import { InterviewScorecard, QuestionAnswerPair, EvaluationData } from "./InterviewScorecard";
 import BrandLoader from "@/src/components/shared/BrandLoader";
+import { triggerRealtimeSync } from "@/src/lib/utils/realtime-sync";
 
 type InterviewView = "lobby" | "generating" | "live_room" | "scorecard" | "error";
 
@@ -210,20 +211,27 @@ export default function Interview() {
         const finalScore = completeRes?.data?.finalScore ?? completeRes?.finalScore ?? 78;
         const completedSession = completeRes?.data?.session || completeRes?.session;
 
-        // Invalidate relevant query caches
-        if (session?.user?.id) {
-          queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
-          queryClient.invalidateQueries({ queryKey: ["assessments"] });
-          queryClient.invalidateQueries({ queryKey: ["progress"] });
-          queryClient.invalidateQueries({ queryKey: ["careerTwin"] });
-          queryClient.invalidateQueries({ queryKey: ["interviewHistory"] });
-          queryClient.invalidateQueries({ queryKey: ["applicationReadiness"] });
-          queryClient.invalidateQueries({ queryKey: ["readiness"] });
-          queryClient.invalidateQueries({ queryKey: ["skillGaps"] });
-          queryClient.invalidateQueries({ queryKey: ["proofGraph"] });
-          queryClient.invalidateQueries({ queryKey: ["careerDecision"] });
-          queryClient.invalidateQueries({ queryKey: ["evidenceVerification"] });
-        }
+        // Invalidate relevant query caches & trigger instant real-time sync
+        queryClient.invalidateQueries({ queryKey: ["dashboardData"] });
+        queryClient.invalidateQueries({ queryKey: ["assessments"] });
+        queryClient.invalidateQueries({ queryKey: ["progress"] });
+        queryClient.invalidateQueries({ queryKey: ["careerTwin"] });
+        queryClient.invalidateQueries({ queryKey: ["interviewHistory"] });
+        queryClient.invalidateQueries({ queryKey: ["applicationReadiness"] });
+        queryClient.invalidateQueries({ queryKey: ["readiness"] });
+        queryClient.invalidateQueries({ queryKey: ["skillGaps"] });
+        queryClient.invalidateQueries({ queryKey: ["proofGraph"] });
+        queryClient.invalidateQueries({ queryKey: ["careerDecision"] });
+        queryClient.invalidateQueries({ queryKey: ["evidenceVerification"] });
+        queryClient.invalidateQueries({ queryKey: ["gemWallet"] });
+        queryClient.refetchQueries({ queryKey: ["gemWallet"] });
+        queryClient.invalidateQueries({ queryKey: ["gemHistory"] });
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        queryClient.refetchQueries({ queryKey: ["notifications"] });
+        queryClient.invalidateQueries({ queryKey: ["unreadNotificationCount"] });
+        queryClient.refetchQueries({ queryKey: ["unreadNotificationCount"] });
+
+        triggerRealtimeSync(queryClient);
 
         // Build QuestionAnswerPair list
         const pairs: QuestionAnswerPair[] = questions.map((q) => {
@@ -293,7 +301,7 @@ export default function Interview() {
   // Not signed in
   if (!session?.user?.id) {
     return (
-      <main className="flex min-h-screen items-center justify-center px-4">
+      <div className="flex min-h-[60vh] w-full items-center justify-center px-4">
         <section className="dashboard-card w-full max-w-lg text-center space-y-4">
           <h1 className="text-xl font-bold text-foreground">Sign In Required</h1>
           <p className="text-xs text-muted-foreground">
@@ -307,14 +315,14 @@ export default function Interview() {
             Go to Sign In
           </button>
         </section>
-      </main>
+      </div>
     );
   }
 
   // Error State
   if (view === "error") {
     return (
-      <main className="flex min-h-screen items-center justify-center px-4">
+      <div className="flex min-h-[60vh] w-full items-center justify-center px-4">
         <section className="dashboard-card w-full max-w-lg text-center space-y-4">
           <div className="mx-auto w-12 h-12 rounded-full bg-red-500/15 text-red-500 flex items-center justify-center">
             <AlertCircle className="w-6 h-6" />
@@ -332,7 +340,7 @@ export default function Interview() {
             Return to Lobby
           </button>
         </section>
-      </main>
+      </div>
     );
   }
 
@@ -340,7 +348,7 @@ export default function Interview() {
   if (view === "generating") {
     const ActiveIcon = PLAYFUL_MESSAGES[messageIndex].icon;
     return (
-      <main className="flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="flex min-h-[60vh] w-full items-center justify-center px-4">
         <div className="flex flex-col items-center gap-6 max-w-sm text-center">
           {/* Animated Glowing Icon Badge */}
           <div className="relative flex items-center justify-center">
@@ -365,14 +373,14 @@ export default function Interview() {
             <div className="h-full w-full bg-primary animate-pulse" />
           </div>
         </div>
-      </main>
+      </div>
     );
   }
 
   // Live Interview Room
   if (view === "live_room" && questions.length > 0) {
     return (
-      <main className="min-h-screen w-full px-4 py-8 max-w-5xl mx-auto">
+      <div className="w-full flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
         {errorMessage && (
           <div className="mb-4 p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-500 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
@@ -439,14 +447,14 @@ export default function Interview() {
             </div>
           </div>
         )}
-      </main>
+      </div>
     );
   }
 
   // Executive Scorecard Screen
   if (view === "scorecard" && completedResult) {
     return (
-      <main className="min-h-screen w-full px-4 py-8 max-w-5xl mx-auto">
+      <div className="w-full flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
         <InterviewScorecard
           targetRole={targetRole}
           finalScore={completedResult.finalScore}
@@ -460,13 +468,13 @@ export default function Interview() {
           }}
           onReturnDashboard={() => router.push("/dashboard/learner")}
         />
-      </main>
+      </div>
     );
   }
 
   // Default: Interview Lobby
   return (
-    <main className="min-h-screen w-full px-4 py-8 max-w-5xl mx-auto space-y-8">
+    <div className="w-full flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       <InterviewLobby
         targetRole={targetRole}
         experienceLevel={experienceLevel}
@@ -612,6 +620,6 @@ export default function Interview() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }

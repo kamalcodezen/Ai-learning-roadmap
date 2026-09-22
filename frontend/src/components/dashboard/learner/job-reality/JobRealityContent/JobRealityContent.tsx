@@ -116,14 +116,6 @@ export default function JobRealityContent() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> Real Market Intelligence
-            </span>
-            {isRefetching && (
-              <span className="text-xs text-muted-foreground flex items-center gap-1 animate-pulse">
-                <RefreshCw className="w-3 h-3 animate-spin" /> Updating...
-              </span>
-            )}
           </div>
           <h1 className="text-3xl font-bold text-foreground">Job Reality</h1>
           <p className="text-muted-foreground mt-1">

@@ -43,7 +43,7 @@ export default function AdminAiSandboxView() {
   const { data: session } = authClient.useSession();
   const userId = session?.user?.id;
 
-  const [model, setModel] = useState("llama-3.1-8b-instant");
+  const [model, setModel] = useState("qwen/qwen3.8-27b");
   const [temperature, setTemperature] = useState(0.7);
   const [maxTokens, setMaxTokens] = useState(1000);
   const [systemPrompt, setSystemPrompt] = useState(
@@ -114,8 +114,8 @@ export default function AdminAiSandboxView() {
           <h1 className="section-title text-left">
             AI Prompt &amp; Model <span className="text-brand">Sandbox</span>
           </h1>
-          <p className="section-subtitle mt-1 text-left">
-            Test LLM prompts, model configurations, and reasoning token telemetry in real-time.
+          <p className="section-subtitle mt-1 !text-left !mx-0 max-w-none">
+            Test LLM prompts, model configurations, and reasoning token telemetry in real-time
           </p>
         </div>
       </div>
@@ -200,7 +200,7 @@ export default function AdminAiSandboxView() {
                       onClick={() => setMaxTokens(t)}
                       className={`py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer ${
                         maxTokens === t
-                          ? "bg-primary text-primary-foreground border-primary"
+                          ? "bg-primary text-white border-primary"
                           : "bg-muted/30 border-border/60 text-muted-foreground hover:border-primary/40"
                       }`}
                     >
@@ -226,7 +226,7 @@ export default function AdminAiSandboxView() {
               <button
                 type="button"
                 onClick={() => {
-                  setModel("llama-3.1-8b-instant");
+                  setModel("qwen/qwen3.8-27b");
                   setTemperature(0.7);
                   setMaxTokens(1000);
                   setSystemPrompt("You are an AI Curriculum Architect and Career Mentor for the AI Pather platform. Provide structured, concise, and expert guidance.");
@@ -294,7 +294,7 @@ export default function AdminAiSandboxView() {
                 <button
                   type="submit"
                   disabled={testMutation.isPending}
-                  className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-sm hover:opacity-90 active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:opacity-90 active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
                 >
                   {testMutation.isPending ? (
                     <>
@@ -390,7 +390,7 @@ export default function AdminAiSandboxView() {
               ) : (
                 <div className="flex flex-col items-center justify-center h-36 gap-1 text-muted-foreground">
                   <Sparkles className="h-6 w-6 text-primary/40" />
-                  <span className="text-xs font-medium">Run a prompt test above to view live inference telemetry.</span>
+                  <span className="text-xs font-medium">Run a prompt test above to view live inference telemetry</span>
                 </div>
               )}
             </div>

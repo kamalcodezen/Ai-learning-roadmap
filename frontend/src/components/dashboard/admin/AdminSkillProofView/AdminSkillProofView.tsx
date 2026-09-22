@@ -34,19 +34,39 @@ const columns: AdminDataTableColumn<AdminSkillProofItem>[] = [
   },
   {
     header: "Knowledge",
-    render: (p) => <StatusBadge tone="blue">{p.knowledgeScore}%</StatusBadge>,
+    align: "center",
+    render: (p) => (
+      <div className="flex justify-center">
+        <StatusBadge tone="blue">{p.knowledgeScore}%</StatusBadge>
+      </div>
+    ),
   },
   {
     header: "Practice",
-    render: (p) => <StatusBadge tone="blue">{p.practiceScore}%</StatusBadge>,
+    align: "center",
+    render: (p) => (
+      <div className="flex justify-center">
+        <StatusBadge tone="blue">{p.practiceScore}%</StatusBadge>
+      </div>
+    ),
   },
   {
     header: "Project",
-    render: (p) => <StatusBadge tone="blue">{p.projectScore}%</StatusBadge>,
+    align: "center",
+    render: (p) => (
+      <div className="flex justify-center">
+        <StatusBadge tone="blue">{p.projectScore}%</StatusBadge>
+      </div>
+    ),
   },
   {
     header: "Evidence",
-    render: (p) => <StatusBadge tone="primary">{p.evidenceScore}%</StatusBadge>,
+    align: "center",
+    render: (p) => (
+      <div className="flex justify-center">
+        <StatusBadge tone="primary">{p.evidenceScore}%</StatusBadge>
+      </div>
+    ),
   },
 ];
 
@@ -97,7 +117,7 @@ export default function AdminSkillProofView() {
             Skill <span className="text-brand">Proof</span>
           </h1>
           <p className="section-subtitle mt-1 text-left">
-            Review submitted skill proofs and scores across the platform.
+            Review submitted skill proofs and scores across the platform
           </p>
         </div>
       </div>

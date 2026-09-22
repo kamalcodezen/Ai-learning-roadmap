@@ -725,7 +725,7 @@ export default function CareerTwinSection() {
               Career <span className="text-brand">twin</span>
             </h2>
             <p className="section-subtitle mt-1">
-              Track your progress and match your skills to real-world roles.
+              Track your progress and match your skills to real-world roles
             </p>
           </>
         }
@@ -767,7 +767,7 @@ export default function CareerTwinSection() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 right-0 mt-2 rounded-md border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl overflow-hidden z-30 flex flex-col p-1.5"
+                    className="absolute top-full left-0 right-0 mt-2 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl overflow-hidden z-30 flex flex-col p-1.5"
                   >
                     {ROLES.map((r, idx) => (
                       <button
@@ -805,6 +805,8 @@ export default function CareerTwinSection() {
             </div>
 
             <motion.button
+              type="button"
+              suppressHydrationWarning
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleAction}

@@ -59,7 +59,7 @@ export default function CareerTwinPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <PageHeader
           title="Career Twin"
-          description="Your AI-generated professional profile and readiness analysis."
+          description="Your AI-generated professional profile and readiness analysis"
         />
         <div className="flex flex-wrap items-center gap-2.5">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-card/80 text-xs font-medium">

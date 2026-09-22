@@ -521,6 +521,52 @@ export async function formatLearningPathResponse(roadmap: any, targetRole: strin
   };
 }
 
+/**
+ * Dynamically computes gem reward for a milestone:
+ * - Small / Introductory milestone (≤ 8 hrs or foundations): +2 💎
+ * - Medium practical milestone (9–20 hrs or intermediate): +4 💎
+ * - Advanced capstone / architectural milestone (21+ hrs or portfolio): +8 💎
+ */
+function calculateMilestoneGems(estimatedTime?: string | null, type?: string | null): number {
+  if (!estimatedTime && !type) return 2;
+  const timeStr = (estimatedTime || "").toLowerCase();
+  const typeStr = (type || "").toUpperCase();
+
+  if (
+    typeStr.includes("PORTFOLIO") ||
+    typeStr.includes("CAPSTONE") ||
+    typeStr.includes("ADVANCED") ||
+    timeStr.includes("month") ||
+    timeStr.includes("3 week") ||
+    timeStr.includes("4 week")
+  ) {
+    return 8;
+  }
+
+  const hourMatch = timeStr.match(/(\d+)\s*(?:-|to)?\s*(\d+)?\s*(?:hours|hrs|hr)/);
+  if (hourMatch) {
+    const rawVal = hourMatch[2] || hourMatch[1] || "0";
+    const maxHour = parseInt(rawVal, 10);
+    if (maxHour <= 8) return 2;
+    if (maxHour <= 20) return 4;
+    return 8;
+  }
+
+  const weekMatch = timeStr.match(/(\d+)\s*(?:-|to)?\s*(\d+)?\s*(?:weeks|wks|wk)/);
+  if (weekMatch) {
+    const rawVal = weekMatch[2] || weekMatch[1] || "0";
+    const maxWeek = parseInt(rawVal, 10);
+    if (maxWeek >= 2) return 8;
+    return 4;
+  }
+
+  if (typeStr.includes("PROJECT") || typeStr.includes("INTERMEDIATE")) {
+    return 4;
+  }
+
+  return 2;
+}
+
 export const completeMilestone = async (userId: string, milestoneId: string) => {
   const milestone = await prisma.milestone.findUnique({
     where: { id: milestoneId },
@@ -663,6 +709,21 @@ export const completeMilestone = async (userId: string, milestoneId: string) => 
     await evaluateAchievements(userId);
   } catch (err) {
     console.error("Failed to award gamification XP for milestone:", err);
+  }
+
+  // 5b. Award Dynamic Milestone Gems (2, 4, or 8 💎 based on complexity & hours)
+  try {
+    const { awardGems } = await import("../../gem-economy/services/gem-economy.service.js");
+    const gemReward = calculateMilestoneGems(milestone.estimatedTime, milestone.type);
+    await awardGems(
+      userId,
+      gemReward,
+      "MILESTONE_COMPLETED",
+      `Completed milestone: ${milestone.title} (+${gemReward} 💎)`,
+      milestone.id,
+    );
+  } catch (err) {
+    console.error("Failed to award milestone gems:", err);
   }
 
   // 6. Create real Notification

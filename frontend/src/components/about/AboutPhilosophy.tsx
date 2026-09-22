@@ -77,7 +77,7 @@ export default function AboutPhilosophy() {
             </span>
           </div>
 
-          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground text-balance">
+          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground text-balance">
             What we stand against{" "}
             <span className="bg-linear-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
               What we stand for
@@ -98,7 +98,7 @@ export default function AboutPhilosophy() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="rounded-2xl border border-red-500/20 bg-card p-6 sm:p-8 flex flex-col justify-between shadow-md"
+            className="rounded-2xl border border-red-500/20 bg-card p-6 sm:p-8 flex flex-col justify-between shadow-md dashboard-card"
           >
             <div>
               <div className="flex items-center justify-between border-b border-border/80 pb-4 mb-6">
@@ -110,7 +110,7 @@ export default function AboutPhilosophy() {
                     WE DON&apos;T BELIEVE IN
                   </h3>
                 </div>
-                <span className="font-mono text-xs font-semibold text-red-400 uppercase px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/20">
+                <span className="font-mono hidden sm:block text-xs font-semibold text-red-400 uppercase px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/20">
                   Legacy Paradigm
                 </span>
               </div>
@@ -148,7 +148,7 @@ export default function AboutPhilosophy() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="relative rounded-2xl border border-primary/40 bg-gradient-to-b from-card via-card to-primary/10 p-6 sm:p-8 flex flex-col justify-between shadow-xl overflow-hidden"
+            className="relative rounded-2xl border border-primary/40 bg-gradient-to-b from-card via-card to-primary/10 p-6 sm:p-8 flex flex-col justify-between shadow-xl overflow-hidden dashboard-card"
           >
             <BorderBeam size={250} duration={8} colorFrom="#9F54F7" colorTo="#22C55E" />
 
@@ -162,7 +162,7 @@ export default function AboutPhilosophy() {
                     WE BELIEVE IN
                   </h3>
                 </div>
-                <span className="font-mono text-xs font-semibold text-primary uppercase px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/30">
+                <span className="font-mono text-xs hidden sm:block font-semibold text-primary uppercase px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/30">
                   AI Pather Standard
                 </span>
               </div>

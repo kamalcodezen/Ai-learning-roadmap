@@ -42,6 +42,7 @@ const columns: AdminDataTableColumn<AdminAssessmentItem>[] = [
   },
   {
     header: "Status",
+    align: "center",
     render: (a) => (
       <span
         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
@@ -56,6 +57,7 @@ const columns: AdminDataTableColumn<AdminAssessmentItem>[] = [
   },
   {
     header: "Score",
+    align: "center",
     render: (a) => (
       <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary">
         {a.score !== null && a.score !== undefined ? `${a.score}%` : "-"}
@@ -64,6 +66,7 @@ const columns: AdminDataTableColumn<AdminAssessmentItem>[] = [
   },
   {
     header: "Started At",
+    align: "center",
     render: (a) => (
       <span className="whitespace-nowrap text-muted-foreground">
         {new Date(a.startedAt).toLocaleDateString()}
@@ -144,7 +147,7 @@ export default function AdminAssessmentsView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="section-title text-left">Assessment <span className="text-brand">Analytics</span></h1>
-          <p className="section-subtitle mt-1 text-left">Review platform-wide assessment attempts, completion and performance.</p>
+          <p className="section-subtitle mt-1 text-left">Review platform-wide assessment attempts, completion and performance</p>
         </div>
       </div>
 
@@ -190,7 +193,10 @@ export default function AdminAssessmentsView() {
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
-              <Select.Popover>
+              <Select.Popover
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <ListBox>
                   <ListBox.Item
                     key="IN_PROGRESS"
@@ -228,7 +234,10 @@ export default function AdminAssessmentsView() {
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
-              <Select.Popover>
+              <Select.Popover
+                className="rounded-lg! [border-radius:0.5rem]!"
+                style={{ borderRadius: "0.5rem" }}
+              >
                 <ListBox>
                   <ListBox.Item key="7" id="7" textValue="Last 7 Days">
                     Last 7 Days

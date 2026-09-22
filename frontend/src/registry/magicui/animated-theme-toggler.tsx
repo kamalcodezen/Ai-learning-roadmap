@@ -81,6 +81,7 @@ export const AnimatedThemeToggler = ({ className }: AnimatedThemeTogglerProps) =
       ref={buttonRef}
       onClick={onToggle}
       aria-label="Switch theme"
+      suppressHydrationWarning
       className={["flex items-center justify-center p-2 rounded-full outline-none focus:outline-none active:outline-none focus:ring-0 cursor-pointer", className].filter(Boolean).join(" ")}
       type="button"
     >

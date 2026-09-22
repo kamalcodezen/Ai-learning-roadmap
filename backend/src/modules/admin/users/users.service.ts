@@ -47,6 +47,13 @@ export const getUsers = async (skip: number, take: number, search?: string, role
             targetRoleName: true,
           },
         },
+        gamification: {
+          select: {
+            gemsBalance: true,
+            currentLevel: true,
+            totalXp: true,
+          },
+        },
       },
     }),
     prisma.user.count({ where }),

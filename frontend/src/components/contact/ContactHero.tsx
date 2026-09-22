@@ -44,7 +44,7 @@ export default function ContactHero() {
           initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground leading-[1.15]"
+          className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground text-balance"
         >
           Let&apos;s build your career capability,{" "}
           <span className="bg-linear-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">

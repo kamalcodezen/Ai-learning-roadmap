@@ -121,10 +121,10 @@ export function InterviewLobby({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 py-6">
+    <div className="w-full flex flex-col dashboard-card-gap animate-in fade-in duration-500">
       {/* Hero Welcome & Role Card */}
-      <div className="dashboard-card flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
-        <div className="space-y-2 max-w-xl">
+      <div className="dashboard-card flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+        <div className="space-y-2 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
             <Sparkles className="w-3.5 h-3.5 text-primary" />
             <span>AI Live Voice Technical Interview Room</span>
@@ -135,7 +135,7 @@ export function InterviewLobby({
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
             Real-time conversational AI interviewer evaluating your systems architecture, algorithmic problem solving, and communication in an authentic high-stakes simulation.
           </p>
-          <div className="flex items-center gap-3 pt-2 text-xs text-muted-foreground">
+          <div className="flex items-center justify-center md:justify-start gap-3 pt-2 text-xs text-muted-foreground">
             <span className="flex items-center gap-1 font-semibold text-emerald-500">
               <ShieldCheck className="w-4 h-4" /> Role-Adaptive AI
             </span>
@@ -145,7 +145,7 @@ export function InterviewLobby({
         </div>
 
         {/* Audio Quick Tester */}
-        <div className="flex flex-col items-center sm:items-end gap-2 p-4 rounded-lg bg-card-soft border border-border shrink-0 w-full sm:w-auto">
+        <div className="flex flex-col items-center md:items-end gap-2 p-4 rounded-lg bg-card-soft border border-border shrink-0 w-full md:w-auto">
           <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
             Audio Diagnostic
           </span>
@@ -174,7 +174,7 @@ export function InterviewLobby({
             )}
           </button>
           {micNotice && (
-            <p className="text-[11px] text-amber-500 font-medium max-w-[220px] text-center sm:text-right animate-in fade-in">
+            <p className="text-[11px] text-amber-500 font-medium max-w-[220px] text-center md:text-right animate-in fade-in">
               {micNotice}
             </p>
           )}
@@ -182,7 +182,7 @@ export function InterviewLobby({
       </div>
 
       {/* Mode Selection Grid */}
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
             <span>1. Select Interview Mode</span>
@@ -190,7 +190,7 @@ export function InterviewLobby({
           <span className="text-xs text-muted-foreground">Tailored for {targetRole}</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
           {MODES.map((mode) => {
             const isSelected = selectedMode === mode.id;
             return (
@@ -205,7 +205,7 @@ export function InterviewLobby({
                     setSelectedMode(mode.id);
                   }
                 }}
-                className={`dashboard-card text-left cursor-pointer flex flex-col justify-between space-y-3 ${
+                className={`dashboard-card text-left cursor-pointer flex flex-col justify-between space-y-3 h-full ${
                   isSelected
                     ? "ring-2 ring-primary border-primary"
                     : "hover:border-primary/40"
@@ -243,7 +243,7 @@ export function InterviewLobby({
       </div>
 
       {/* Session Length / Question Count Selector */}
-      <div className="dashboard-card space-y-3">
+      <div className="dashboard-card space-y-3 w-full">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <h3 className="text-sm font-bold text-foreground">2. Interview Session Length</h3>
@@ -252,7 +252,7 @@ export function InterviewLobby({
           <Clock className="w-4 h-4 text-primary" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap pt-1">
           <button
             type="button"
             onClick={() => setQuestionCount(3)}
@@ -299,7 +299,7 @@ export function InterviewLobby({
           type="button"
           onClick={() => onStart({ mode: selectedMode, questionCount })}
           disabled={isLoading}
-          className="w-full sm:w-auto min-w-[300px] flex items-center justify-center gap-3 px-8 py-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-extrabold text-base shadow-lg shadow-primary/25 transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 cursor-pointer"
+          className="w-full sm:w-auto min-w-[300px] flex items-center justify-center gap-3 px-8 py-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-primary/25 transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 cursor-pointer"
         >
           {isLoading ? (
             <>Generating Role-Specific AI Interview...</>

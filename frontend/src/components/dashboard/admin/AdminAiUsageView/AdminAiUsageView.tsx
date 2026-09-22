@@ -92,7 +92,7 @@ export default function AdminAiUsageView() {
             AI <span className="text-brand">Usage</span>
           </h1>
           <p className="section-subtitle mt-1 text-left">
-            Monitor AI call volume, success rates, and provider breakdowns.
+            Monitor AI call volume, success rates, and provider breakdowns
           </p>
         </div>
       </div>

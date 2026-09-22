@@ -8,8 +8,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { authClient } from "@/src/lib/auth-client";
 import { useChatMentor } from "@/src/hooks/useChatMentor";
-import logoSrc from "../../../public/brand/AI-Pather-blue.png";
-import brandLogo from "../../../public/brand/logo-p-purple.png";
 import { PlasmaTriggerButton } from "./PlasmaTriggerButton";
 import { TypingIndicator } from "./TypingIndicator";
 import { useInlineVoiceChat } from "../voice-agent";
@@ -24,6 +22,8 @@ function getTimeGreeting(): string {
   }
   return "Good evening";
 }
+
+const logoSrc = "/brand/uploaded-p-white.png";
 
 function cn(...classes: (string | boolean | undefined | null)[]) {
   return classes.filter(Boolean).join(" ");
@@ -83,9 +83,19 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
     return () => clearInterval(interval);
   }, []);
 
+  const sessionUser = session?.user as { role?: string; name?: string } | undefined;
+  const userRole = sessionUser?.role?.toUpperCase() || (session?.user ? "LEARNER" : "GUEST");
   const rawName = session?.user?.name?.trim();
   const userName = rawName ? rawName.split(/\s+/)[0] : undefined;
-  const greeting = userName ? `${timeGreeting}, ${userName}` : timeGreeting;
+
+  const greeting =
+    userRole === "ADMIN"
+      ? userName
+        ? `${timeGreeting}, ${userName} (Admin)`
+        : `${timeGreeting}, Admin`
+      : userName
+      ? `${timeGreeting}, ${userName}`
+      : timeGreeting;
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -149,15 +159,16 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
         )}
       </AnimatePresence>
 
-      <div
-        className={cn(
-          "pointer-events-auto font-sans z-50",
-          isExpanded
-            ? "fixed inset-3 sm:inset-6 md:inset-8 flex flex-col"
-            : "fixed bottom-6 right-6 flex flex-col items-end"
-        )}
-      >
+      <div className="pointer-events-auto font-sans">
         {/* Plasma Animated Chat Window */}
+        <div
+          className={cn(
+            "fixed z-50",
+            isExpanded
+            ? "fixed inset-3 sm:inset-6 md:inset-8 flex flex-col"
+            : "fixed bottom-[96px] left-1/2 -translate-x-1/2 flex flex-col items-center sm:left-auto sm:right-6 sm:translate-x-0 sm:items-end"
+          )}
+        >
         <AnimatePresence>
           {open && (
             <motion.div
@@ -166,13 +177,13 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               className={cn(
-                "relative flex flex-col overflow-hidden rounded-3xl bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] dark:from-[#0a0015] dark:via-[#120025] dark:to-[#1a0040] text-zinc-950 dark:text-white backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-[var(--color-primary)]/40 dark:border-[var(--color-primary)]/30",
+                "relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-b from-[#f3e8ff] via-[#ede5ff] to-[#ddd0ff] dark:from-[#0a0015] dark:via-[#120025] dark:to-[#1a0040] text-zinc-950 dark:text-white backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-[var(--color-primary)]/40 dark:border-[var(--color-primary)]/30 ",
                 isExpanded
                   ? "w-full h-full max-h-none mb-0"
-                  : "mb-3 h-[590px] max-h-[86vh] w-[385px] sm:w-[445px]"
+                  : "h-[570px] max-h-[calc(100vh-115px)] w-[385px] sm:w-[445px]"
               )}
               onClick={(e) => e.stopPropagation()}
-            >
+             >
               {/* Plasma Animated Border Glow Overlay */}
               <div className="pointer-events-none absolute inset-0 rounded-3xl animate-plasmaGlow z-0" />
 
@@ -181,16 +192,23 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[0_0_15px_rgba(159,84,247,0.5)] p-2">
                     <Image
-                      src={logoSrc}
-                      alt="AI Pathar"
+                      src="/brand/uploaded-p-white.png"
+                      alt="AI Pather"
                       width={22}
                       height={22}
-                      className="h-5.5 w-5.5 object-contain brightness-0 invert"
+                      className="h-5.5 w-5.5 object-contain block dark:hidden"
+                    />
+                    <Image
+                      src="/brand/uploaded-p-white.png"
+                      alt="AI Pather"
+                      width={22}
+                      height={22}
+                      className="h-5.5 w-5.5 object-contain hidden dark:block"
                     />
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-zinc-950 dark:text-white tracking-wide">
-                      AI Pathar
+                      AI Pather
                     </h3>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className="h-2 w-2 rounded-full bg-[var(--color-primary)] dark:bg-[var(--color-primary)] shadow-[0_0_8px_rgba(159,84,247,0.8)]" />
@@ -281,17 +299,26 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
               >
                 {messages.length === 0 ? (
                   <div className={cn(
-                    "flex min-h-full flex-col items-center justify-between text-center p-4 pt-10",
+                    "flex min-h-full flex-col items-center justify-between text-center px-2 sm:px-3 pt-5 sm:pt-7 pb-0",
                     isExpanded && "max-w-3xl mx-auto justify-center gap-8 pt-16"
                   )}>
                     <div className="flex flex-col items-center">
-                      <div className="mb-3 flex items-center justify-center">
+                      <div className="mb-2.5 flex items-center justify-center">
                         <Image
-                          src={brandLogo}
-                          alt="AI Pathar"
-                          width={44}
-                          height={44}
-                          className="h-11 w-11 object-contain"
+                          src="/brand/AI-Pather-purple.png"
+                          alt="AI Pather"
+                          width={130}
+                          height={24}
+                          className="h-5 sm:h-6 w-auto object-contain block dark:hidden"
+                          style={{ width: "auto" }}
+                        />
+                        <Image
+                          src="/brand/AI-Pather-white.png"
+                          alt="AI Pather"
+                          width={130}
+                          height={24}
+                          className="h-5 sm:h-6 w-auto object-contain hidden dark:block"
+                          style={{ width: "auto" }}
                         />
                       </div>
                       <h3 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 dark:text-white tracking-tight">
@@ -300,22 +327,38 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                     </div>
 
                     <div className={cn(
-                      "w-full mb-2",
+                      "w-full mt-auto mb-0",
                       isExpanded
-                        ? "grid grid-cols-1 sm:grid-cols-3 gap-3"
-                        : "flex flex-col gap-2.5"
+                        ? "grid grid-cols-1 sm:grid-cols-2 gap-3"
+                        : "flex flex-col gap-2"
                     )}>
-                      {[
-                        "Create my personalized learning roadmap",
-                        "Analyze my skills and suggest what to learn",
-                        "Help me plan a real-world project",
-                      ].map((suggestion) => (
+                      {(userRole === "ADMIN"
+                        ? [
+                            "📊 Summarize platform health & active learner metrics",
+                            "👥 How do I manage users & assign role permissions?",
+                            "📢 Help me draft a platform broadcast announcement",
+                            "🔍 What are the top learner skill gap trends?",
+                          ]
+                        : userRole === "LEARNER"
+                        ? [
+                            "🎯 What is my current milestone and next step?",
+                            "🧠 Review my active skill gaps and learning debt",
+                            "💻 Help me plan a real-world project for my stack",
+                            "🎙️ Start a 5-minute technical mock interview",
+                          ]
+                        : [
+                            "🚀 What is AI Pather and how does it work?",
+                            "🗺️ Which tech career track should I start with?",
+                            "💡 How does the adaptive roadmap help me?",
+                            "💼 How do I get verified proof for my GitHub projects?",
+                          ]
+                      ).map((suggestion) => (
                         <button
                           key={suggestion}
                           type="button"
                           onClick={() => void handleSendMessage(suggestion)}
                           disabled={isLoading}
-                          className="rounded-2xl border border-black/10 dark:border-[var(--color-primary)]/30 bg-purple-100/85 dark:bg-black/40 px-4 py-3 text-left text-sm font-semibold text-zinc-950 dark:text-zinc-100 transition hover:border-black dark:hover:border-[var(--color-primary)] hover:bg-purple-200 dark:hover:bg-[var(--color-primary)]/20 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+                          className="rounded-2xl border border-black/10 dark:border-[var(--color-primary)]/30 bg-purple-100/85 dark:bg-black/40 px-3.5 py-2.5 sm:px-4 sm:py-3 text-left text-sm font-semibold text-zinc-950 dark:text-zinc-100 transition hover:border-black dark:hover:border-[var(--color-primary)] hover:bg-purple-200 dark:hover:bg-[var(--color-primary)]/20 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {suggestion}
                         </button>
@@ -347,7 +390,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                                   alt="AI"
                                   width={18}
                                   height={18}
-                                  className="h-4 w-4 sm:h-5 sm:w-5 object-contain brightness-0 invert"
+                                  className="h-4 w-4 sm:h-5 sm:w-5 object-contain"
                                 />
                               </div>
                             )}
@@ -475,7 +518,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                               alt="AI"
                               width={20}
                               height={20}
-                              className="h-5 w-5 object-contain brightness-0 invert"
+                              className="h-5 w-5 object-contain"
                             />
                           </div>
                           <TypingIndicator />
@@ -488,7 +531,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
               </div>
 
             {/* Input Footer */}
-            <div className="relative z-10 shrink-0 border-t border-black/10 dark:border-[var(--color-primary)]/20 p-3.5 bg-purple-50/80 dark:bg-black/75 backdrop-blur-md">
+            <div className="relative z-10 shrink-0 border-t border-black/10 dark:border-[var(--color-primary)]/20 px-3.5 pt-2.5 pb-3 bg-purple-50/80 dark:bg-black/75 backdrop-blur-md">
               <div className={cn("w-full", isExpanded && "max-w-4xl mx-auto")}>
                 <div className="flex items-center gap-2 rounded-2xl border-1 border-black/20 dark:border-[var(--color-primary)]/40 bg-white dark:bg-[var(--color-surface)] px-4 py-2 focus-within:border-[var(--color-primary)] dark:focus-within:border-[var(--color-primary)] transition-all">
                   <input
@@ -497,7 +540,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     disabled={isLoading}
-                    placeholder="Ask AI Pathar..."
+                    placeholder="Ask AI Pather..."
                     className="flex-1 bg-transparent text-sm font-bold !text-black dark:!text-white outline-none placeholder:text-zinc-700 dark:placeholder:text-zinc-400 placeholder:font-medium disabled:cursor-not-allowed"
                   />
                   {/* Direct Inline Voice Input Mic Button */}
@@ -541,19 +584,26 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
                   </motion.button>
                 </div>
                 <p className="mt-2 text-center text-xs text-zinc-500 dark:text-zinc-300 font-medium">
-                  AI Pathar can make mistakes. Verify important information.
+                  AI Pather can make mistakes. Verify important information.
                 </p>
               </div>
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
+       </AnimatePresence>
+        </div>
 
         {/* Floating Trigger Button */}
-        <div className={cn(hideTriggerOnMobile && "hidden lg:block")}>
+        <div
+          className={cn(
+            "fixed bottom-6 right-6 z-50",
+            hideTriggerOnMobile && "hidden lg:block",
+            isExpanded && "hidden"
+          )}
+        >
           <PlasmaTriggerButton
             size={60}
-            logo={logoSrc}
+            logo="/brand/logo-p-dark.png"
             isOpen={open}
             onClick={toggleOpen}
           />

@@ -215,7 +215,7 @@ export default function ProgressPage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-primary uppercase tracking-wider">Target Track</span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-medium">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-medium text-white">
                   {data.targetRole || data.summary.targetRole}
                 </span>
               </div>
@@ -263,7 +263,7 @@ export default function ProgressPage() {
                 Live verification across Knowledge, Practice simulations, and Project evidence.
               </p>
             </div>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground">
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-secondary text-secondary-foreground text-white">
               {data.skills.length} Competencies
             </span>
           </CardHeader>
@@ -276,9 +276,9 @@ export default function ProgressPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm text-foreground">{skill.name}</span>
+                      <span className="font-semibold text-sm text-foreground ">{skill.name}</span>
                       <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider text-white ${
                           skill.score >= 80
                             ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                             : skill.score >= 50

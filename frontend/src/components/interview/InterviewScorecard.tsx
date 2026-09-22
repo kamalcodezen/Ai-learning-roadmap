@@ -119,7 +119,7 @@ export function InterviewScorecard({
   ];
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pb-16">
+    <div className="w-full flex flex-col dashboard-card-gap animate-in fade-in duration-500">
       {/* Executive Hero Banner */}
       <div className="dashboard-card flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="space-y-2 text-center md:text-left">
@@ -166,7 +166,7 @@ export function InterviewScorecard({
           <span>Core Evaluation Rubric (5 Dimensions)</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
           {RUBRIC_METRICS.map((metric) => (
             <div
               key={metric.label}
@@ -188,7 +188,7 @@ export function InterviewScorecard({
       </div>
 
       {/* Strengths & Actionable Improvements */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 dashboard-card-gap">
         <div className="dashboard-card space-y-3 border-emerald-500/30">
           <h3 className="text-sm font-bold text-emerald-500 flex items-center gap-2">
             <TrendingUp className="w-4 h-4" /> Demonstrated Strengths
@@ -224,7 +224,7 @@ export function InterviewScorecard({
       </div>
 
       {/* Question Breakdown with Staff Engineer Ideal Answers */}
-      <div className="space-y-4">
+      <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-bold text-foreground flex items-center gap-2">
             <Code2 className="w-5 h-5 text-primary" />

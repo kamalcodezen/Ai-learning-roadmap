@@ -1,9 +1,15 @@
-/* Modal enter transitions */
+/* Modal enter transitions and dark theme defaults */
 [data-slot="modal-backdrop"] {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
   animation: modal-backdrop-in 200ms ease-out;
 }
 
 [data-slot="modal-dialog"] {
+  background-color: rgb(var(--card)) !important;
+  color: rgb(var(--card-foreground)) !important;
+  border: 1px solid rgb(var(--border)) !important;
   animation: modal-dialog-in 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -25,4 +31,50 @@
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+/* Dropdown popover cards border radius */
+.popover,
+.select__popover,
+.dropdown__popover,
+.autocomplete__popover,
+.neural-dropdown,
+[data-slot="popover"],
+[data-slot="select-popover"],
+[data-slot="popover-dialog"],
+[data-slot="dropdown-menu"],
+[data-slot="menu"],
+[data-slot="listbox"] {
+  border-radius: 0.5rem !important;
+}
+
+/* Disable hover effects on SearchField and Select trigger */
+.search-field__group,
+.select__trigger,
+[data-slot="search-field-group"],
+[data-slot="select-trigger"],
+[data-slot="group"],
+[data-slot="trigger"] {
+  border-radius: 0.5rem !important;
+  transition: none !important;
+}
+
+.search-field__group:hover,
+.search-field__group[data-hovered="true"],
+.search-field__group:hover:not(:focus-within),
+.search-field__group[data-hovered="true"]:not([data-focus-within="true"]),
+[data-slot="search-field-group"]:hover,
+[data-slot="search-field-group"][data-hovered="true"],
+[data-slot="group"]:hover,
+[data-slot="group"][data-hovered="true"],
+.select__trigger:hover,
+.select__trigger[data-hovered="true"],
+[data-slot="select-trigger"]:hover,
+[data-slot="select-trigger"][data-hovered="true"],
+[data-slot="trigger"]:hover,
+[data-slot="trigger"][data-hovered="true"] {
+  background-color: var(--field-background, var(--default, #ffffff)) !important;
+  border-color: var(--field-border, rgb(var(--border))) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }

@@ -17,6 +17,7 @@ import {
   ShieldAlert,
   Loader2,
   Eye,
+  X,
 } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import {
@@ -30,6 +31,7 @@ import {
 } from "@heroui/react";
 import AdminDataTable, { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
+import "../admin.css";
 
 export default function AdminProjectsView() {
   const queryClient = useQueryClient();
@@ -65,6 +67,7 @@ export default function AdminProjectsView() {
       ),
     enabled: !!userId,
   });
+
 
   const verifyMutation = useMutation({
     mutationFn: ({
@@ -167,27 +170,31 @@ export default function AdminProjectsView() {
     },
     {
       header: "Score",
+      align: "center",
       render: (p) => {
         const score = p.score ?? 0;
         return (
-          <span
-            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-              score >= 80
-                ? "bg-green-500/10 text-green-500"
-                : score >= 50
-                  ? "bg-orange-500/10 text-orange-500"
-                  : "bg-red-500/10 text-red-500"
-            }`}
-          >
-            {score}%
-          </span>
+          <div className="flex justify-center">
+            <span
+              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                score >= 80
+                  ? "bg-green-500/10 text-green-500"
+                  : score >= 50
+                    ? "bg-orange-500/10 text-orange-500"
+                    : "bg-red-500/10 text-red-500"
+              }`}
+            >
+              {score}%
+            </span>
+          </div>
         );
       },
     },
     {
       header: "Evidence",
+      align: "center",
       render: (p) => (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-center gap-3">
           {p.repositoryUrl ? (
             <a
               href={p.repositoryUrl}
@@ -219,19 +226,23 @@ export default function AdminProjectsView() {
     },
     {
       header: "Date",
+      align: "center",
       render: (p) => (
-        <span className="whitespace-nowrap text-muted-foreground text-xs">
-          {new Date(p.createdAt).toLocaleDateString()}
-        </span>
+        <div className="flex justify-center text-center">
+          <span className="whitespace-nowrap text-muted-foreground text-xs">
+            {new Date(p.createdAt).toLocaleDateString()}
+          </span>
+        </div>
       ),
     },
     {
       header: "Verification Action",
+      align: "center",
       render: (p) => {
         const isPending =
           verifyMutation.isPending && verifyMutation.variables?.projectId === p.id;
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <button
               onClick={() => handleToggleVerification(p)}
               disabled={isPending}
@@ -285,7 +296,7 @@ export default function AdminProjectsView() {
         <p className="text-red-500 font-medium">Unable to load projects. Please try again.</p>
       </div>
     );
-  }
+  } 
 
   const { projects, total } = data;
 
@@ -294,7 +305,7 @@ export default function AdminProjectsView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="section-title text-left">Submitted <span className="text-brand">Projects</span></h1>
-          <p className="section-subtitle mt-1 text-left">Inspect, evaluate, and verify learner projects submitted from roadmaps.</p>
+          <p className="section-subtitle mt-1 text-left">Inspect, evaluate, and verify learner projects submitted from roadmaps</p>
         </div>
       </div>
 
@@ -321,13 +332,16 @@ export default function AdminProjectsView() {
           >
             <Label>Time Range</Label>
             <Select.Trigger
-              className="rounded-lg! [border-radius:0.5rem]!"
-              style={{ borderRadius: "0.5rem" }}
+              className="rounded-lg! [border-radius:0.5rem]! transition-none!"
+              style={{ borderRadius: "0.5rem", transition: "none" }}
             >
               <Select.Value />
               <Select.Indicator />
             </Select.Trigger>
-            <Select.Popover>
+            <Select.Popover
+              className="rounded-lg! [border-radius:0.5rem]!"
+              style={{ borderRadius: "0.5rem" }}
+            >
               <ListBox>
                 <ListBox.Item key="7" id="7" textValue="Last 7 Days">
                   Last 7 Days
@@ -356,19 +370,43 @@ export default function AdminProjectsView() {
         onPageChange={setPage}
       />
 
+
+
+
       {/* Project Detail Modal */}
       <Modal state={detailModal}>
-        <Modal.Backdrop>
-          <Modal.Container>
-            <Modal.Dialog className="sm:max-w-[640px]">
-              <Modal.CloseTrigger />
-              <Modal.Header>
-                <Modal.Icon className="bg-primary/10 text-primary">
+        <Modal.Backdrop className="bg-black/70 backdrop-blur-sm z-50">
+          <Modal.Container className="z-50 p-4">
+            <Modal.Dialog
+              data-lenis-prevent="true"
+              data-lenis-prevent-wheel="true"
+              data-lenis-prevent-touch="true"
+              className="sm:max-w-[640px] w-full rounded-2xl border border-border bg-card text-card-foreground shadow-2xl p-6 relative overflow-hidden"
+            >
+              <Modal.CloseTrigger className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-full bg-primary hover:bg-primary/90 text-white transition-all duration-200 cursor-pointer shadow-sm z-20">
+                <X className="size-4" />
+              </Modal.CloseTrigger>
+              <Modal.Header className="border-b border-border/40 pb-4 flex items-center gap-3.5 relative z-10">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20">
                   <FolderKanban className="size-5" />
-                </Modal.Icon>
-                <Modal.Heading>{selectedProject?.title}</Modal.Heading>
+                </div>
+                <div>
+                  <Modal.Heading className="text-lg font-bold text-foreground tracking-tight">
+                    {selectedProject?.title}
+                  </Modal.Heading>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Project Verification & Build Details
+                  </p>
+                </div>
               </Modal.Header>
-              <Modal.Body className="space-y-4">
+              <Modal.Body
+                data-lenis-prevent="true"
+                data-lenis-prevent-wheel="true"
+                data-lenis-prevent-touch="true"
+                onWheel={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+                className="space-y-4 overflow-y-auto overscroll-contain max-h-[75vh] py-4"
+              >
                 {selectedProject && (
                   <>
                     <div className="rounded-xl bg-muted/40 p-4 border border-border/40 space-y-2">
@@ -452,8 +490,8 @@ export default function AdminProjectsView() {
                   </>
                 )}
               </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" slot="close" fullWidth>
+              <Modal.Footer className="border-t border-border/40 pt-4">
+                <Button className="w-full rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold py-2.5 transition-colors cursor-pointer" slot="close">
                   Close
                 </Button>
               </Modal.Footer>
@@ -461,6 +499,9 @@ export default function AdminProjectsView() {
           </Modal.Container>
         </Modal.Backdrop>
       </Modal>
+
+
+
     </div>
   );
 }

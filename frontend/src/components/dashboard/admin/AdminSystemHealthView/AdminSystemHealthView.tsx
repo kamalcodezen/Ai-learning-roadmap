@@ -177,14 +177,14 @@ export default function AdminSystemHealthView() {
       </div>
 
       {/* ============================= SYSTEM STATUS BANNER ============================= */}
-      <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-6 transition-all">
+      <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-4 sm:p-6 transition-all">
         <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-primary/10 blur-3xl" />
         <div className="pointer-events-none absolute -left-12 -bottom-12 h-44 w-44 rounded-full bg-[var(--color-secondary)]/10 blur-3xl" />
 
-        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-start sm:items-center gap-4">
+        <div className="relative z-10 flex flex-col gap-5 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-start sm:items-center gap-3 sm:gap-4">
             <div
-              className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border ${
+              className={`relative flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-2xl border ${
                 allOperational
                   ? "bg-green-500/10 border-green-500/20 text-green-500"
                   : "bg-amber-500/10 border-amber-500/20 text-amber-500"
@@ -192,7 +192,7 @@ export default function AdminSystemHealthView() {
             >
               {allOperational ? (
                 <>
-                  <CheckCircle2 className="h-7 w-7" />
+                  <CheckCircle2 className="h-6 w-6 sm:h-7 sm:w-7" />
                   <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-green-500" />
@@ -200,7 +200,7 @@ export default function AdminSystemHealthView() {
                 </>
               ) : (
                 <>
-                  <AlertCircle className="h-7 w-7" />
+                  <AlertCircle className="h-6 w-6 sm:h-7 sm:w-7" />
                   <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-500" />
@@ -209,15 +209,15 @@ export default function AdminSystemHealthView() {
               )}
             </div>
 
-            <div>
-              <div className="flex items-center gap-3">
-                <h2 className="text-xl font-bold tracking-tight text-foreground">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
                   {allOperational
                     ? "All Systems Operational"
                     : `${operationalCount}/${totalCount} Systems Operational`}
                 </h2>
                 <span
-                  className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                  className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                     allOperational
                       ? "bg-green-500/10 text-green-500 border border-green-500/20"
                       : "bg-amber-500/10 text-amber-500 border border-amber-500/20"
@@ -226,32 +226,32 @@ export default function AdminSystemHealthView() {
                   <Radio className="h-3 w-3 animate-pulse" /> Live Telemetry
                 </span>
               </div>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 Continuous real-time health verification across primary database, REST API, authentication, and AI inference nodes.
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6 border-t border-border/40 pt-4 lg:border-t-0 lg:pt-0">
+          <div className="flex flex-wrap items-center justify-between sm:justify-start gap-4 sm:gap-6 border-t border-border/40 pt-4 lg:border-t-0 lg:pt-0">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <Zap className="h-5 w-5" />
+              <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground">Avg Latency</p>
-                <p className="text-sm font-bold text-foreground">
+                <p className="text-[11px] sm:text-xs font-medium text-muted-foreground">Avg Latency</p>
+                <p className="text-xs sm:text-sm font-bold text-foreground">
                   {avgLatency !== null ? `${avgLatency}ms` : "Fast"}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary/10 text-[var(--color-secondary)]">
-                <Clock className="h-5 w-5" />
+              <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-[var(--color-secondary)]">
+                <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground">Last Checked</p>
-                <p className="text-sm font-bold text-foreground">
+                <p className="text-[11px] sm:text-xs font-medium text-muted-foreground">Last Checked</p>
+                <p className="text-xs sm:text-sm font-bold text-foreground">
                   {lastRefreshedAt.toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -264,7 +264,7 @@ export default function AdminSystemHealthView() {
             <button
               onClick={() => refetch()}
               disabled={isFetching}
-              className="flex items-center gap-2 rounded-lg border border-border bg-card px-3.5 py-2 text-xs font-semibold text-foreground shadow-sm hover:bg-muted/60 active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
+              className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 sm:px-3.5 py-1.5 sm:py-2 text-xs font-semibold text-foreground shadow-sm hover:bg-muted/60 active:scale-95 transition-all disabled:opacity-50 cursor-pointer shrink-0"
               title="Refresh system health status"
             >
               <RefreshCw
@@ -375,18 +375,18 @@ export default function AdminSystemHealthView() {
       {/* ============================= TELEMETRY & DIAGNOSTICS ============================= */}
       <div className="grid grid-cols-1 lg:grid-cols-2 dashboard-card-gap">
         {/* Real-Time Telemetry Bar Chart / Comparison */}
-        <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-                <Activity className="h-4 w-4 text-primary" />
-                Response Time Breakdown
+        <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-4 sm:p-6">
+          <div className="flex items-start sm:items-center justify-between gap-3 mb-4">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
+                <Activity className="h-4 w-4 text-primary shrink-0" />
+                <span className="truncate">Response Time Breakdown</span>
               </h3>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Ping and roundtrip latency across integrated micro-services
               </p>
             </div>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary shrink-0 whitespace-nowrap">
               Real-time
             </span>
           </div>
@@ -434,18 +434,18 @@ export default function AdminSystemHealthView() {
         </div>
 
         {/* System & Architecture Details */}
-        <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-                <HardDrive className="h-4 w-4 text-primary" />
-                Infrastructure & Environment
+        <div className="glow-card group relative overflow-hidden rounded-xl border border-border p-4 sm:p-6">
+          <div className="flex items-start sm:items-center justify-between gap-3 mb-4">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
+                <HardDrive className="h-4 w-4 text-primary shrink-0" />
+                <span className="truncate">Infrastructure &amp; Environment</span>
               </h3>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Platform specifications and security parameters
               </p>
             </div>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-500/10 text-green-500">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-green-500/10 text-green-500 shrink-0 whitespace-nowrap">
               Verified
             </span>
           </div>

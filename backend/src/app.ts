@@ -28,6 +28,8 @@ import careerIntelligenceRoutes from "./modules/learner/career-intelligence/care
 import notificationRoutes from "./modules/learner/notifications/notification.routes.js";
 import settingsRoutes from "./modules/learner/settings/settings.routes.js";
 import subscriptionRoutes from "./modules/learner/subscription/subscription.routes.js";
+import adaptiveRecoveryRoutes from "./modules/learner/adaptive-recovery/adaptive-recovery.routes.js";
+import gemEconomyRoutes from "./modules/learner/gem-economy/gem-economy.routes.js";
 const isProduction = env.NODE_ENV === "production";
 
 const app = express();
@@ -110,6 +112,12 @@ app.use("/api/settings", settingsRoutes);
 
 // Subscription & Plan Routes
 app.use("/api/subscription", subscriptionRoutes);
+
+// Adaptive Engine & Recovery Mode Routes (Roadmap Simulator, Zero-Guilt Recovery, AI Dependency Meter)
+app.use("/api/adaptive-recovery", adaptiveRecoveryRoutes);
+
+// Dynamic Gem Economy Routes
+app.use("/api/gem-economy", gemEconomyRoutes);
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);

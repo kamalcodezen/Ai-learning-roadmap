@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import * as React from "react";
 import { motion, useInView } from "motion/react";
 
@@ -10,6 +12,7 @@ function cn(...classes: (string | false | undefined)[]) {
 export interface CoverflowSlide {
   src: string;
   alt: string;
+  video?: string;
 }
 
 export interface StaticCoverflowRowProps {
@@ -19,8 +22,8 @@ export interface StaticCoverflowRowProps {
   className?: string;
 }
 
-/* Same constants as the original CoverflowCarousel defaults */
-const CARD_WIDTH = "clamp(150px, 20vw, 240px)";
+/* Same constants as the original CoverflowCarousel defaults, responsive to both width and viewport height */
+const CARD_WIDTH = "clamp(200px, min(17vw, 24vh), 210px)";
 const GAP = 0.05;
 const PITCH_PERCENT = (1 + GAP) * 100;
 const ROTATE = 44;
@@ -67,7 +70,7 @@ export default function StaticCoverflowRow({
       aria-label={label}
     >
       <div
-        className="flex items-center justify-center py-5"
+        className="flex items-center justify-center py-2 sm:py-3"
         style={{
           perspective: `calc(var(--cf-card) * ${PERSPECTIVE})`,
         }}
@@ -136,13 +139,26 @@ export default function StaticCoverflowRow({
                   }}
                   transition={{ type: "spring", stiffness: 120, damping: 18 }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={slide.src}
-                    alt={slide.alt}
-                    draggable={false}
-                    className="h-full w-full select-none object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
+                  {slide.video ? (
+                    <video
+                      src={slide.video}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      disablePictureInPicture
+                      aria-hidden
+                      draggable={false}
+                      className="h-full w-full select-none object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={slide.src}
+                      alt={slide.alt}
+                      draggable={false}
+                      className="h-full w-full select-none object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  )}
                 </motion.div>
               </motion.div>
             );

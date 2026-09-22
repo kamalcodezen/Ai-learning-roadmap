@@ -13,20 +13,24 @@ const hindSiliguri = Hind_Siliguri({
 });
 
 export const metadata: import("next").Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://your-production-domain.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://aipather.com"),
   title: {
-    default: "AI Pather — AI-Powered Career Learning Platform",
+    default: "AI Pather — AI-Powered Tech Career Learning Platform",
     template: "%s | AI Pather",
   },
-  description: "Navigate your tech career with AI-driven skill assessments, learning roadmaps, and interview prep.",
+  description: "Accelerate your tech career with AI Pather. Personalized learning roadmaps, AI-driven skill assessments, real-world portfolio proof, and mock interviews.",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "/",
     siteName: "AI Pather",
+    title: "AI Pather — AI-Powered Tech Career Learning Platform",
+    description: "Accelerate your tech career with AI Pather. Personalized learning roadmaps, AI-driven skill assessments, real-world portfolio proof, and mock interviews.",
   },
   twitter: {
     card: "summary_large_image",
+    title: "AI Pather — AI-Powered Tech Career Learning Platform",
+    description: "Accelerate your tech career with AI Pather. Personalized learning roadmaps, AI-driven skill assessments, real-world portfolio proof, and mock interviews.",
   },
   icons: {
     icon: [
@@ -54,7 +58,7 @@ export default function RootLayout({
       className={`antialiased ${hindSiliguri.variable}`}
     >
       <body
-        className="flex flex-col antialiased"
+        className="flex flex-col antialiased overflow-x-hidden"
         suppressHydrationWarning
       >
         <NextTopLoader

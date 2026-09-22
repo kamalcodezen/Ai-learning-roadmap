@@ -12,6 +12,7 @@ import { GlowCard } from "@/src/components/dashboard/shared/cards";
 import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
+import "../admin.css";
 
 const getScoreColor = (score: number) => {
   if (score >= 80) return "bg-green-500/10 text-green-500";
@@ -42,25 +43,31 @@ const columns: AdminDataTableColumn<AdminCareerReadinessProfileItem>[] = [
   },
   {
     header: "Readiness Score",
+    align: "center",
     render: (p) => {
       const score = Math.round(Number(p.readinessScore ?? p.score ?? 0));
       return (
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${getScoreColor(
-            score
-          )}`}
-        >
-          {score}%
-        </span>
+        <div className="flex justify-center">
+          <span
+            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${getScoreColor(
+              score
+            )}`}
+          >
+            {score}%
+          </span>
+        </div>
       );
     },
   },
   {
     header: "Assessments Passed",
+    align: "center",
     render: (p) => (
-      <span className="text-muted-foreground">
-        {Number(p.assessmentsPassed ?? 0)}
-      </span>
+      <div className="flex justify-center text-center">
+        <span className="text-muted-foreground">
+          {Number(p.assessmentsPassed ?? 0)}
+        </span>
+      </div>
     ),
   },
 ];
@@ -124,7 +131,7 @@ export default function AdminCareerReadinessView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="section-title text-left">Career <span className="text-brand">Readiness</span></h1>
-          <p className="section-subtitle mt-1 text-left">Assess learner preparedness for target career roles.</p>
+          <p className="section-subtitle mt-1 text-left">Assess learner preparedness for target career roles</p>
         </div>
       </div>
 
@@ -140,6 +147,7 @@ export default function AdminCareerReadinessView() {
       </div>
 
       <AdminDataTable
+        scrollable
         columns={columns}
         rows={filtered}
         rowKey={(p) => p.id}

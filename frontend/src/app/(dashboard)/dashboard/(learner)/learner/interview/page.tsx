@@ -12,7 +12,7 @@ const InterviewPage = () => {
       requiredPlan="PLUS"
       description="Practice real-world technical and behavioral interviews with real-time AI audio analysis, scenario scoring, and tailored feedback."
     >
-      <div className="flex flex-col min-h-[94vh] justify-center">
+      <div className="w-full flex flex-col">
         <Interview />
       </div>
     </FeatureLockedOverlay>

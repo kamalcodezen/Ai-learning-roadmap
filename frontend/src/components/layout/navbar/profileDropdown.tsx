@@ -15,6 +15,9 @@ import {
   Crown,
   Zap,
   Loader2,
+  ShieldCheck,
+  Users,
+  Radio,
 } from "lucide-react";
 import { authClient } from "@/src/lib/auth-client";
 
@@ -23,7 +26,15 @@ interface ProfileDropdownProps {
   email?: string;
 }
 
-export const getPlanBadge = (plan?: string) => {
+export const getPlanBadge = (plan?: string, role?: string) => {
+  const isRoleAdmin = role?.toUpperCase() === "ADMIN";
+  if (isRoleAdmin) {
+    return {
+      label: "SUPER ADMIN",
+      icon: ShieldCheck,
+      style: "bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30",
+    };
+  }
   const userPlan = plan?.toUpperCase() || "FREE";
   switch (userPlan) {
     case "PRO":
@@ -48,11 +59,41 @@ export const getPlanBadge = (plan?: string) => {
 };
 
 export const getDropdownLinks = (role: string, prefix: string) => {
-  const isRoleAdmin = role === "ADMIN";
+  const isRoleAdmin = role?.toUpperCase() === "ADMIN";
+  if (isRoleAdmin) {
+    return [
+      {
+        label: "Admin Overview",
+        href: "/dashboard/admin",
+        variant: "default",
+      },
+      {
+        label: "User Directory",
+        href: "/dashboard/admin/users",
+        variant: "default",
+      },
+      {
+        label: "Broadcast Center",
+        href: "/dashboard/admin/broadcasts",
+        variant: "default",
+      },
+      {
+        label: "Admin Profile",
+        href: "/dashboard/admin/profile",
+        variant: "default",
+      },
+      {
+        label: "Sign out",
+        href: "#",
+        variant: "danger",
+      },
+    ] as const;
+  }
+
   return [
     {
-      label: isRoleAdmin ? "Admin Dashboard" : "Dashboard",
-      href: isRoleAdmin ? `${prefix}/dashboard` : `${prefix}`,
+      label: "Dashboard",
+      href: prefix,
       variant: "default",
     },
     {
@@ -101,23 +142,47 @@ export default function ProfileDropdown({
     return () => window.removeEventListener("user-avatar-updated", handleAvatarUpdate);
   }, []);
 
-  const desktopNavItems = [
-    {
-      label: userRole === "ADMIN" ? "Admin Dashboard" : "Dashboard",
-      href: userRole === "ADMIN" ? `${prefix}/dashboard` : `${prefix}`,
-      icon: LayoutDashboard,
-    },
-    {
-      label: "My Profile",
-      href: `${prefix}/profile`,
-      icon: UserIcon,
-    },
-    {
-      label: "Settings & Billing",
-      href: `${prefix}/settings`,
-      icon: Settings,
-    },
-  ];
+  const desktopNavItems =
+    userRole === "ADMIN"
+      ? [
+          {
+            label: "Admin Overview",
+            href: "/dashboard/admin",
+            icon: LayoutDashboard,
+          },
+          {
+            label: "User Directory",
+            href: "/dashboard/admin/users",
+            icon: Users,
+          },
+          {
+            label: "Broadcast Center",
+            href: "/dashboard/admin/broadcasts",
+            icon: Radio,
+          },
+          {
+            label: "Admin Profile",
+            href: "/dashboard/admin/profile",
+            icon: UserIcon,
+          },
+        ]
+      : [
+          {
+            label: "Dashboard",
+            href: prefix,
+            icon: LayoutDashboard,
+          },
+          {
+            label: "My Profile",
+            href: `${prefix}/profile`,
+            icon: UserIcon,
+          },
+          {
+            label: "Settings & Billing",
+            href: `${prefix}/settings`,
+            icon: Settings,
+          },
+        ];
 
   const initial = (name?.trim() || "U").charAt(0).toUpperCase();
 
@@ -151,7 +216,7 @@ export default function ProfileDropdown({
     setIsSigningOut(false);
   };
 
-  const planBadge = getPlanBadge(userPlan);
+  const planBadge = getPlanBadge(userPlan, userRole);
   const PlanIcon = planBadge.icon;
 
   return (
@@ -166,7 +231,11 @@ export default function ProfileDropdown({
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
-        className="group relative flex items-center gap-2 rounded-full border border-primary/30 bg-card/80 py-1 pl-1 pr-3 text-foreground backdrop-blur-md transition-all duration-200 hover:border-primary/60 hover:shadow-[0_0_16px_rgba(159,84,247,0.2)] focus:outline-none"
+        className={`group relative flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 backdrop-blur-md transition-all duration-200 focus:outline-none ${
+          userRole === "ADMIN"
+            ? "border-purple-500/40 bg-purple-500/10 text-foreground hover:border-purple-500/70 hover:shadow-[0_0_16px_rgba(159,84,247,0.25)]"
+            : "border-primary/30 bg-card/80 text-foreground hover:border-primary/60 hover:shadow-[0_0_16px_rgba(159,84,247,0.2)]"
+        }`}
       >
         {/* User Avatar Circle */}
         <div className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-tr from-primary to-secondary text-xs font-bold text-white shadow-xs">
@@ -186,7 +255,7 @@ export default function ProfileDropdown({
 
         {/* User First Name */}
         <span className="hidden max-w-28 truncate text-xs font-semibold tracking-wide text-foreground sm:inline-block">
-          {name?.split(" ")[0] || "Account"}
+          {userRole === "ADMIN" ? (name?.split(" ")[0] || "Admin") : (name?.split(" ")[0] || "Account")}
         </span>
 
         {/* Smooth Chevron */}
@@ -207,7 +276,7 @@ export default function ProfileDropdown({
             transition={{ duration: 0.18, ease: "easeOut" }}
             data-lenis-prevent="true"
             data-lenis-prevent-wheel="true"
-            className="absolute right-0 top-[calc(100%+6px)] z-50 w-72 origin-top-right max-h-[85vh] overflow-y-auto overscroll-contain rounded-2xl border border-border/80 bg-card/95 p-2 shadow-[0_16px_40px_rgba(0,0,0,0.14)] backdrop-blur-2xl dark:border-primary/20 dark:bg-[#120722]/95 dark:shadow-[0_20px_50px_rgba(0,0,0,0.55)]"
+            className="absolute right-0 top-[calc(100%+6px)] z-50 w-72 origin-top-right max-h-[85vh] overflow-y-auto overscroll-contain rounded-lg border border-border/80 bg-card/95 p-2 shadow-[0_16px_40px_rgba(0,0,0,0.14)] backdrop-blur-2xl dark:border-primary/20 dark:bg-[#120722]/95 dark:shadow-[0_20px_50px_rgba(0,0,0,0.55)]"
           >
             {/* Header: User Profile Info */}
             <div className="rounded-xl border border-border/50 bg-muted/40 p-3.5">
@@ -233,7 +302,7 @@ export default function ProfileDropdown({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-1.5">
                     <p className="truncate text-sm font-bold text-foreground">
-                      {name || "User"}
+                      {name || (userRole === "ADMIN" ? "System Admin" : "User")}
                     </p>
                     <span
                       className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider border ${planBadge.style}`}
@@ -250,47 +319,65 @@ export default function ProfileDropdown({
               </div>
             </div>
 
-            {/* Dynamic Plan Upgrade Card */}
-            <div className="mt-2 px-1">
-              {userPlan === "FREE" && (
+            {/* Dynamic Plan Upgrade Card or Admin System Banner */}
+            {userRole === "ADMIN" ? (
+              <div className="mt-2 px-1">
                 <Link
-                  href="/pricing"
+                  href="/dashboard/admin"
                   onClick={() => setOpen(false)}
-                  className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                  className="group flex items-center justify-between rounded-xl border border-purple-500/30 bg-purple-500/10 px-3 py-2 text-xs font-semibold text-purple-700 dark:text-purple-300 shadow-xs transition-all hover:bg-purple-500/20"
                 >
                   <span className="flex items-center gap-1.5">
-                    <Sparkles className="size-3.5 text-yellow-300" />
-                    <span>Upgrade to Plus</span>
+                    <ShieldCheck className="size-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
+                    <span className="font-bold">Admin Console</span>
                   </span>
-                  <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
-                    Save 20%
-                  </span>
-                </Link>
-              )}
-
-              {userPlan === "PLUS" && (
-                <Link
-                  href="/pricing"
-                  onClick={() => setOpen(false)}
-                  className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
-                >
-                  <span className="flex items-center gap-1.5">
-                    <Crown className="size-3.5 text-yellow-200" />
-                    <span>Upgrade to Pro</span>
-                  </span>
-                  <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
-                    Enterprise
+                  <span className="rounded-md bg-purple-500/20 dark:bg-purple-400/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-purple-700 dark:text-purple-300">
+                    Root Access
                   </span>
                 </Link>
-              )}
+              </div>
+            ) : (
+              <div className="mt-2 px-1">
+                {userPlan === "FREE" && (
+                  <Link
+                    href="/pricing"
+                    onClick={() => setOpen(false)}
+                    className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <Sparkles className="size-3.5 text-yellow-300" />
+                      <span>Upgrade to Plus</span>
+                    </span>
+                    <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                      Save 20%
+                    </span>
+                  </Link>
+                )}
 
-              {userPlan === "PRO" && (
-                <div className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-500 dark:text-amber-400">
-                  <Crown className="size-3.5" />
-                  <span>Verified Pro Member</span>
-                </div>
-              )}
-            </div>
+                {userPlan === "PLUS" && (
+                  <Link
+                    href="/pricing"
+                    onClick={() => setOpen(false)}
+                    className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <Crown className="size-3.5 text-yellow-200" />
+                      <span>Upgrade to Pro</span>
+                    </span>
+                    <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                      Enterprise
+                    </span>
+                  </Link>
+                )}
+
+                {userPlan === "PRO" && (
+                  <div className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-500 dark:text-amber-400">
+                    <Crown className="size-3.5" />
+                    <span>Verified Pro Member</span>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Navigation Links */}
             <div className="mt-2 space-y-0.5">

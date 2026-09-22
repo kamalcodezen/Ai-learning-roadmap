@@ -32,7 +32,7 @@ export default function AboutProblem() {
             </span>
           </div>
 
-          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground text-balance">
+          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground text-balance">
             The internet gave us more to learn.{" "}
             <span className="bg-linear-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
               Not a better way to learn
@@ -57,7 +57,7 @@ export default function AboutProblem() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="lg:col-span-6 relative rounded-2xl border border-red-500/20 bg-card p-6 sm:p-8 flex flex-col justify-between shadow-lg"
+            className="lg:col-span-6 relative rounded-2xl border border-red-500/20 bg-card p-6 sm:p-8 flex flex-col justify-between shadow-lg dashboard-card"
           >
             <div>
               <div className="flex items-center justify-between border-b border-border/80 pb-4 mb-6">
@@ -134,7 +134,7 @@ export default function AboutProblem() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="lg:col-span-6 relative rounded-2xl border border-primary/30 bg-gradient-to-b from-card via-card to-primary/5 p-6 sm:p-8 flex flex-col justify-between shadow-xl overflow-hidden"
+            className="lg:col-span-6 relative rounded-2xl border border-primary/30 bg-gradient-to-b from-card via-card to-primary/5 p-6 sm:p-8 flex flex-col justify-between shadow-xl overflow-hidden dashboard-card"
           >
             <BorderBeam size={220} duration={7} colorFrom="#9F54F7" colorTo="#38BDF8" />
 

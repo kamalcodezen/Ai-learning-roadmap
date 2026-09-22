@@ -10,6 +10,7 @@ import { useDebounce } from "use-debounce";
 import AdminPageSkeleton from "@/src/components/dashboard/admin/shared/AdminPageSkeleton";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
+import "../admin.css";
 
 interface ActivityRow {
   id: string;
@@ -119,11 +120,13 @@ export default function AdminActivityView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="section-title text-left">System <span className="text-brand">Activity</span></h1>
-          <p className="section-subtitle mt-1 text-left">Monitor user actions and system events across the platform.</p>
+          <p className="section-subtitle mt-1 text-left">Monitor user actions and system events across the platform</p>
         </div>
       </div>
 
       <AdminDataTable
+        scrollable
+        className="h-[calc(100vh-210px)] min-h-[540px]"
         columns={columns}
         rows={filtered}
         rowKey={(a) => a.id}

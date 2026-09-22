@@ -2,7 +2,9 @@ import DashboardStats from "@/src/components/dashboard/admin/DashboardStats";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: {
+    absolute: "AI Pather | Admin Console",
+  },
   description: "Administrative dashboard with key platform metrics, learner activity, and system status.",
 };
 

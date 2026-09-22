@@ -8,6 +8,7 @@ import {
   submitSkillSimulation,
   getSkillSimulationResult,
   SimulationResultData,
+  SkillSimulationData,
 } from "@/src/lib/api/learner/assessments";
 import { Card, CardContent } from "@/src/components/ui/Card";
 import SkillSimulationResultView from "../SkillSimulationResultView";
@@ -23,8 +24,11 @@ import {
   MessageSquareText,
   Send,
   AlertCircle,
+  Lock,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import { triggerRealtimeSync } from "@/src/lib/utils/realtime-sync";
 
 interface Props {
   skill: string;
@@ -38,6 +42,11 @@ export default function SkillSimulationView({
   const queryClient = useQueryClient();
   const { data: session } = useDashboardSession();
 
+  const user = session?.user as { role?: string; plan?: string } | undefined;
+  const userRole = (user?.role || "LEARNER").toUpperCase();
+  const userPlan = (user?.plan || "FREE").toUpperCase();
+  const hasAccess = userRole === "ADMIN" || userPlan === "PLUS" || userPlan === "PRO";
+
   const [currentStage, setCurrentStage] = useState<number>(0);
   const [isReviewMode, setIsReviewMode] = useState<boolean>(initialReviewMode);
 
@@ -49,18 +58,73 @@ export default function SkillSimulationView({
   const [submittedResult, setSubmittedResult] =
     useState<SimulationResultData | null>(null);
 
-  // Fetch simulation questions
+  // Fallback preview data when viewing in locked preview mode
+  const previewSimulationData: SkillSimulationData = {
+    skill,
+    title: `${skill} Mastery Simulation`,
+    description: `Evaluate your practical ability across 4 stages in ${skill}. Upgrade to PLUS or PRO to start this simulation.`,
+    targetRole: "Full Stack Engineer",
+    difficulty: "INTERMEDIATE",
+    stages: {
+      understand: {
+        stage: "understand",
+        title: "Theoretical & Conceptual Reasoning",
+        question: `When designing or optimizing implementations in ${skill}, which fundamental architectural principle ensures maintainability and scalability?`,
+        options: [
+          `Separation of concerns, modularity, and enforcing idempotent operations for ${skill}`,
+          `Bypassing schema validations and typing rules to maximize raw throughput`,
+          `Ignoring state immutability across nested components`,
+          `Coupling business logic directly into UI rendering views`,
+        ],
+      },
+      debug: {
+        stage: "debug",
+        title: "Code Inspection & Bug Diagnosis",
+        question: `Identify the primary bug or security vulnerability in this ${skill} snippet:`,
+        codeSnippet: `// Configuration / Handler for ${skill}\nfunction processPayload(data) {\n  if (!data) return;\n  const result = eval(data.expression); // dynamic evaluation\n  return { success: true, result };\n}`,
+        options: [
+          "Unsanitized dynamic evaluation (eval) introduces arbitrary code execution vulnerabilities",
+          `data.expression is a reserved keyword in ${skill}`,
+          "The return statement cannot return object literals with boolean keys",
+          `Functions in ${skill} must always declare parameters as constants`,
+        ],
+      },
+      code: {
+        stage: "code",
+        title: "Hands-on Implementation",
+        question: `Implement a clean, reusable utility or service method for ${skill} adhering to clean architecture standards.`,
+        starterCode: `// Implementation for ${skill}\nexport function executeTask(config) {\n  if (!config) throw new Error('Config required');\n  // Upgrade to PLUS to write & evaluate code interactively\n  return { success: true };\n}`,
+        instructions: [
+          `Validate input configuration and handle boundary conditions for ${skill}`,
+          "Ensure errors are caught and transformed into structured return types",
+          "Return an object containing status and execution results",
+        ],
+      },
+      explain: {
+        stage: "explain",
+        title: "Architectural & Technical Communication",
+        question: `Explain how ${skill} is strategically utilized in production architectures. Detail key trade-offs, scaling considerations, and monitoring strategies.`,
+        placeholder: `Discuss system reliability, throughput, trade-offs between complexity vs maintainability, and testing strategies for ${skill}...`,
+      },
+    },
+  };
+
+  // Fetch simulation questions - only runs if user has access to prevent 403 network failures
   const {
     data: simulationData,
     isLoading: isSimulationLoading,
     isError: isSimulationError,
+    error: simulationError,
     refetch: refetchSimulation,
   } = useQuery({
     queryKey: ["skillSimulation", skill],
     queryFn: () => getSkillSimulation(skill),
-    enabled: !isReviewMode && !!skill,
+    enabled: !isReviewMode && !!skill && hasAccess,
     staleTime: 1000 * 60 * 30, // 30m cache
+    retry: false,
   });
+
+  const activeSimulation = simulationData || (!hasAccess ? previewSimulationData : null);
 
   // Fetch previous result if in review mode
   const {
@@ -78,7 +142,7 @@ export default function SkillSimulationView({
   const effectiveCode =
     codeAnswer !== ""
       ? codeAnswer
-      : simulationData?.stages?.code?.starterCode || "";
+      : activeSimulation?.stages?.code?.starterCode || "";
 
   // Submission mutation
   const submitMutation = useMutation({
@@ -133,6 +197,19 @@ export default function SkillSimulationView({
       queryClient.invalidateQueries({
         queryKey: ["skillTree", session?.user?.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["gemWallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gemHistory"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["unreadNotificationCount"],
+      });
+      triggerRealtimeSync(queryClient);
     },
   });
 
@@ -142,7 +219,7 @@ export default function SkillSimulationView({
     setCurrentStage(0);
     setUnderstandAnswer("");
     setDebugAnswer("");
-    setCodeAnswer(simulationData?.stages?.code?.starterCode || "");
+    setCodeAnswer(activeSimulation?.stages?.code?.starterCode || "");
     setExplainAnswer("");
   };
 
@@ -177,7 +254,36 @@ export default function SkillSimulationView({
     );
   }
 
-  if (isSimulationError || !simulationData) {
+  const errorMessage = (simulationError as Error)?.message || "";
+  const isPaywallError =
+    errorMessage.toLowerCase().includes("subscription") ||
+    errorMessage.toLowerCase().includes("plus") ||
+    errorMessage.toLowerCase().includes("pro") ||
+    errorMessage.includes("403");
+
+  if (isSimulationError || !activeSimulation) {
+    if (isPaywallError) {
+      return (
+        <div className="flex flex-col items-center justify-center p-8 text-center max-w-lg mx-auto bg-card rounded-2xl border border-primary/30 shadow-lg space-y-4 my-8">
+          <div className="p-3.5 rounded-2xl bg-primary/20 text-primary border border-primary/30">
+            <Lock className="w-7 h-7" />
+          </div>
+          <h3 className="text-xl font-bold text-foreground">
+            Subscription Required
+          </h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            AI Skill Simulations require an active <strong className="text-foreground font-semibold">PLUS</strong> or <strong className="text-foreground font-semibold">PRO</strong> subscription. Upgrade your account to unlock interactive coding and debugging evaluations with real-time AI feedback.
+          </p>
+          <Link
+            href="/pricing"
+            className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <Sparkles className="w-4 h-4" /> Upgrade to PLUS / PRO
+          </Link>
+        </div>
+      );
+    }
+
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-4 text-center max-w-md mx-auto">
         <AlertCircle className="w-10 h-10 text-destructive" />
@@ -193,7 +299,7 @@ export default function SkillSimulationView({
     );
   }
 
-  const { stages } = simulationData;
+  const { stages } = activeSimulation;
 
   const stageTitles = [
     { title: "Understand", icon: BookOpen },
@@ -254,14 +360,14 @@ export default function SkillSimulationView({
           <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
             {skill} Mastery Simulation
           </span>
-          {simulationData.targetRole && (
+          {activeSimulation.targetRole && (
             <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground border border-border">
-              {simulationData.targetRole}
+              {activeSimulation.targetRole}
             </span>
           )}
-          {simulationData.difficulty && (
+          {activeSimulation.difficulty && (
             <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20 uppercase text-[10px]">
-              {simulationData.difficulty}
+              {activeSimulation.difficulty}
             </span>
           )}
         </div>

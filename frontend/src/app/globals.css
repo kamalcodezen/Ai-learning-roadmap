@@ -17,7 +17,7 @@
   --color-text-primary: #1E1E1E;
   --color-text-secondary: #4D4D4D;
   --color-border: #E6E9EE;
-  --color-muted: #F5F5F5;
+  --color-muted: #E2E5EB;
   --color-muted-foreground: #6B6B6B;
   --gradient-primary: linear-gradient(135deg, #9F54F7 0%, #8523F5 100%);
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
@@ -56,12 +56,13 @@
   --card-foreground: 38 38 38;
 
   --primary: 159 84 247;
+  --primary-foreground: 255 255 255;
   --secondary: 133 35 245;
   --accent: 159 84 247;
 
   --border: 230 233 238;
 
-  --muted: 245 245 245;
+  --muted: 226 229 235;
   --muted-foreground: 107 107 107;
 
   --sidebar: 255 255 255;
@@ -82,7 +83,7 @@
   --color-text-primary: #E5E5E5;
   --color-text-secondary: #A8A8A8;
   --color-border: #292929;
-  --color-muted: #141414;
+  --color-muted: #262030;
   --color-muted-foreground: #8B8B8B;
   --gradient-primary: linear-gradient(135deg, #B978FF 0%, #A855F7 100%);
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -96,12 +97,13 @@
   --card-foreground: 247 247 247;
 
   --primary: 185 120 255;
+  --primary-foreground: 255 255 255;
   --secondary: 168 85 247;
   --accent: 185 120 255;
 
   --border: 41 41 41;
 
-  --muted: 20 20 20;
+  --muted: 38 32 48;
   --muted-foreground: 139 139 139;
 
   --sidebar: 0 0 0;
@@ -324,17 +326,27 @@ button {
 /* =========================================
    CUSTOM SCROLLBAR SYSTEM
 ========================================= */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--primary)) transparent;
+}
+
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgb(var(--muted));
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   background: rgb(var(--primary));
   border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--primary) / 0.8);
 }
 
 /* =========================================
@@ -414,7 +426,7 @@ button {
   }
 
   .dashboard-card {
-  @apply relative overflow-hidden rounded-md border p-6 backdrop-blur-md
+  @apply relative overflow-hidden rounded-lg border p-6 backdrop-blur-md
     transition-all duration-300;
 
   background: linear-gradient(
@@ -484,7 +496,7 @@ button {
 }
 
 .dashboard-card-secondary { 
-  @apply rounded-xl border p-6 backdrop-blur-md transition-all duration-300; 
+  @apply rounded-lg border p-6 backdrop-blur-md transition-all duration-300; 
   background: var(--gradient-proof-card); 
   border-color: #E6E9EE; 
 }
@@ -500,7 +512,7 @@ button {
   }
 
   .soft-card {
-    @apply rounded-xl border p-6;
+    @apply rounded-lg border p-6;
     background: rgb(var(--card-soft));
     border-color: rgb(var(--border));
   }
@@ -516,6 +528,21 @@ button {
     @apply overflow-hidden rounded-lg border;
     background: rgb(var(--card));
     border-color: rgb(var(--border));
+  }
+
+  /* Popover / Select Dropdown Card border radius */
+  .popover,
+  .select__popover,
+  .dropdown__popover,
+  .autocomplete__popover,
+  .neural-dropdown,
+  [data-slot="popover"],
+  [data-slot="select-popover"],
+  [data-slot="popover-dialog"],
+  [data-slot="dropdown-menu"],
+  [data-slot="menu"],
+  [data-slot="listbox"] {
+    border-radius: 0.5rem !important;
   }
 
   .input-field {
@@ -557,8 +584,8 @@ button {
   }
 
   .skeleton-card {
-    @apply rounded-xl border flex flex-col overflow-hidden bg-card/60;
-    border-color: rgb(159 84 247 / 0.22);
+    @apply rounded-lg border flex flex-col overflow-hidden bg-card/75;
+    border-color: rgb(159 84 247 / 0.28);
   }
 }
 
@@ -568,11 +595,11 @@ button {
 @keyframes skeleton-deep-pulse {
   0%, 100% {
     opacity: 1;
-    filter: brightness(1.05);
+    filter: brightness(0.92);
   }
   50% {
-    opacity: 0.22;
-    filter: brightness(1.25);
+    opacity: 0.5;
+    filter: brightness(0.82);
   }
 }
 
@@ -626,6 +653,49 @@ button {
   background: radial-gradient(circle at top left, rgba(185, 120, 255, 0.12), transparent 40%);
 }
 
+/* =========================================
+   BANNER BOTTOM AMBIENT GRADIENT
+========================================= */
+.banner-bottom-gradient {
+  background:
+    /* Ambient brand glow radiating gently from bottom center using project color tokens */
+    radial-gradient(
+      ellipse 60% 70% at 50% 100%,
+      rgb(var(--primary) / 0.2) 0%,
+      rgb(var(--secondary) / 0.06) 45%,
+      transparent 80%
+    ),
+    /* Smooth upward scrim fade into project background token */
+    linear-gradient(
+      to top,
+      rgb(var(--background) / 0.98) 0%,
+      rgb(var(--background) / 0.8) 25%,
+      rgb(var(--background) / 0.42) 55%,
+      rgb(var(--background) / 0.1) 80%,
+      transparent 100%
+    );
+}
+
+.dark .banner-bottom-gradient {
+  background:
+    /* Ambient neon-violet aura radiating gently from bottom center using dark theme tokens */
+    radial-gradient(
+      ellipse 60% 70% at 50% 100%,
+      rgb(var(--primary) / 0.32) 0%,
+      rgb(var(--secondary) / 0.1) 45%,
+      transparent 80%
+    ),
+    /* Smooth upward scrim fade into dark background token */
+    linear-gradient(
+      to top,
+      rgb(var(--background) / 0.96) 0%,
+      rgb(var(--background) / 0.76) 25%,
+      rgb(var(--background) / 0.38) 55%,
+      rgb(var(--background) / 0.1) 80%,
+      transparent 100%
+    );
+}
+
 @theme inline {
   --animate-blink-cursor: blink-cursor 1.2s step-end infinite;
 
@@ -674,11 +744,88 @@ button {
 }
 
 /* =========================================
-   FORM FIELD RADIUS OVERRIDES (rounded-lg)
+   FORM FIELD RADIUS & STATIC HOVER OVERRIDES (rounded-lg)
 ========================================= */
 .select__trigger,
 [data-slot="select-trigger"],
 .search-field__group,
-[data-slot="search-field-group"] {
+[data-slot="search-field-group"],
+[data-slot="group"],
+[data-slot="trigger"] {
   border-radius: 0.5rem !important;
+  transition: none !important;
+}
+
+.search-field__group:hover,
+.search-field__group[data-hovered="true"],
+.search-field__group:hover:not(:focus-within),
+.search-field__group[data-hovered="true"]:not([data-focus-within="true"]),
+[data-slot="search-field-group"]:hover,
+[data-slot="search-field-group"][data-hovered="true"],
+[data-slot="group"]:hover,
+[data-slot="group"][data-hovered="true"],
+.select__trigger:hover,
+.select__trigger[data-hovered="true"],
+[data-slot="select-trigger"]:hover,
+[data-slot="select-trigger"][data-hovered="true"],
+[data-slot="trigger"]:hover,
+[data-slot="trigger"][data-hovered="true"] {
+  background-color: var(--field-background, var(--default, #ffffff)) !important;
+  border-color: var(--field-border, rgb(var(--border))) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+/* ===== Crown button auto-glare (like pricing cards) ===== */
+.crown-glare {
+  background-image: linear-gradient(
+    var(--gh-angle, -45deg),
+    transparent 60%,
+    var(--gh-rgba, rgba(159, 84, 247, 0.35)) 70%,
+    transparent,
+    transparent 100%
+  );
+  background-size: var(--gh-size, 250%) var(--gh-size, 250%), 100% 100%;
+  background-position: -100% -100%, 0 0;
+  animation: crown-glare-sweep 2s ease-in-out infinite;
+}
+
+@keyframes crown-glare-sweep {
+  0% {
+    background-position: -100% -100%, 0 0;
+  }
+  100% {
+    background-position: 100% 100%, 0 0;
+  }
+}
+
+/* ===== Features Swiper (mobile) ===== */
+.features-swiper {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.features-swiper .swiper-slide {
+  transition: transform 0.3s ease;
+  box-shadow: none;
+}
+
+.features-swiper .swiper-slide-active {
+  transform: scale(1);
+}
+
+.features-swiper .swiper-slide-prev,
+.features-swiper .swiper-slide-next {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Force animated border always visible on mobile */
+@media (max-width: 639px) {
+  .features-swiper .swiper-slide svg polygon {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .features-swiper .swiper-slide:hover {
+    transform: none;
+  }
 }

@@ -111,19 +111,16 @@ export default function Footer() {
           <div className="flex flex-col items-center">
             <Link
               href="/"
-              className="flex items-center justify-center mt-20 space-x-3 md:space-x-4"
+              className="flex items-center justify-center mt-20"
+              aria-label="AI Pather home"
             >
               <Image
-                src="/brand/logo-p-purple.png"
+                src="/brand/AI-Pather-white.png"
                 alt="AI Pather"
-                width={52}
-                height={52}
-                className="w-8 h-8 md:w-[52px] md:h-[52px] object-contain shrink-0"
+                width={190}
+                height={34}
+                className="h-8 md:h-10 w-auto object-contain shrink-0"
               />
-
-              <span className="font-bold text-display leading-none tracking-tight text-white translate-y-[2px] md:translate-y-[3px]">
-                AI <span className="text-[var(--color-primary)]">Pather</span>
-              </span>
             </Link>
           </div>
 

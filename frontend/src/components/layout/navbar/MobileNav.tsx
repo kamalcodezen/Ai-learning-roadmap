@@ -18,10 +18,15 @@ import {
   FiMoon,
   FiHome,
   FiMail,
+  FiTrendingUp,
+  FiCopy,
+  FiUsers,
+  FiRadio,
 } from "react-icons/fi";
-import { Sparkles, Crown, Loader2 } from "lucide-react";
+import { Sparkles, Crown, Loader2, ShieldCheck } from "lucide-react";
 import Logo from "./Logo";
 import Button from "../../ui/button";
+import CrownButton from "./CrownButton";
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
 import { authClient } from "@/src/lib/auth-client";
 import { getDropdownLinks, getPlanBadge } from "./profileDropdown";
@@ -36,7 +41,7 @@ const getHashServerSnapshot = () => "";
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
-  const [expandedSolutions, setExpandedSolutions] = useState(false);
+  const [expandedDropdown, setExpandedDropdown] = useState<string | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const mobileNavRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -156,7 +161,7 @@ export default function MobileNav() {
   const profileLinks = getDropdownLinks(userRole, prefix);
   const navLinks = getNavLinks();
 
-  const planBadge = getPlanBadge(userPlan);
+  const planBadge = getPlanBadge(userPlan, userRole);
   const PlanIcon = planBadge.icon;
 
   const handleSignOut = async () => {
@@ -183,6 +188,10 @@ export default function MobileNav() {
     switch (label) {
       case "Home":
         return <FiHome className="size-4 shrink-0" />;
+      case "Tracks":
+        return <FiTrendingUp className="size-4 shrink-0" />;
+      case "Pages":
+        return <FiCopy className="size-4 shrink-0" />;
       case "Solutions":
         return <FiLayers className="size-4 shrink-0" />;
       case "Why AI Pather":
@@ -201,10 +210,16 @@ export default function MobileNav() {
   const getProfileIcon = (label: string) => {
     switch (label) {
       case "Dashboard":
+      case "Admin Overview":
       case "Admin Dashboard":
         return <FiLayout className="size-4 shrink-0" />;
+      case "User Directory":
+        return <FiUsers className="size-4 shrink-0" />;
+      case "Broadcast Center":
+        return <FiRadio className="size-4 shrink-0" />;
       case "Profile":
       case "My Profile":
+      case "Admin Profile":
         return <FiUser className="size-4 shrink-0" />;
       case "Settings":
       case "Settings & Billing":
@@ -253,28 +268,29 @@ export default function MobileNav() {
         {/* Header Bar (Always visible) */}
         <div className="flex items-center justify-between w-full px-2 py-1.5">
           {/* Logo Section */}
-          <div className="pl-0">
+          <div className="flex items-center gap-2 pl-0">
             <Logo />
+            <CrownButton />
           </div>
 
           {/* Menu Toggle Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center justify-center size-9 bg-foreground text-background rounded-full hover:bg-foreground/80 transition-all focus:outline-none relative"
+            className="flex items-center justify-center size-9 bg-brand text-white rounded-full transition-all focus:outline-none relative"
             aria-label="Toggle menu"
           >
             <div
-              className={`w-3.5 h-0.5 bg-background rounded-full transition-transform duration-300 absolute ${
+              className={`w-3.5 h-0.5 bg-white rounded-full transition-transform duration-300 absolute ${
                 isOpen ? "rotate-45" : "-translate-y-1"
               }`}
             />
             <div
-              className={`w-3.5 h-0.5 bg-background rounded-full transition-opacity duration-300 absolute ${
+              className={`w-3.5 h-0.5 bg-white rounded-full transition-opacity duration-300 absolute ${
                 isOpen ? "opacity-0" : "opacity-100"
               }`}
             />
             <div
-              className={`w-3.5 h-0.5 bg-background rounded-full transition-transform duration-300 absolute ${
+              className={`w-3.5 h-0.5 bg-white rounded-full transition-transform duration-300 absolute ${
                 isOpen ? "-rotate-45" : "translate-y-1"
               }`}
             />
@@ -342,46 +358,64 @@ export default function MobileNav() {
                   </div>
                 )}
 
-                {/* Dynamic Plan Upgrade Card */}
+                {/* Dynamic Plan Upgrade Card or Admin System Banner */}
                 {isAuthenticated && (
                   <div className="px-0.5">
-                    {userPlan === "FREE" && (
+                    {userRole === "ADMIN" ? (
                       <Link
-                        href="/pricing"
+                        href="/dashboard/admin"
                         onClick={() => setIsOpen(false)}
-                        className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                        className="group flex items-center justify-between rounded-xl border border-purple-500/30 bg-purple-500/10 px-3.5 py-2.5 text-xs font-semibold text-purple-700 dark:text-purple-300 shadow-xs transition-all hover:bg-purple-500/20"
                       >
                         <span className="flex items-center gap-1.5">
-                          <Sparkles className="size-3.5 text-yellow-300" />
-                          <span>Upgrade to Plus</span>
+                          <ShieldCheck className="size-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
+                          <span className="font-bold">Admin Console</span>
                         </span>
-                        <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
-                          Save 20%
-                        </span>
-                      </Link>
-                    )}
-
-                    {userPlan === "PLUS" && (
-                      <Link
-                        href="/pricing"
-                        onClick={() => setIsOpen(false)}
-                        className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
-                      >
-                        <span className="flex items-center gap-1.5">
-                          <Crown className="size-3.5 text-yellow-200" />
-                          <span>Upgrade to Pro</span>
-                        </span>
-                        <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
-                          Enterprise
+                        <span className="rounded-md bg-purple-500/20 dark:bg-purple-400/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-purple-700 dark:text-purple-300">
+                          Root Access
                         </span>
                       </Link>
-                    )}
+                    ) : (
+                      <>
+                        {userPlan === "FREE" && (
+                          <Link
+                            href="/pricing"
+                            onClick={() => setIsOpen(false)}
+                            className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-primary to-secondary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                          >
+                            <span className="flex items-center gap-1.5">
+                              <Sparkles className="size-3.5 text-yellow-300" />
+                              <span>Upgrade to Plus</span>
+                            </span>
+                            <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                              Save 20%
+                            </span>
+                          </Link>
+                        )}
 
-                    {userPlan === "PRO" && (
-                      <div className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3.5 py-2 text-xs font-bold text-amber-500 dark:text-amber-400">
-                        <Crown className="size-3.5" />
-                        <span>Verified Pro Member</span>
-                      </div>
+                        {userPlan === "PLUS" && (
+                          <Link
+                            href="/pricing"
+                            onClick={() => setIsOpen(false)}
+                            className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-amber-500 to-primary px-3.5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-95"
+                          >
+                            <span className="flex items-center gap-1.5">
+                              <Crown className="size-3.5 text-yellow-200" />
+                              <span>Upgrade to Pro</span>
+                            </span>
+                            <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
+                              Enterprise
+                            </span>
+                          </Link>
+                        )}
+
+                        {userPlan === "PRO" && (
+                          <div className="flex items-center justify-center gap-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3.5 py-2 text-xs font-bold text-amber-500 dark:text-amber-400">
+                            <Crown className="size-3.5" />
+                            <span>Verified Pro Member</span>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 )}
@@ -396,11 +430,16 @@ export default function MobileNav() {
                     const hasChildren = link.children && link.children.length > 0;
 
                     if (hasChildren) {
+                      const isLabelOpen = expandedDropdown === link.label;
                       return (
                         <div key={link.label} className="flex flex-col">
                           <button
                             type="button"
-                            onClick={() => setExpandedSolutions((prev) => !prev)}
+                            onClick={() =>
+                              setExpandedDropdown((prev) =>
+                                prev === link.label ? null : link.label,
+                              )
+                            }
                             className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
                           >
                             <div className="flex items-center gap-2.5">
@@ -411,13 +450,13 @@ export default function MobileNav() {
                             </div>
                             <FiChevronDown
                               className={`size-4 text-muted-foreground transition-transform duration-200 ${
-                                expandedSolutions ? "rotate-180 text-primary" : ""
+                                isLabelOpen ? "rotate-180 text-primary" : ""
                               }`}
                             />
                           </button>
 
                           <AnimatePresence>
-                            {expandedSolutions && (
+                            {isLabelOpen && (
                               <motion.div
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}

@@ -12,6 +12,11 @@ export interface AdminUserListItem {
     targetRole?: string;
     targetRoleName?: string;
   } | null;
+  gamification?: {
+    gemsBalance?: number;
+    currentLevel?: number;
+    totalXp?: number;
+  } | null;
 }
 
 export interface AdminUserListResult {

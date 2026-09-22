@@ -5,7 +5,7 @@ import { stripe } from "@/src/lib/stripe";
 import { pool } from "@/src/lib/auth";
 
 export const metadata: Metadata = {
-  title: "Payment · AI Pather",
+  title: "Payment Successful",
   robots: { index: false, follow: false },
 };
 

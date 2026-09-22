@@ -18,7 +18,7 @@ const channels = [
     badge: "Support & Diagnostics",
     title: "Learner & Tech Support",
     description:
-      "Get help with roadmap generation, milestone diagnostics, proof graph verification, or account settings.",
+      "Get help with roadmap generation, milestone diagnostics, proof graph verification, or account settings",
     email: "support@aipather.com",
     actionType: "email",
   },
@@ -27,7 +27,7 @@ const channels = [
     badge: "Enterprise & Scale",
     title: "Enterprise & Partnerships",
     description:
-      "Discuss custom capability benchmarks, cohort tracking for engineering teams, university access, and licensing.",
+      "Discuss custom capability benchmarks, cohort tracking for engineering teams, university access, and licensing",
     email: "enterprise@aipather.com",
     actionType: "email",
   },
@@ -36,7 +36,7 @@ const channels = [
     badge: "Collaborate & Grow",
     title: "Community & Builders",
     description:
-      "Join the AI Pather learner ecosystem, share verified project proofs, discuss roadmap trends, and give live feedback.",
+      "Join the AI Pather learner ecosystem, share verified project proofs, discuss roadmap trends, and give live feedback",
     email: "community@aipather.com",
     actionType: "email",
   },
@@ -69,10 +69,10 @@ export default function ContactInfoCards() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card/70 p-6 sm:p-7 backdrop-blur-md transition-all duration-300 hover:border-primary/50"
+                className="dashboard-card group relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card/70 p-6 sm:p-7 backdrop-blur-md transition-all duration-300 hover:border-primary/50 shadow-none"
               >
                 {/* Glow overlay on hover */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                <div className="absolute inset-0 rounded-2xl  bg-gradient-to-b from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                 <div>
                   {/* Top Bar: Icon + Badge */}

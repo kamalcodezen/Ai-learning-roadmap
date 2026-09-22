@@ -10,6 +10,7 @@ import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import { Briefcase } from "lucide-react";
 import AdminDataTable from "@/src/components/dashboard/admin/shared/AdminDataTable";
 import type { AdminDataTableColumn } from "@/src/components/dashboard/admin/shared/AdminDataTable";
+import "../admin.css";
 
 const columns: AdminDataTableColumn<AdminJobRealityRoleItem>[] = [
   {
@@ -73,7 +74,7 @@ export default function AdminJobRealityView() {
             Job <span className="text-brand">Reality</span>
           </h1>
           <p className="section-subtitle mt-1 text-left">
-            Explore popular roles and job-market alignment for learners.
+            Explore popular roles and job-market alignment for learners
           </p>
         </div>
       </div>
@@ -88,6 +89,7 @@ export default function AdminJobRealityView() {
       </div>
 
       <AdminDataTable
+        scrollable
         columns={columns}
         rows={data.popularRoles}
         rowKey={(r) => r.role}

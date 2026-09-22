@@ -1,11 +1,12 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+import Lenis from "lenis";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { DashboardButton } from "@/src/components/dashboard/shared/patterns";
 import { Label, SearchField } from "@heroui/react";
-import { CardContent, CardHeader } from "@/src/components/ui/Card";
-import { DashboardCard } from "@/src/components/dashboard/shared/cards";
+import { Card, CardContent, CardHeader } from "@/src/components/ui/Card";
+import "../../admin.css";
 
 export interface AdminDataTableColumn<T> {
   header: string;
@@ -30,6 +31,8 @@ export interface AdminDataTableProps<T> {
   take?: number;
   total?: number;
   onPageChange?: (page: number) => void;
+  className?: string;
+  scrollable?: boolean;
 }
 
 export default function AdminDataTable<T>({
@@ -46,15 +49,44 @@ export default function AdminDataTable<T>({
   take = 20,
   total,
   onPageChange,
+  className,
+  scrollable = false,
 }: AdminDataTableProps<T>) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
   const totalPages = total !== undefined ? Math.ceil(total / take) || 1 : 1;
   const showPagination =
     total !== undefined && totalPages > 1 && onPageChange !== undefined;
   const skip = page !== undefined ? (page - 1) * take : 0;
 
+  useEffect(() => {
+    if (!scrollable) return;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    if (!scrollRef.current || !contentRef.current) return;
+
+    const lenis = new Lenis({
+      wrapper: scrollRef.current,
+      content: contentRef.current,
+      autoRaf: true,
+    });
+
+    return () => {
+      lenis.destroy();
+    };
+  }, [scrollable, rows]);
+
   return (
-    <DashboardCard className="p-0!">
-      <CardHeader className="border-b border-border gap-0 p-4">
+    <Card
+      className={`!p-0 ${
+        scrollable
+          ? "h-[calc(100vh-320px)] min-h-[480px] flex flex-col rounded-lg border-2 border-background shadow-none dashboard-card overflow-hidden"
+          : "rounded-lg border-2 border-background shadow-none dashboard-card"
+      } ${className || ""}`}
+    >
+      <CardHeader className="border-b border-border/40 gap-0 p-4 shrink-0 relative z-10">
         <div className="flex flex-col sm:flex-row sm:items-end gap-4">
           {searchTerm !== undefined && onSearchChange !== undefined && (
             <SearchField
@@ -64,8 +96,8 @@ export default function AdminDataTable<T>({
             >
               <Label>Search</Label>
               <SearchField.Group
-                className="rounded-lg! [border-radius:0.5rem]!"
-                style={{ borderRadius: "0.5rem" }}
+                className="rounded-lg! [border-radius:0.5rem]! transition-none!"
+                style={{ borderRadius: "0.5rem", transition: "none" }}
               >
                 <SearchField.SearchIcon />
                 <SearchField.Input
@@ -87,65 +119,87 @@ export default function AdminDataTable<T>({
         </div>
       </CardHeader>
 
-      <CardContent className="p-0">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px] border-collapse">
-            <thead>
-              <tr>
-                {columns.map((col) => (
-                  <th
-                    key={col.header}
-                    className={`p-4 font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider ${
-                      col.align === "center"
-                        ? "text-center"
-                        : col.align === "right"
-                          ? "text-right"
-                          : "text-left"
-                    } ${col.className || ""}`}
-                  >
-                    {col.header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.length === 0 ? (
+      <CardContent
+        className={`flex flex-col !p-0 relative z-10 ${
+          scrollable ? "h-full min-h-0 flex-1" : ""
+        }`}
+      >
+        <div
+          ref={scrollable ? scrollRef : undefined}
+          className={
+            scrollable
+              ? "min-h-0 flex-1 overflow-y-scroll overflow-x-auto"
+              : "overflow-x-auto"
+          }
+        >
+          <div
+            ref={scrollable ? contentRef : undefined}
+            className={scrollable ? "min-h-full" : undefined}
+          >
+            <table className="w-full min-w-[600px] border-collapse">
+              <thead
+                className={
+                  scrollable
+                    ? "sticky top-0 bg-card z-10 border-b border-border/40 shadow-xs"
+                    : undefined
+                }
+              >
                 <tr>
-                  <td colSpan={columns.length} className="p-4">
-                    <div className="py-8 text-center text-muted-foreground">
-                      {emptyMessage}
-                    </div>
-                  </td>
+                  {columns.map((col) => (
+                    <th
+                      key={col.header}
+                      className={`p-4 font-medium text-sm text-[var(--color-text-primary)] uppercase tracking-wider ${
+                        col.align === "center"
+                          ? "text-center"
+                          : col.align === "right"
+                            ? "text-right"
+                            : "text-left"
+                      } ${col.className || ""}`}
+                    >
+                      {col.header}
+                    </th>
+                  ))}
                 </tr>
-              ) : (
-                rows.map((row, i) => (
-                  <tr
-                    key={rowKey(row, i)}
-                    className="border-t border-[var(--color-border)] hover:bg-muted/30 transition-colors"
-                  >
-                    {columns.map((col) => (
-                      <td
-                        key={col.header}
-                        className={`p-4 ${
-                          col.align === "center"
-                            ? "text-center"
-                            : col.align === "right"
-                              ? "text-right"
-                              : "text-left"
-                        } ${col.className || ""}`}
-                      >
-                        {col.render(row)}
-                      </td>
-                    ))}
+              </thead>
+              <tbody className={scrollable ? "divide-y divide-border/40" : undefined}>
+                {rows.length === 0 ? (
+                  <tr>
+                    <td colSpan={columns.length} className="p-4">
+                      <div className="py-8 text-center text-muted-foreground">
+                        {emptyMessage}
+                      </div>
+                    </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  rows.map((row, i) => (
+                    <tr
+                      key={rowKey(row, i)}
+                      className="border-t border-[var(--color-border)] hover:bg-muted/30 transition-colors"
+                    >
+                      {columns.map((col) => (
+                        <td
+                          key={col.header}
+                          className={`p-4 ${
+                            col.align === "center"
+                              ? "text-center"
+                              : col.align === "right"
+                                ? "text-right"
+                                : "text-left"
+                          } ${col.className || ""}`}
+                        >
+                          {col.render(row)} 
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {showPagination && (
-          <div className="flex items-center justify-between border-t border-border px-4 py-4">
+          <div className="flex items-center justify-between border-t border-border px-4 py-4 shrink-0">
             <p className="text-sm text-muted-foreground">
               Showing {skip + 1} to {Math.min(skip + take, total!)} of {total}{" "}
               results
@@ -169,6 +223,6 @@ export default function AdminDataTable<T>({
           </div>
         )}
       </CardContent>
-    </DashboardCard>
+    </Card>
   );
 }

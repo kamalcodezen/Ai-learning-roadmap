@@ -253,56 +253,80 @@ export default function ApplicationReadinessPage() {
           const status = getStatusDetails(category.status);
 
           return (
-            <DashboardCard
-              key={category.id}
-              className="transition-all hover:border-primary/30 group"
-            >
-              <CardContent className="p-0!">
-                <div className="flex flex-col lg:flex-row">
-                  <div className="pb-6 lg:w-1/3 border-b lg:border-b-0 lg:border-r border-border flex flex-col justify-center">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-background rounded-lg border-brand text-brand shadow-sm">
-                        {getCategoryIcon(category.name)}
-                      </div>
-                      <h3 className="font-bold text-lg">{category.name}</h3>
-                    </div>
+<DashboardCard
+  key={category.id}
+  className="transition-all hover:border-primary/30 group"
+>
+  <CardContent className="p-0!">
+    <div className="flex flex-col lg:flex-row">
 
-                    <div className="flex items-center justify-between">
-                      <span
-                        className={`text-xs font-semibold px-2.5 py-1 rounded-md border-brand border text-brand ${status.bg} ${status.color}`}
-                      >
-                        {status.label}
-                      </span>
-                      {category.status !== "missing" && (
-                        <span className="font-bold text-lg">
-                          {category.score}%
-                        </span>
-                      )}
-                    </div>
-                  </div>
+      {/* Left Side */}
+      <div
+        className="
+          px-4 py-4
+          lg:w-1/3
+          border-b lg:border-b-0 lg:border-r
+          border-border
+          flex flex-col justify-center
+        "
+      >
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-background rounded-lg border-brand text-brand shadow-sm">
+            {getCategoryIcon(category.name)}
+          </div>
 
-                  <div className="pt-6 lg:w-2/3 flex flex-col justify-center gap-4">
-                    <div className="space-y-1">
-                      <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                        {status.icon} Current Status
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        {category.reason}
-                      </p>
-                    </div>
+          <h3 className="font-bold text-lg">
+            {category.name}
+          </h3>
+        </div>
 
-                    <div className="bg-background/50 p-4 rounded-xl border border-primary/20 space-y-1">
-                      <h4 className="text-sm font-semibold text-primary">
-                        Recommendation
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        {category.recommendation}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </DashboardCard>
+        <div className="flex items-center justify-between">
+          <span
+            className={`text-xs font-semibold px-2.5 py-1 rounded-md border-brand border text-brand ${status.bg} ${status.color}`}
+          >
+            {status.label}
+          </span>
+
+          {category.status !== "missing" && (
+            <span className="font-bold text-lg">
+              {category.score}%
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Right Side */}
+      <div
+        className="
+          px-4 py-4
+          lg:w-2/3
+          flex flex-col justify-center gap-4
+        "
+      >
+        <div className="space-y-1">
+          <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+            {status.icon} Current Status
+          </h4>
+
+          <p className="text-sm text-muted-foreground">
+            {category.reason}
+          </p>
+        </div>
+
+        <div className="bg-background/50 p-4 rounded-xl border border-primary/20 space-y-1">
+          <h4 className="text-sm font-semibold text-primary">
+            Recommendation
+          </h4>
+
+          <p className="text-sm text-muted-foreground">
+            {category.recommendation}
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </CardContent>
+</DashboardCard>
           );
         })}
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Lenis from "lenis";
@@ -36,8 +37,8 @@ import {
 } from "@/src/lib/api/learner/diagnostic";
 import BrandLoader from "@/src/components/shared/BrandLoader";
 import DiagnosticResultView from "./DiagnosticResultView";
-import Image from "next/image";
-import brandLogo from "../../../public/brand/AI-Pather-blue.png";
+import brandLogo from "@/public/brand/logo-p-dark.png";
+import { triggerRealtimeSync } from "@/src/lib/utils/realtime-sync";
 
 type DiagnosticStatus =
   | "idle"
@@ -412,6 +413,11 @@ export default function Diagnostic() {
         queryClient.invalidateQueries({
           queryKey: ["proofGraph", session.user.id],
         });
+        queryClient.invalidateQueries({ queryKey: ["gemWallet"] });
+        queryClient.invalidateQueries({ queryKey: ["gemHistory"] });
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        queryClient.invalidateQueries({ queryKey: ["unreadNotificationCount"] });
+        triggerRealtimeSync(queryClient);
       }
 
       setResult(completeResponse.data);

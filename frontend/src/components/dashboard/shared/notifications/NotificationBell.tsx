@@ -24,6 +24,7 @@ import {
   MessageSquare,
   Sparkles,
   Trash2,
+  X,
 } from "lucide-react";
 import { useNotifications } from "@/src/hooks/useNotifications";
 
@@ -92,28 +93,40 @@ export default function NotificationBell({ className }: { className?: string } =
     const isMobile = window.innerWidth < 640;
 
     if (isMobile) {
-      setDropdownStyle({
-        position: "fixed",
-        top: `${rect.bottom + 8}px`,
-        left: "16px",
-        right: "16px",
-        maxWidth: "calc(100vw - 32px)",
-        zIndex: 99999,
-      });
-    } else {
-      const panelWidth = 390;
-      let left = rect.left;
-      if (left + panelWidth > window.innerWidth - 16) {
-        left = window.innerWidth - panelWidth - 16;
-      }
-      if (left < 16) left = 16;
+      const topPos = Math.max(64, Math.min(rect.bottom + 8, window.innerHeight - 340));
+      const maxH = window.innerHeight - topPos - 20;
 
       setDropdownStyle({
         position: "fixed",
-        top: `${rect.bottom + 8}px`,
+        top: `${topPos}px`,
+        left: "12px",
+        right: "12px",
+        width: "auto",
+        maxWidth: "calc(100vw - 24px)",
+        maxHeight: `${Math.max(280, maxH)}px`,
+        zIndex: 99999,
+        display: "flex",
+        flexDirection: "column",
+      });
+    } else {
+      const panelWidth = 400;
+      let left = rect.right - panelWidth;
+      if (left < 16) left = 16;
+      if (left + panelWidth > window.innerWidth - 16) {
+        left = window.innerWidth - panelWidth - 16;
+      }
+      const topPos = rect.bottom + 8;
+      const maxH = window.innerHeight - topPos - 24;
+
+      setDropdownStyle({
+        position: "fixed",
+        top: `${topPos}px`,
         left: `${left}px`,
         width: `${panelWidth}px`,
+        maxHeight: `${Math.max(340, maxH)}px`,
         zIndex: 99999,
+        display: "flex",
+        flexDirection: "column",
       });
     }
   }, []);
@@ -140,9 +153,9 @@ export default function NotificationBell({ className }: { className?: string } =
     };
   }, [isOpen, updatePosition]);
 
-  // Close on outside click
+  // Close on outside click / tap (works on both mouse & touch)
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handlePointerDown(event: Event) {
       const target = event.target as Node;
       if (
         buttonRef.current &&
@@ -154,10 +167,12 @@ export default function NotificationBell({ className }: { className?: string } =
       }
     }
     if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("mousedown", handlePointerDown);
+      document.addEventListener("touchstart", handlePointerDown, { passive: true });
     }
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
     };
   }, [isOpen]);
 
@@ -187,6 +202,7 @@ export default function NotificationBell({ className }: { className?: string } =
 
   return (
     <>
+      {/* Prominent, Modern Bell Trigger Button */}
       <button
         ref={buttonRef}
         type="button"
@@ -194,230 +210,249 @@ export default function NotificationBell({ className }: { className?: string } =
         aria-label={unreadCount > 0 ? `Notifications (${unreadCount} unread)` : "Notifications"}
         aria-expanded={isOpen}
         className={[
-          "relative flex items-center justify-center p-2 rounded-full text-foreground hover:bg-foreground/10 outline-none focus:outline-none active:outline-none focus:ring-0 cursor-pointer transition-colors",
+          "relative flex items-center justify-center size-9 sm:size-10 rounded-full text-foreground transition-all cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
           className,
         ]
           .filter(Boolean)
           .join(" ")}
       >
-        <Bell className="w-5 h-5 text-foreground" />
+        <Bell className="size-5 sm:size-5.5 text-foreground/90 group-hover:text-foreground group-hover:rotate-12 transition-transform duration-200" />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white shadow-xs ring-2 ring-background animate-in zoom-in-50 duration-200">
+          <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-black text-white shadow-sm ring-2 ring-background animate-in zoom-in-50 duration-200">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && mounted && createPortal(
-        <div
-          ref={dropdownRef}
-          role="dialog"
-          aria-label="Notification center"
-          data-lenis-prevent="true"
-          data-lenis-prevent-wheel="true"
-          data-lenis-prevent-touch="true"
-          onWheel={(e) => e.stopPropagation()}
-          style={dropdownStyle}
-          className="rounded-2xl border border-border/90 bg-card/95 backdrop-blur-2xl p-4 shadow-[0_16px_40px_rgba(0,0,0,0.18)] dark:bg-[#11091e]/95 dark:border-primary/25 dark:shadow-[0_20px_50px_rgba(0,0,0,0.65)] animate-in fade-in zoom-in-95 duration-150"
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between border-b border-border/60 pb-3">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-sm text-foreground">Notifications</h3>
-              {unreadCount > 0 ? (
-                <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-primary">
-                  {unreadCount} new
-                </span>
-              ) : (
-                <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
-                  {notifications.length}
-                </span>
-              )}
-            </div>
-
-            {/* Header Actions */}
-            <div className="flex items-center gap-2">
-              {unreadCount > 0 && (
-                <button
-                  type="button"
-                  onClick={() => markAllAsRead()}
-                  disabled={isMarkingAllRead}
-                  title="Mark all notifications as read"
-                  className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors disabled:opacity-50 px-1.5 py-0.5 rounded-md hover:bg-primary/10"
-                >
-                  {isMarkingAllRead ? (
-                    <Loader2 className="size-3 animate-spin" />
-                  ) : (
-                    <CheckCheck className="size-3.5" />
-                  )}
-                  <span>Mark read</span>
-                </button>
-              )}
-
-              {notifications.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => clearAll()}
-                  disabled={isClearingAll}
-                  title="Clear all notifications"
-                  className="flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50 px-1.5 py-0.5 rounded-md hover:bg-destructive/10"
-                >
-                  {isClearingAll ? (
-                    <Loader2 className="size-3 animate-spin text-destructive" />
-                  ) : (
-                    <Trash2 className="size-3.5" />
-                  )}
-                  <span>Clear all</span>
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Filter Pills (if notifications exist) */}
-          {notifications.length > 0 && (
-            <div className="flex items-center gap-1.5 pt-2.5 pb-1 text-xs">
-              <button
-                type="button"
-                onClick={() => setFilter("all")}
-                className={`rounded-lg px-2.5 py-1 font-medium transition-all ${
-                  filter === "all"
-                    ? "bg-primary text-white shadow-xs"
-                    : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
-                All ({notifications.length})
-              </button>
-              <button
-                type="button"
-                onClick={() => setFilter("unread")}
-                className={`rounded-lg px-2.5 py-1 font-medium transition-all ${
-                  filter === "unread"
-                    ? "bg-primary text-white shadow-xs"
-                    : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
-                Unread ({unreadCount})
-              </button>
-            </div>
-          )}
-
-          {/* Body: Scrollable notifications list */}
+        <>
+          {/* Mobile backdrop for seamless outside-tap dismiss */}
           <div
+            className="fixed inset-0 z-[99998] bg-black/25 backdrop-blur-2xs sm:hidden"
+            onClick={() => setIsOpen(false)}
+            aria-hidden="true"
+          />
+
+          <div
+            ref={dropdownRef}
+            role="dialog"
+            aria-label="Notification center"
             data-lenis-prevent="true"
             data-lenis-prevent-wheel="true"
             data-lenis-prevent-touch="true"
             onWheel={(e) => e.stopPropagation()}
-            className="mt-2.5 max-h-[360px] overflow-y-auto overscroll-contain space-y-2 pr-1.5 touch-pan-y"
-            style={{
-              scrollbarWidth: "thin",
-              overscrollBehavior: "contain",
-            }}
+            style={dropdownStyle}
+            className="rounded-2xl border border-border/90 bg-card/95 backdrop-blur-2xl p-3.5 sm:p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] dark:bg-[#11091e]/95 dark:border-primary/25 dark:shadow-[0_20px_50px_rgba(0,0,0,0.7)] animate-in fade-in zoom-in-95 duration-150"
           >
-            {isLoading ? (
-              <div className="space-y-2 py-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex gap-3 p-2.5 rounded-xl bg-muted/30 animate-pulse">
-                    <div className="size-8 rounded-lg bg-muted shrink-0" />
-                    <div className="space-y-1.5 flex-1">
-                      <div className="h-3 w-3/4 rounded bg-muted" />
-                      <div className="h-2.5 w-1/2 rounded bg-muted" />
-                    </div>
-                  </div>
-                ))}
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-border/60 pb-3">
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold text-sm text-foreground">Notifications</h3>
+                {unreadCount > 0 ? (
+                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                    {unreadCount} new
+                  </span>
+                ) : (
+                  <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                    {notifications.length}
+                  </span>
+                )}
               </div>
-            ) : isError ? (
-              <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
-                <AlertCircle className="size-8 text-destructive mb-2 opacity-80" />
-                <p className="text-xs font-medium text-foreground">Failed to load notifications</p>
+
+              {/* Header Actions */}
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                {unreadCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => markAllAsRead()}
+                    disabled={isMarkingAllRead}
+                    title="Mark all notifications as read"
+                    className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors disabled:opacity-50 px-1.5 py-0.5 rounded-md hover:bg-primary/10 cursor-pointer"
+                  >
+                    {isMarkingAllRead ? (
+                      <Loader2 className="size-3 animate-spin" />
+                    ) : (
+                      <CheckCheck className="size-3.5" />
+                    )}
+                    <span className="hidden xs:inline sm:inline">Mark read</span>
+                  </button>
+                )}
+
+                {notifications.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => clearAll()}
+                    disabled={isClearingAll}
+                    title="Clear all notifications"
+                    className="flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50 px-1.5 py-0.5 rounded-md hover:bg-destructive/10 cursor-pointer"
+                  >
+                    {isClearingAll ? (
+                      <Loader2 className="size-3 animate-spin text-destructive" />
+                    ) : (
+                      <Trash2 className="size-3.5" />
+                    )}
+                    <span className="hidden xs:inline sm:inline">Clear all</span>
+                  </button>
+                )}
+
+                {/* Mobile Close X Button */}
                 <button
                   type="button"
-                  onClick={() => refetch()}
-                  className="mt-2 text-xs text-primary font-semibold hover:underline"
+                  onClick={() => setIsOpen(false)}
+                  className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors sm:hidden cursor-pointer ml-1"
+                  aria-label="Close notifications"
                 >
-                  Try again
+                  <X className="size-4" />
                 </button>
               </div>
-            ) : filteredNotifications.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-                <div className="flex size-11 items-center justify-center rounded-2xl bg-muted/60 mb-2.5 border border-border/40 shadow-2xs">
-                  <Inbox className="size-5 opacity-60 text-muted-foreground" />
-                </div>
-                <p className="text-xs font-semibold text-foreground">
-                  {filter === "unread" ? "No unread notifications" : "All caught up!"}
-                </p>
-                <p className="text-[11px] text-muted-foreground mt-0.5 max-w-[240px]">
-                  {filter === "unread"
-                    ? "You have reviewed all your alerts."
-                    : "When you receive course, badge, or streak updates, they will show up here."}
-                </p>
-              </div>
-            ) : (
-              filteredNotifications.map((n) => (
-                <div
-                  key={n.id}
-                  onClick={() => {
-                    if (!n.isRead) {
-                      markAsRead(n.id);
-                    }
-                  }}
-                  className={`group relative flex items-start gap-3 p-2.5 rounded-xl text-left transition-all cursor-pointer border ${
-                    n.isRead
-                      ? "bg-transparent border-transparent hover:bg-muted/45"
-                      : "bg-primary/5 border-primary/20 hover:bg-primary/10"
+            </div>
+
+            {/* Filter Pills (if notifications exist) */}
+            {notifications.length > 0 && (
+              <div className="flex items-center gap-1.5 pt-2.5 pb-1 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setFilter("all")}
+                  className={`rounded-lg px-2.5 py-1 font-medium transition-all cursor-pointer ${
+                    filter === "all"
+                      ? "bg-primary text-white shadow-xs"
+                      : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
-                  {/* Category Icon */}
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-background border border-border/80 shadow-2xs mt-0.5">
-                    {getNotificationIcon(n.type)}
-                  </div>
-
-                  {/* Text Content */}
-                  <div className="flex-1 min-w-0 pr-1">
-                    <div className="flex items-center justify-between gap-1">
-                      <p
-                        className={`text-xs truncate ${
-                          n.isRead ? "font-medium text-foreground" : "font-semibold text-foreground"
-                        }`}
-                      >
-                        {n.title}
-                      </p>
-                      <span className="text-[10px] text-muted-foreground shrink-0 ml-1">
-                        {formatRelativeTime(n.createdAt)}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
-                      {n.message}
-                    </p>
-                  </div>
-
-                  {/* Actions & Read Status */}
-                  <div className="flex items-center gap-1.5 shrink-0 self-center">
-                    {/* Delete single notification button on hover */}
-                    <button
-                      type="button"
-                      title="Remove notification"
-                      aria-label="Remove notification"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteNotification(n.id);
-                      }}
-                      className="opacity-0 group-hover:opacity-100 p-1 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
-                    >
-                      <Trash2 className="size-3.5" />
-                    </button>
-
-                    {!n.isRead && (
-                      <span
-                        className="size-2 rounded-full bg-primary shrink-0"
-                        aria-label="Unread"
-                      />
-                    )}
-                  </div>
-                </div>
-              ))
+                  All ({notifications.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFilter("unread")}
+                  className={`rounded-lg px-2.5 py-1 font-medium transition-all cursor-pointer ${
+                    filter === "unread"
+                      ? "bg-primary text-white shadow-xs"
+                      : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  Unread ({unreadCount})
+                </button>
+              </div>
             )}
+
+            {/* Body: Scrollable notifications list (flex-1 ensures it fits any mobile viewport) */}
+            <div
+              data-lenis-prevent="true"
+              data-lenis-prevent-wheel="true"
+              data-lenis-prevent-touch="true"
+              onWheel={(e) => e.stopPropagation()}
+              className="mt-2.5 flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-2 pr-1.5 touch-pan-y"
+              style={{
+                scrollbarWidth: "thin",
+                overscrollBehavior: "contain",
+              }}
+            >
+              {isLoading ? (
+                <div className="space-y-2 py-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex gap-3 p-2.5 rounded-xl bg-muted/30 animate-pulse">
+                      <div className="size-8 rounded-lg bg-muted shrink-0" />
+                      <div className="space-y-1.5 flex-1">
+                        <div className="h-3 w-3/4 rounded bg-muted" />
+                        <div className="h-2.5 w-1/2 rounded bg-muted" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : isError ? (
+                <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
+                  <AlertCircle className="size-8 text-destructive mb-2 opacity-80" />
+                  <p className="text-xs font-medium text-foreground">Failed to load notifications</p>
+                  <button
+                    type="button"
+                    onClick={() => refetch()}
+                    className="mt-2 text-xs text-primary font-semibold hover:underline cursor-pointer"
+                  >
+                    Try again
+                  </button>
+                </div>
+              ) : filteredNotifications.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
+                  <div className="flex size-11 items-center justify-center rounded-2xl bg-muted/60 mb-2.5 border border-border/40 shadow-2xs">
+                    <Inbox className="size-5 opacity-60 text-muted-foreground" />
+                  </div>
+                  <p className="text-xs font-semibold text-foreground">
+                    {filter === "unread" ? "No unread notifications" : "All caught up!"}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5 max-w-[240px]">
+                    {filter === "unread"
+                      ? "You have reviewed all your alerts."
+                      : "When you receive course, badge, or streak updates, they will show up here."}
+                  </p>
+                </div>
+              ) : (
+                filteredNotifications.map((n) => (
+                  <div
+                    key={n.id}
+                    onClick={() => {
+                      if (!n.isRead) {
+                        markAsRead(n.id);
+                      }
+                    }}
+                    className={`group relative flex items-start gap-2.5 sm:gap-3 p-2.5 rounded-xl text-left transition-all cursor-pointer border ${
+                      n.isRead
+                        ? "bg-transparent border-transparent hover:bg-muted/45"
+                        : "bg-primary/5 border-primary/20 hover:bg-primary/10"
+                    }`}
+                  >
+                    {/* Category Icon */}
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-background border border-border/80 shadow-2xs mt-0.5">
+                      {getNotificationIcon(n.type)}
+                    </div>
+
+                    {/* Text Content */}
+                    <div className="flex-1 min-w-0 pr-1">
+                      <div className="flex items-center justify-between gap-1">
+                        <p
+                          className={`text-xs truncate ${
+                            n.isRead ? "font-medium text-foreground" : "font-semibold text-foreground"
+                          }`}
+                        >
+                          {n.title}
+                        </p>
+                        <span className="text-[10px] text-muted-foreground shrink-0 ml-1">
+                          {formatRelativeTime(n.createdAt)}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                        {n.message}
+                      </p>
+                    </div>
+
+                    {/* Actions & Read Status */}
+                    <div className="flex items-center gap-1.5 shrink-0 self-center">
+                      {/* Delete notification button */}
+                      <button
+                        type="button"
+                        title="Remove notification"
+                        aria-label="Remove notification"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteNotification(n.id);
+                        }}
+                        className="opacity-70 sm:opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </button>
+
+                      {!n.isRead && (
+                        <span
+                          className="size-2 rounded-full bg-primary shrink-0"
+                          aria-label="Unread"
+                        />
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        </div>,
+        </>,
         document.body
       )}
     </>

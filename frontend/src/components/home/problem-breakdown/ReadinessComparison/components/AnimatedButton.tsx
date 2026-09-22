@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { GoArrowUpRight } from "react-icons/go";
 
 interface AnimatedButtonProps {
-  text: string;
+  text: ReactNode;
   href?: string;
   onClick?: () => void;
   icon?: ReactNode;
@@ -112,7 +112,7 @@ export default function AnimatedButton({
   }
 
   return (
-    <button type="button" onClick={onClick} className={classes}>
+    <button type="button" onClick={onClick} className={classes} suppressHydrationWarning>
       {content}
     </button>
   );

@@ -33,18 +33,36 @@ export interface AiSandboxTelemetryResult {
   };
 }
 
-const groq = env.GROQ_API_KEY ? new Groq({ apiKey: env.GROQ_API_KEY }) : null;
-const groqSecondary = env.GROQ_API_KEY_SECONDARY
-  ? new Groq({ apiKey: env.GROQ_API_KEY_SECONDARY })
-  : null;
+const groqKeys = [
+  env.GROQ_API_KEY,
+  env.GROQ_API_KEY_SECONDARY,
+  env.GROQ_API_KEY_3 || (process.env.GROQ_API_KEY_TERTIARY || ""),
+  env.GROQ_API_KEY_4 || (process.env.GROQ_API_KEY_QUATERNARY || ""),
+].filter((k): k is string => Boolean(k && k.trim()));
+
+const groqClients = groqKeys.map((apiKey) => new Groq({ apiKey }));
 
 export const AVAILABLE_MODELS = [
   {
-    id: "llama-3.1-8b-instant",
-    name: "Llama 3.1 8B Instant",
+    id: "qwen/qwen3.8-27b",
+    name: "Qwen 3.8 27B",
+    provider: "Groq",
+    description: "High-capacity multilingual and coding capability model.",
+    speed: "Fast (450 T/s)",
+  },
+  {
+    id: "groq/compound-mini",
+    name: "Groq Compound Mini",
     provider: "Groq",
     description: "Ultra-low latency, highly responsive general intelligence model.",
     speed: "Instant (750 T/s)",
+  },
+  {
+    id: "groq/compound",
+    name: "Groq Compound Reasoning",
+    provider: "Groq",
+    description: "Deep reasoning model for architecture and curriculum planning.",
+    speed: "Fast (320 T/s)",
   },
   {
     id: "openai/gpt-oss-120b",
@@ -54,37 +72,16 @@ export const AVAILABLE_MODELS = [
     speed: "Ultra-Fast (320 T/s)",
   },
   {
-    id: "qwen/qwen3.8-27b",
-    name: "Qwen 3.8 27B",
-    provider: "Groq",
-    description: "High-capacity multilingual and coding capability model.",
-    speed: "Fast (450 T/s)",
-  },
-  {
     id: "openai/gpt-oss-20b",
     name: "GPT OSS 20B",
     provider: "Groq",
     description: "Balanced reasoning model optimized for diagnostic rubrics.",
     speed: "Fast (550 T/s)",
   },
-  {
-    id: "mixtral-8x7b-32768",
-    name: "Mixtral 8x7B MoE",
-    provider: "Groq",
-    description: "Mixture-of-Experts with expanded 32k context window.",
-    speed: "Fast (450 T/s)",
-  },
-  {
-    id: "gemma2-9b-it",
-    name: "Gemma 2 9B IT",
-    provider: "Groq",
-    description: "Google Gemma instruction-tuned model.",
-    speed: "Very Fast (500 T/s)",
-  },
 ];
 
 export async function getModelList() {
-  const client = groq || groqSecondary;
+  const client = groqClients[0];
   if (!client) return AVAILABLE_MODELS;
 
   try {
@@ -104,15 +101,13 @@ export async function testAiPrompt(input: AiSandboxPromptInput) {
   const {
     prompt,
     systemPrompt = "You are an AI Curriculum Architect and Career Mentor for the AI Pather platform. Provide structured, concise, and expert guidance.",
-    model = "llama-3.1-8b-instant",
+    model = "qwen/qwen3.8-27b",
     temperature = 0.7,
     maxTokens = 1000,
     adminId,
   } = input;
 
-  const client = groq || groqSecondary;
-
-  if (!client) {
+  if (groqClients.length === 0) {
     const startTime = Date.now();
     await new Promise((r) => setTimeout(r, 450));
     const latency = Date.now() - startTime;
@@ -146,26 +141,27 @@ export async function testAiPrompt(input: AiSandboxPromptInput) {
   const startTime = Date.now();
   const modelsToTry = [
     model,
-    "llama-3.1-8b-instant",
-    "openai/gpt-oss-120b",
     "qwen/qwen3.8-27b",
+    "groq/compound-mini",
+    "groq/compound",
+    "openai/gpt-oss-120b",
     "openai/gpt-oss-20b",
-    "mixtral-8x7b-32768",
   ].filter((v, i, a) => Boolean(v) && a.indexOf(v) === i);
 
   let lastError: Error | null = null;
 
-  for (const activeModel of modelsToTry) {
-    try {
-      const completion = await client.chat.completions.create({
-        model: activeModel,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: prompt },
-        ],
-        temperature: Number(temperature),
-        max_tokens: Number(maxTokens),
-      });
+  for (const client of groqClients) {
+    for (const activeModel of modelsToTry) {
+      try {
+        const completion = await client.chat.completions.create({
+          model: activeModel,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: prompt },
+          ],
+          temperature: Number(temperature),
+          max_tokens: Number(maxTokens),
+        });
 
       const latency = Date.now() - startTime;
       const reply = completion.choices[0]?.message?.content || "No response generated.";
@@ -206,7 +202,7 @@ export async function testAiPrompt(input: AiSandboxPromptInput) {
     } catch (err: any) {
       lastError = err;
       console.warn(`[AI Sandbox] Model ${activeModel} failed: ${err.message}. Trying next available fallback...`);
-      // If error is not model_not_found or 404, we still try next model
+      }
     }
   }
 
