@@ -384,7 +384,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
       <button
         type="button"
         onClick={() => setMobileOpen((prev) => !prev)}
-        className="flex size-10 md:size-11 shrink-0 items-center justify-center rounded-full bg-brand text-white  transition-all duration-700 hover:opacity-90 active:scale-95 focus:outline-none relative"
+        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-white transition-all duration-300 hover:opacity-90 active:scale-95 focus:outline-none relative"
         aria-label="Toggle navigation menu"
         aria-expanded={mobileOpen}
       >
@@ -409,17 +409,17 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             data-lenis-prevent="true"
             data-lenis-prevent-wheel="true"
-            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] max-w-[360px] rounded-lg border border-border/70 dark:border-white/10 bg-white/95 dark:bg-[#1a1128]/95 p-5 shadow-2xl backdrop-blur-2xl"
+            className="absolute right-0 top-[calc(100%+14px)] z-50 w-[88vw] max-w-[360px] rounded-2xl border border-border/80 dark:border-primary/25 bg-card/90 dark:bg-[#191029]/95 p-3.5 shadow-2xl backdrop-blur-2xl"
           >
             <div
               ref={scrollContainerRef}
               data-lenis-prevent="true"
               data-lenis-prevent-wheel="true"
-              className="flex flex-col gap-4 max-h-[76vh] overflow-y-auto overscroll-contain pr-1"
+              className="flex flex-col gap-4 max-h-[76vh] overflow-y-auto overscroll-contain"
             >
               {/* User Profile Card (when authenticated) */}
               {isAuthenticated && (
-                <div className="flex items-center justify-between rounded-2xl bg-muted/60 dark:bg-white/5 border border-border/60 dark:border-white/10 p-3">
+                <div className="flex items-center justify-between rounded-2xl bg-muted/60 dark:bg-white/5 border border-border/60 dark:border-white/10 p-3 mt-1">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-tr from-primary to-secondary text-sm font-bold text-white shadow-xs">
                       {user.image ? (
@@ -445,14 +445,12 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <span
-                      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider border ${planBadge.style}`}
-                    >
-                      <PlanIcon className="size-2.5" />
-                      {planBadge.label}
-                    </span>
-                  </div>
+                  <span
+                    className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider border ${planBadge.style}`}
+                  >
+                    <PlanIcon className="size-2.5" />
+                    {planBadge.label}
+                  </span>
                 </div>
               )}
 
@@ -518,9 +516,9 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                 </div>
               )}
 
-              {/* Navigation Links */}
+              {/* Main Navigation Links */}
               <div className="flex flex-col gap-1">
-                <span className="px-2 text-[11px] font-mono font-semibold tracking-[0.16em] text-muted-foreground uppercase">
+                <span className="px-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
                   Navigation
                 </span>
 
@@ -538,13 +536,13 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                               prev === link.label ? null : link.label,
                             )
                           }
-                          className="flex items-center justify-between rounded-2xl px-0 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-muted/60 dark:hover:bg-white/5"
+                          className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-poppins font-medium text-foreground transition-all hover:bg-card-soft dark:hover:bg-white/5"
                         >
-                          <div className="flex items-center gap-3.5">
-                            <span className="flex size-8 items-center justify-center rounded-xl bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300 shrink-0">
+                          <div className="flex items-center gap-2.5">
+                            <span className="flex size-7 items-center justify-center rounded-lg bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300">
                               {getNavLinkIcon(link.label)}
                             </span>
-                            <span className="text-[14px] font-medium">{link.label}</span>
+                            <span>{link.label}</span>
                           </div>
                           <FiChevronDown
                             className={`size-4 text-muted-foreground transition-transform duration-200 ${
@@ -564,7 +562,6 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                             >
                               <div className="flex flex-col gap-1 border-l-2 border-primary/25 my-1 pl-2.5">
                                 {link.children!.map((child) => (
-                                  
                                   <Link
                                     key={child.label}
                                     href={child.href}
@@ -611,7 +608,6 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
                       }`}>
                         {getNavLinkIcon(link.label)}
                       </span>
-
                       <span className="text-[14px] font-medium">{link.label}</span>
                     </Link>
                   );

@@ -268,33 +268,35 @@ export default function MobileNav() {
         {/* Header Bar (Always visible) */}
         <div className="flex items-center justify-between w-full px-2 py-1.5">
           {/* Logo Section */}
-          <div className="flex items-center gap-2 pl-0">
+          <div className="flex items-center pl-0">
             <Logo />
-            <CrownButton />
           </div>
 
-          {/* Menu Toggle Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center justify-center size-9 bg-brand text-white rounded-full transition-all focus:outline-none relative"
-            aria-label="Toggle menu"
-          >
-            <div
-              className={`w-3.5 h-0.5 bg-white rounded-full transition-transform duration-300 absolute ${
-                isOpen ? "rotate-45" : "-translate-y-1"
-              }`}
-            />
-            <div
-              className={`w-3.5 h-0.5 bg-white rounded-full transition-opacity duration-300 absolute ${
-                isOpen ? "opacity-0" : "opacity-100"
-              }`}
-            />
-            <div
-              className={`w-3.5 h-0.5 bg-white rounded-full transition-transform duration-300 absolute ${
-                isOpen ? "-rotate-45" : "translate-y-1"
-              }`}
-            />
-          </button>
+          {/* Right Action: Crown next to Hamburger Menu Toggle */}
+          <div className="flex items-center gap-2">
+            <CrownButton />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="flex items-center justify-center size-9 bg-brand text-white rounded-full transition-all hover:opacity-90 active:scale-95 focus:outline-none relative"
+              aria-label="Toggle menu"
+            >
+              <div
+                className={`w-3.5 h-0.5 bg-white rounded-full transition-transform duration-300 absolute ${
+                  isOpen ? "rotate-45" : "-translate-y-1"
+                }`}
+              />
+              <div
+                className={`w-3.5 h-0.5 bg-white rounded-full transition-opacity duration-300 absolute ${
+                  isOpen ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <div
+                className={`w-3.5 h-0.5 bg-white rounded-full transition-transform duration-300 absolute ${
+                  isOpen ? "-rotate-45" : "translate-y-1"
+                }`}
+              />
+            </button>
+          </div>
         </div>
 
         {/* Dropdown Content */}

@@ -289,9 +289,9 @@ const sections: Section[] = [
           </div>
           <a
             href="mailto:privacy@aipather.com"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
           >
-            Send Inquiry <ExternalLink className="w-3 h-3" />
+            Send Inquiry <ExternalLink className="w-3 h-3 text-white" />
           </a>
         </div>
       </div>

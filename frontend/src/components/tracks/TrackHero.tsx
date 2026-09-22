@@ -88,8 +88,8 @@ export default function TrackHero({ track }: { track: Track }) {
               {/* Icon + title row */}
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3.5">
-                  <span className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-primary to-secondary text-white">
-                    <Image src={brandLogo} alt="Brand-logo" className="ml-1 w-4 h-4 md:w-5 md:h-5 brightness-0 invert" height={20} width={20}/>
+                  <span className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-primary to-secondary text-white shrink-0 shadow-xs">
+                    <Image src={brandLogo} alt="Brand-logo" className="w-7 h-7 md:w-8 md:h-8 brightness-0 invert object-contain" height={32} width={32}/>
                   </span>
                   <div>
                     <h2 className="font-poppins text-lg font-bold text-foreground">
@@ -162,7 +162,7 @@ export default function TrackHero({ track }: { track: Track }) {
               <Button
                 text={track.ctaButton}
                 href="/dashboard/learner"
-                className="mt-6 h-11 self-start"
+                className="mt-6 h-11 self-center sm:self-start"
               />
             </div>
           </motion.div>

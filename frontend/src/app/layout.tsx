@@ -13,24 +13,24 @@ const hindSiliguri = Hind_Siliguri({
 });
 
 export const metadata: import("next").Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://aipather.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://aipather.vercel.app"),
   title: {
-    default: "AI Pather — AI-Powered Tech Career Learning Platform",
+    default: "AI Pather — AI-Powered Career Learning Platform",
     template: "%s | AI Pather",
   },
-  description: "Accelerate your tech career with AI Pather. Personalized learning roadmaps, AI-driven skill assessments, real-world portfolio proof, and mock interviews.",
+  description: "Accelerate your career with AI Pather. Personalized learning roadmaps, AI-driven skill assessments, real-world portfolio proof, and mock interviews.",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "/",
     siteName: "AI Pather",
-    title: "AI Pather — AI-Powered Tech Career Learning Platform",
-    description: "Accelerate your tech career with AI Pather. Personalized learning roadmaps, AI-driven skill assessments, real-world portfolio proof, and mock interviews.",
+    title: "AI Pather — AI-Powered Career Learning Platform",
+    description: "Accelerate your  career with AI Pather. Personalized learning roadmaps, AI-driven skill assessments, real-world portfolio proof, and mock interviews.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Pather — AI-Powered Tech Career Learning Platform",
-    description: "Accelerate your tech career with AI Pather. Personalized learning roadmaps, AI-driven skill assessments, real-world portfolio proof, and mock interviews.",
+    title: "AI Pather — AI-Powered Career Learning Platform",
+    description: "Accelerate your career with AI Pather. Personalized learning roadmaps, AI-driven skill assessments, real-world portfolio proof, and mock interviews.",
   },
   icons: {
     icon: [
