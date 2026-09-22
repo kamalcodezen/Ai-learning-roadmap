@@ -52,7 +52,7 @@ export default function DiagnoseCard() {
 
       {/* Bottom Context Text */}
       <p className="text-xs md:text-sm text-muted-foreground text-center mt-4 px-2 leading-relaxed">
-        Assess your current skills against the requirements of your target career.
+        Assess your current skills against the requirements of your target career
       </p>
     </div>
   );

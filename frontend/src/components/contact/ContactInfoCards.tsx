@@ -18,7 +18,7 @@ const channels = [
     badge: "Support & Diagnostics",
     title: "Learner & Tech Support",
     description:
-      "Get help with roadmap generation, milestone diagnostics, proof graph verification, or account settings.",
+      "Get help with roadmap generation, milestone diagnostics, proof graph verification, or account settings",
     email: "support@aipather.com",
     actionType: "email",
   },
@@ -27,7 +27,7 @@ const channels = [
     badge: "Enterprise & Scale",
     title: "Enterprise & Partnerships",
     description:
-      "Discuss custom capability benchmarks, cohort tracking for engineering teams, university access, and licensing.",
+      "Discuss custom capability benchmarks, cohort tracking for engineering teams, university access, and licensing",
     email: "enterprise@aipather.com",
     actionType: "email",
   },
@@ -36,7 +36,7 @@ const channels = [
     badge: "Collaborate & Grow",
     title: "Community & Builders",
     description:
-      "Join the AI Pather learner ecosystem, share verified project proofs, discuss roadmap trends, and give live feedback.",
+      "Join the AI Pather learner ecosystem, share verified project proofs, discuss roadmap trends, and give live feedback",
     email: "community@aipather.com",
     actionType: "email",
   },

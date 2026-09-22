@@ -102,12 +102,13 @@ export default function AdminSubscriptionsView() {
   </h1>
 
   <p className="section-subtitle !mx-0 !text-left mt-1  inline">
-    Supervise recurring monetization tiers, tier entitlements, subscriber lifetime value, and user quotas.
+   Supervise recurring monetization tiers, tier entitlements, and subscriber lifetime value and
+user quotas
   </p>
 </div>
 
       {/* KPI Cards */}
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {kpis.map((kpi) => {
           const Icon = kpi.icon;
           return (

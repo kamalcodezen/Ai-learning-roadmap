@@ -8,8 +8,7 @@ export default function TextHeader() {
               </span>
               </h2>
       <p className="section-subtitle max-w-max mt-1">
-        Master your career path with a dynamic AI-driven learning and
-        verification framework.
+        Master your career path with a dynamic AI-driven learning and verification framework
       </p>
     </div>
   );

@@ -60,7 +60,7 @@ export default function RoadmapSimulatorCard() {
     } else if (weeklyHours >= 14) {
       paceTitle = "Accelerated Sprint";
       paceBadge = "⚡ Accelerated Sprint";
-      paceDescription = "Optimal balance between speed and concept retention for rapid career readiness.";
+      paceDescription = "Optimal balance between speed and concept retention for rapid career readiness";
     }
 
     const velocityIndex = (weeklyHours / 10).toFixed(1);

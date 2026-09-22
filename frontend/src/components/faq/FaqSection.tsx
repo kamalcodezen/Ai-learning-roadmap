@@ -30,7 +30,7 @@ export default function FaqSection({
       <span className="text-primary">Know About AI Pather</span>
     </>
   ),
-  subtitle = "Quick, honest answers to the questions we hear most often. Can&apos;t find what you&apos;re looking for? Reach out — we reply fast.",
+  subtitle = "Quick, honest answers to the questions we hear most often. Can't find what you're looking for? Reach out — we reply fast",
   showCta = true,
   headingLevel: Heading = "h2",
   className = "",
@@ -127,7 +127,7 @@ export default function FaqSection({
 
         {/* Footer CTA */}
         {showCta && (
-          <div className="mx-auto mt-10 max-w-3xl">
+          <div className="mx-auto mt-10 max-w-3xl mb-10">
             <a
               href="/contact"
               className="group flex items-center justify-center gap-2 rounded-2xl border border-primary/25 bg-primary/5 px-6 py-4 font-poppins text-sm font-bold text-primary transition-all hover:border-primary/50 hover:bg-primary/10"

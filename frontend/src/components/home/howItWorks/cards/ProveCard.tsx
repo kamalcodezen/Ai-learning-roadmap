@@ -39,7 +39,7 @@ export default function ProveCard() {
       </BorderGlow>
 
       <p className="text-small text-muted-foreground text-center mt-4 px-2 leading-relaxed">
-        Turn what you learn into real projects and measurable skill evidence.
+        Turn what you learn into real projects and measurable skill evidence
       </p>
     </div>
   );

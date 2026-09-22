@@ -40,7 +40,7 @@ export default function UnblockCard() {
       </BorderGlow>
 
       <p className="text-small text-muted-foreground text-center mt-4 px-2 leading-relaxed">
-        Identify the missing knowledge and prerequisites standing in your way.
+        Identify the missing knowledge and prerequisites standing in your way
       </p>
     </div>
   );

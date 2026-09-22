@@ -16,7 +16,7 @@ export default function Logo({
     >
       {/* Light version (dark logo) */}
       <Image
-        src="/brand/AI-Pather-blue.png"
+        src="/brand/AI-Pather-purple.png"
         alt="AI Pather"
         width={160}
         height={30}

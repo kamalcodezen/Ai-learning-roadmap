@@ -310,7 +310,7 @@ export default function DashboardStats() {
           <span className="text-xs text-muted-foreground">Instant Control Hub</span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2.5">
           {quickOps.map((op) => {
             const Icon = op.icon;
             return (
@@ -337,14 +337,14 @@ export default function DashboardStats() {
 
       {/* ============================= GEM ECONOMY SPOTLIGHT BANNER ============================= */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xl border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 via-purple-500/5 to-transparent p-4 shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 shadow-inner">
+        <div className="flex items-start sm:items-center gap-3 min-w-0">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 shadow-inner mt-0.5 sm:mt-0">
             <Gem className="h-5 w-5" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <p className="font-bold text-foreground text-sm">Gem Economy & Streaks Manager</p>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400 whitespace-nowrap">
                 {(overview.totalGemsInCirculation ?? 0).toLocaleString()} 💎 in circulation
               </span>
             </div>
@@ -364,8 +364,8 @@ export default function DashboardStats() {
 
       {/* ============================= CORE TELEMETRY & ECOSYSTEM METRICS ============================= */}
       <section>
-        <div className="mb-3.5 flex items-center justify-between">
-          <div>
+        <div className="mb-3.5 flex items-start sm:items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
             <h2 className="text-lg font-bold tracking-tight text-foreground">
               Core Platform Telemetry
             </h2>
@@ -373,12 +373,12 @@ export default function DashboardStats() {
               Multi-dimensional operational telemetry & learner throughput
             </p>
           </div>
-          <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+          <span className="shrink-0 whitespace-nowrap rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
             9 Active Metrics
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 dashboard-card-gap">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 dashboard-card-gap">
           {kpis.map((kpi) => {
             const Icon = kpi.icon;
             return (
@@ -417,7 +417,7 @@ export default function DashboardStats() {
       </section>
 
       {/* ============================= HEALTH + RECENT USERS ============================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 dashboard-card-gap">
+      <div className="grid grid-cols-1 xl:grid-cols-2 dashboard-card-gap">
         {/* System Health */}
         <section className="flex flex-col">
           <div className="mb-3 flex items-center justify-between">
@@ -534,8 +534,8 @@ export default function DashboardStats() {
 
       {/* ============================= RECENT ACTIVITY ============================= */}
       <section>
-        <div className="mb-3.5 flex items-center justify-between">
-          <div>
+        <div className="mb-3.5 flex items-start sm:items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
             <h2 className="text-lg font-bold tracking-tight text-foreground">
               Governance Audit Stream
             </h2>
@@ -545,7 +545,7 @@ export default function DashboardStats() {
           </div>
           <Link
             href="/dashboard/admin/activity"
-            className="flex items-center gap-1 text-xs font-semibold text-primary hover:text-secondary transition-colors"
+            className="flex items-center gap-1 text-xs font-semibold text-primary hover:text-secondary transition-colors shrink-0 whitespace-nowrap mt-0.5 sm:mt-0"
           >
             View Complete Stream <ArrowRight className="h-3.5 w-3.5" />
           </Link>
@@ -557,36 +557,68 @@ export default function DashboardStats() {
               <div className="p-6 text-center text-muted-foreground text-sm">No recent activity logged.</div>
             ) : (
               <div className="divide-y divide-border/50">
-                {recentActivity.map((a) => (
-                  <div key={a.id} className="flex items-center justify-between gap-4 p-3.5 hover:bg-muted/40 transition-colors">
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                        <Activity className="h-4 w-4" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-xs text-foreground uppercase tracking-wide">
-                            {a.type.replace(/_/g, " ")}
-                          </span>
-                          <span className="text-[10px] rounded-full bg-muted px-1.5 py-0.5 text-muted-foreground font-mono">
-                            {a.user.email}
-                          </span>
+                {recentActivity.map((a) => {
+                  const formattedDate = new Date(a.createdAt).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
+
+                  return (
+                    <div key={a.id} className="p-3 sm:p-3.5 hover:bg-muted/40 transition-colors">
+                      {/* Mobile Layout (< sm) */}
+                      <div className="flex sm:hidden items-start gap-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary mt-0.5">
+                          <Activity className="h-4 w-4" />
                         </div>
-                        <p className="truncate text-xs text-muted-foreground mt-0.5">
-                          {a.description || `Action executed by ${a.user.name}`}
-                        </p>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-start justify-between gap-2">
+                            <span className="font-bold text-xs text-foreground uppercase tracking-wide truncate">
+                              {a.type.replace(/_/g, " ")}
+                            </span>
+                            <span className="shrink-0 text-[10px] font-medium text-muted-foreground whitespace-nowrap">
+                              {formattedDate}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <span className="text-[10px] rounded-md bg-muted px-1.5 py-0.5 text-muted-foreground font-mono truncate max-w-[220px]">
+                              {a.user.email}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
+                            {a.description || `Action executed by ${a.user.name}`}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Desktop / Tablet Layout (sm+) */}
+                      <div className="hidden sm:flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                            <Activity className="h-4 w-4" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-xs text-foreground uppercase tracking-wide">
+                                {a.type.replace(/_/g, " ")}
+                              </span>
+                              <span className="text-[10px] rounded-full bg-muted px-1.5 py-0.5 text-muted-foreground font-mono">
+                                {a.user.email}
+                              </span>
+                            </div>
+                            <p className="truncate text-xs text-muted-foreground mt-0.5">
+                              {a.description || `Action executed by ${a.user.name}`}
+                            </p>
+                          </div>
+                        </div>
+                        <span className="shrink-0 text-[11px] font-medium text-muted-foreground whitespace-nowrap">
+                          {formattedDate}
+                        </span>
                       </div>
                     </div>
-                    <span className="shrink-0 text-[11px] font-medium text-muted-foreground whitespace-nowrap">
-                      {new Date(a.createdAt).toLocaleDateString(undefined, {
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>

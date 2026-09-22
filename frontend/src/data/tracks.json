@@ -6,8 +6,8 @@
       "category": "AI & Data",
       "icon": "Bot",
       "badge": "Trending Now",
-      "tagline": "Design, build, and ship products powered by LLMs, agents, and intelligent systems.",
-      "overview": "AI Engineers are the people turning raw models into products people actually use — RAG systems, autonomous agents, and AI features inside existing apps. It is the single fastest-growing job title in the United States, topping LinkedIn's Jobs on the Rise list two years running, and one of the few roles where demand is growing far faster than supply.",
+      "tagline": "Design, build, and ship products powered by LLMs, agents, and intelligent systems",
+      "overview": "AI Engineers are the people turning raw models into products people actually use — RAG systems, autonomous agents, and AI features inside existing apps. It is the single fastest-growing job title in the United States, topping LinkedIn's Jobs on the Rise list two years running, and one of the few roles where demand is growing far faster than supply",
       "stats": {
         "activePostings": 21000,
         "postingsYoY": 143,
@@ -59,19 +59,19 @@
       "helpSteps": [
         {
           "title": "Diagnose your AI skill baseline",
-          "desc": "Take a diagnostic built for AI Engineers. AI evaluates your Python, ML, and prompt-engineering level and tells you exactly how far you are from the role."
+          "desc": "Take a diagnostic built for AI Engineers. AI evaluates your Python, ML, and prompt-engineering level and tells you exactly how far you are from the role"
         },
         {
           "title": "Walk an adaptive AI Engineer roadmap",
-          "desc": "Get a personalized learning path covering LLM architecture, RAG, agents, and deployment — every milestone links to curated resources and a real project."
+          "desc": "Get a personalized learning path covering LLM architecture, RAG, agents, and deployment — every milestone links to curated resources and a real project"
         },
         {
           "title": "Prove it with projects & interviews",
-          "desc": "Build agents and RAG apps in a sandbox, import them as GitHub proof, and face AI mock interviews on system design and model selection."
+          "desc": "Build agents and RAG apps in a sandbox, import them as GitHub proof, and face AI mock interviews on system design and model selection"
         },
         {
           "title": "Become the hire AI companies want",
-          "desc": "Polish an ATS-ready AI Engineer resume, check your career alignment, and get an application-readiness score before you apply."
+          "desc": "Polish an ATS-ready AI Engineer resume, check your career alignment, and get an application-readiness score before you apply"
         }
       ],
       "ctaHeadline": "The market is hungry for AI Engineers. Start becoming one today.",
@@ -83,8 +83,8 @@
       "category": "AI & Data",
       "icon": "BrainCircuit",
       "badge": "High Demand",
-      "tagline": "Build, train, evaluate, and deploy machine learning systems at production scale.",
-      "overview": "Machine Learning Engineers are the most common AI title in Europe and one of the largest AI hiring categories in the US, with hundreds of new postings every month. The role sits at the intersection of data, models, and infrastructure — if you like productionizing models that reliably work in the real world, this track is where the career runway is longest.",
+      "tagline": "Build, train, evaluate, and deploy machine learning systems at production scale",
+      "overview": "Machine Learning Engineers are the most common AI title in Europe and one of the largest AI hiring categories in the US, with hundreds of new postings every month. The role sits at the intersection of data, models, and infrastructure — if you like productionizing models that reliably work in the real world, this track is where the career runway is longest",
       "stats": {
         "activePostings": 4800,
         "postingsYoY": 26,
@@ -136,22 +136,22 @@
       "helpSteps": [
         {
           "title": "Diagnose your ML foundation",
-          "desc": "AI scores your math, Python, and modeling fundamentals so you know whether to start with linear regression or jump straight to transformers."
+          "desc": "AI scores your math, Python, and modeling fundamentals so you know whether to start with linear regression or jump straight to transformers"
         },
         {
           "title": "Follow a production-ML roadmap",
-          "desc": "Your learning path covers training, evaluation, feature pipelines, and deployment — with hands-on projects at every milestone."
+          "desc": "Your learning path covers training, evaluation, feature pipelines, and deployment — with hands-on projects at every milestone"
         },
         {
           "title": "Deploy, then prove it",
-          "desc": "Ship models to endpoints, import the repos as proof, and get grade-level feedback from AI on your MLOps decisions."
+          "desc": "Ship models to endpoints, import the repos as proof, and get grade-level feedback from AI on your MLOps decisions"
         },
         {
           "title": "Land the ML role",
-          "desc": "Build an ATS-ready MLOps resume, verify your skill graph, and test your application readiness before the interviews start."
+          "desc": "Build an ATS-ready MLOps resume, verify your skill graph, and test your application readiness before the interviews start"
         }
       ],
-      "ctaHeadline": "ML Engineers build the models that power the future. Start building your career.",
+      "ctaHeadline": "ML Engineers build the models that power the future. Start building your career",
       "ctaButton": "Become a Machine Learner"
     },
     {
@@ -160,8 +160,8 @@
       "category": "AI & Data",
       "icon": "BarChart3",
       "badge": "Fastest Growing",
-      "tagline": "Use statistics, Python, machine learning, and experimentation to solve real business problems.",
-      "overview": "The World Economic Forum projects data science to be one of the fastest-growing jobs of the decade, with demand expected to grow over 100% by 2030. Data Scientists are moving beyond reports and into ML and LLM work — the role is being redefined to sit closer to product decisions than ever before.",
+      "tagline": "Use statistics, Python, machine learning, and experimentation to solve real business problems",
+      "overview": "The World Economic Forum projects data science to be one of the fastest-growing jobs of the decade, with demand expected to grow over 100% by 2030. Data Scientists are moving beyond reports and into ML and LLM work — the role is being redefined to sit closer to product decisions than ever before",
       "stats": {
         "activePostings": 11400,
         "postingsYoY": 24,
@@ -213,22 +213,22 @@
       "helpSteps": [
         {
           "title": "Diagnose your data skills",
-          "desc": "AI benchmarks your statistics, SQL, and Python against what data roles actually require, so you never waste time on the wrong tools."
+          "desc": "AI benchmarks your statistics, SQL, and Python against what data roles actually require, so you never waste time on the wrong tools"
         },
         {
           "title": "Follow a data-science roadmap",
-          "desc": "Your adaptive path moves from analytics to experimentation to ML — each milestone unlocked with real datasets and delivered projects."
+          "desc": "Your adaptive path moves from analytics to experimentation to ML — each milestone unlocked with real datasets and delivered projects"
         },
         {
           "title": "Turn insight into proof",
-          "desc": "Publish analyses, A/B experiment write-ups, and models as verified portfolio proof AI can grade against data-science hiring bars."
+          "desc": "Publish analyses, A/B experiment write-ups, and models as verified portfolio proof AI can grade against data-science hiring bars"
         },
         {
           "title": "Get decision-table ready",
-          "desc": "Align your profile to the role, get an application-readiness score, and practice presenting findings like you would in a real case interview."
+          "desc": "Align your profile to the role, get an application-readiness score, and practice presenting findings like you would in a real case interview"
         }
       ],
-      "ctaHeadline": "The data-driven decade has just begun. Start becoming the analyst it needs.",
+      "ctaHeadline": "The data-driven decade has just begun. Start becoming the analyst it needs",
       "ctaButton": "Become a Data Scientist"
     },
     {
@@ -237,8 +237,8 @@
       "category": "Software Engineering",
       "icon": "Layers",
       "badge": "Most Versatile",
-      "tagline": "Build complete products across frontend, backend, and deployment.",
-      "overview": "Full Stack Developers remain the most consistently requested engineering role in the market, and in 2026 the most in-demand variant combines it with AI: companies are paying a premium for engineers who can wire LLMs into a shipped product end to end. It is the pragmatic path to owning whole systems — from database to button.",
+      "tagline": "Build complete products across frontend, backend, and deployment",
+      "overview": "Full Stack Developers remain the most consistently requested engineering role in the market, and in 2026 the most in-demand variant combines it with AI: companies are paying a premium for engineers who can wire LLMs into a shipped product end to end. It is the pragmatic path to owning whole systems — from database to button",
       "stats": {
         "activePostings": 28400,
         "postingsYoY": 22,
@@ -291,22 +291,22 @@
       "helpSteps": [
         {
           "title": "Diagnose your full-stack baseline",
-          "desc": "AI tests your frontend, backend, and database fundamentals to find the fastest route from your current level to shipping complete apps."
+          "desc": "AI tests your frontend, backend, and database fundamentals to find the fastest route from your current level to shipping complete apps"
         },
         {
           "title": "Learn by building real products",
-          "desc": "Your roadmap chains milestones together — UI, API, database, deployment — so every step ends with a working, shippable feature."
+          "desc": "Your roadmap chains milestones together — UI, API, database, deployment — so every step ends with a working, shippable feature"
         },
         {
           "title": "Prove your stack with GitHub proof",
-          "desc": "Import your repos, get AI code reviews, and watch real project evidence build your skill-graph and portfolio in parallel."
+          "desc": "Import your repos, get AI code reviews, and watch real project evidence build your skill-graph and portfolio in parallel"
         },
         {
           "title": "Pass the interview, land the role",
-          "desc": "Mock interviews cover both sides of the stack, and our ATS-resume tool makes sure your full-stack proof reads like a hire."
+          "desc": "Mock interviews cover both sides of the stack, and our ATS-resume tool makes sure your full-stack proof reads like a hire"
         }
       ],
-      "ctaHeadline": "Companies need engineers who own the whole product. Become the one they hire.",
+      "ctaHeadline": "Companies need engineers who own the whole product. Become the one they hire",
       "ctaButton": "Become a Full Stack Dev"
     },
     {
@@ -315,8 +315,8 @@
       "category": "Software Engineering",
       "icon": "Monitor",
       "badge": "Beginner Friendly",
-      "tagline": "Build modern, accessible, high-performance web interfaces with React and TypeScript.",
-      "overview": "Frontend development is one of the most accessible doors into tech — roughly one in five openings is entry-level, far above the industry average. Yet senior frontend demand is still scrambling: TypeScript, design systems, and performance skills command a real salary premium, which means frontends who grow past the tutorial stage are scarce.",
+      "tagline": "Build modern, accessible, high-performance web interfaces with React and TypeScript",
+      "overview": "Frontend development is one of the most accessible doors into tech — roughly one in five openings is entry-level, far above the industry average. Yet senior frontend demand is still scrambling: TypeScript, design systems, and performance skills command a real salary premium, which means frontends who grow past the tutorial stage are scarce",
       "stats": {
         "activePostings": 6100,
         "postingsYoY": 16,
@@ -369,22 +369,22 @@
       "helpSteps": [
         {
           "title": "Diagnose your frontend level",
-          "desc": "Start anywhere — AI benchmarks your HTML, CSS, React, and TypeScript and builds a path from your exact baseline to a frontend job."
+          "desc": "Start anywhere — AI benchmarks your HTML, CSS, React, and TypeScript and builds a path from your exact baseline to a frontend job"
         },
         {
           "title": "Master the modern frontend stack",
-          "desc": "Your roadmap flows from React fundamentals to Next.js, design systems, and performance — with a polished portfolio project every step of the way."
+          "desc": "Your roadmap flows from React fundamentals to Next.js, design systems, and performance — with a polished portfolio project every step of the way"
         },
         {
           "title": "Ship UI and get ranked proof",
-          "desc": "Deploy real interfaces, import them as GitHub proof, and earn verified skill checks that interviewers can actually inspect."
+          "desc": "Deploy real interfaces, import them as GitHub proof, and earn verified skill checks that interviewers can actually inspect"
         },
         {
           "title": "Win frontend interviews",
-          "desc": "AI mock interviews on React patterns and system design, plus an ATS resume that highlights your TypeScript premium over the crowd."
+          "desc": "AI mock interviews on React patterns and system design, plus an ATS resume that highlights your TypeScript premium over the crowd"
         }
       ],
-      "ctaHeadline": "Frontend is the fastest door into tech. TypeScript up and walk through it.",
+      "ctaHeadline": "Frontend is the fastest door into tech. TypeScript up and walk through it",
       "ctaButton": "Become a Frontend Dev"
     },
     {
@@ -393,8 +393,8 @@
       "category": "Software Engineering",
       "icon": "Server",
       "badge": "Solid Career",
-      "tagline": "Build APIs, services, databases, and scalable systems that power everything else.",
-      "overview": "Backend engineering is where the highest-paid senior roles in software live — but it is also the least entry-level-friendly track, with barely 1% of postings open to juniors. That mismatch makes structured, proven preparation non-negotiable: the market rewards backend engineers who can show real systems experience over course certificates.",
+      "tagline": "Build APIs, services, databases, and scalable systems that power everything else",
+      "overview": "Backend engineering is where the highest-paid senior roles in software live — but it is also the least entry-level-friendly track, with barely 1% of postings open to juniors. That mismatch makes structured, proven preparation non-negotiable: the market rewards backend engineers who can show real systems experience over course certificates",
       "stats": {
         "activePostings": 18300,
         "postingsYoY": 19,
@@ -450,15 +450,15 @@
         },
         {
           "title": "Build scalable systems step by step",
-          "desc": "Your roadmap moves from API design to distributed systems, with production-grade projects that become the proofs hiring managers trust."
+          "desc": "Your roadmap moves from API design to distributed systems, with production-grade projects that become the proofs hiring managers trust"
         },
         {
           "title": "Prove production experience",
-          "desc": "Import your deployments, get AI reviews on architecture, and accumulate verified skill proof that closes the junior-openings gap."
+          "desc": "Import your deployments, get AI reviews on architecture, and accumulate verified skill proof that closes the junior-openings gap"
         },
         {
           "title": "Command the senior backend market",
-          "desc": "Practice heavy system-design mock interviews and build an ATS resume that positions your proof at the level the pay demands."
+          "desc": "Practice heavy system-design mock interviews and build an ATS resume that positions your proof at the level the pay demands"
         }
       ],
       "ctaHeadline": "Backend engineers are paid like senior engineers from day one. Earn the track record.",

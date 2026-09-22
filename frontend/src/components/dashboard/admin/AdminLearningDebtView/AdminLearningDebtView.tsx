@@ -69,7 +69,7 @@ export default function AdminLearningDebtView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="section-title text-left">Learning <span className="text-brand">Debt</span></h1>
-          <p className="section-subtitle mt-1 text-left">Surface where learners fall behind so interventions can be targeted.</p>
+          <p className="section-subtitle mt-1 text-left">Surface where learners fall behind so interventions can be targeted</p>
         </div>
       </div>
 

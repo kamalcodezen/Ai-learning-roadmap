@@ -88,7 +88,7 @@ export default function TrackCharts({ track }: { track: Track }) {
           </h2>
           <p className="section-subtitle mt-1">
             Real demand signals compiled from 2026 job-market research — so you
-            know exactly what you&apos;re investing your learning time into.
+            know exactly what you&apos;re investing your learning time into
           </p>
         </div>
 

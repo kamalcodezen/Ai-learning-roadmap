@@ -210,7 +210,7 @@ export default function NotificationBell({ className }: { className?: string } =
         aria-label={unreadCount > 0 ? `Notifications (${unreadCount} unread)` : "Notifications"}
         aria-expanded={isOpen}
         className={[
-          "relative flex items-center justify-center size-9 sm:size-10 rounded-full border border-border/80 bg-card/70 hover:bg-muted/80 text-foreground shadow-2xs hover:border-border transition-all cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
+          "relative flex items-center justify-center size-9 sm:size-10 rounded-full text-foreground transition-all cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
           className,
         ]
           .filter(Boolean)

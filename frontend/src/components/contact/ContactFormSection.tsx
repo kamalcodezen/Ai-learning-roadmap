@@ -117,7 +117,7 @@ export default function ContactFormSection() {
               </h2>
 
               <p className="mt-4 font-poppins text-sm sm:text-base text-muted-foreground leading-relaxed">
-                Whether you need technical support, want to inquire about custom capability frameworks, or have feedback on AI Pather&apos;s trajectory algorithms, we want to hear from you.
+                Whether you need technical support, want to inquire about custom capability frameworks, or have feedback on AI Pather&apos;s trajectory algorithms, we want to hear from you
               </p>
             </div>
 
@@ -132,7 +132,7 @@ export default function ContactFormSection() {
                     1
                   </span>
                   <span>
-                    Your inquiry is automatically routed to our specialized support or engineering triage.
+                    Your inquiry is automatically routed to our specialized support or engineering triage
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -140,7 +140,7 @@ export default function ContactFormSection() {
                     2
                   </span>
                   <span>
-                    If you have an active AI Pather account, your learning context helps us diagnose faster.
+                    If you have an active AI Pather account, your learning context helps us diagnose faster
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -148,7 +148,7 @@ export default function ContactFormSection() {
                     3
                   </span>
                   <span>
-                    You will receive a detailed, human-reviewed response in your inbox within 24 hours.
+                    You will receive a detailed, human-reviewed response in your inbox within 24 hours
                   </span>
                 </li>
               </ul>
@@ -157,7 +157,7 @@ export default function ContactFormSection() {
             {/* Security Notice */}
             <div className="flex items-center gap-3 text-xs text-muted-foreground font-poppins px-1">
               <FiShield className="size-4 text-emerald-500 shrink-0" />
-              <span>We never share your email or data with third parties.</span>
+              <span>We never share your email or data with third parties</span>
             </div>
           </motion.div>
 
