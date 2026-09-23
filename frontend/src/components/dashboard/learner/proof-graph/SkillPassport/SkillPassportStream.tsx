@@ -148,7 +148,7 @@ export function SkillPassportStream({
             {/* Quick Metrics Bar */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
               <div className="p-3 rounded-2xl bg-card-soft border border-border text-left">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                <span className="text-xs uppercase font-bold text-muted-foreground tracking-wider">
                   Verified Skills
                 </span>
                 <div className="text-lg font-black text-emerald-400">
@@ -157,7 +157,7 @@ export function SkillPassportStream({
               </div>
 
               <div className="p-3 rounded-2xl bg-card-soft border border-border text-left">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                <span className="text-xs uppercase font-bold text-muted-foreground tracking-wider">
                   Live Projects
                 </span>
                 <div className="text-lg font-black text-sky-400">
@@ -166,7 +166,7 @@ export function SkillPassportStream({
               </div>
 
               <div className="p-3 rounded-2xl bg-card-soft border border-border text-left">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                <span className="text-xs uppercase font-bold text-muted-foreground tracking-wider">
                   Code Evidence
                 </span>
                 <div className="text-lg font-black text-primary">
@@ -175,7 +175,7 @@ export function SkillPassportStream({
               </div>
 
               <div className="p-3 rounded-2xl bg-card-soft border border-border text-left">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                <span className="text-xs uppercase font-bold text-muted-foreground tracking-wider">
                   Assessments
                 </span>
                 <div className="text-lg font-black text-indigo-400">
@@ -187,7 +187,7 @@ export function SkillPassportStream({
 
           {/* Master Proof Score Radial / Circular Badge */}
           <div className="flex flex-col items-center sm:items-end justify-center p-5 rounded-2xl bg-card-soft border border-primary/30 backdrop-blur-xl shrink-0 w-full sm:w-auto text-center sm:text-right space-y-3">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-primary">
+            <span className="text-xs font-bold uppercase tracking-wider text-primary">
               Candidate Readiness Score
             </span>
 
@@ -349,7 +349,7 @@ export function SkillPassportStream({
                         <ShieldCheck className="w-5 h-5" />
                       </div>
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                           Core Competency
                         </span>
                         <h3 className="text-lg font-extrabold text-foreground group-hover:text-primary transition-colors">
@@ -400,62 +400,62 @@ export function SkillPassportStream({
 
                 {/* ── 3-PILLAR VERIFICATION CHAIN (THE RECRUITER AUDIT) ── */}
                 <div className="space-y-2.5 my-4 pt-3 border-t border-border/70">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-primary" /> Recruiter Verification Evidence Chain
+                  <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-primary" /> Recruiter Verification Evidence Chain
                   </span>
 
                   {/* Pillar 1: Diagnostic Assessment */}
-                  <div className="flex items-start justify-between gap-3 p-2.5 rounded-xl bg-muted/40 border border-border/60 text-xs">
+                  <div className="flex items-start justify-between gap-3 p-3 rounded-xl bg-muted/40 border border-border/60 text-sm">
                     <div className="flex items-center gap-2">
                       <BrainCircuit className="w-4 h-4 text-indigo-400 shrink-0" />
                       <div>
                         <span className="font-semibold text-foreground">Diagnostic Assessment</span>
-                        <p className="text-[11px] text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           {diagNodes.length > 0
                             ? `${diagNodes[0].description || "Evaluated by diagnostic telemetry"}`
                             : "Assessment completed & validated"}
                         </p>
                       </div>
                     </div>
-                    <span className="text-[11px] font-bold text-emerald-500 flex items-center gap-1 shrink-0">
-                      <CheckCircle2 className="w-3 h-3" /> Passed
+                    <span className="text-xs font-bold text-emerald-500 flex items-center gap-1 shrink-0">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Passed
                     </span>
                   </div>
 
                   {/* Pillar 2: GitHub Code Evidence */}
-                  <div className="flex items-start justify-between gap-3 p-2.5 rounded-xl bg-muted/40 border border-border/60 text-xs">
+                  <div className="flex items-start justify-between gap-3 p-3 rounded-xl bg-muted/40 border border-border/60 text-sm">
                     <div className="flex items-center gap-2">
                       <FaGithub className="w-4 h-4 text-primary shrink-0" />
                       <div>
                         <span className="font-semibold text-foreground">Code Evidence Analyzed</span>
-                        <p className="text-[11px] text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           {evidenceNodes.length > 0
                             ? `${evidenceNodes.length} Verified code artifact(s) on GitHub`
                             : "Repository syntax & commit history inspected"}
                         </p>
                       </div>
                     </div>
-                    <span className="text-[11px] font-bold text-emerald-500 flex items-center gap-1 shrink-0">
-                      <CheckCircle2 className="w-3 h-3" /> Inspected
+                    <span className="text-xs font-bold text-emerald-500 flex items-center gap-1 shrink-0">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Inspected
                     </span>
                   </div>
 
                   {/* Pillar 3: Verified Project & Live Demo */}
-                  <div className="p-3 rounded-2xl bg-muted/60 border border-border space-y-2">
+                  <div className="p-3.5 rounded-2xl bg-muted/60 border border-border space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <FileCode className="w-4 h-4 text-sky-400" />
-                        <span className="font-bold text-xs text-foreground">
+                        <span className="font-bold text-sm text-foreground">
                           {projects.length > 0 ? projects[0].title : "Practical Project Application"}
                         </span>
                       </div>
-                      <span className="text-[10px] font-semibold text-sky-400 uppercase tracking-wider">
+                      <span className="text-xs font-semibold text-sky-400 uppercase tracking-wider">
                         Production Artifact
                       </span>
                     </div>
 
                     {projects.length > 0 && projects[0].description && (
-                      <p className="text-[11px] text-muted-foreground line-clamp-2">
+                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                         {projects[0].description}
                       </p>
                     )}
@@ -475,8 +475,8 @@ export function SkillPassportStream({
                           <FaGithub className="w-3.5 h-3.5 text-primary" /> Repository <ExternalLink className="w-3 h-3 text-muted-foreground" />
                         </a>
                       ) : (
-                        <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-                          <FolderGit2 className="w-3 h-3" /> Verified in Repository
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          <FolderGit2 className="w-3.5 h-3.5" /> Verified in Repository
                         </span>
                       )}
 
@@ -487,7 +487,7 @@ export function SkillPassportStream({
                           rel="noreferrer"
                           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-400 border border-sky-500/30 transition-colors"
                         >
-                          <Globe className="w-3.5 h-3.5" /> Live Demo <ArrowUpRight className="w-3 h-3" />
+                          <Globe className="w-3.5 h-3.5" /> Live Demo <ArrowUpRight className="w-3.5 h-3.5" />
                         </a>
                       )}
                     </div>
@@ -496,8 +496,8 @@ export function SkillPassportStream({
 
                 {/* Card Footer */}
                 <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border/50">
-                  <span className="text-[10px] font-mono">HMAC SHA-256 Validated</span>
-                  <span className="text-primary font-bold group-hover:underline flex items-center gap-1 text-[11px]">
+                  <span className="text-xs font-mono font-medium">HMAC SHA-256 Validated</span>
+                  <span className="text-primary font-bold group-hover:underline flex items-center gap-1 text-xs">
                     Inspect Verification Audit →
                   </span>
                 </div>

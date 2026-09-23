@@ -14,8 +14,8 @@ export default function QualityBadge({
   return (
     <span
       className={[
-        "rounded-full border px-2 py-0.5",
-        "text-[9px] font-bold uppercase tracking-wide",
+        "rounded-full border px-2.5 py-0.5",
+        "text-xs font-bold uppercase tracking-wide",
         style.text,
         style.soft,
         style.border,

@@ -218,7 +218,7 @@ export default function NotificationBell({ className }: { className?: string } =
       >
         <Bell className="size-5 sm:size-5.5 text-foreground/90 group-hover:text-foreground group-hover:rotate-12 transition-transform duration-200" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-black text-white shadow-sm ring-2 ring-background animate-in zoom-in-50 duration-200">
+          <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-rose-500 px-1 text-xs font-black text-white shadow-sm ring-2 ring-background animate-in zoom-in-50 duration-200">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -249,11 +249,11 @@ export default function NotificationBell({ className }: { className?: string } =
               <div className="flex items-center gap-2">
                 <h3 className="font-semibold text-sm text-foreground">Notifications</h3>
                 {unreadCount > 0 ? (
-                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs font-bold text-primary">
                     {unreadCount} new
                   </span>
                 ) : (
-                  <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                  <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
                     {notifications.length}
                   </span>
                 )}
@@ -379,7 +379,7 @@ export default function NotificationBell({ className }: { className?: string } =
                   <p className="text-xs font-semibold text-foreground">
                     {filter === "unread" ? "No unread notifications" : "All caught up!"}
                   </p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 max-w-[240px]">
+                  <p className="text-xs text-muted-foreground mt-0.5 max-w-[240px]">
                     {filter === "unread"
                       ? "You have reviewed all your alerts."
                       : "When you receive course, badge, or streak updates, they will show up here."}
@@ -415,11 +415,11 @@ export default function NotificationBell({ className }: { className?: string } =
                         >
                           {n.title}
                         </p>
-                        <span className="text-[10px] text-muted-foreground shrink-0 ml-1">
+                        <span className="text-xs text-muted-foreground shrink-0 ml-1 font-medium">
                           {formatRelativeTime(n.createdAt)}
                         </span>
                       </div>
-                      <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
                         {n.message}
                       </p>
                     </div>

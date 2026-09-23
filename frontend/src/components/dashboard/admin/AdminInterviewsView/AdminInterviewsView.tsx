@@ -143,7 +143,7 @@ export default function AdminInterviewsView() {
             <div className="flex items-center gap-1.5">
               <span className="font-medium text-foreground">{item.user.name}</span>
               {item.user.plan && (
-                <span className="rounded bg-muted/60 px-1.5 py-0.2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <span className="rounded bg-muted/60 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   {item.user.plan}
                 </span>
               )}
@@ -423,7 +423,7 @@ export default function AdminInterviewsView() {
                         </p>
                       </div>
                       <div className="text-right pl-4 shrink-0">
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Session Score</span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Session Score</span>
                         <p className="text-2xl font-black text-primary">
                           {sessionDetails.score ?? 0}%
                         </p>
@@ -458,7 +458,7 @@ export default function AdminInterviewsView() {
                             </div>
 
                             <div className="rounded-lg bg-muted/40 dark:bg-muted/20 p-3.5 border border-border/40">
-                              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                                 Candidate Answer:
                               </p>
                               <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">

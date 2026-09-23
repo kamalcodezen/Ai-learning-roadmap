@@ -276,9 +276,9 @@ export default function ProgressPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm text-foreground ">{skill.name}</span>
+                      <span className="font-semibold text-base text-foreground">{skill.name}</span>
                       <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider text-white ${
+                        className={`text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider text-white ${
                           skill.score >= 80
                             ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                             : skill.score >= 50
@@ -289,7 +289,7 @@ export default function ProgressPage() {
                         {skill.level}
                       </span>
                     </div>
-                    <span className="text-sm font-bold text-foreground">{skill.score}%</span>
+                    <span className="text-base font-bold text-foreground">{skill.score}%</span>
                   </div>
 
                   {/* Progress Bar */}
@@ -307,7 +307,7 @@ export default function ProgressPage() {
                   </div>
 
                   {/* Micro Breakdown */}
-                  <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1 border-t border-border/40">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground font-medium pt-1 border-t border-border/40">
                     <span>Knowledge: {skill.knowledge}%</span>
                     <span>Practice: {skill.practice}%</span>
                     <span>Projects: {skill.project}%</span>
@@ -327,11 +327,11 @@ export default function ProgressPage() {
               <Clock className="w-5 h-5 text-primary" />
               <span>Recent Activity Feed</span>
             </CardTitle>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-sm text-muted-foreground mt-0.5">
               Chronological log of your assessments, simulations, projects, and milestone progress.
             </p>
           </div>
-          <span className="text-xs text-muted-foreground font-medium">
+          <span className="text-sm text-muted-foreground font-medium">
             {data.recentActivity.length} Events Recorded
           </span>
         </CardHeader>
@@ -340,7 +340,7 @@ export default function ProgressPage() {
             <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground">
               <Clock className="w-12 h-12 mb-3 opacity-40 text-muted-foreground" />
               <p className="font-semibold text-base text-foreground">No Activity Recorded Yet</p>
-              <p className="text-xs max-w-md mt-1">
+              <p className="text-sm max-w-md mt-1 text-muted-foreground">
                 Complete diagnostic assessments, interactive skill simulations, or roadmap milestones to build your streak and track learning progress.
               </p>
             </div>
@@ -361,21 +361,21 @@ export default function ProgressPage() {
                     <div className="flex-1 p-4 rounded-xl border border-border bg-card/60 hover:bg-card/90 transition-all shadow-sm">
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-bold text-sm sm:text-base text-foreground">{activity.title}</h3>
+                          <h3 className="font-bold text-base text-foreground">{activity.title}</h3>
                           <span
-                            className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border uppercase tracking-wider ${badge.badgeClass}`}
+                            className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${badge.badgeClass}`}
                           >
                             {badge.label}
                           </span>
                           {activity.score !== null && activity.score !== undefined && (
-                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                            <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
                               Score: {activity.score}%
                             </span>
                           )}
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <time className="text-xs font-medium text-muted-foreground">
+                          <time className="text-xs sm:text-sm font-medium text-muted-foreground">
                             {activity.formattedDate || activity.date}
                           </time>
                         </div>

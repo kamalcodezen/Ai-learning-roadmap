@@ -80,8 +80,8 @@ export default function SidebarNavItem({
 
       {/* Lock badge for restricted tier items */}
       {isLocked && (
-        <span className="ml-auto relative z-10 flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-primary border border-primary/25">
-          <Lock className="size-2.5" />
+        <span className="ml-auto relative z-10 flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-xs font-bold tracking-wider text-primary border border-primary/25">
+          <Lock className="size-3" />
           {item.requiredPlan}
         </span>
       )}

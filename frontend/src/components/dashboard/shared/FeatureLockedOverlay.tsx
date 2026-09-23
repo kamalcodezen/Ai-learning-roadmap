@@ -61,11 +61,11 @@ export default function FeatureLockedOverlay({
                 <h2 className="text-base font-bold text-foreground">
                   {featureName}
                 </h2>
-                <span className="rounded-full border border-primary/40 bg-primary/20 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-primary">
+                <span className="rounded-full border border-primary/40 bg-primary/20 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider text-primary">
                   {requiredPlan} Plan Required
                 </span>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground max-w-2xl leading-relaxed">
+              <p className="mt-1 text-sm text-muted-foreground max-w-2xl leading-relaxed">
                 {description ||
                   `This feature is exclusively available on the AI Pather ${requiredPlan} tier. Upgrade your plan to unlock interactive sessions and full capabilities.`}
               </p>
@@ -75,7 +75,7 @@ export default function FeatureLockedOverlay({
           <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-center">
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-xs font-bold text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg active:scale-95 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md transition-all duration-200 hover:opacity-95 hover:shadow-lg active:scale-95 cursor-pointer"
             >
               <Sparkles className="size-3.5" />
               <span>Upgrade to {requiredPlan}</span>
@@ -98,7 +98,7 @@ export default function FeatureLockedOverlay({
 
       {/* 3. Floating Bottom Preview Indicator */}
       <div className="sticky bottom-4 z-20 mt-6 flex justify-center pointer-events-auto">
-        <div className="inline-flex items-center gap-3 rounded-full border border-primary/30 bg-card/90 backdrop-blur-md px-5 py-2.5 shadow-xl text-xs">
+        <div className="inline-flex items-center gap-3 rounded-full border border-primary/30 bg-card/90 backdrop-blur-md px-5 py-2.5 shadow-xl text-sm">
           <span className="flex items-center gap-1.5 font-semibold text-foreground">
             <Lock className="size-3.5 text-primary" />
             <span>Preview Mode</span>
@@ -109,7 +109,7 @@ export default function FeatureLockedOverlay({
           </span>
           <Link
             href="/pricing"
-            className="ml-1 inline-flex items-center gap-1 rounded-full bg-primary/20 hover:bg-primary/30 px-3 py-1 text-[11px] font-bold text-primary transition-colors"
+            className="ml-1 inline-flex items-center gap-1 rounded-full bg-primary/20 hover:bg-primary/30 px-3 py-1 text-xs font-bold text-primary transition-colors"
           >
             Upgrade Now <ArrowRight className="size-3" />
           </Link>

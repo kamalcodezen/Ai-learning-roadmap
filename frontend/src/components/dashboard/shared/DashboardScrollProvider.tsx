@@ -118,7 +118,7 @@ export default function DashboardScrollProvider({ children }: DashboardScrollPro
     >
       <div
         ref={contentRef}
-        className="global-pos relative w-full pt-20 pb-28 px-3 sm:px-6 xl:pt-15 xl:pb-8 xl:pl-4 xl:pr-6"
+        className="global-pos relative w-full pt-20 pb-28 px-3 sm:px-6 xl:pt-16 xl:pb-12 xl:pl-6 xl:pr-8"
       >
         {children}
       </div>

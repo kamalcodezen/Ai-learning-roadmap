@@ -17,10 +17,10 @@ export default function ScoreBar({
     <div className="space-y-2.5">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold text-foreground">{label}</p>
+          <p className="text-sm font-semibold text-foreground">{label}</p>
 
           {description && (
-            <p className="mt-0.5 text-[10px] text-muted-foreground">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               {description}
             </p>
           )}

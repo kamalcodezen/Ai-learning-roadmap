@@ -4,6 +4,8 @@ import Providers from "../providers/providers";
 import ReactQueryProvider from "../components/providers/ReactQueryProvider";
 import SmoothScroll from "../providers/SmoothScroll";
 import NextTopLoader from "nextjs-toploader";
+import RouteTouchReset from "../components/providers/RouteTouchReset";
+import PageReloadLoader from "../components/providers/PageReloadLoader";
 
 const hindSiliguri = Hind_Siliguri({
   weight: ["300", "400", "500", "600", "700"],
@@ -66,9 +68,11 @@ export default function RootLayout({
           showSpinner={false}
           shadow="0 0 10px var(--color-accent), 0 0 5px var(--color-accent)"
         />
+        <RouteTouchReset />
         <SmoothScroll>
           <ReactQueryProvider>
             <Providers>
+              <PageReloadLoader />
               <main className="min-h-screen transition-colors duration-300">
                 {children}
               </main>

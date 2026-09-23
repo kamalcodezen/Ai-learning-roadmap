@@ -366,7 +366,7 @@ export default function SkillSimulationView({
             </span>
           )}
           {activeSimulation.difficulty && (
-            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20 uppercase text-[10px]">
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20 uppercase tracking-wide">
               {activeSimulation.difficulty}
             </span>
           )}
@@ -546,9 +546,9 @@ export default function SkillSimulationView({
 
               {/* Code Editor Textarea */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-muted-foreground flex items-center justify-between">
+                <label className="text-sm font-semibold text-muted-foreground flex items-center justify-between">
                   <span>Your Code Solution:</span>
-                  <span className="text-[11px] font-mono">
+                  <span className="text-xs font-mono font-medium">
                     {effectiveCode.length} characters
                   </span>
                 </label>
@@ -557,7 +557,7 @@ export default function SkillSimulationView({
                   onChange={(e) => setCodeAnswer(e.target.value)}
                   rows={10}
                   spellCheck={false}
-                  className="w-full font-mono text-xs p-4 rounded-xl bg-[#0d1117] text-[#e6edf3] border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-y leading-relaxed"
+                  className="w-full font-mono text-sm p-4 rounded-xl bg-[#0d1117] text-[#e6edf3] border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-y leading-relaxed"
                   placeholder="// Implement your solution here..."
                 />
               </div>
@@ -568,21 +568,21 @@ export default function SkillSimulationView({
           {currentStage === 3 && (
             <div className="space-y-5 animate-in fade-in duration-300">
               <div className="space-y-1">
-                <span className="text-xs uppercase font-bold tracking-wider text-purple-500">
+                <span className="text-sm uppercase font-bold tracking-wider text-purple-500">
                   Stage 4: Technical Communication
                 </span>
                 <h3 className="text-xl font-bold text-foreground">
                   {stages.explain.title}
                 </h3>
-                <p className="text-sm text-foreground/90 font-medium pt-1 leading-relaxed">
+                <p className="text-base text-foreground/90 font-medium pt-1 leading-relaxed">
                   {stages.explain.question}
                 </p>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-muted-foreground flex items-center justify-between">
+                <label className="text-sm font-semibold text-muted-foreground flex items-center justify-between">
                   <span>Your Technical Explanation:</span>
-                  <span className="text-[11px] font-mono">
+                  <span className="text-xs font-mono font-medium">
                     {explainAnswer.length} characters
                   </span>
                 </label>
@@ -590,13 +590,13 @@ export default function SkillSimulationView({
                   value={explainAnswer}
                   onChange={(e) => setExplainAnswer(e.target.value)}
                   rows={7}
-                  className="w-full text-sm p-4 rounded-xl bg-background border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-y leading-relaxed"
+                  className="w-full text-base p-4 rounded-xl bg-background border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-y leading-relaxed"
                   placeholder={
                     stages.explain.placeholder ||
                     "Explain clearly in your own words..."
                   }
                 />
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   💡 Evaluated for technical clarity, depth, terminology, and
                   practical reasoning.
                 </p>

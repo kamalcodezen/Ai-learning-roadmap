@@ -29,15 +29,15 @@ export default function AdaptiveRecoveryPage() {
     <div className="flex flex-col dashboard-card-gap pb-12 animate-in fade-in duration-500">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-border/40">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold border border-border">
-            <Sliders className="w-3.5 h-3.5" />
+        <div className="space-y-1.5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold border border-border">
+            <Sliders className="w-4 h-4" />
             <span>Adaptive Engine & Resilience</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
             Adaptive Pace & Recovery Engine
           </h1>
-          <p className="text-xs md:text-sm text-muted-foreground max-w-2xl leading-relaxed">
+          <p className="text-sm md:text-base text-muted-foreground max-w-2xl leading-relaxed">
             Personalize your weekly study velocity, track autonomous problem-solving signals, and safely rebuild momentum whenever life interrupts your routine.
           </p>
         </div>
@@ -45,10 +45,10 @@ export default function AdaptiveRecoveryPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard/learner/learning-path"
-            className="px-4 py-2 rounded-xl bg-muted hover:bg-muted/80 text-foreground text-xs font-semibold transition-all flex items-center gap-1.5 border border-border"
+            className="px-4 py-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground text-sm font-semibold transition-all flex items-center gap-2 border border-border"
           >
             <span>View Roadmap</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

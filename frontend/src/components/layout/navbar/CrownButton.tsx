@@ -5,6 +5,7 @@ import { Crown } from "lucide-react";
 import type { CSSProperties } from "react";
 import { authClient } from "@/src/lib/auth-client";
 import { cn } from "@/src/utils/cn";
+import { useIsMounted } from "@/src/hooks/useIsMounted";
 
 const glareVars = {
   "--gh-angle": "-45deg",
@@ -17,9 +18,10 @@ interface CrownButtonProps {
 }
 
 export default function CrownButton({ className }: CrownButtonProps) {
+  const mounted = useIsMounted();
   const { data: session } = authClient.useSession();
 
-  const user = session?.user as { role?: string; plan?: string } | undefined;
+  const user = mounted ? (session?.user as { role?: string; plan?: string } | undefined) : undefined;
   const userRole = (user?.role || "").toUpperCase();
   const userPlan = (user?.plan || "FREE").toUpperCase();
   const isAdmin = userRole === "ADMIN";

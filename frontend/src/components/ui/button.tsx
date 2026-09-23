@@ -33,6 +33,7 @@ export default function Button({
 
       {/* Text */}
       <span
+        suppressHydrationWarning
         className={`relative z-10 transition-all duration-500 ease-out group-hover:translate-x-8 ${
           variant === "primary"
             ? "group-hover:text-white dark:group-hover:text-black"
@@ -95,7 +96,7 @@ export default function Button({
 
   if (href && !disabled) {
     return (
-      <a href={href} className={classes}>
+      <a href={href} className={classes} suppressHydrationWarning>
         {content}
       </a>
     );

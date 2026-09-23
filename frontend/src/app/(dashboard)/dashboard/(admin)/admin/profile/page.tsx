@@ -141,7 +141,7 @@ export default function AdminProfilePage() {
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 PostgreSQL Database
               </span>
-              <span className="font-semibold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[11px]">
+              <span className="font-semibold text-emerald-500 bg-emerald-500/10 px-2.5 py-0.5 rounded-full text-xs">
                 Connected
               </span>
             </div>
@@ -151,7 +151,7 @@ export default function AdminProfilePage() {
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 REST Backend API
               </span>
-              <span className="font-semibold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[11px]">
+              <span className="font-semibold text-emerald-500 bg-emerald-500/10 px-2.5 py-0.5 rounded-full text-xs">
                 Online
               </span>
             </div>
@@ -161,7 +161,7 @@ export default function AdminProfilePage() {
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 Groq AI Inference
               </span>
-              <span className="font-semibold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[11px]">
+              <span className="font-semibold text-emerald-500 bg-emerald-500/10 px-2.5 py-0.5 rounded-full text-xs">
                 Active &amp; Ready
               </span>
             </div>
@@ -208,11 +208,11 @@ export default function AdminProfilePage() {
                         <p className="truncate text-xs font-bold text-foreground">
                           {act.type}
                         </p>
-                        <span className="shrink-0 text-[10px] text-muted-foreground font-medium">
+                        <span className="shrink-0 text-xs text-muted-foreground font-medium">
                           {new Date(act.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="truncate text-[11px] text-muted-foreground mt-0.5">
+                      <p className="truncate text-xs text-muted-foreground mt-0.5">
                         {act.description || act.user?.name || act.user?.email || "System Event"}
                       </p>
                     </div>
@@ -244,7 +244,7 @@ export default function AdminProfilePage() {
             <div className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-2">
                 <div className="p-2.5 rounded-xl bg-muted/20 border border-border/40">
-                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
+                  <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider block">
                     Active Roadmaps
                   </span>
                   <span className="text-lg font-bold text-foreground font-poppins mt-0.5 block">
@@ -252,7 +252,7 @@ export default function AdminProfilePage() {
                   </span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-muted/20 border border-border/40">
-                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
+                  <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider block">
                     Completed
                   </span>
                   <span className="text-lg font-bold text-emerald-500 font-poppins mt-0.5 block">
@@ -262,7 +262,7 @@ export default function AdminProfilePage() {
               </div>
 
               <div className="space-y-1">
-                <div className="flex justify-between text-[11px] font-semibold text-muted-foreground">
+                <div className="flex justify-between text-xs font-semibold text-muted-foreground">
                   <span>Curriculum Completion Rate</span>
                   <span className="text-foreground font-bold">
                     {data?.roadmapManagement?.totalRoadmaps
@@ -326,7 +326,7 @@ export default function AdminProfilePage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500 group-hover:scale-105 transition-transform">
                     <Activity className="h-4 w-4" />
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                  <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
                     Live
                   </span>
                 </div>
@@ -335,7 +335,7 @@ export default function AdminProfilePage() {
                     System Health
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-primary" />
                   </h3>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
                     Live telemetry &amp; ping checks.
                   </p>
                 </div>
@@ -351,7 +351,7 @@ export default function AdminProfilePage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] group-hover:scale-105 transition-transform">
                     <Sparkles className="h-4 w-4" />
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                  <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
                     Playground
                   </span>
                 </div>
@@ -360,7 +360,7 @@ export default function AdminProfilePage() {
                     AI Sandbox
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-primary" />
                   </h3>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
                     Test LLM models &amp; latency.
                   </p>
                 </div>
@@ -376,7 +376,7 @@ export default function AdminProfilePage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 group-hover:scale-105 transition-transform">
                     <Megaphone className="h-4 w-4" />
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                  <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">
                     Push
                   </span>
                 </div>
@@ -385,7 +385,7 @@ export default function AdminProfilePage() {
                     Broadcasts
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-primary" />
                   </h3>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
                     Cohort announcements.
                   </p>
                 </div>
@@ -401,7 +401,7 @@ export default function AdminProfilePage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pink-500/10 text-pink-500 group-hover:scale-105 transition-transform">
                     <Cpu className="h-4 w-4" />
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-pink-500/10 text-pink-500 border border-pink-500/20">
+                  <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-pink-500/10 text-pink-500 border border-pink-500/20">
                     Pipeline
                   </span>
                 </div>
@@ -410,7 +410,7 @@ export default function AdminProfilePage() {
                     AI Usage
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-primary" />
                   </h3>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
                     Tokens &amp; provider logs.
                   </p>
                 </div>
@@ -426,7 +426,7 @@ export default function AdminProfilePage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500 group-hover:scale-105 transition-transform">
                     <FileText className="h-4 w-4" />
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20">
+                  <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20">
                     Security
                   </span>
                 </div>
@@ -435,7 +435,7 @@ export default function AdminProfilePage() {
                     Audit Logs
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-primary" />
                   </h3>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
                     Security audit trail.
                   </p>
                 </div>
@@ -451,7 +451,7 @@ export default function AdminProfilePage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-500 group-hover:scale-105 transition-transform">
                     <Route className="h-4 w-4" />
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-purple-500/10 text-purple-500 border border-purple-500/20">
+                  <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-500 border border-purple-500/20">
                     Curriculum
                   </span>
                 </div>
@@ -460,7 +460,7 @@ export default function AdminProfilePage() {
                     Roadmaps
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-primary" />
                   </h3>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
                     Milestones &amp; pathways.
                   </p>
                 </div>

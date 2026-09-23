@@ -127,10 +127,14 @@ export default function ChatBox() {
     }
   }, [messages, isLoading]);
 
-  // Lenis smooth scrolling for the inner chat scroll area
+  // Lenis smooth scrolling for the inner chat scroll area (Desktop only)
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
+
+    // Do NOT run Lenis on mobile devices — native momentum scrolling is faster and battery-friendly
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) return;
 
     if (!chatScrollRef.current || !chatContentRef.current) return;
 
@@ -232,7 +236,7 @@ export default function ChatBox() {
         ref={glowRef}
         className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300"
       />
-      <Meteors number={8} className="bg-primary/30" />
+      <Meteors number={8} className="hidden sm:block bg-primary/30" />
       {/* Header */}
       <header className="flex items-center justify-between border-b border-border px-3 py-2.5 sm:px-6 sm:py-3 gap-2 min-w-0">
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
@@ -567,20 +571,22 @@ export default function ChatBox() {
           onSubmit={handleSubmit}
           className="relative mx-auto flex max-w-3xl items-center gap-1.5 sm:gap-2 rounded-2xl border border-border bg-background/90 px-2 sm:px-3 py-1.5 transition focus-within:border-primary/50 shadow-xs"
         >
-          <BorderBeam
-            duration={6}
-            size={100}
-            colorFrom="rgba(239,68,68,0)"
-            colorTo="#ef4444"
-          />
-          <BorderBeam
-            duration={6}
-            delay={3}
-            size={100}
-            borderWidth={2}
-            colorFrom="rgba(59,130,246,0)"
-            colorTo="#3b82f6"
-          />
+          <div className="hidden sm:block">
+            <BorderBeam
+              duration={6}
+              size={100}
+              colorFrom="rgba(239,68,68,0)"
+              colorTo="#ef4444"
+            />
+            <BorderBeam
+              duration={6}
+              delay={3}
+              size={100}
+              borderWidth={2}
+              colorFrom="rgba(59,130,246,0)"
+              colorTo="#3b82f6"
+            />
+          </div>
           {/* Message Input */}
           <textarea
             value={input}

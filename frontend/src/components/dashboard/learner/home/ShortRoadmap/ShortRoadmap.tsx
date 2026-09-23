@@ -64,8 +64,8 @@ export default function ShortRoadmap({ data }: Props) {
                 bg-primary/10
                 px-2.5
                 py-1
-                text-[11px]
-                font-semibold
+                text-xs
+                font-bold
                 text-primary
               "
             >
@@ -145,8 +145,8 @@ export default function ShortRoadmap({ data }: Props) {
               bg-primary/10
               px-2.5
               py-1
-              text-[11px]
-              font-semibold
+              text-xs
+              font-bold
               text-primary
             "
           >

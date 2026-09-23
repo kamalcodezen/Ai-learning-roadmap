@@ -99,20 +99,20 @@ const ProofGraphNode = ({ data }: { data: ProofNodeData }) => {
   const getStatusBadge = () => {
     if (isVerified) {
       return (
-        <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+        <span className="flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
           <CheckCircle2 className="w-3 h-3" /> Verified
         </span>
       );
     }
     if (isPending) {
       return (
-        <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
+        <span className="flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
           <AlertCircle className="w-3 h-3" /> In Review
         </span>
       );
     }
     return (
-      <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30">
+      <span className="flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30">
         <XCircle className="w-3 h-3" /> Unverified
       </span>
     );
@@ -151,7 +151,7 @@ const ProofGraphNode = ({ data }: { data: ProofNodeData }) => {
       {/* Header Row */}
       <div className="relative flex items-center justify-between gap-2 mb-2">
         <span
-          className={`flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${typeMeta.badgeBg}`}
+          className={`flex items-center gap-1 text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${typeMeta.badgeBg}`}
         >
           {typeMeta.icon}
           {typeMeta.label}
@@ -166,7 +166,7 @@ const ProofGraphNode = ({ data }: { data: ProofNodeData }) => {
 
       {/* Short Description */}
       {description && (
-        <p className="relative text-[11px] text-muted-foreground mt-1 line-clamp-1 leading-relaxed">
+        <p className="relative text-xs text-muted-foreground mt-1 line-clamp-1 leading-relaxed">
           {description}
         </p>
       )}
@@ -174,10 +174,10 @@ const ProofGraphNode = ({ data }: { data: ProofNodeData }) => {
       {/* Score and Metadata Footer */}
       <div className="relative mt-2.5 pt-2 border-t border-border flex items-center justify-between gap-2">
         {score !== undefined ? (
-          <div className="flex items-center gap-1.5 text-[11px]">
-            <span className="text-muted-foreground text-[10px]">Mastery:</span>
+          <div className="flex items-center gap-1.5 text-xs">
+            <span className="text-muted-foreground text-xs">Mastery:</span>
             <span
-              className={`font-black text-[11px] ${
+              className={`font-black text-xs ${
                 score >= 70
                   ? "text-emerald-400"
                   : score >= 40
@@ -189,7 +189,7 @@ const ProofGraphNode = ({ data }: { data: ProofNodeData }) => {
             </span>
           </div>
         ) : (
-          <span className="text-[10px] text-muted-foreground font-mono">Proof Node</span>
+          <span className="text-xs text-muted-foreground font-mono">Proof Node</span>
         )}
 
         {/* Action Chips */}
@@ -222,8 +222,8 @@ const ProofGraphNode = ({ data }: { data: ProofNodeData }) => {
             )}
           </div>
         ) : (
-          <span className="text-[10px] text-primary/80 group-hover:text-primary flex items-center gap-0.5">
-            Details <ExternalLink className="w-2.5 h-2.5" />
+          <span className="text-xs font-semibold text-primary/80 group-hover:text-primary flex items-center gap-1">
+            Details <ExternalLink className="w-3 h-3" />
           </span>
         )}
       </div>

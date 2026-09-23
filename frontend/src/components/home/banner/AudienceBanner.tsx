@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { authClient } from "@/src/lib/auth-client";
+import { useIsMounted } from "@/src/hooks/useIsMounted";
 
 import BannerBackground from "./BannerBackground";
 import BannerHeader from "./BannerHeader";
@@ -14,11 +15,12 @@ import { carouselItems, slides } from "./data";
 
 export default function AudienceBanner() {
   const [activeIndex, setActiveIndex] = useState(3);
+  const mounted = useIsMounted();
   const { data: session } = authClient.useSession();
 
-  const activeItem = carouselItems[activeIndex];
+  const activeItem = carouselItems[activeIndex] ?? carouselItems[3];
 
-  const user = session?.user;
+  const user = mounted ? session?.user : undefined;
   const userRole = (user as { role?: string } | undefined)?.role?.toUpperCase();
 
   const ctaHref = !user

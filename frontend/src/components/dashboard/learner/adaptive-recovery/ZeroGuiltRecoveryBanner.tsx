@@ -130,11 +130,11 @@ export default function ZeroGuiltRecoveryBanner({
               <h3 className="font-bold text-foreground text-base md:text-lg">
                 Zero-Guilt Recovery Engine
               </h3>
-              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-muted text-muted-foreground border border-border">
+              <span className="hidden sm:inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-muted text-muted-foreground border border-border">
                 {isAutoActive ? "Active Recovery" : "4-Day Catch-Up Plan"}
               </span>
             </div>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-sm text-muted-foreground mt-0.5">
               {isAutoActive
                 ? data.welcomeMessage.heading
                 : "Drop-off protection & micro catch-up plan (+50 XP bonus)"}
@@ -143,7 +143,7 @@ export default function ZeroGuiltRecoveryBanner({
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-muted/50 border border-border text-xs font-semibold text-foreground">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-muted/50 border border-border text-sm font-semibold text-foreground">
             <span>{data.completedStepsCount}/{data.totalStepsCount} Steps</span>
           </div>
           <button
@@ -164,7 +164,7 @@ export default function ZeroGuiltRecoveryBanner({
             <h4 className="text-lg md:text-xl font-bold text-foreground">
               {data.welcomeMessage.heading}
             </h4>
-            <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
               {data.welcomeMessage.subheading}{" "}
               <span className="text-foreground font-medium">
                 {data.welcomeMessage.encouragement}
@@ -193,7 +193,7 @@ export default function ZeroGuiltRecoveryBanner({
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span
-                        className={`text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                        className={`text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
                           step.completed
                             ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
                             : isCurrent
@@ -204,8 +204,8 @@ export default function ZeroGuiltRecoveryBanner({
                         Day {step.dayIndex}
                       </span>
 
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
-                        <Clock className="w-3 h-3 text-primary" />
+                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-medium">
+                        <Clock className="w-3.5 h-3.5 text-primary" />
                         <span>{step.estimatedMinutes}m</span>
                         {step.completed && (
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 ml-1" />
@@ -213,11 +213,11 @@ export default function ZeroGuiltRecoveryBanner({
                       </div>
                     </div>
 
-                    <h5 className="font-bold text-sm text-foreground leading-tight">
+                    <h5 className="font-bold text-base text-foreground leading-tight">
                       {step.title.replace(/^Day \d+:\s*/, "")}
                     </h5>
 
-                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
                       {step.subtitle}
                     </p>
                   </div>
@@ -225,8 +225,8 @@ export default function ZeroGuiltRecoveryBanner({
                   {/* Step Action / Drawer trigger */}
                   <div className="pt-3 mt-3 border-t border-border/50">
                     {step.completed ? (
-                      <div className="flex items-center gap-1.5 text-xs text-emerald-500 font-semibold">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      <div className="flex items-center gap-1.5 text-sm text-emerald-500 font-semibold">
+                        <CheckCircle2 className="w-4 h-4" />
                         <span>Completed</span>
                       </div>
                     ) : (
@@ -237,7 +237,7 @@ export default function ZeroGuiltRecoveryBanner({
                             activeStepIndex === step.dayIndex ? null : step.dayIndex
                           )
                         }
-                        className={`w-full py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                        className={`w-full py-2 px-3 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                           isCurrent
                             ? "bg-primary hover:bg-primary/90 text-white shadow-xs"
                             : "bg-muted hover:bg-muted/80 text-foreground"
@@ -266,20 +266,20 @@ export default function ZeroGuiltRecoveryBanner({
 
                 return (
                   <div className="space-y-4">
-                    <div className="space-y-1">
+                    <div className="space-y-1.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-primary">
+                        <span className="text-sm font-bold uppercase tracking-wider text-primary">
                           Day {step.dayIndex} Focus
                         </span>
-                        <span className="text-xs text-muted-foreground">•</span>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-sm text-muted-foreground">•</span>
+                        <span className="text-sm text-muted-foreground">
                           {step.estimatedMinutes} minutes commitment
                         </span>
                       </div>
-                      <h4 className="text-base font-bold text-foreground">
+                      <h4 className="text-lg font-bold text-foreground">
                         {step.title}
                       </h4>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
                         {step.content.description}
                       </p>
                     </div>
@@ -287,11 +287,11 @@ export default function ZeroGuiltRecoveryBanner({
                     {/* Day 1: Refresher bullets */}
                     {step.type === "REFRESHER" && step.content.details && (
                       <div className="bg-card p-4 rounded-xl border border-border space-y-2">
-                        <div className="flex items-center gap-2 text-xs font-semibold text-primary mb-1">
+                        <div className="flex items-center gap-2 text-sm font-semibold text-primary mb-1">
                           <BookOpen className="w-4 h-4" />
                           <span>Key Concept Anchor ({step.content.targetSkillOrConcept})</span>
                         </div>
-                        <ul className="space-y-1.5 text-xs text-foreground">
+                        <ul className="space-y-1.5 text-sm text-foreground">
                           {step.content.details.map((bullet, i) => (
                             <li key={i} className="flex items-start gap-2">
                               <span className="text-primary font-bold">•</span>
@@ -305,12 +305,12 @@ export default function ZeroGuiltRecoveryBanner({
                     {/* Day 2: Micro Confidence Puzzle */}
                     {step.type === "PUZZLE" && (
                       <div className="bg-card p-4 rounded-xl border border-border space-y-4">
-                        <div className="flex items-center gap-2 text-xs font-semibold text-primary">
+                        <div className="flex items-center gap-2 text-sm font-semibold text-primary">
                           <HelpCircle className="w-4 h-4" />
                           <span>10-Minute Problem Solving Revival</span>
                         </div>
 
-                        <p className="text-sm font-semibold text-foreground">
+                        <p className="text-base font-semibold text-foreground">
                           {step.content.puzzleQuestion}
                         </p>
 
@@ -336,7 +336,7 @@ export default function ZeroGuiltRecoveryBanner({
                                 type="button"
                                 disabled={puzzleSubmitted}
                                 onClick={() => handlePuzzleSelect(idx)}
-                                className={`w-full text-left p-3 rounded-lg border text-xs transition-all flex items-center justify-between cursor-pointer ${btnStyle}`}
+                                className={`w-full text-left p-3.5 rounded-lg border text-sm transition-all flex items-center justify-between cursor-pointer ${btnStyle}`}
                               >
                                 <span>{opt}</span>
                                 {puzzleSubmitted && isCorrect && (
@@ -348,7 +348,7 @@ export default function ZeroGuiltRecoveryBanner({
                         </div>
 
                         {puzzleSubmitted && (
-                          <div className="p-3 rounded-lg bg-muted/40 border border-border text-xs text-muted-foreground animate-in fade-in">
+                          <div className="p-3.5 rounded-lg bg-muted/40 border border-border text-sm text-muted-foreground leading-relaxed animate-in fade-in">
                             <span className="font-bold text-foreground">Explanation: </span>
                             {step.content.puzzleExplanation}
                           </div>
@@ -359,12 +359,12 @@ export default function ZeroGuiltRecoveryBanner({
                     {/* Day 3: Roadmap Milestone Step */}
                     {step.type === "ROADMAP_STEP" && (
                       <div className="bg-card p-4 rounded-xl border border-border space-y-3">
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                           <div className="space-y-1">
-                            <h5 className="font-bold text-sm text-foreground">
+                            <h5 className="font-bold text-base text-foreground">
                               Target Stage: {step.content.targetSkillOrConcept}
                             </h5>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-sm text-muted-foreground leading-relaxed">
                               Dive directly into your upcoming milestone without cognitive overload.
                             </p>
                           </div>
@@ -373,7 +373,7 @@ export default function ZeroGuiltRecoveryBanner({
                             type="button"
                             onClick={() => stepMutation.mutate(step.dayIndex)}
                             disabled={stepMutation.isPending}
-                            className="px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 text-xs font-bold transition-all shadow-xs cursor-pointer"
+                            className="px-5 py-2.5 rounded-xl bg-primary text-white hover:bg-primary/90 text-sm font-bold transition-all shadow-xs cursor-pointer shrink-0"
                           >
                             Mark Frontier Active
                           </button>
@@ -389,10 +389,10 @@ export default function ZeroGuiltRecoveryBanner({
                             <Trophy className="w-6 h-6" />
                           </div>
                           <div>
-                            <h5 className="font-bold text-sm text-foreground">
+                            <h5 className="font-bold text-base text-foreground">
                               Claim +50 XP Resilience Bonus
                             </h5>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-sm text-muted-foreground leading-relaxed">
                               Locks in your momentum and automatically returns you to your normal roadmap flow.
                             </p>
                           </div>
@@ -407,7 +407,7 @@ export default function ZeroGuiltRecoveryBanner({
                           type="button"
                           disabled={puzzleAnswer === null}
                           onClick={() => handlePuzzleSubmit(step)}
-                          className="px-5 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
+                          className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-all disabled:opacity-50 cursor-pointer"
                         >
                           Check Answer
                         </button>
@@ -418,11 +418,11 @@ export default function ZeroGuiltRecoveryBanner({
                           type="button"
                           disabled={stepMutation.isPending}
                           onClick={() => stepMutation.mutate(step.dayIndex)}
-                          className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white text-xs font-bold transition-all flex items-center gap-2 shadow-xs cursor-pointer"
+                          className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-all flex items-center gap-2 shadow-xs cursor-pointer"
                         >
                           {stepMutation.isPending ? (
                             <>
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              <Loader2 className="w-4 h-4 animate-spin" />
                               <span>Marking Done...</span>
                             </>
                           ) : (
@@ -441,7 +441,7 @@ export default function ZeroGuiltRecoveryBanner({
           )}
 
           {/* Footer Utility: Skip or Simulate */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-3 border-t border-border/60 text-xs text-muted-foreground">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-3 border-t border-border/60 text-sm text-muted-foreground">
             <span>
               Take your time — consistency is about returning gently, not burning out.
             </span>

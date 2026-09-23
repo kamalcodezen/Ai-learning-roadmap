@@ -42,6 +42,15 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const sendMessageRef = useRef<(text?: string) => Promise<void>>(async () => {});
+  // Automatically close floating chat on route change
+  useEffect(() => {
+    const handleClose = () => {
+      setOpen(false);
+      setIsExpanded(false);
+    };
+    window.addEventListener("route-change-close-drawers", handleClose);
+    return () => window.removeEventListener("route-change-close-drawers", handleClose);
+  }, []);
 
   // Global event listener to open chat from external buttons (e.g. mobile navbar AI Mentor button)
   useEffect(() => {
@@ -159,11 +168,12 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
         )}
       </AnimatePresence>
 
-      <div className="pointer-events-auto font-sans">
+      <div className="pointer-events-none font-sans">
         {/* Plasma Animated Chat Window */}
         <div
           className={cn(
             "fixed z-50",
+            open ? "pointer-events-auto" : "pointer-events-none",
             isExpanded
             ? "fixed inset-3 sm:inset-6 md:inset-8 flex flex-col"
             : "fixed bottom-[80px] sm:bottom-[96px] left-1/2 -translate-x-1/2 flex flex-col items-center sm:left-auto sm:right-6 sm:translate-x-0 sm:items-end"
@@ -596,7 +606,7 @@ export function HomeFloatingChat({ hideTriggerOnMobile = false }: HomeFloatingCh
         {/* Floating Trigger Button */}
         <div
           className={cn(
-            "fixed bottom-6 right-6 z-50",
+            "fixed bottom-6 right-6 z-50 pointer-events-auto",
             hideTriggerOnMobile && "hidden lg:block",
             isExpanded && "hidden"
           )}

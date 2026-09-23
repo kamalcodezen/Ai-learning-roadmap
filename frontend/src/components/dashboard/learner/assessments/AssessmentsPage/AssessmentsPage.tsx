@@ -300,11 +300,11 @@ export default function AssessmentsPage() {
                     <div className="space-y-1.5 flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         {getStatusBadge(assessment.status)}
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground bg-muted/60 px-2 py-0.5 rounded-md border border-border/40">
+                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground bg-muted/60 px-2.5 py-1 rounded-md border border-border/40">
                           {getTypeLabel(assessment.type)}
                         </span>
                         {assessment.attemptLabel && (
-                          <span className="text-[11px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20">
+                          <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-md border border-primary/20">
                             {assessment.attemptLabel}
                           </span>
                         )}
@@ -315,15 +315,15 @@ export default function AssessmentsPage() {
                       </h3>
 
                       {assessment.skillAssociated && (
-                        <div className="flex items-center gap-1.5 text-xs font-semibold text-primary/90">
-                          <Target className="w-3.5 h-3.5 text-primary" />
+                        <div className="flex items-center gap-1.5 text-sm font-semibold text-primary/90">
+                          <Target className="w-4 h-4 text-primary" />
                           <span>{assessment.skillAssociated}</span>
                         </div>
                       )}
 
                       {assessment.completedAt && (
-                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                          <Calendar className="w-3.5 h-3.5" />
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                          <Calendar className="w-4 h-4" />
                           <span>Completed: {assessment.completedAt}</span>
                         </div>
                       )}
@@ -340,7 +340,7 @@ export default function AssessmentsPage() {
                         >
                           {assessment.score}%
                         </span>
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground">
+                        <span className="text-xs uppercase font-bold text-muted-foreground">
                           Score
                         </span>
                       </div>

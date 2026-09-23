@@ -154,12 +154,12 @@ export default function JobRealityContent() {
               </select>
             </div>
 
-            <div className="text-xs text-muted-foreground flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
+            <div className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1.5 bg-muted/50 px-3.5 py-1.5 rounded-full border border-border/50">
               <Database className="w-3.5 h-3.5 text-primary" />
               Data via {source.provider} • Updated{" "}
               {formatDistanceToNow(new Date(source.fetchedAt))} ago
               {source.cached && (
-                <span className="ml-1 text-[10px] bg-muted px-1.5 py-0.5 rounded border border-border">
+                <span className="ml-1 text-xs font-semibold bg-muted px-2 py-0.5 rounded border border-border">
                   cached
                 </span>
               )}
@@ -182,7 +182,7 @@ export default function JobRealityContent() {
         <Card className="hover:border-primary/40 transition-colors">
           <CardContent className="p-6">
             <div className="flex justify-between items-start mb-4">
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-base font-semibold text-muted-foreground">
                 Market Demand
               </p>
               <BarChart3
@@ -196,7 +196,7 @@ export default function JobRealityContent() {
               />
             </div>
             <h3 className="text-3xl font-bold">{market.demandLevel}</h3>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               Based on active relevant listing density
             </p>
           </CardContent>
@@ -205,7 +205,7 @@ export default function JobRealityContent() {
         <Card className="hover:border-primary/40 transition-colors">
           <CardContent className="p-6">
             <div className="flex justify-between items-start mb-4">
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-base font-semibold text-muted-foreground">
                 Listings Analysed
               </p>
               <Briefcase className="w-5 h-5 text-blue-500" />
@@ -215,7 +215,7 @@ export default function JobRealityContent() {
                 ? market.jobCount
                 : "Unavailable"}
             </h3>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               {market.rawFetchedCount && market.rawFetchedCount > market.jobCount
                 ? `${market.jobCount} relevant out of ${market.rawFetchedCount} fetched`
                 : "Relevant verified market job posts"}
@@ -226,7 +226,7 @@ export default function JobRealityContent() {
         <Card className="hover:border-primary/40 transition-colors">
           <CardContent className="p-6">
             <div className="flex justify-between items-start mb-4">
-              <p className="text-sm font-medium text-muted-foreground">Market Trend</p>
+              <p className="text-base font-semibold text-muted-foreground">Market Trend</p>
               <TrendingUp
                 className={`w-5 h-5 ${
                   market.trend === "Growing"
@@ -242,7 +242,7 @@ export default function JobRealityContent() {
             <h3 className="text-3xl font-bold">
               {market.trend || (market.jobCount > 0 ? "Stable" : "Insufficient Data")}
             </h3>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               Derived from relevant listing velocity
             </p>
           </CardContent>
@@ -365,25 +365,25 @@ export default function JobRealityContent() {
           {aiAnalysis.roleSummary && (
             <DashboardCard className="border-primary/20">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold flex items-center gap-1.5 text-primary">
+                <CardTitle className="text-base font-semibold flex items-center gap-1.5 text-primary">
                   <Sparkles className="w-4 h-4" /> AI Market Summary
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-xs leading-relaxed text-foreground/90 font-medium">
+                <p className="text-sm leading-relaxed text-foreground font-medium">
                   {aiAnalysis.roleSummary}
                 </p>
 
                 {aiAnalysis.commonTools && aiAnalysis.commonTools.length > 0 && (
                   <div className="mt-3 pt-3 border-t border-primary/10">
-                    <p className="text-[11px] font-semibold text-muted-foreground mb-1.5 flex items-center gap-1">
-                      <Wrench className="w-3 h-3" /> Commonly Mentioned Tools
+                    <p className="text-xs font-bold text-muted-foreground mb-1.5 flex items-center gap-1">
+                      <Wrench className="w-3.5 h-3.5" /> Commonly Mentioned Tools
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {aiAnalysis.commonTools.map((tool, i) => (
                         <span
                           key={i}
-                          className="text-[11px] px-2 py-0.5 rounded-md bg-background border border-border text-foreground font-medium"
+                          className="text-xs px-2.5 py-1 rounded-md bg-background border border-border text-foreground font-semibold"
                         >
                           {tool}
                         </span>
@@ -402,8 +402,8 @@ export default function JobRealityContent() {
             </CardHeader>
             <CardContent>
               {!aiAnalysis.available && (
-                <p className="text-xs text-muted-foreground mb-3 flex items-center gap-1">
-                  <Info className="w-3.5 h-3.5 text-amber-500" />
+                <p className="text-sm text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <Info className="w-4 h-4 text-amber-500" />
                   Showing calculated listing statistics. AI interpretation offline.
                 </p>
               )}
@@ -413,7 +413,7 @@ export default function JobRealityContent() {
                     <div className="p-1 rounded-full bg-primary/10 text-primary mt-0.5 shrink-0">
                       <TrendingUp className="w-3.5 h-3.5" />
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {insight}
                     </p>
                   </li>
@@ -436,7 +436,7 @@ export default function JobRealityContent() {
                   >
                     <div className="flex items-start gap-2">
                       <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                      <p className="text-xs font-semibold text-foreground leading-normal">
+                      <p className="text-sm font-semibold text-foreground leading-normal">
                         {rec.text}
                       </p>
                     </div>
@@ -444,7 +444,7 @@ export default function JobRealityContent() {
                     {rec.href && (
                       <Link
                         href={rec.href}
-                        className="self-end mt-1 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-muted/50 hover:bg-muted text-foreground border border-border transition-all shadow-xs group cursor-pointer"
+                        className="self-end mt-1 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-muted/50 hover:bg-muted text-foreground border border-border transition-all shadow-xs group cursor-pointer"
                       >
                         <span>
                           {rec.actionType === "GENERATE_PROJECT"
@@ -461,7 +461,7 @@ export default function JobRealityContent() {
               <div className="mt-6 flex flex-col gap-2.5 w-full">
                 <Link
                   href="/dashboard/learner/learning-path"
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 hover:border-primary/50 transition-all shadow-xs cursor-pointer text-center group"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 hover:border-primary/50 transition-all shadow-xs cursor-pointer text-center group"
                 >
                   <span>Continue Learning Path</span>
                   <ArrowUpRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -469,7 +469,7 @@ export default function JobRealityContent() {
 
                 <Link
                   href="/dashboard/learner/portfolio"
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-muted/60 hover:bg-muted text-foreground border border-border transition-all shadow-xs cursor-pointer text-center group"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-muted/60 hover:bg-muted text-foreground border border-border transition-all shadow-xs cursor-pointer text-center group"
                 >
                   <span>Generate Project Gap Skill</span>
                   <ArrowUpRight className="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

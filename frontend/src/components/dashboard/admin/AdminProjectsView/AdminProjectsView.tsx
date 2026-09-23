@@ -111,22 +111,22 @@ export default function AdminProjectsView() {
             <div className="flex items-center gap-2 flex-wrap">
               <p className="font-medium text-foreground">{p.title}</p>
               <span
-                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.2 text-[10px] font-semibold ${
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                   p.projectType === "IMPORTED"
                     ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30"
                     : "bg-purple-500/15 text-purple-400 border border-purple-500/30"
                 }`}
               >
                 {p.projectType === "IMPORTED" ? (
-                  <GitBranch className="size-2.5" />
+                  <GitBranch className="size-3" />
                 ) : (
-                  <Sparkles className="size-2.5" />
+                  <Sparkles className="size-3" />
                 )}
                 {p.projectType === "IMPORTED" ? "Imported Repo" : "AI Specification"}
               </span>
               {p.isVerified ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-green-500/15 text-green-400 border border-green-500/30 px-2 py-0.2 text-[10px] font-semibold">
-                  <CheckCircle2 className="size-2.5" /> Verified Proof
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/30 px-2.5 py-0.5 text-xs font-semibold">
+                  <CheckCircle2 className="size-3" /> Verified Proof
                 </span>
               ) : null}
             </div>
@@ -140,13 +140,13 @@ export default function AdminProjectsView() {
                 {p.techStack.slice(0, 3).map((tech) => (
                   <span
                     key={tech}
-                    className="rounded bg-muted/60 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground"
+                    className="rounded bg-muted/60 px-2 py-0.5 text-xs font-mono text-muted-foreground"
                   >
                     {tech}
                   </span>
                 ))}
                 {p.techStack.length > 3 && (
-                  <span className="text-[10px] text-muted-foreground font-mono">
+                  <span className="text-xs text-muted-foreground font-mono">
                     +{p.techStack.length - 3}
                   </span>
                 )}

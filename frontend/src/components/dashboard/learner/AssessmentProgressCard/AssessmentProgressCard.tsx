@@ -35,14 +35,14 @@ export default function AssessmentProgressCard({ data }: Props) {
       </CardHeader>
       <CardContent className="flex flex-col h-full">
         <div className="space-y-4 mb-6">
-          <div className="flex justify-between items-center text-sm">
-            <span className="font-medium text-foreground">Completed</span>
+          <div className="flex justify-between items-center text-base">
+            <span className="font-semibold text-foreground">Completed</span>
             <span className="font-bold text-primary">
               {data.completedCount}
             </span>
           </div>
-          <div className="flex justify-between items-center text-sm">
-            <span className="font-medium text-foreground">Pending</span>
+          <div className="flex justify-between items-center text-base">
+            <span className="font-semibold text-foreground">Pending</span>
             <span className="font-bold text-muted-foreground">
               {data.pendingCount}
             </span>

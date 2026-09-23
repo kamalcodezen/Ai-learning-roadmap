@@ -239,19 +239,19 @@ user quotas
                           <div className="flex items-center gap-2">
                             <p className="font-medium text-foreground">{u.name}</p>
                             <span
-                              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.2 text-[10px] font-bold uppercase tracking-wider ${
+                              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${
                                 isPro
                                   ? "bg-amber-500/15 text-amber-500 border border-amber-500/30"
                                   : "bg-blue-500/15 text-blue-500 border border-blue-500/30"
                               }`}
                             >
-                              {isPro ? <Crown className="size-2.5" /> : <Sparkles className="size-2.5" />}
+                              {isPro ? <Crown className="size-3" /> : <Sparkles className="size-3" />}
                               {u.plan}
                             </span>
                           </div>
                           <p className="text-xs text-muted-foreground">{u.email}</p>
                           {(u.careerProfile?.targetRoleName || u.careerProfile?.targetRole) && (
-                            <p className="text-[11px] font-medium text-primary mt-0.5">
+                            <p className="text-xs font-semibold text-primary mt-0.5">
                               Target: {u.careerProfile.targetRoleName || u.careerProfile.targetRole}
                             </p>
                           )}

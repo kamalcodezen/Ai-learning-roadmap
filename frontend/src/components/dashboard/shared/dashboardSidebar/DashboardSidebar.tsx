@@ -70,13 +70,26 @@ export default function DashboardSidebar() {
     return () => el.removeEventListener("wheel", handleWheel);
   }, [handleWheel]);
 
-  // ── Lock body scroll when mobile drawer is open ──────────────────
+  // ── Auto-close drawer on route change or global event ────────────
   useEffect(() => {
-    if (!drawerOpen) return;
-    const prevOverflow = document.body.style.overflow;
+    const handleClose = () => {
+      setDrawerOpen(false);
+      document.body.style.overflow = "";
+      document.body.style.pointerEvents = "";
+    };
+    window.addEventListener("route-change-close-drawers", handleClose);
+    return () => window.removeEventListener("route-change-close-drawers", handleClose);
+  }, []);
+
+  // ── Lock body scroll ONLY while mobile drawer is open ────────────
+  useEffect(() => {
+    if (!drawerOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = prevOverflow;
+      document.body.style.overflow = "";
     };
   }, [drawerOpen]);
 
@@ -103,7 +116,10 @@ export default function DashboardSidebar() {
     };
   }, [drawerOpen, handleMobileWheel]);
 
-  const closeDrawer = () => setDrawerOpen(false);
+  const closeDrawer = () => {
+    setDrawerOpen(false);
+    document.body.style.overflow = "";
+  };
 
   return (
     <>
@@ -128,24 +144,19 @@ export default function DashboardSidebar() {
       {/* ── Mobile drawer ───────────────────────────────────────── */}
       <AnimatePresence>
         {drawerOpen && (
-          <div className="fixed inset-0 z-50 xl:hidden">
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+          <motion.div
+            key="mobile-dashboard-drawer-wrapper"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 xl:hidden"
+          >
+            {/* Backdrop: 1-click anywhere outside closes drawer */}
+            <div
               onClick={closeDrawer}
-              onWheel={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              onTouchMove={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
               aria-hidden="true"
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
             />
 
             {/* Drawer panel */}
@@ -208,7 +219,7 @@ export default function DashboardSidebar() {
                           </>
                         )}
                       </span>
-                      <span className="rounded-full bg-primary/20 px-1.5 py-0.5 text-[9px] font-extrabold text-primary">
+                      <span className="rounded-full bg-primary/20 px-2 py-0.5 text-xs font-bold text-primary">
                         {((user as { plan?: string })?.plan || "FREE").toUpperCase() === "PLUS" ? "PRO" : "PLUS"}
                       </span>
                     </div>
@@ -219,7 +230,7 @@ export default function DashboardSidebar() {
               {/* Fixed footer */}
               <SignOutButton onSignOut={closeDrawer} />
             </motion.aside>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>
