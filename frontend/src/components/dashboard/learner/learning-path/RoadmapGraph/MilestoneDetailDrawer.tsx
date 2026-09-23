@@ -180,16 +180,16 @@ export function MilestoneDetailDrawer({
                     <Target className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-primary block">
+                    <span className="text-xs font-bold uppercase tracking-wider text-primary block">
                       Target Skill Gap
                     </span>
-                    <span className="text-sm font-extrabold text-foreground">
+                    <span className="text-base font-extrabold text-foreground">
                       {targetSkillGap}
                     </span>
                   </div>
                 </div>
                 <span
-                  className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                  className={`text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
                     isCompleted
                       ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                       : isCurrent
@@ -201,7 +201,7 @@ export function MilestoneDetailDrawer({
                 </span>
               </div>
 
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {isCompleted
                   ? "You have completed this stage. To evaluate your hands-on mastery and elevate your verified score for this specific competency, launch the targeted 4-stage Skill Mastery Simulation below."
                   : isCurrent
@@ -260,12 +260,12 @@ export function MilestoneDetailDrawer({
           {/* Click-to-Load Curated Resources Accordion or Locked Notice */}
           <div className="pt-2 pb-4">
             {isUpcoming ? (
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-muted/40 border border-border text-xs text-muted-foreground">
+              <div className="flex items-center justify-between p-3.5 rounded-xl bg-muted/40 border border-border text-xs sm:text-sm text-muted-foreground">
                 <span className="flex items-center gap-2 font-medium">
                   <Lock className="w-4 h-4 text-muted-foreground shrink-0" />
                   Curated Learning Resources Locked
                 </span>
-                <span className="text-[11px] bg-muted px-2.5 py-1 rounded-md border border-border">
+                <span className="text-xs bg-muted px-2.5 py-1 rounded-md border border-border font-medium">
                   Complete previous milestone to unlock
                 </span>
               </div>
@@ -276,7 +276,7 @@ export function MilestoneDetailDrawer({
                   onClick={() =>
                     setExpandedMilestoneId(showResources ? null : milestone.id)
                   }
-                  className="w-full flex items-center justify-between p-3.5 rounded-xl bg-card-soft border border-border hover:border-primary/40 hover:bg-muted transition-all text-xs font-semibold text-foreground group cursor-pointer"
+                  className="w-full flex items-center justify-between p-3.5 rounded-xl bg-card-soft border border-border hover:border-primary/40 hover:bg-muted transition-all text-sm font-semibold text-foreground group cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-primary" />
@@ -284,7 +284,7 @@ export function MilestoneDetailDrawer({
                       ? "Hide Curated Learning Resources"
                       : "Explore Curated Learning Resources"}
                   </span>
-                  <span className="text-muted-foreground text-[11px] font-normal flex items-center gap-1 group-hover:text-primary transition-colors">
+                  <span className="text-muted-foreground text-xs font-medium flex items-center gap-1 group-hover:text-primary transition-colors">
                     {showResources ? "Collapse" : "Click to Load"}
                     {showResources ? (
                       <ChevronUp className="w-3.5 h-3.5" />
@@ -302,11 +302,11 @@ export function MilestoneDetailDrawer({
                         Fetching verified official tutorials & docs...
                       </div>
                     ) : isResourceError ? (
-                      <div className="p-4 text-xs text-destructive bg-destructive/10 rounded-xl border border-destructive/20">
+                      <div className="p-4 text-xs sm:text-sm text-destructive bg-destructive/10 rounded-xl border border-destructive/20">
                         Unable to load external resources at this time. Please try again.
                       </div>
                     ) : resources.length === 0 ? (
-                      <div className="p-4 text-xs text-muted-foreground bg-muted rounded-xl border border-border">
+                      <div className="p-4 text-xs sm:text-sm text-muted-foreground bg-muted rounded-xl border border-border">
                         Interactive resources for this module are being curated.
                       </div>
                     ) : (
@@ -317,7 +317,7 @@ export function MilestoneDetailDrawer({
                             href={res.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group flex items-start justify-between gap-3 p-3.5 rounded-xl bg-card-soft border border-border hover:border-primary/50 hover:bg-muted transition-all text-xs"
+                            className="group flex items-start justify-between gap-3 p-3.5 rounded-xl bg-card-soft border border-border hover:border-primary/50 hover:bg-muted transition-all text-xs sm:text-sm"
                           >
                             <div className="flex items-start gap-2.5">
                               <div className="p-1.5 rounded-lg bg-muted text-primary group-hover:bg-primary group-hover:text-white transition-colors shrink-0">
@@ -331,10 +331,10 @@ export function MilestoneDetailDrawer({
                                 )}
                               </div>
                               <div>
-                                <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                                <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors text-sm">
                                   {res.title}
                                 </h4>
-                                <span className="text-[11px] text-muted-foreground">
+                                <span className="text-xs text-muted-foreground font-medium">
                                   {res.provider} • {res.difficulty || res.type || "Official Guide"}
                                 </span>
                               </div>
@@ -452,19 +452,19 @@ export function MilestoneDetailDrawer({
           ) : (
             /* Upcoming / Locked */
             <div className="space-y-3">
-              <div className="p-3.5 rounded-xl bg-muted/40 border border-border flex items-center justify-between gap-3 text-xs">
+              <div className="p-3.5 rounded-xl bg-muted/40 border border-border flex items-center justify-between gap-3 text-xs sm:text-sm">
                 <div className="flex items-center gap-2.5">
                   <div className="p-2 rounded-lg bg-muted text-muted-foreground shrink-0 border border-border">
                     <Lock className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground">Milestone Locked (Preview Mode)</h4>
-                    <p className="text-[11px] text-muted-foreground">
+                    <h4 className="font-semibold text-foreground text-sm">Milestone Locked (Preview Mode)</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mt-0.5">
                       You can preview all module details below. To work on this stage, complete previous milestones in order from above. If it is already unlocked, you can start working immediately.
                     </p>
                   </div>
                 </div>
-                <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-muted text-muted-foreground border border-border shrink-0">
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-muted text-muted-foreground border border-border shrink-0">
                   Locked
                 </span>
               </div>
@@ -474,7 +474,7 @@ export function MilestoneDetailDrawer({
                   <button
                     type="button"
                     onClick={onSelectActive}
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm"
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-2.5 px-3 rounded-xl text-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm"
                   >
                     <ArrowRight className="w-3.5 h-3.5" />
                     <span className="truncate">Go to Active Stage{activeMilestoneTitle ? ` (${activeMilestoneTitle})` : ""}</span>
@@ -483,7 +483,7 @@ export function MilestoneDetailDrawer({
                 <Link
                   href="/dashboard/learner/assessments"
                   onClick={onClose}
-                  className="w-full bg-card hover:bg-card-soft text-foreground font-semibold py-2.5 px-3 rounded-xl border border-border text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm"
+                  className="w-full bg-card hover:bg-card-soft text-foreground font-semibold py-2.5 px-3 rounded-xl border border-border text-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm"
                 >
                   <Target className="w-3.5 h-3.5 text-primary" />
                   Test Out in Assessments

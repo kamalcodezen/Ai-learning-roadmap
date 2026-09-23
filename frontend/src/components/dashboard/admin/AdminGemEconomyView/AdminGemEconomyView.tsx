@@ -146,7 +146,7 @@ export default function AdminGemEconomyView() {
           </div>
           <div className="truncate">
             <div className="font-semibold text-foreground text-xs truncate">{t.userName}</div>
-            <div className="text-[11px] text-muted-foreground truncate">{t.userEmail}</div>
+            <div className="text-xs text-muted-foreground truncate">{t.userEmail}</div>
           </div>
         </div>
       ),
@@ -170,7 +170,7 @@ export default function AdminGemEconomyView() {
       header: "Source",
       align: "center",
       render: (t) => (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-muted text-foreground border border-border/60">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider bg-muted text-foreground border border-border/60">
           {t.source.replace(/_/g, " ")}
         </span>
       ),
@@ -283,7 +283,7 @@ export default function AdminGemEconomyView() {
             <span className="text-2xl font-black text-foreground">{overview?.totalGemsInCirculation ?? 0}</span>
             <span className="text-xs font-bold text-emerald-500">💎</span>
           </div>
-          <p className="text-[11px] text-muted-foreground mt-1">Total gems held across learners</p>
+          <p className="text-xs text-muted-foreground mt-1">Total gems held across learners</p>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
@@ -295,7 +295,7 @@ export default function AdminGemEconomyView() {
             <span className="text-2xl font-black text-foreground">{overview?.claimsPast24h ?? 0}</span>
             <span className="text-xs font-semibold text-muted-foreground">claims</span>
           </div>
-          <p className="text-[11px] text-muted-foreground mt-1">Daily streak check-ins today</p>
+          <p className="text-xs text-muted-foreground mt-1">Daily streak check-ins today</p>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
@@ -307,7 +307,7 @@ export default function AdminGemEconomyView() {
             <span className="text-2xl font-black text-foreground">{overview?.activeStreakersCount ?? 0}</span>
             <span className="text-xs font-semibold text-muted-foreground">learners</span>
           </div>
-          <p className="text-[11px] text-muted-foreground mt-1">Streak unbroken in past 48h</p>
+          <p className="text-xs text-muted-foreground mt-1">Streak unbroken in past 48h</p>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
@@ -319,7 +319,7 @@ export default function AdminGemEconomyView() {
             <span className="text-2xl font-black text-foreground">{overview?.totalTransactionsCount ?? 0}</span>
             <span className="text-xs font-semibold text-muted-foreground">txs</span>
           </div>
-          <p className="text-[11px] text-muted-foreground mt-1">Audit-verified reward events</p>
+          <p className="text-xs text-muted-foreground mt-1">Audit-verified reward events</p>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
@@ -331,7 +331,7 @@ export default function AdminGemEconomyView() {
             <span className="text-2xl font-black text-rose-600 dark:text-rose-400">{overview?.atRiskLearnersCount ?? 0}</span>
             <span className="text-xs font-semibold text-muted-foreground">inactive 7d+</span>
           </div>
-          <p className="text-[11px] text-muted-foreground mt-1">Eligible for Zero-Guilt Recovery</p>
+          <p className="text-xs text-muted-foreground mt-1">Eligible for Zero-Guilt Recovery</p>
         </div>
       </div>
 
@@ -436,24 +436,24 @@ export default function AdminGemEconomyView() {
                       </div>
                       <div className="truncate">
                         <h4 className="font-bold text-foreground text-xs truncate">{learner.name}</h4>
-                        <p className="text-[11px] text-muted-foreground truncate">{learner.email}</p>
+                        <p className="text-xs text-muted-foreground truncate">{learner.email}</p>
                       </div>
                     </div>
-                    <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                    <span className="shrink-0 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                       {learner.daysInactive}d inactive
                     </span>
                   </div>
 
                   <div className="space-y-1.5 text-xs">
-                    <div className="flex items-center justify-between text-[11px]">
+                    <div className="flex items-center justify-between text-xs">
                       <span className="text-muted-foreground">Target Role:</span>
                       <span className="font-semibold text-foreground truncate max-w-[140px]">{learner.targetRole}</span>
                     </div>
-                    <div className="flex items-center justify-between text-[11px]">
+                    <div className="flex items-center justify-between text-xs">
                       <span className="text-muted-foreground">Gems Wallet:</span>
                       <span className="font-bold text-emerald-600 dark:text-emerald-400">{learner.gemsBalance} 💎</span>
                     </div>
-                    <div className="flex items-center justify-between text-[11px]">
+                    <div className="flex items-center justify-between text-xs">
                       <span className="text-muted-foreground">Recovery Mode:</span>
                       <span
                         className={`font-semibold ${
@@ -472,7 +472,7 @@ export default function AdminGemEconomyView() {
                       type="button"
                       disabled={reminderMutation.isPending}
                       onClick={() => reminderMutation.mutate(learner.userId)}
-                      className="py-2 px-2.5 rounded-xl bg-primary/10 hover:bg-primary text-primary hover:text-white text-[11px] font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="py-2 px-2.5 rounded-xl bg-primary/10 hover:bg-primary text-primary hover:text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
                       <Send className="size-3" />
                       <span>Encourage</span>
@@ -492,7 +492,7 @@ export default function AdminGemEconomyView() {
                         setAdjustReason("Comeback Welcome Bonus (+25 💎)");
                         setIsAdjustModalOpen(true);
                       }}
-                      className="py-2 px-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-600 text-emerald-600 dark:text-emerald-400 hover:text-white text-[11px] font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer border border-emerald-500/20"
+                      className="py-2 px-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-600 text-emerald-600 dark:text-emerald-400 hover:text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer border border-emerald-500/20"
                     >
                       <Coins className="size-3" />
                       <span>Gift Gems</span>
@@ -560,8 +560,8 @@ export default function AdminGemEconomyView() {
                         {selectedLearner.name.charAt(0).toUpperCase()}
                       </div>
                       <div className="truncate">
-                        <p className="font-bold text-foreground truncate">{selectedLearner.name}</p>
-                        <p className="text-[11px] text-muted-foreground truncate">{selectedLearner.email}</p>
+                        <p className="font-bold text-foreground text-xs truncate">{selectedLearner.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{selectedLearner.email}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
@@ -618,7 +618,7 @@ export default function AdminGemEconomyView() {
                               </div>
                               <div className="truncate">
                                 <p className="font-semibold text-foreground text-xs truncate">{learner.name}</p>
-                                <p className="text-[10px] text-muted-foreground truncate">{learner.email}</p>
+                                <p className="text-xs text-muted-foreground truncate">{learner.email}</p>
                               </div>
                             </div>
                             <span className="shrink-0 text-xs font-bold text-emerald-600 dark:text-emerald-400">
@@ -648,7 +648,7 @@ export default function AdminGemEconomyView() {
                         key={preset}
                         type="button"
                         onClick={() => setAdjustAmount(preset)}
-                        className="px-2 py-1 text-[10px] font-bold rounded-lg bg-muted hover:bg-emerald-500/10 hover:text-emerald-500 border border-border transition-colors cursor-pointer"
+                        className="px-2.5 py-1 text-xs font-bold rounded-lg bg-muted hover:bg-emerald-500/10 hover:text-emerald-500 border border-border transition-colors cursor-pointer"
                       >
                         +{preset}
                       </button>

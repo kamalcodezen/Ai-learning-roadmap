@@ -389,11 +389,11 @@ export default function CareerAlignmentPage() {
                 className="flex items-center flex-wrap justify-between gap-4 p-4 bg-card/40 hover:bg-card/70 transition-colors"
               >
                 <div className="flex flex-col gap-1 min-w-[180px]">
-                  <span className="font-bold text-sm text-foreground">
+                  <span className="font-bold text-base text-foreground">
                     {req.skill}
                   </span>
                   {req.score !== undefined && req.score > 0 && (
-                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
                       <span>Score: {req.score}%</span>
                       {req.knowledgeScore !== undefined && req.knowledgeScore > 0 && (
                         <span>• Knowledge: {req.knowledgeScore}%</span>

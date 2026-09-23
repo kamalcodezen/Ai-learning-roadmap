@@ -15,8 +15,8 @@ export default function FreshnessBadge({
   return (
     <span
       className={[
-        "inline-flex items-center gap-1",
-        "text-[10px] font-semibold",
+        "inline-flex items-center gap-1.5",
+        "text-xs font-semibold",
         style.text,
       ].join(" ")}
     >

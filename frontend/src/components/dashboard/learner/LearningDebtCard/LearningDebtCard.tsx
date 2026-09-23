@@ -24,6 +24,10 @@ export default function LearningDebtCard({ data }: Props) {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
+    // Do not run Lenis on mobile devices — native touch momentum is smooth and battery-friendly
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) return;
+
     if (!debtScrollRef.current || !debtContentRef.current) return;
 
     const lenis = new Lenis({
@@ -71,10 +75,10 @@ export default function LearningDebtCard({ data }: Props) {
                 className={`w-5 h-5 shrink-0 ${debt.severity === "HIGH" ? "text-red-500" : "text-amber-500"}`}
               />
               <div>
-                <h4 className="font-semibold text-foreground text-sm">
+                <h4 className="font-bold text-foreground text-base">
                   {debt.skill}
                 </h4>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className="text-sm text-muted-foreground mt-0.5">
                   {debt.reason}
                 </p>
               </div>

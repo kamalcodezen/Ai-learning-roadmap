@@ -309,7 +309,7 @@ console.log("useimg",user);
                   {isPro ? <Crown className="size-3.5" /> : isPlus ? <Sparkles className="size-3.5" /> : <Zap className="size-3.5" />}
                   {isPro ? "PRO PLAN" : isPlus ? "PLUS PLAN" : "GO (FREE)"}
                 </span>
-                <span className="inline-flex items-center rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[11px] font-bold text-emerald-500 border border-emerald-500/20">
+                <span className="inline-flex items-center rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-xs font-bold text-emerald-500 border border-emerald-500/20">
                   Active
                 </span>
               </div>

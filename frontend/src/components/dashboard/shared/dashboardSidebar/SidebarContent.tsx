@@ -72,11 +72,11 @@ export default function SidebarContent({
                   </>
                 )}
               </span>
-              <span className="rounded-full bg-primary/20 px-1.5 py-0.5 text-[9px] font-extrabold text-primary">
+              <span className="rounded-full bg-primary/20 px-2 py-0.5 text-xs font-bold text-primary">
                 {userPlan === "PLUS" ? "PRO" : "PLUS"}
               </span>
             </div>
-            <p className="text-[10px] text-muted-foreground leading-tight">
+            <p className="text-xs text-muted-foreground leading-snug">
               {userPlan === "PLUS"
                 ? "Unlock AI Resume, Proof Graph & Career Intelligence."
                 : "Unlock Job Reality, Assessments, and Mock Interviews."}

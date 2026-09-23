@@ -135,7 +135,7 @@ export default function AdminAiSandboxView() {
                   Tune LLM inference hyperparameters
                 </p>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+              <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-primary/10 text-primary">
                 Groq API
               </span>
             </div>
@@ -173,7 +173,7 @@ export default function AdminAiSandboxView() {
                   <label className="font-semibold text-muted-foreground uppercase tracking-wider">
                     Temperature ({temperature})
                   </label>
-                  <span className="text-[11px] text-muted-foreground">
+                  <span className="text-xs text-muted-foreground">
                     {temperature <= 0.3 ? "Deterministic" : temperature <= 0.8 ? "Balanced" : "Creative"}
                   </span>
                 </div>
@@ -258,7 +258,7 @@ export default function AdminAiSandboxView() {
 
             {/* Quick Templates */}
             <div className="flex flex-wrap gap-1.5 mb-3">
-              <span className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1 mr-1">
+              <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1 mr-1">
                 <FileCode className="h-3 w-3 text-primary" /> Templates:
               </span>
               {PROMPT_TEMPLATES.map((tpl) => (
@@ -267,7 +267,7 @@ export default function AdminAiSandboxView() {
                   type="button"
                   aria-label={`Load template prompt: ${tpl.label}`}
                   onClick={() => setPrompt(tpl.prompt)}
-                  className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-muted/40 border border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all cursor-pointer"
+                  className="text-xs font-medium px-3 py-1 rounded-full bg-muted/40 border border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all cursor-pointer"
                 >
                   {tpl.label}
                 </button>
@@ -340,7 +340,7 @@ export default function AdminAiSandboxView() {
             {result && (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
                 <div className="p-2.5 rounded-lg bg-muted/20 border border-border/40 text-xs">
-                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
+                  <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider block">
                     Response Time
                   </span>
                   <span className="text-sm font-bold text-emerald-500 flex items-center gap-1 mt-0.5">
@@ -350,7 +350,7 @@ export default function AdminAiSandboxView() {
                 </div>
 
                 <div className="p-2.5 rounded-lg bg-muted/20 border border-border/40 text-xs">
-                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
+                  <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider block">
                     Total Tokens
                   </span>
                   <span className="text-sm font-bold text-foreground font-poppins mt-0.5 block">
@@ -359,7 +359,7 @@ export default function AdminAiSandboxView() {
                 </div>
 
                 <div className="p-2.5 rounded-lg bg-muted/20 border border-border/40 text-xs">
-                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
+                  <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider block">
                     Prompt Tokens
                   </span>
                   <span className="text-sm font-bold text-muted-foreground font-poppins mt-0.5 block">
@@ -368,7 +368,7 @@ export default function AdminAiSandboxView() {
                 </div>
 
                 <div className="p-2.5 rounded-lg bg-muted/20 border border-border/40 text-xs">
-                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
+                  <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider block">
                     Provider Node
                   </span>
                   <span className="text-xs font-bold text-primary truncate mt-0.5 block">

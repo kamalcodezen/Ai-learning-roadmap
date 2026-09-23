@@ -129,7 +129,7 @@ export default function AdminResumesView() {
             <div className="flex items-center gap-1.5">
               <span className="font-medium text-foreground">{item.fullName}</span>
               {item.user.plan && (
-                <span className="rounded bg-muted/60 px-1.5 py-0.2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <span className="rounded bg-muted/60 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   {item.user.plan}
                 </span>
               )}
@@ -371,7 +371,7 @@ export default function AdminResumesView() {
                         </p>
                       </div>
                       <div className="text-right pl-4 shrink-0">
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">ATS Score</span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">ATS Score</span>
                         <p className="text-2xl font-black text-primary">
                           {resumeDetails.atsScore ?? 0}%
                         </p>
@@ -402,7 +402,7 @@ export default function AdminResumesView() {
                           {resumeDetails.atsFeedback.strengths &&
                             resumeDetails.atsFeedback.strengths.length > 0 && (
                               <div className="rounded-lg bg-muted/40 dark:bg-muted/20 p-3.5 border border-border/40 space-y-1.5">
-                                <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                                <p className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
                                   <CheckCircle2 className="size-3.5" /> Strengths Identified:
                                 </p>
                                 <ul className="list-disc list-inside text-xs text-foreground/90 space-y-1 leading-relaxed">
@@ -416,14 +416,14 @@ export default function AdminResumesView() {
                           {resumeDetails.atsFeedback.missingKeywords &&
                             resumeDetails.atsFeedback.missingKeywords.length > 0 && (
                               <div className="rounded-lg bg-amber-500/5 dark:bg-amber-500/10 p-3.5 border border-amber-500/20 space-y-2">
-                                <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                                <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
                                   <AlertTriangle className="size-3.5" /> Missing Keywords For Target Role:
                                 </p>
                                 <div className="flex flex-wrap gap-1.5 pt-0.5">
                                   {resumeDetails.atsFeedback.missingKeywords.map((kw, i) => (
                                     <span
                                       key={i}
-                                      className="rounded-md bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[11px] font-mono text-amber-600 dark:text-amber-400 font-medium"
+                                      className="rounded-md bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 text-xs font-mono text-amber-600 dark:text-amber-400 font-medium"
                                     >
                                       {kw}
                                     </span>
@@ -435,7 +435,7 @@ export default function AdminResumesView() {
                           {resumeDetails.atsFeedback.suggestions &&
                             resumeDetails.atsFeedback.suggestions.length > 0 && (
                               <div className="rounded-lg bg-primary/5 dark:bg-primary/10 p-3.5 border border-primary/20 space-y-1.5">
-                                <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
+                                <p className="text-xs font-bold uppercase tracking-wider text-primary">
                                   Recommendations:
                                 </p>
                                 <ul className="list-disc list-inside text-xs text-muted-foreground space-y-1 leading-relaxed">
@@ -452,7 +452,7 @@ export default function AdminResumesView() {
                     {/* Resume Executive Summary */}
                     {resumeDetails.summary && (
                       <div className="rounded-xl border border-border/60 bg-muted/40 dark:bg-muted/20 p-4 space-y-2">
-                        <h4 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                           Executive Summary
                         </h4>
                         <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">

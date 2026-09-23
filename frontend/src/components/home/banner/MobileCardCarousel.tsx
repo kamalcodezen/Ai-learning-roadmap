@@ -55,7 +55,11 @@ export default function MobileCardCarousel({
           modifier: 1,
           slideShadows: false,
         }}
-        onSwiper={(swiper) => onActiveChange?.(swiper.realIndex)}
+        onSwiper={(swiper) => {
+          if (initialSlide !== undefined) {
+            swiper.slideToLoop(initialSlide, 0, false);
+          }
+        }}
         onSlideChange={handleChange}
       >
         {slides.map((slide, index) => (

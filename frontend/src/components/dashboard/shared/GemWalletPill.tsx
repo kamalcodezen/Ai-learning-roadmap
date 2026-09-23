@@ -9,7 +9,7 @@ import {
   type GemWalletSummary,
 } from "@/src/lib/api/learner/gem-economy";
 import { useDashboardSession } from "./sessionGuard/SessionGuard";
-import { Check, Clock, X, Flame } from "lucide-react";
+import { Check, Clock, X, Flame, Loader2, Sparkles } from "lucide-react";
 import confetti from "canvas-confetti";
 
 const emptySubscribe = () => () => {};
@@ -292,7 +292,7 @@ export default function GemWalletPill({ className = "" }: { className?: string }
                   <EmeraldGemIcon className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     AI Gems Wallet
                   </h4>
                   <div className="flex items-baseline gap-1.5">
@@ -331,7 +331,7 @@ export default function GemWalletPill({ className = "" }: { className?: string }
                     <Flame className="w-3.5 h-3.5 text-amber-500" />
                     <span>7-Day Streak Ladder</span>
                   </div>
-                  <span className="text-[11px] text-muted-foreground font-medium">
+                  <span className="text-xs text-muted-foreground font-semibold">
                     Day {streak?.currentStreakDays || 0} of 7
                   </span>
                 </div>
@@ -341,7 +341,7 @@ export default function GemWalletPill({ className = "" }: { className?: string }
                   {streak?.streakLadder.map((dayItem) => (
                     <div
                       key={dayItem.day}
-                      className={`flex flex-col items-center justify-center p-1 sm:p-1.5 rounded-xl border text-[10px] font-bold transition-all ${
+                      className={`flex flex-col items-center justify-center p-1 sm:p-1.5 rounded-xl border text-xs font-bold transition-all ${
                         dayItem.claimed
                           ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
                           : dayItem.isCurrent && canClaim
@@ -349,7 +349,7 @@ export default function GemWalletPill({ className = "" }: { className?: string }
                           : "bg-muted/40 text-muted-foreground border-border/40"
                       }`}
                     >
-                      <span className="text-[9px] opacity-70">D{dayItem.day}</span>
+                      <span className="text-[10px] font-semibold opacity-80">D{dayItem.day}</span>
                       <span className="mt-0.5 text-xs leading-none flex items-center gap-0.5">
                         {dayItem.claimed ? (
                           "✓"
@@ -369,19 +369,21 @@ export default function GemWalletPill({ className = "" }: { className?: string }
                 {canClaim ? (
                   <button
                     type="button"
-                    disabled={claimMutation.isPending}
                     onClick={() => claimMutation.mutate()}
-                    className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm shadow-emerald-600/20 disabled:opacity-50 cursor-pointer"
+                    disabled={claimMutation.isPending}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-xs shadow-md shadow-emerald-500/20 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <EmeraldGemIcon className="w-4 h-4" />
-                    <span>
-                      {claimMutation.isPending
-                        ? "Claiming..."
-                        : `Claim Today (+${streak?.todayRewardGems || 1} Gems)`}
-                    </span>
+                    {claimMutation.isPending ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        <span>Claim Daily Gem (+{streak?.todayRewardGems || 1})</span>
+                      </>
+                    )}
                   </button>
                 ) : (
-                  <div className="w-full py-2 px-3 rounded-xl bg-muted/60 text-muted-foreground text-xs font-semibold flex items-center justify-center gap-2 border border-border/60">
+                  <div className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-muted/60 text-muted-foreground text-xs font-medium border border-border/40">
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
                     <span>Claimed for today! Next in ~24h</span>
                   </div>
@@ -390,7 +392,7 @@ export default function GemWalletPill({ className = "" }: { className?: string }
 
               {/* Recent Earnings History */}
               <div className="pt-2 border-t border-border/50">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
                   Recent Activity
                 </p>
                 {wallet?.recentTransactions && wallet.recentTransactions.length > 0 ? (
@@ -401,10 +403,10 @@ export default function GemWalletPill({ className = "" }: { className?: string }
                         className="flex items-center justify-between text-xs p-1.5 rounded-lg hover:bg-muted/40 transition-colors"
                       >
                         <div className="truncate pr-2">
-                          <p className="font-semibold text-foreground text-[11px] truncate">
+                          <p className="font-semibold text-foreground text-xs truncate">
                             {tx.description}
                           </p>
-                          <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                          <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
                             <Clock className="w-2.5 h-2.5" />
                             {new Date(tx.createdAt).toLocaleDateString("en-US", {
                               month: "short",

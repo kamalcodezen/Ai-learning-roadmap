@@ -51,17 +51,33 @@ export default function AdminSidebar() {
     return () => el.removeEventListener("wheel", handleWheel);
   }, [handleWheel]);
 
-  // ── Lock body scroll when mobile drawer is open ──────────────────
+  // ── Auto-close drawer on route change or global event ────────────
   useEffect(() => {
-    if (!drawerOpen) return;
-    const prevOverflow = document.body.style.overflow;
+    const handleClose = () => {
+      setDrawerOpen(false);
+      document.body.style.overflow = "";
+      document.body.style.pointerEvents = "";
+    };
+    window.addEventListener("route-change-close-drawers", handleClose);
+    return () => window.removeEventListener("route-change-close-drawers", handleClose);
+  }, []);
+
+  // ── Lock body scroll ONLY while mobile drawer is open ────────────
+  useEffect(() => {
+    if (!drawerOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = prevOverflow;
+      document.body.style.overflow = "";
     };
   }, [drawerOpen]);
 
-  const closeDrawer = () => setDrawerOpen(false);
+  const closeDrawer = () => {
+    setDrawerOpen(false);
+    document.body.style.overflow = "";
+  };
 
   return (
     <>
@@ -83,23 +99,19 @@ export default function AdminSidebar() {
 
       <AnimatePresence>
         {drawerOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+          <motion.div
+            key="admin-mobile-drawer-wrapper"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 lg:hidden"
+          >
+            {/* Backdrop: 1-click anywhere outside closes drawer */}
+            <div
               onClick={closeDrawer}
-              onWheel={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              onTouchMove={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
               aria-hidden="true"
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
             />
             <motion.aside
               role="dialog"
@@ -122,7 +134,7 @@ export default function AdminSidebar() {
                 onNavigate={closeDrawer}
               />
             </motion.aside>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>

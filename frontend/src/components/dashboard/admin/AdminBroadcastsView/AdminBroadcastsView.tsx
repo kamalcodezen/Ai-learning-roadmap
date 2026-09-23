@@ -112,7 +112,7 @@ export default function AdminBroadcastsView() {
           <p className="text-2xl sm:text-3xl font-bold font-poppins text-foreground mt-2">
             {stats?.totalLearners ?? 0}
           </p>
-          <span className="text-[11px] text-muted-foreground mt-1 block">Active Reachable Audience</span>
+          <span className="text-xs text-muted-foreground mt-1 block">Active Reachable Audience</span>
         </GlowCard>
 
         <GlowCard>
@@ -125,7 +125,7 @@ export default function AdminBroadcastsView() {
           <p className="text-2xl sm:text-3xl font-bold font-poppins text-amber-500 mt-2">
             {stats?.cohortBreakdown?.PRO ?? 0}
           </p>
-          <span className="text-[11px] text-muted-foreground mt-1 block">Pro Subscription Tier</span>
+          <span className="text-xs text-muted-foreground mt-1 block">Pro Subscription Tier</span>
         </GlowCard>
 
         <GlowCard>
@@ -138,7 +138,7 @@ export default function AdminBroadcastsView() {
           <p className="text-2xl sm:text-3xl font-bold font-poppins text-primary mt-2">
             {stats?.cohortBreakdown?.PLUS ?? 0}
           </p>
-          <span className="text-[11px] text-muted-foreground mt-1 block">Plus Subscription Tier</span>
+          <span className="text-xs text-muted-foreground mt-1 block">Plus Subscription Tier</span>
         </GlowCard>
 
         <GlowCard corner="top-right">
@@ -151,7 +151,7 @@ export default function AdminBroadcastsView() {
           <p className="text-2xl sm:text-3xl font-bold font-poppins text-foreground mt-2">
             {stats?.totalBroadcastsSent ?? 0}
           </p>
-          <span className="text-[11px] text-muted-foreground mt-1 block">Total Broadcasts Sent</span>
+          <span className="text-xs text-muted-foreground mt-1 block">Total Broadcasts Sent</span>
         </GlowCard>
       </div>
 
@@ -170,7 +170,7 @@ export default function AdminBroadcastsView() {
                   Send system announcements directly to learner notification centers
                 </p>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+              <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
                 Push
               </span>
             </div>
@@ -329,7 +329,7 @@ export default function AdminBroadcastsView() {
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <span
-                          className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                          className={`text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
                             bc.priority === "URGENT"
                               ? "bg-red-500/10 text-red-500 border-red-500/20"
                               : bc.priority === "HIGH"
@@ -356,7 +356,7 @@ export default function AdminBroadcastsView() {
                       {bc.message}
                     </p>
 
-                    <div className="flex flex-wrap items-center justify-between pt-2 border-t border-border/30 text-[11px] text-muted-foreground">
+                    <div className="flex flex-wrap items-center justify-between pt-2 border-t border-border/30 text-xs text-muted-foreground">
                       <span>Sender: <strong className="text-foreground">{bc.senderName}</strong></span>
                       {bc.actionUrl && (
                         <span className="flex items-center gap-1 text-primary font-medium hover:underline">

@@ -38,7 +38,7 @@ function RoadmapMilestoneNodeComponent({ data }: { data: RoadmapMilestoneNodeDat
       }`}
     >
       {data.isTarget && (
-        <div className="mb-2.5 py-1 px-2.5 rounded-lg bg-primary/15 border border-primary/50 text-primary text-[11px] font-extrabold flex items-center gap-1.5 animate-pulse">
+        <div className="mb-2.5 py-1 px-2.5 rounded-lg bg-primary/15 border border-primary/50 text-primary text-xs font-bold flex items-center gap-1.5 animate-pulse">
           <Target className="w-3.5 h-3.5 text-primary shrink-0" />
           <span>🎯 TARGET SKILL GAP FOCUS</span>
         </div>
@@ -88,7 +88,7 @@ function RoadmapMilestoneNodeComponent({ data }: { data: RoadmapMilestoneNodeDat
             )}
           </span>
           <span
-            className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+            className={`text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
               isCompleted
                 ? "bg-primary/20 text-primary"
                 : isCurrent
@@ -100,14 +100,14 @@ function RoadmapMilestoneNodeComponent({ data }: { data: RoadmapMilestoneNodeDat
           </span>
         </div>
 
-        <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+        <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
           {data.estimatedTime}
         </span>
       </div>
 
       {/* Node Title */}
       <h4
-        className={`text-sm font-bold line-clamp-2 leading-tight mb-1.5 ${
+        className={`text-base font-bold line-clamp-2 leading-tight mb-1.5 ${
           isCompleted ? "text-primary" : isCurrent ? "text-primary" : "text-foreground"
         }`}
       >
@@ -115,23 +115,23 @@ function RoadmapMilestoneNodeComponent({ data }: { data: RoadmapMilestoneNodeDat
       </h4>
 
       {/* Node Description Preview */}
-      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3">
+      <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 leading-relaxed mb-3">
         {data.description}
       </p>
 
       {/* Skills Pill Tags */}
       {data.skillsCovered && data.skillsCovered.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-3">
+        <div className="flex flex-wrap gap-1.5 mb-3">
           {data.skillsCovered.slice(0, 3).map((skill, i) => (
             <span
               key={i}
-              className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-foreground border border-border truncate max-w-[100px]"
+              className="text-xs px-2 py-0.5 rounded bg-muted text-foreground border border-border truncate max-w-[120px] font-medium"
             >
               {skill}
             </span>
           ))}
           {data.skillsCovered.length > 3 && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+            <span className="text-xs px-2 py-0.5 rounded bg-muted text-muted-foreground font-medium">
               +{data.skillsCovered.length - 3}
             </span>
           )}
@@ -141,28 +141,28 @@ function RoadmapMilestoneNodeComponent({ data }: { data: RoadmapMilestoneNodeDat
       {/* Bottom Action Footer */}
       <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
         {isUpcoming ? (
-          <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
-            <Lock className="w-3 h-3" /> View module
+          <span className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+            <Lock className="w-3.5 h-3.5" /> View module
           </span>
         ) : (
-          <span className="text-[11px] font-semibold text-primary hover:text-primary/80 flex items-center gap-1">
-            Learn more <ArrowRight className="w-3 h-3" />
+          <span className="text-xs font-bold text-primary hover:text-primary/80 flex items-center gap-1">
+            Learn more <ArrowRight className="w-3.5 h-3.5" />
           </span>
         )}
 
         {isCompleted && (
-          <span className="text-[10px] text-primary font-semibold flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3" /> Completed
+          <span className="text-xs text-primary font-bold flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Completed
           </span>
         )}
         {isCurrent && (
-          <span className="text-[10px] text-primary font-semibold flex items-center gap-1">
-            <Sparkles className="w-3 h-3" /> Active Frontier
+          <span className="text-xs text-primary font-bold flex items-center gap-1">
+            <Sparkles className="w-3.5 h-3.5" /> Active Frontier
           </span>
         )}
         {isUpcoming && (
-          <span className="text-[10px] text-muted-foreground flex items-center gap-1 font-medium">
-            <Lock className="w-2.5 h-2.5" /> Locked
+          <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
+            <Lock className="w-3 h-3" /> Locked
           </span>
         )}
       </div>

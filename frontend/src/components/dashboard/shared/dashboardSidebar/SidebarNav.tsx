@@ -33,7 +33,7 @@ export default function SidebarNav({
     >
       {dashboardNavSections.map((section, idx) => (
         <div key={idx} className="space-y-1.5">
-          <h4 className="px-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-2">
+          <h4 className="px-6 text-xs font-bold uppercase tracking-widest text-muted-foreground/80 mb-2">
             {section.title}
           </h4>
           {section.items.map((item) => (

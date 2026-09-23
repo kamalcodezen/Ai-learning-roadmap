@@ -48,7 +48,7 @@ export default function SkillSimulationResultView({ result, onRetake }: Props) {
               </span>
             )}
             {result.difficulty && (
-              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20 uppercase text-[10px]">
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20 uppercase tracking-wide">
                 {result.difficulty}
               </span>
             )}
@@ -121,7 +121,7 @@ export default function SkillSimulationResultView({ result, onRetake }: Props) {
               >
                 {result.overallScore}%
               </span>
-              <span className="text-[11px] text-muted-foreground mt-1">
+              <span className="text-xs text-muted-foreground mt-1">
                 Canonical SkillState updated
               </span>
             </div>

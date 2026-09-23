@@ -16,7 +16,7 @@ export default function ReadinessMetric({
           : "border-border bg-card",
       ].join(" ")}
     >
-      <div className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-foreground">
+      <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
         {dimension.icon}
         <span className="truncate">{dimension.label}</span>
       </div>
