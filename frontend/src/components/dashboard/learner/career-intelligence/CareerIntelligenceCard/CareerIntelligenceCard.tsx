@@ -323,7 +323,7 @@ export default function CareerIntelligenceCard() {
                 </StatusPill>
               </div>
 
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
                 AI-powered readiness intelligence for{" "}
                 <span className="font-semibold text-foreground">
                   {decisionData.targetRole}
@@ -346,7 +346,7 @@ export default function CareerIntelligenceCard() {
               <div className="hidden h-14 w-px bg-border lg:block" />
 
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Career Readiness
                 </p>
 
@@ -398,25 +398,32 @@ export default function CareerIntelligenceCard() {
       </DashboardCard>
 
       <DashboardCard className="overflow-hidden p-0!">
-        <div className="grid lg:grid-cols-[1fr_0.75fr]">
-          <div className="border-b border-border p-6 lg:border-b-0 lg:border-r lg:p-8">
-            <SectionLabel icon={<Zap className="h-3.5 w-3.5" />}>
-              Highest Impact Next Action
-            </SectionLabel>
+        <div className="grid grid-cols-1 divide-y divide-border lg:grid-cols-2 lg:divide-x lg:divide-y-0">
+          <div className="p-6 lg:p-8">
+            <div className="flex items-center justify-between">
+              <SectionLabel icon={<Target className="h-3.5 w-3.5" />}>
+                Recommended Career Move
+              </SectionLabel>
 
-            <div className="mt-5 flex flex-col gap-5">
+              <span className="flex items-center gap-1.5 text-xs font-semibold text-primary">
+                <Sparkles className="h-3.5 w-3.5" />
+                Dynamic
+              </span>
+            </div>
+
+            <div className="mt-5 space-y-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-xl font-bold tracking-tight text-foreground">
                     {decisionData.nextBestAction.title}
                   </h3>
 
-                  <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide text-primary">
+                  <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-primary">
                     {decisionData.nextBestAction.expectedImpact} impact
                   </span>
                 </div>
 
-                <p className="mt-2 text-xs text-muted-foreground">
+                <p className="mt-2 text-sm text-muted-foreground">
                   Focus area:{" "}
                   <span className="font-semibold text-foreground">
                     {decisionData.nextBestAction.skillName}
@@ -429,8 +436,8 @@ export default function CareerIntelligenceCard() {
               </div>
 
               <div className="flex flex-col gap-4 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-                  <Clock3 className="h-3.5 w-3.5 text-primary" />
+                <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                  <Clock3 className="h-4 w-4 text-primary" />
                   Estimated effort:{" "}
                   <span className="font-semibold text-foreground">
                     ~{decisionData.nextBestAction.estimatedEffortHours} hrs
@@ -467,7 +474,7 @@ export default function CareerIntelligenceCard() {
                     <Check className="h-3 w-3" />
                   </span>
 
-                  <p className="text-xs leading-5 text-foreground/80">
+                  <p className="text-sm leading-relaxed text-foreground/80">
                     {reason}
                   </p>
                 </div>
@@ -482,18 +489,18 @@ export default function CareerIntelligenceCard() {
               What-if projection
             </SectionLabel>
 
-            <p className="mt-2 text-xs font-medium leading-5 text-foreground">
+            <p className="mt-2 text-sm font-medium leading-relaxed text-foreground">
               {decisionData.simulation.scenarioText}
             </p>
 
-            <p className="mt-1 text-[10px] leading-5 text-muted-foreground">
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
               {decisionData.simulation.disclaimer}
             </p>
           </div>
 
           <div className="flex shrink-0 items-center gap-6">
             <div>
-              <p className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 Proof Gain
               </p>
               <p className="mt-1 text-lg font-black text-emerald-600 dark:text-emerald-400">
@@ -504,7 +511,7 @@ export default function CareerIntelligenceCard() {
             <div className="h-9 w-px bg-border" />
 
             <div>
-              <p className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 Readiness Gain
               </p>
               <p className="mt-1 text-lg font-black text-blue-600 dark:text-blue-400">
@@ -527,7 +534,7 @@ export default function CareerIntelligenceCard() {
                 Skill vs proof
               </h3>
 
-              <p className="mt-1 max-w-xl text-xs leading-5 text-muted-foreground">
+              <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
                 The difference between what you know and what you can prove
                 through real implementation.
               </p>
@@ -537,7 +544,7 @@ export default function CareerIntelligenceCard() {
               <Award className="h-5 w-5 text-primary" />
 
               <div>
-                <p className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
+                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Employer Confidence
                 </p>
 
@@ -575,7 +582,7 @@ export default function CareerIntelligenceCard() {
               Evidence Matrix
             </SectionLabel>
 
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Skill-level verification, freshness and supporting project proof.
             </p>
           </div>
@@ -591,7 +598,7 @@ export default function CareerIntelligenceCard() {
                   className="group border border-border bg-card p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <h4 className="min-w-0 truncate text-sm font-bold text-foreground">
+                    <h4 className="min-w-0 truncate text-base font-bold text-foreground">
                       {item.skillName}
                     </h4>
 
@@ -600,7 +607,7 @@ export default function CareerIntelligenceCard() {
 
                   <div className="mt-4 grid grid-cols-2 dashboard-card-gap">
                     <div>
-                      <p className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
+                      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                         Knowledge
                       </p>
 
@@ -610,7 +617,7 @@ export default function CareerIntelligenceCard() {
                     </div>
 
                     <div>
-                      <p className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
+                      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                         Proof
                       </p>
 
@@ -637,7 +644,7 @@ export default function CareerIntelligenceCard() {
                   <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
                     <FreshnessBadge freshness={item.freshness} />
 
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-xs text-muted-foreground">
                       {item.evidenceSources.verifiedProjectsCount} verified
                       project
                       {item.evidenceSources.verifiedProjectsCount === 1
@@ -648,7 +655,7 @@ export default function CareerIntelligenceCard() {
 
                   {item.recommendation && (
                     <div className="mt-3 border-l-2 border-amber-500 bg-amber-500/[0.06] px-3 py-2">
-                      <p className="text-[10px] leading-4 text-amber-700 dark:text-amber-300">
+                      <p className="text-xs leading-relaxed text-amber-700 dark:text-amber-300">
                         {item.recommendation}
                       </p>
                     </div>
@@ -666,7 +673,7 @@ export default function CareerIntelligenceCard() {
                 className={[
                   "inline-flex items-center justify-center gap-2",
                   "rounded-full border px-5 py-2",
-                  "text-xs font-semibold",
+                  "text-sm font-semibold",
                   "border-primary/20 bg-primary/10 text-primary",
                   "transition-colors duration-200",
                   "hover:bg-primary/15",
@@ -692,13 +699,13 @@ export default function CareerIntelligenceCard() {
                 Seven dimensions of career readiness
               </h3>
 
-              <p className="mt-1 max-w-xl text-xs leading-5 text-muted-foreground">
+              <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
                 A unified view of the signals that determine your current
                 position in the career pipeline.
               </p>
             </div>
 
-            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Canonical evaluation
             </span>
           </div>
@@ -719,7 +726,7 @@ export default function CareerIntelligenceCard() {
 
           <div className="mt-5 grid grid-cols-2 gap-px overflow-hidden border border-border bg-border md:grid-cols-3 lg:grid-cols-6">
             <div className="bg-card p-4">
-              <p className="text-[10px] font-semibold text-muted-foreground">
+              <p className="text-xs font-bold text-muted-foreground">
                 Skill Score
               </p>
 
@@ -727,13 +734,13 @@ export default function CareerIntelligenceCard() {
                 {verificationData.overallSkillScore}%
               </p>
 
-              <p className="mt-1 text-[9px] text-muted-foreground">
+              <p className="mt-1 text-xs text-muted-foreground font-medium">
                 Claimed knowledge
               </p>
             </div>
 
             <div className="bg-card p-4">
-              <p className="text-[10px] font-semibold text-muted-foreground">
+              <p className="text-xs font-bold text-muted-foreground">
                 Proof Score
               </p>
 
@@ -741,13 +748,13 @@ export default function CareerIntelligenceCard() {
                 {verificationData.overallProofScore}%
               </p>
 
-              <p className="mt-1 text-[9px] text-muted-foreground">
+              <p className="mt-1 text-xs text-muted-foreground font-medium">
                 Verified implementation
               </p>
             </div>
 
             <div className="bg-card p-4">
-              <p className="text-[10px] font-semibold text-muted-foreground">
+              <p className="text-xs font-bold text-muted-foreground">
                 Evidence Quality
               </p>
 
@@ -755,13 +762,13 @@ export default function CareerIntelligenceCard() {
                 <QualityBadge quality={evidenceQuality} />
               </div>
 
-              <p className="mt-2 text-[9px] text-muted-foreground">
+              <p className="mt-2 text-xs text-muted-foreground font-medium">
                 {verificationData.strongEvidenceSkillsCount} strong skill(s)
               </p>
             </div>
 
             <div className="bg-card p-4">
-              <p className="text-[10px] font-semibold text-muted-foreground">
+              <p className="text-xs font-bold text-muted-foreground">
                 Confidence
               </p>
 
@@ -769,13 +776,13 @@ export default function CareerIntelligenceCard() {
                 {evidenceConfidence}%
               </p>
 
-              <p className="mt-1 text-[9px] text-muted-foreground">
+              <p className="mt-1 text-xs text-muted-foreground font-medium">
                 Multi-source validity
               </p>
             </div>
 
             <div className="bg-card p-4">
-              <p className="text-[10px] font-semibold text-muted-foreground">
+              <p className="text-xs font-bold text-muted-foreground">
                 Freshness
               </p>
 
@@ -783,13 +790,13 @@ export default function CareerIntelligenceCard() {
                 <FreshnessBadge freshness={evidenceFreshness} />
               </div>
 
-              <p className="mt-2 text-[9px] text-muted-foreground">
+              <p className="mt-2 text-xs text-muted-foreground font-medium">
                 {verificationData.staleEvidenceSkillsCount} stale skill(s)
               </p>
             </div>
 
             <div className="bg-primary/[0.06] p-4">
-              <p className="text-[10px] font-semibold text-primary">
+              <p className="text-xs font-bold text-primary">
                 Employer Signal
               </p>
 
@@ -797,7 +804,7 @@ export default function CareerIntelligenceCard() {
                 {verificationData.employerConfidenceSignal}%
               </p>
 
-              <p className="mt-1 text-[9px] text-muted-foreground">
+              <p className="mt-1 text-xs text-muted-foreground font-medium">
                 Hiring readiness
               </p>
             </div>

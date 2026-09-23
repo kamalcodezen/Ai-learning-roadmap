@@ -41,12 +41,12 @@ export default function SkillHealthCard({ data }: Props) {
         <div className="space-y-4 mb-6">
           {data.map((skill, index) => (
             <div key={index}>
-              <div className="flex justify-between items-end mb-1">
-                <span className="text-sm font-medium text-foreground">
+              <div className="flex justify-between items-end mb-1.5">
+                <span className="text-base font-semibold text-foreground">
                   {skill.name}
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold">{skill.score}%</span>
+                  <span className="text-sm font-bold">{skill.score}%</span>
                   {skill.trend === "UP" && (
                     <TrendingUp className="w-4 h-4 text-primary" />
                   )}

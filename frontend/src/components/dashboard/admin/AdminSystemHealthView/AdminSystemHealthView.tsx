@@ -238,7 +238,7 @@ export default function AdminSystemHealthView() {
                 <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div>
-                <p className="text-[11px] sm:text-xs font-medium text-muted-foreground">Avg Latency</p>
+                <p className="text-xs font-medium text-muted-foreground">Avg Latency</p>
                 <p className="text-xs sm:text-sm font-bold text-foreground">
                   {avgLatency !== null ? `${avgLatency}ms` : "Fast"}
                 </p>
@@ -250,7 +250,7 @@ export default function AdminSystemHealthView() {
                 <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div>
-                <p className="text-[11px] sm:text-xs font-medium text-muted-foreground">Last Checked</p>
+                <p className="text-xs font-medium text-muted-foreground">Last Checked</p>
                 <p className="text-xs sm:text-sm font-bold text-foreground">
                   {lastRefreshedAt.toLocaleTimeString([], {
                     hour: "2-digit",
@@ -312,7 +312,7 @@ export default function AdminSystemHealthView() {
                       {svc.name}
                     </h3>
                     {svc.provider && (
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">
+                      <span className="text-xs uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-primary/10 text-primary">
                         {svc.provider}
                       </span>
                     )}

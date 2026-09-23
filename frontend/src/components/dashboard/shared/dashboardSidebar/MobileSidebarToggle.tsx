@@ -52,20 +52,22 @@ export default function MobileSidebarToggle({ onOpen }: MobileSidebarToggleProps
           aria-label="Open AI Mentor Chat"
           className="relative flex items-center gap-2 rounded-lg border border-foreground/20 px-2.5 py-1.5 font-semibold text-xs sm:text-sm text-primary transition-colors hover:bg-brand hover:text-white cursor-pointer"
         >
-          <BorderBeam
-            size={60}
-            duration={6}
-            colorFrom="rgba(239,68,68,0)"
-            colorTo="#ef4444"
-          />
-          <BorderBeam
-            size={60}
-            duration={6}
-            delay={3}
-            borderWidth={2}
-            colorFrom="rgba(59,130,246,0)"
-            colorTo="#3b82f6"
-          />
+          <div className="hidden sm:block">
+            <BorderBeam
+              size={60}
+              duration={6}
+              colorFrom="rgba(239,68,68,0)"
+              colorTo="#ef4444"
+            />
+            <BorderBeam
+              size={60}
+              duration={6}
+              delay={3}
+              borderWidth={2}
+              colorFrom="rgba(59,130,246,0)"
+              colorTo="#3b82f6"
+            />
+          </div>
           <Sparkles className="size-4" aria-hidden="true" />
           <span className="mt-0.5">Ai Mentor</span>
         </button>

@@ -67,10 +67,10 @@ export default function NextBestActionCard({ data }: Props) {
         <div ref={reasonScrollRef} className="mt-4 lg:h-fit min-h-0 overflow-y-scroll rounded-lg">
           <div ref={reasonContentRef} className="min-h-full">
             <div className="bg-card-soft rounded-lg p-4 border border-border">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block mb-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground block mb-1.5">
                 Reason
               </span>
-              <p className="text-sm text-foreground">{data.reason}</p>
+              <p className="text-base leading-relaxed text-foreground">{data.reason}</p>
             </div>
           </div>
         </div>

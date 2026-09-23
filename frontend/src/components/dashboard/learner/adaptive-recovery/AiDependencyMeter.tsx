@@ -88,18 +88,18 @@ export default function AiDependencyMeter({
               <h3 className="font-bold text-foreground text-base md:text-lg">
                 AI Dependency & Problem-Solving Meter
               </h3>
-              <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-muted text-muted-foreground border border-border">
+              <span className="hidden sm:inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-muted text-muted-foreground border border-border">
                 {data.categoryBadge}
               </span>
             </div>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-sm text-muted-foreground mt-0.5">
               Tracks autonomous problem solving vs AI reliance for live interviews
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-muted/50 border border-border text-xs font-semibold text-foreground">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-muted/50 border border-border text-sm font-semibold text-foreground">
             <span>{depScore}% AI Reliance</span>
           </div>
           <button
@@ -156,18 +156,18 @@ export default function AiDependencyMeter({
                   <span className="text-3xl font-black text-foreground tracking-tight">
                     {depScore}%
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     AI Reliance
                   </span>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <h4 className={`font-bold text-sm ${themeColor} flex items-center justify-center gap-1.5`}>
+                <h4 className={`font-bold text-base ${themeColor} flex items-center justify-center gap-1.5`}>
                   {statusIcon}
                   <span>{data.categoryTitle}</span>
                 </h4>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Autonomy Score: <span className="font-bold text-foreground">{autonomyScore}%</span> (Self-Reliance)
                 </p>
               </div>
@@ -175,89 +175,89 @@ export default function AiDependencyMeter({
 
             {/* Right 7 cols: Employer Perception & 3 Pillars */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="p-3.5 rounded-xl bg-muted/20 border border-border space-y-1.5">
-                <div className="flex items-center justify-between text-xs">
+              <div className="p-4 rounded-xl bg-muted/20 border border-border space-y-1.5">
+                <div className="flex items-center justify-between text-sm">
                   <span className="font-bold text-foreground flex items-center gap-1.5">
-                    <TrendingUp className="w-3.5 h-3.5 text-primary" />
+                    <TrendingUp className="w-4 h-4 text-primary" />
                     Employer Hiring Signal
                   </span>
-                  <span className="text-[11px] font-semibold text-primary">
+                  <span className="text-xs font-bold text-primary">
                     {data.employerSignalRating.replace("_", " ")}
                   </span>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {data.employerPerceptionSummary}
                 </p>
               </div>
 
               {/* 3 Pillars Breakdown */}
-              <div className="space-y-2.5">
-                <div className="text-xs font-bold text-foreground uppercase tracking-wider">
+              <div className="space-y-3">
+                <div className="text-sm font-bold text-foreground uppercase tracking-wider">
                   Autonomy Breakdown Pillars
                 </div>
 
                 {/* Pillar 1: Prompting Autonomy */}
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs">
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-sm">
                     <span className="font-medium text-foreground flex items-center gap-1.5">
-                      <Brain className="w-3.5 h-3.5 text-primary" />
+                      <Brain className="w-4 h-4 text-primary" />
                       {data.pillars.promptAutonomy.name}
                     </span>
                     <span className="font-bold text-foreground">
                       {data.pillars.promptAutonomy.score}%
                     </span>
                   </div>
-                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary rounded-full transition-all duration-700"
                       style={{ width: `${data.pillars.promptAutonomy.score}%` }}
                     />
                   </div>
-                  <p className="text-[10px] text-muted-foreground">
+                  <p className="text-xs text-muted-foreground font-medium">
                     {data.pillars.promptAutonomy.metricData}
                   </p>
                 </div>
 
                 {/* Pillar 2: Project Code Articulation */}
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs">
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-sm">
                     <span className="font-medium text-foreground flex items-center gap-1.5">
-                      <Code2 className="w-3.5 h-3.5 text-primary" />
+                      <Code2 className="w-4 h-4 text-primary" />
                       {data.pillars.projectExplanation.name}
                     </span>
                     <span className="font-bold text-foreground">
                       {data.pillars.projectExplanation.score}%
                     </span>
                   </div>
-                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary rounded-full transition-all duration-700"
                       style={{ width: `${data.pillars.projectExplanation.score}%` }}
                     />
                   </div>
-                  <p className="text-[10px] text-muted-foreground">
+                  <p className="text-xs text-muted-foreground font-medium">
                     {data.pillars.projectExplanation.metricData}
                   </p>
                 </div>
 
                 {/* Pillar 3: Live Screening Recall */}
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs">
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-sm">
                     <span className="font-medium text-foreground flex items-center gap-1.5">
-                      <Mic className="w-3.5 h-3.5 text-primary" />
+                      <Mic className="w-4 h-4 text-primary" />
                       {data.pillars.interviewArticulation.name}
                     </span>
                     <span className="font-bold text-foreground">
                       {data.pillars.interviewArticulation.score}%
                     </span>
                   </div>
-                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary rounded-full transition-all duration-700"
                       style={{ width: `${data.pillars.interviewArticulation.score}%` }}
                     />
                   </div>
-                  <p className="text-[10px] text-muted-foreground">
+                  <p className="text-xs text-muted-foreground font-medium">
                     {data.pillars.interviewArticulation.metricData}
                   </p>
                 </div>
@@ -268,16 +268,16 @@ export default function AiDependencyMeter({
           {/* Actionable Remedies to Maximize Live Interview Pass Probability */}
           <div className="pt-2 border-t border-border/60 space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <h4 className="text-sm font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-primary" />
                 Interview Preparation Recommendations
               </h4>
               <Link
                 href="/dashboard/learner/interview"
-                className="text-xs text-primary font-bold hover:underline flex items-center gap-1"
+                className="text-sm text-primary font-bold hover:underline flex items-center gap-1"
               >
                 <span>Practice Mock Interview</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
+                <ArrowUpRight className="w-4 h-4" />
               </Link>
             </div>
 
@@ -285,12 +285,12 @@ export default function AiDependencyMeter({
               {data.actionableRemedies.map((remedy, i) => (
                 <div
                   key={i}
-                  className="p-3 rounded-xl bg-muted/20 border border-border text-xs space-y-1"
+                  className="p-3.5 rounded-xl bg-muted/20 border border-border space-y-1.5"
                 >
-                  <div className="font-bold text-foreground leading-tight">
+                  <div className="font-bold text-sm text-foreground leading-tight">
                     {remedy.title}
                   </div>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {remedy.description}
                   </p>
                 </div>

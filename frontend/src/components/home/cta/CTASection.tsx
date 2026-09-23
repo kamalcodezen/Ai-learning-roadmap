@@ -3,6 +3,7 @@
 import React from 'react';
 import Button from '../../ui/button';
 import { authClient } from '@/src/lib/auth-client';
+import { useIsMounted } from '@/src/hooks/useIsMounted';
 
 /* Dot-pattern chevron decorations (top-left & top-right) */
 function DotPattern({ className = '' }: { className?: string }) {
@@ -42,8 +43,10 @@ function DotPattern({ className = '' }: { className?: string }) {
 }
 
 export default function CTASection() {
+  const mounted = useIsMounted();
   const { data: session } = authClient.useSession();
-  const user = session?.user;
+
+  const user = mounted ? session?.user : undefined;
   const userRole = (user as { role?: string } | undefined)?.role?.toUpperCase();
 
   const ctaHref = !user

@@ -21,7 +21,7 @@ export default function MetricSignal({
       <div className="flex items-start justify-between gap-3">
         <div
           className={[
-            "flex items-center gap-1.5 text-[11px] font-semibold",
+            "flex items-center gap-1.5 text-xs font-bold",
             style.text,
           ].join(" ")}
         >
@@ -34,7 +34,7 @@ export default function MetricSignal({
         {value}
       </div>
 
-      <p className="mt-1 text-[11px] leading-5 text-muted-foreground">
+      <p className="mt-1 text-xs leading-5 text-muted-foreground">
         {description}
       </p>
     </div>

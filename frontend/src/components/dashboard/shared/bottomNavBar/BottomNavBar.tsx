@@ -31,19 +31,22 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
           borderColor: "rgba(255,255,255,0.08)",
         }}
       >
-        <BorderBeam
-          duration={6}
-          size={100}
-          borderWidth={2}
-          className="from-transparent via-[#9F54F7] to-transparent"
-        />
-        <BorderBeam
-          duration={6}
-          delay={3}
-          size={100}
-          borderWidth={2}
-          className="from-transparent via-[#c084fc] to-transparent"
-        />
+        {/* Lightweight border on mobile, animated beam on tablet/desktop */}
+        <div className="hidden sm:block">
+          <BorderBeam
+            duration={6}
+            size={100}
+            borderWidth={2}
+            className="from-transparent via-[#9F54F7] to-transparent"
+          />
+          <BorderBeam
+            duration={6}
+            delay={3}
+            size={100}
+            borderWidth={2}
+            className="from-transparent via-[#c084fc] to-transparent"
+          />
+        </div>
         {/* Left brand icon */}
         <Link
           href="/"
@@ -96,7 +99,7 @@ export default function BottomNavBar({ items }: BottomNavBarProps) {
 
                 <span
                   className={cn(
-                    "relative z-10 text-[10px] font-bold leading-tight transition-opacity duration-300",
+                    "relative z-10 text-xs font-bold leading-tight transition-opacity duration-300",
                     active ? "opacity-100" : "opacity-70 group-hover:opacity-100",
                   )}
                 >

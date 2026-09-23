@@ -175,7 +175,7 @@ export function ProofNodeDrawer({
                   style={{ width: `${node.score}%` }}
                 />
               </div>
-              <p className="text-[11px] text-muted-foreground pt-1">
+              <p className="text-xs text-muted-foreground pt-1 leading-relaxed">
                 {node.score >= 70
                   ? "Exceeds production competency threshold (>70%). Validated for recruiter sharing."
                   : "Requires further milestone evidence or assessment to reach mastery threshold."}
@@ -266,13 +266,13 @@ export function ProofNodeDrawer({
                         <div className="font-semibold text-foreground group-hover:text-primary transition-colors">
                           {targetNode.title}
                         </div>
-                        <div className="text-[11px] text-muted-foreground">
+                        <div className="text-xs text-muted-foreground">
                           {edge.label ? `Relation: "${edge.label}"` : `Type: ${targetNode.type}`}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 text-muted-foreground group-hover:text-primary">
-                      <span className="text-[11px] capitalize">{targetNode.status}</span>
+                      <span className="text-xs capitalize">{targetNode.status}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </div>
                   </button>
@@ -303,13 +303,13 @@ export function ProofNodeDrawer({
                         <div className="font-semibold text-foreground group-hover:text-primary transition-colors">
                           {sourceNode.title}
                         </div>
-                        <div className="text-[11px] text-muted-foreground">
+                        <div className="text-xs text-muted-foreground">
                           {edge.label ? `Relationship: "${edge.label}"` : `Type: ${sourceNode.type}`}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 text-muted-foreground group-hover:text-primary">
-                      <span className="text-[11px] capitalize">{sourceNode.status}</span>
+                      <span className="text-xs capitalize">{sourceNode.status}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </div>
                   </button>

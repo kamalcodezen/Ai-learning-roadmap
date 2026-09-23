@@ -52,7 +52,7 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
           </div>
 
           {/* Status Badge */}
-          <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-rose-600 dark:text-rose-400">
+          <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 px-3 py-1 text-xs font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400">
             <Lock className="size-3" />
             403 Forbidden — Admin Only
           </div>
@@ -76,17 +76,17 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
           {user && (
             <div className="mt-5 rounded-xl border border-border/80 bg-muted/40 p-3 text-left text-xs flex items-center justify-between">
               <div className="truncate pr-2">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground block">Signed In As</span>
+                <span className="text-xs uppercase font-bold text-muted-foreground block">Signed In As</span>
                 <span className="font-semibold text-foreground truncate block">{user.email}</span>
               </div>
-              <span className="shrink-0 rounded-md bg-foreground/10 px-2 py-0.5 text-[10px] font-extrabold uppercase">
+              <span className="shrink-0 rounded-md bg-foreground/10 px-2.5 py-0.5 text-xs font-bold uppercase">
                 {userRole}
               </span>
             </div>
           )}
 
           {/* Countdown Notification */}
-          <p className="mt-4 text-[11px] font-medium text-muted-foreground">
+          <p className="mt-4 text-xs font-medium text-muted-foreground">
             Redirecting you back to your Learner Dashboard in{" "}
             <span className="font-bold text-rose-500">{countdown}s</span>...
           </p>

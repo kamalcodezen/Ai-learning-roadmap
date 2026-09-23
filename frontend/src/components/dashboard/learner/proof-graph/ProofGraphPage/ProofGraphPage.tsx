@@ -708,12 +708,12 @@ export default function ProofGraphPage() {
                         <span>+{ach.xpReward} XP</span>
                       </div>
                       {ach.isUnlocked ? (
-                        <span className="text-[10px] text-green-500 font-semibold flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3" /> Unlocked
+                        <span className="text-xs text-green-500 font-semibold flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Unlocked
                         </span>
                       ) : (
-                        <span className="text-[10px] text-muted-foreground font-semibold flex items-center gap-1">
-                          <Lock className="w-3 h-3" /> Locked
+                        <span className="text-xs text-muted-foreground font-semibold flex items-center gap-1">
+                          <Lock className="w-3.5 h-3.5" /> Locked
                         </span>
                       )}
                     </CardContent>

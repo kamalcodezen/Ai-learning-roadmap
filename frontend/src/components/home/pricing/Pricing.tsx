@@ -7,13 +7,15 @@ import { pricingPlans, type PricingPlan } from "./plans";
 import { NumberTicker } from "@/src/registry/magicui/number-ticker";
 import Button from "../../ui/button";
 import { authClient } from "@/src/lib/auth-client";
+import { useIsMounted } from "@/src/hooks/useIsMounted";
 
 const Pricing = () => {
   const router = useRouter();
   const [billing, setBilling] = useState<BillingPeriod>("monthly");
+  const mounted = useIsMounted();
   const { data: session } = authClient.useSession();
 
-  const user = session?.user as { plan?: string; role?: string } | undefined;
+  const user = mounted ? (session?.user as { plan?: string; role?: string } | undefined) : undefined;
   const userPlan = user?.plan?.toUpperCase() || "FREE";
   const isLoggedIn = !!user;
 

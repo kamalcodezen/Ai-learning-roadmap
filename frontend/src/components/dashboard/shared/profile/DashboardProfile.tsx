@@ -395,7 +395,7 @@ export default function DashboardProfile({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="block text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                    <span className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
                       {item.label}
                     </span>
                     <div className="truncate text-sm font-semibold text-foreground mt-0.5">
@@ -426,7 +426,7 @@ export default function DashboardProfile({
                     <span className="block text-2xl font-black text-foreground font-poppins tracking-tight group-hover/metric:text-primary transition-colors">
                       {metric.value}
                     </span>
-                    <span className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider mt-1 block">
+                    <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mt-1 block">
                       {metric.label}
                     </span>
                   </div>

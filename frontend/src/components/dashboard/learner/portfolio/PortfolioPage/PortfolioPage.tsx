@@ -823,7 +823,7 @@ export default function PortfolioPage() {
               onClick={openImportModal}
               className="w-full sm:w-auto shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/30 transition-all cursor-pointer py-2.5 px-6 active:scale-[0.99]"
             />
-            <div className="flex items-center justify-center sm:justify-start lg:justify-end gap-1.5 text-[11px] sm:text-xs text-muted-foreground w-full">
+            <div className="flex items-center justify-center sm:justify-start lg:justify-end gap-1.5 text-xs sm:text-sm text-muted-foreground w-full">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
               <span className="font-medium">Instant ~15s analysis</span>
               <span className="opacity-40">•</span>
@@ -835,37 +835,37 @@ export default function PortfolioPage() {
         {/* BOTTOM FULL-WIDTH AUDIT & EVIDENCE EXPLANATION CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 pt-5 border-t border-border/60 relative">
           <div className="p-3.5 rounded-xl bg-muted/40 border border-border/60 space-y-1.5 transition-colors hover:bg-muted/60">
-            <div className="flex items-center gap-2 text-foreground font-bold text-xs">
+            <div className="flex items-center gap-2 text-foreground font-bold text-sm">
               <div className="p-1.5 rounded-lg bg-primary/10 text-primary shrink-0">
                 <FileCode2 className="w-4 h-4" />
               </div>
               <span>Codebase & Stack Inspection</span>
             </div>
-            <p className="text-[11px] text-muted-foreground leading-relaxed pl-7">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed pl-7">
               Scans root directory, programming languages, Dockerfiles, CI/CD workflows, and automated test frameworks.
             </p>
           </div>
 
           <div className="p-3.5 rounded-xl bg-muted/40 border border-border/60 space-y-1.5 transition-colors hover:bg-muted/60">
-            <div className="flex items-center gap-2 text-foreground font-bold text-xs">
+            <div className="flex items-center gap-2 text-foreground font-bold text-sm">
               <div className="p-1.5 rounded-lg bg-primary/10 text-primary shrink-0">
                 <Sparkles className="w-4 h-4" />
               </div>
               <span>AI Architecture Review</span>
             </div>
-            <p className="text-[11px] text-muted-foreground leading-relaxed pl-7">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed pl-7">
               Senior Architect AI assesses real implementation, engineering decisions, documentation quality, and strengths.
             </p>
           </div>
 
           <div className="p-3.5 rounded-xl bg-muted/40 border border-border/60 space-y-1.5 transition-colors hover:bg-muted/60">
-            <div className="flex items-center gap-2 text-foreground font-bold text-xs">
+            <div className="flex items-center gap-2 text-foreground font-bold text-sm">
               <div className="p-1.5 rounded-lg bg-primary/10 text-primary shrink-0">
                 <ShieldCheck className="w-4 h-4" />
               </div>
               <span>Proof Graph & Skill State Sync</span>
             </div>
-            <p className="text-[11px] text-muted-foreground leading-relaxed pl-7">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed pl-7">
               Awards verifiable evidence scores, boosting your technical depth score and updating your Career Twin readiness.
             </p>
           </div>
@@ -1164,7 +1164,7 @@ export default function PortfolioPage() {
                           <span className="text-sm">🎯</span>
                           <span>Selected Milestone Project</span>
                         </span>
-                        <span className="text-[10px] uppercase tracking-wider bg-primary text-white px-2 py-0.5 rounded font-extrabold shadow-sm">
+                        <span className="text-xs uppercase tracking-wider bg-primary text-white px-2.5 py-0.5 rounded font-extrabold shadow-sm">
                           Active Match
                         </span>
                       </div>
@@ -1193,19 +1193,19 @@ export default function PortfolioPage() {
                     <CardHeader className="border-b border-border pb-6">
                       {/* Top Distinct Context Banner */}
                       {isGenerated && rawMilestoneTitle && (
-                        <div className="mb-3 pr-16 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 text-xs font-semibold text-primary flex flex-wrap items-center justify-between gap-2 shadow-sm">
+                        <div className="mb-3 pr-16 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 text-xs sm:text-sm font-semibold text-primary flex flex-wrap items-center justify-between gap-2 shadow-sm">
                           <span className="flex items-center gap-2">
-                            <span className="text-sm">📍</span>
+                            <span className="text-base">📍</span>
                             <span>Created for Roadmap Milestone: <strong className="text-foreground font-bold">{rawMilestoneTitle}</strong></span>
                           </span>
-                          <span className="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">
+                          <span className="text-xs uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">
                             Milestone Project
                           </span>
                         </div>
                       )}
 
                       {!isGenerated && (
-                        <div className="mb-3 pr-16 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 text-xs font-semibold text-primary flex flex-wrap items-center justify-between gap-2 shadow-sm">
+                        <div className="mb-3 pr-16 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 text-xs sm:text-sm font-semibold text-primary flex flex-wrap items-center justify-between gap-2 shadow-sm">
                           <span className="flex items-center gap-2">
                             <FolderGit2 className="w-4 h-4 text-primary shrink-0" />
                             <span>
@@ -1215,7 +1215,7 @@ export default function PortfolioPage() {
                               </strong>
                             </span>
                           </span>
-                          <span className="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">
+                          <span className="text-xs uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">
                             GitHub Import
                           </span>
                         </div>
@@ -1224,22 +1224,22 @@ export default function PortfolioPage() {
                       <div className="flex flex-wrap items-center gap-2 mb-3">
                         {isGenerated ? (
                           <>
-                            <span className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                            <span className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
                               <Sparkles className="w-3.5 h-3.5" /> AI Generated Project
                             </span>
                             {rawMilestoneTitle && (
-                              <span className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm">
+                              <span className="flex items-center gap-1.5 text-xs font-bold px-3 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm">
                                 📍 Milestone: {rawMilestoneTitle}
                               </span>
                             )}
                           </>
                         ) : (
                           <>
-                            <span className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                            <span className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
                               <FolderGit2 className="w-3.5 h-3.5" /> Imported GitHub Project
                             </span>
                             {repoDisplayName && (
-                              <span className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm">
+                              <span className="flex items-center gap-1.5 text-xs font-bold px-3 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm">
                                 🐙 {repoDisplayName}
                               </span>
                             )}
@@ -1533,7 +1533,7 @@ export default function PortfolioPage() {
                                                 </td>
                                                 <td className="p-2">
                                                   <span
-                                                    className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
+                                                    className={`px-2.5 py-0.5 rounded text-xs font-bold border ${
                                                       isVerified
                                                         ? "bg-green-500/10 text-green-500 border-green-500/20"
                                                         : isPartial
@@ -1862,7 +1862,7 @@ export default function PortfolioPage() {
           <div className="w-full max-w-lg bg-card border border-border rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between p-6 border-b border-border bg-blue-500/5">
               <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
                   FLOW B — IMPORT EXISTING PROJECT
                 </span>
                 <h3 className="text-lg font-bold flex items-center gap-2 mt-1">
@@ -2206,7 +2206,7 @@ export default function PortfolioPage() {
                       {generatedProjectSpec.project.techStack.map((tech, i) => (
                         <span
                           key={i}
-                          className="text-[11px] px-2 py-0.5 rounded bg-muted text-foreground border border-border"
+                          className="text-xs px-2.5 py-1 rounded bg-muted text-foreground border border-border font-medium"
                         >
                           {tech}
                         </span>

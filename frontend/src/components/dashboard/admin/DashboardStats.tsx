@@ -293,7 +293,7 @@ export default function DashboardStats() {
             <span className="text-border">|</span>
             <span>SLA 99.98%</span>
             <span className="text-border">|</span>
-            <span className="text-primary font-mono text-[11px]">PROD</span>
+            <span className="text-primary font-mono text-xs font-bold">PROD</span>
           </div>
         }
       />
@@ -327,7 +327,7 @@ export default function DashboardStats() {
                 </div>
                 <div className="mt-3 min-w-0">
                   <p className="text-xs font-bold text-foreground truncate">{op.title}</p>
-                  <p className="text-[10px] text-muted-foreground truncate mt-0.5">{op.desc}</p>
+                  <p className="text-xs text-muted-foreground truncate mt-0.5 font-medium">{op.desc}</p>
                 </div>
               </Link>
             );
@@ -344,7 +344,7 @@ export default function DashboardStats() {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <p className="font-bold text-foreground text-sm">Gem Economy & Streaks Manager</p>
-              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400 whitespace-nowrap">
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-bold text-emerald-400 whitespace-nowrap">
                 {(overview.totalGemsInCirculation ?? 0).toLocaleString()} 💎 in circulation
               </span>
             </div>
@@ -389,7 +389,7 @@ export default function DashboardStats() {
                 <CardContent className="relative z-10 flex flex-col justify-between h-full !p-0">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/80">
+                      <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                         {kpi.category}
                       </span>
                       <h3 className="text-sm font-bold text-foreground truncate mt-0.5">
@@ -450,7 +450,7 @@ export default function DashboardStats() {
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 Cluster Healthy
               </span>
-              <span className="font-mono text-[11px]">Heartbeat: 30s interval</span>
+              <span className="font-mono text-xs font-medium">Heartbeat: 30s interval</span>
             </div>
           </Card>
         </section>
@@ -496,7 +496,7 @@ export default function DashboardStats() {
                               <div className="flex items-center gap-1.5">
                                 <p className="font-semibold text-xs text-foreground truncate">{u.name}</p>
                                 {u.plan && (
-                                  <span className={`shrink-0 rounded-full px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider ${
+                                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
                                     u.plan === 'PRO' ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30' :
                                     u.plan === 'PLUS' ? 'bg-blue-500/15 text-blue-500 border border-blue-500/30' :
                                     'bg-muted/60 text-muted-foreground border border-border/40'
@@ -505,19 +505,19 @@ export default function DashboardStats() {
                                   </span>
                                 )}
                               </div>
-                              <p className="text-[11px] text-muted-foreground truncate">{u.email}</p>
+                              <p className="text-xs text-muted-foreground truncate">{u.email}</p>
                               {(u.careerProfile?.targetRoleName || u.careerProfile?.targetRole) && (
-                                <p className="text-[10px] font-medium text-primary mt-0.5 truncate">
+                                <p className="text-xs font-medium text-primary mt-0.5 truncate">
                                   🎯 {u.careerProfile.targetRoleName || u.careerProfile.targetRole}
                                 </p>
                               )}
                             </div>
                           </div>
                           <div className="flex flex-col items-end shrink-0 text-right gap-1">
-                            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary whitespace-nowrap uppercase">
+                            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary whitespace-nowrap uppercase">
                               {u.role}
                             </span>
-                            <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                            <span className="text-xs text-muted-foreground whitespace-nowrap">
                               {new Date(u.createdAt).toLocaleDateString()}
                             </span>
                           </div>
@@ -577,16 +577,16 @@ export default function DashboardStats() {
                             <span className="font-bold text-xs text-foreground uppercase tracking-wide truncate">
                               {a.type.replace(/_/g, " ")}
                             </span>
-                            <span className="shrink-0 text-[10px] font-medium text-muted-foreground whitespace-nowrap">
+                            <span className="shrink-0 text-xs font-medium text-muted-foreground whitespace-nowrap">
                               {formattedDate}
                             </span>
                           </div>
                           <div className="flex items-center gap-1.5 mt-1">
-                            <span className="text-[10px] rounded-md bg-muted px-1.5 py-0.5 text-muted-foreground font-mono truncate max-w-[220px]">
+                            <span className="text-xs rounded-md bg-muted px-2 py-0.5 text-muted-foreground font-mono truncate max-w-[220px]">
                               {a.user.email}
                             </span>
                           </div>
-                          <p className="text-[11px] text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
                             {a.description || `Action executed by ${a.user.name}`}
                           </p>
                         </div>
@@ -603,7 +603,7 @@ export default function DashboardStats() {
                               <span className="font-bold text-xs text-foreground uppercase tracking-wide">
                                 {a.type.replace(/_/g, " ")}
                               </span>
-                              <span className="text-[10px] rounded-full bg-muted px-1.5 py-0.5 text-muted-foreground font-mono">
+                              <span className="text-xs rounded-full bg-muted px-2 py-0.5 text-muted-foreground font-mono">
                                 {a.user.email}
                               </span>
                             </div>
@@ -612,7 +612,7 @@ export default function DashboardStats() {
                             </p>
                           </div>
                         </div>
-                        <span className="shrink-0 text-[11px] font-medium text-muted-foreground whitespace-nowrap">
+                        <span className="shrink-0 text-xs font-medium text-muted-foreground whitespace-nowrap">
                           {formattedDate}
                         </span>
                       </div>
@@ -638,10 +638,10 @@ function HealthRow({ label, status, type }: { label: string; status: string; typ
     <div className="flex items-center justify-between border-b border-border/40 last:border-0 pb-2.5 last:pb-0">
       <div className="flex flex-col">
         <span className="font-semibold text-xs text-foreground">{label}</span>
-        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{type}</span>
+        <span className="text-xs text-muted-foreground uppercase tracking-wider">{type}</span>
       </div>
       {isNotTracked ? (
-        <span className="text-[11px] text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full font-medium">{status}</span>
+        <span className="text-xs text-muted-foreground bg-muted/50 px-2.5 py-0.5 rounded-full font-medium">{status}</span>
       ) : isOk ? (
         <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-500">
           <CheckCircle2 className="h-3.5 w-3.5" /> {latency ?? "Operational"}

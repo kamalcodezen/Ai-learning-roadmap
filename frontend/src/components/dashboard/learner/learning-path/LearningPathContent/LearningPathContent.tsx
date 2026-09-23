@@ -489,7 +489,7 @@ export default function LearningPathContent() {
                   Target Skill Gap: <span className="text-primary font-extrabold">{skillParam}</span>
                 </span>
                 <span
-                  className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                  className={`text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
                     targetMilestone.status === "completed"
                       ? "bg-emerald-500/20 text-emerald-500"
                       : targetMilestone.status === "current"
@@ -752,7 +752,7 @@ export default function LearningPathContent() {
                                 <Lock className="w-3.5 h-3.5" />
                                 Locked
                               </button>
-                              <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+                              <p className="text-xs sm:text-sm text-muted-foreground text-center leading-relaxed">
                                 Complete prerequisite milestones to unlock this module.
                               </p>
                             </div>
@@ -971,33 +971,33 @@ function MilestoneResourcesAccordion({
           )}
 
           {data?.data?.resources && data.data.resources.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 mt-2">
               {data.data.resources.map((res: CuratedResource) => (
                 <a
                   key={res.id}
                   href={res.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 rounded-lg bg-card-soft hover:bg-muted border border-border/70 flex flex-col justify-between transition-all group"
+                  className="p-3 rounded-lg bg-card-soft hover:bg-muted border border-border/70 flex flex-col justify-between transition-all group"
                 >
                   <div>
-                    <div className="flex items-center justify-between gap-1 mb-1">
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary uppercase">
+                    <div className="flex items-center justify-between gap-1 mb-1.5">
+                      <span className="text-xs font-bold px-2 py-0.5 rounded bg-primary/10 text-primary uppercase">
                         {res.type}
                       </span>
-                      <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
                     </div>
-                    <p className="text-xs font-semibold text-foreground line-clamp-1">
+                    <p className="text-sm font-semibold text-foreground line-clamp-1">
                       {res.title}
                     </p>
-                    <p className="text-[11px] text-muted-foreground line-clamp-2 mt-0.5">
+                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1 leading-relaxed">
                       {res.description}
                     </p>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[10px] text-muted-foreground/80">
+                  <div className="mt-2.5 flex items-center justify-between text-xs text-muted-foreground font-medium">
                     <span>{res.provider}</span>
                     {res.isOfficial && (
-                      <span className="text-green-500 font-medium">
+                      <span className="text-emerald-500 font-semibold">
                         Official
                       </span>
                     )}

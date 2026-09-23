@@ -295,7 +295,7 @@ export function ProofGraphCanvas({
 
           <div className="sm:border-l sm:border-border sm:pl-4 flex flex-col justify-center min-w-[130px]">
             <div className="flex justify-between items-center text-xs font-semibold mb-1">
-              <span className="text-muted-foreground text-[11px]">Proof Score</span>
+              <span className="text-muted-foreground text-xs font-semibold">Proof Score</span>
               <span className="text-primary font-black text-sm">
                 {overallProofScore}%
               </span>

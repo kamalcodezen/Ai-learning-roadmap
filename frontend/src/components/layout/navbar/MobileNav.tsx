@@ -50,6 +50,13 @@ export default function MobileNav() {
   const hashFromStore = useSyncExternalStore(subscribeToHash, getHashSnapshot, getHashServerSnapshot);
   const [scrollSection, setScrollSection] = useState<string>("");
 
+
+  useEffect(() => {
+    const handleClose = () => setIsOpen(false);
+    window.addEventListener("route-change-close-drawers", handleClose);
+    return () => window.removeEventListener("route-change-close-drawers", handleClose);
+  }, []);
+
   // Track active section on home page when scrolling
   useEffect(() => {
     if (pathname !== "/") return;
@@ -235,6 +242,7 @@ export default function MobileNav() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            key="mobile-nav-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

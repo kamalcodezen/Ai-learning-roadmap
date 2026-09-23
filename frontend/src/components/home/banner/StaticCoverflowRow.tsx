@@ -45,7 +45,7 @@ export default function StaticCoverflowRow({
   const [hovered, setHovered] = React.useState<number | null>(null);
 
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const inView = useInView(containerRef, { once: true, margin: "-80px" });
+  const inView = useInView(containerRef, { once: true });
 
   React.useEffect(() => {
     const measure = () => {
@@ -104,6 +104,10 @@ export default function StaticCoverflowRow({
                   transformStyle: "preserve-3d",
                 }}
                 onMouseEnter={() => {
+                  setHovered(index);
+                  onActiveChange?.(index);
+                }}
+                onClick={() => {
                   setHovered(index);
                   onActiveChange?.(index);
                 }}

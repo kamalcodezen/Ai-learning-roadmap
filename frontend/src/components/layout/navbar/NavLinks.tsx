@@ -27,6 +27,7 @@ import {
 import { Sparkles, Crown, Loader2, Bot, BrainCircuit, BarChart3, Layers, Monitor, Server, ShieldCheck, FileText, BookMarked } from "lucide-react";
 import { trackNavLinks } from "@/src/data/tracks";
 import { authClient } from "@/src/lib/auth-client";
+import { useIsMounted } from "@/src/hooks/useIsMounted";
 import { getDropdownLinks, getPlanBadge } from "./profileDropdown";
 import Button from "../../ui/button";
 import { AnimatedThemeToggler } from "@/src/registry/magicui/animated-theme-toggler";
@@ -171,6 +172,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
 
   const { data: session } = authClient.useSession();
   const [liveImage, setLiveImage] = useState<string | null>(null);
+  const mounted = useIsMounted();
 
   useEffect(() => {
     const handleAvatarUpdate = (e: Event) => {
@@ -183,7 +185,7 @@ export default function NavLinks({ onlyHamburger = false }: NavLinksProps) {
     return () => window.removeEventListener("user-avatar-updated", handleAvatarUpdate);
   }, []);
 
-  const isAuthenticated = !!session?.user;
+  const isAuthenticated = mounted && !!session?.user;
   const sessionUser = session?.user as { role?: string; plan?: string; image?: string | null } | undefined;
   const user = {
     name: session?.user?.name || "User",

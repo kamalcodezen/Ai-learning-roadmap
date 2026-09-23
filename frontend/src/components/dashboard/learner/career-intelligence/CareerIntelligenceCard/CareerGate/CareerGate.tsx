@@ -118,7 +118,7 @@ export default function CareerGate({
           <div className="max-w-3xl">
             <div className={`flex items-center gap-2 ${style.text}`}>
               <Icon className="h-5 w-5" />
-              <span className="text-[10px] font-black uppercase tracking-[0.16em]">
+              <span className="text-xs font-bold uppercase tracking-wider">
                 {config.eyebrow}
               </span>
             </div>
@@ -127,14 +127,14 @@ export default function CareerGate({
               {config.title}
             </h3>
 
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
               {config.description}
             </p>
           </div>
 
           <div className="flex shrink-0 flex-col items-start gap-4 md:items-end">
             <div className="text-left md:text-right">
-              <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 {config.scoreLabel}
               </p>
               <div className={`mt-1 text-4xl font-black ${style.text}`}>

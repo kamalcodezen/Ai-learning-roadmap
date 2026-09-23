@@ -93,7 +93,7 @@ export default function DashboardBanner({
                   {stat.label}
                 </p>
                 {stat.subtext && (
-                  <p className="mt-0.5 hidden text-[11px] text-muted-foreground/70 sm:block">
+                  <p className="mt-0.5 hidden text-xs text-muted-foreground/80 sm:block font-medium">
                     {stat.subtext}
                   </p>
                 )}

@@ -28,26 +28,26 @@ export default function WeeklyProgressCard({ data }: Props) {
             </p>
           </div>
         ) : (
-          <div className="space-y-3 mb-6">
-            <div className="flex justify-between text-sm">
+          <div className="space-y-3.5 mb-6">
+            <div className="flex justify-between text-base">
               <span className="text-muted-foreground">Learning</span>
-              <span className="font-medium">{data.learning || "—"}</span>
+              <span className="font-semibold text-foreground">{data.learning || "—"}</span>
             </div>
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-base">
               <span className="text-muted-foreground">Assessments</span>
-              <span className="font-medium">{data.assessments || "—"}</span>
+              <span className="font-semibold text-foreground">{data.assessments || "—"}</span>
             </div>
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-base">
               <span className="text-muted-foreground">Projects</span>
-              <span className="font-medium">{data.projects || "—"}</span>
+              <span className="font-semibold text-foreground">{data.projects || "—"}</span>
             </div>
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-base">
               <span className="text-muted-foreground">Practice</span>
-              <span className="font-medium">{data.practice || "—"}</span>
+              <span className="font-semibold text-foreground">{data.practice || "—"}</span>
             </div>
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-base">
               <span className="text-muted-foreground">Career Readiness</span>
-              <span className="font-medium">
+              <span className="font-semibold text-primary">
                 {data.careerReadiness ? `+${data.careerReadiness}` : "—"}
               </span>
             </div>

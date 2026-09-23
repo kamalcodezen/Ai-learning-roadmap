@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { authClient } from "@/src/lib/auth-client";
+import { useIsMounted } from "@/src/hooks/useIsMounted";
 
 const guestLinks = [
   { title: "How It Works", href: "/#how-it-works" },
@@ -49,8 +50,10 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const mounted = useIsMounted();
   const { data: session } = authClient.useSession();
-  const isLoggedIn = !!session?.user;
+
+  const isLoggedIn = mounted ? !!session?.user : false;
   const userRole = (session?.user as { role?: string } | undefined)?.role?.toUpperCase() || "LEARNER";
 
   const currentMainLinks = isLoggedIn
